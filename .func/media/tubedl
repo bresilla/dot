@@ -1,0 +1,4 @@
+#!/bin/sh
+
+clipp=$(xsel --clipboard)
+yt-dlp -i --yes-playlist --restrict-filenames -o "%(autonumber)s-%(title)s.%(ext)s" --no-part --skip-unavailable-fragments --no-overwrites ${1:-$clipp}

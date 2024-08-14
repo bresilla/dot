@@ -1,0 +1,85 @@
+super + l
+    slock
+
+super + mod1 + x
+    /env/dot/.func/run/appy
+super + mod1 + a
+    kitty --class=LAUNCHER zsh -c 'LAUNCHER=true xstarter'
+    # alacritty --class=LAUNCHER -e zsh -c 'LAUNCHER=true xstarter'
+super + mod1 + d
+    kitty --class=LAUNCHER zsh -c 'LAUNCHER=true $(/env/dot/.func/run/runny)'
+super + mod1 + b
+    kitty --class=LAUNCHER zsh -c 'LAUNCHER=true $(/env/dot/.func/run/browsy)'
+super + mod1 + p
+    kitty --class=LAUNCHER zsh -c 'LAUNCHER=true $(/env/dot/.func/code/pro code)'
+
+super + mod1 + space; {space, Return}
+    {kitty --class=kittyled, alacritty}
+
+{Insert, @Insert}
+    /home/bresilla/.config/sxhkd/scripts/eww {--open, --close}
+super + Insert
+    /home/bresilla/.config/sxhkd/scripts/eww --open
+
+F10; {F10,F11,F9}
+    /env/dot/.func/wm/sshoot {--show, --ocr, --maim}
+F11; {F11, F10}
+    {pkill slop; slop -r boxzoom, /env/dot/.func/wm/colorpicker}
+
+
+{super,mod1} + Escape
+    bspc node -{c,k}
+{super, mod1, mod2} + Delete
+    {lule create -- set & pkill polybar && /home/bresilla/.config/polybar/poly & systemctl --user restart xob.service &, lule create -- set, /home/bresilla/.startup}
+
+
+mod1 + space
+    /env/dot/.func/wm/scratch --term=kitty --class=MAIN --width=3000 --height=1250 -m -n -t
+mod2 + space
+    /env/dot/.func/wm/scratch --term=alacritty --class=SSH --width=3000 --height=1250 -m -n
+super + space
+    /env/dot/.func/wm/scratch --term=kitty --class=NOTE --width=3300 --height=2000 -m -n -t
+
+
+super + mod1 + {Left,Right}
+    bspc desktop -f {prev,next}.local
+super + mod1 + {Down,Up}
+    bspc monitor -f {prev,next}
+{super,mod1} + {Left,Down,Up,Right}
+    /home/bresilla/.config/bspwm/scripts/{focus,move} {west,south,north,east}
+{super,mod1} + @button{6,5,4,7}
+    /home/bresilla/.config/bspwm/scripts/{focus,move} {west,south,north,east}
+{_, ctrl, shift} + {super+mod1} + @button{6,5,4,7}
+    /home/bresilla/.config/bspwm/scripts/resize {b,s,s} {Left,Down,Up,Right}
+{super+mod1} + shift + {Left,Right}
+    bspc node -d {prev,next} --follow
+{super+mod1} + shift + {Down,Up}
+    bspc node -m {prev,next} --follow
+
+super + mod1 + Return; {Print,Insert,Delete,XF86MonBrightnessUp}
+    bspc node {-t floating,-t fullscreen,-t tiled,-g sticky}
+
+super + {w,f,t,s}
+    bspc node {-t '~floating',-t '~fullscreen',-t '~tiled',-g sticky}
+
+super + mod1 + p
+    doas chvt 1
+
+# mod3 + space
+mod3 + l
+    youtube_play
+mod3 + p
+    play
+mod3 + {Left,Right, space + mod2}
+    /home/bresilla/.config/sxhkd/scripts/mpv {backwards 10,forewards 10,hide}
+mod3 + space
+    /home/bresilla/.config/sxhkd/scripts/mpv cycle
+super + {F1, F3, F2}
+    volume_control {mute, up,down}
+{super,mod1} + F4 
+    playerctl {next,previous}
+super + {F7, F6}
+    light_control {up,down}
+
+super + mod1 + F4
+    play ~/.config/dunst/scripts/bleep.wav; systemctl --user restart spotifyd

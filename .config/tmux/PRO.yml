@@ -1,0 +1,9 @@
+name: "PRO"
+windows:
+- name: nvim
+  layout: e094,304x64,0,0,25
+  panes:
+  - commands:
+    - nvim
+    focus: true
+    root: /home/bresilla

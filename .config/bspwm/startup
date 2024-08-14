@@ -1,0 +1,58 @@
+#!/usr/bin/env sh
+###PROFILE
+source /home/bresilla/.profile
+
+#MONITORS
+xrandr | grep " connected" | choose 0 | gargs -n 3 "xrandr --output {0} --primary --mode 3456x2160 --pos 199x1080 --output {1} --mode 1920x1080 --pos 1920x0 --output {2} --mode 1920x1080 --pos 0x0"
+
+#TASKBAR
+#for mon in $(bspc query -M --names); do bspc monitor $mon -d 1 2 3 4 5; done
+/env/bin/btops &
+/home/bresilla/.config/polybar/poly &
+
+
+#LULE
+pkill lule
+while pgrep -x lule >/dev/null; do sleep 1; done
+lule daemon --loop=1000 -- start &
+
+
+#SHORTCUTS
+pkill sxhkd
+while pgrep -x sxhkd >/dev/null; do sleep 1; done
+sxhkd -c /home/bresilla/.config/sxhkd/sxhkdrc &
+
+
+#EWW
+#pkill eww
+#while pgrep -x eww >/dev/null; do sleep 1; done
+#eww daemon &
+
+
+#PICOM
+pkill picom
+while pgrep -x picom >/dev/null; do sleep 1; done
+picom --config $HOME/.config/picom/config &
+
+
+#KEYBOARD
+xset -r 118 & #Insert
+xset -r 107 & #Print
+xset -r 21 &  #´
+xset -r 49 &  #^
+
+
+#TMUX
+/env/bin/tmass -l /home/bresilla/.config/tmux load NOTE
+/env/bin/tmass -l /home/bresilla/.config/tmux load MAIN
+
+
+#SOUND
+echo 0 > /home/bresilla/.local/share/fifo/xob
+# pactl set-card-profile alsa_card.pci-0000_00_1f.3 off && pactl set-card-profile alsa_card.pci-0000_00_1f.3 output:analog-stereo+input:analog-stereo
+
+
+#XHOSTS
+xhost +local:focal
+xhost +local:root
+xhost +local:core

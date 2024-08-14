@@ -1,0 +1,293 @@
+{
+    "default_path": "/env/bin",
+    "bins": {
+        "/env/bin/argc": {
+            "path": "/env/bin/argc",
+            "remote_name": "argc",
+            "version": "v1.20.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/sigoden/argc/releases/tag/v1.20.0",
+            "provider": "",
+            "package_path": "argc"
+        },
+        "/env/bin/atuin": {
+            "path": "/env/bin/atuin",
+            "remote_name": "atuin",
+            "version": "v18.3.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.3.0",
+            "provider": "",
+            "package_path": "atuin-x86_64-unknown-linux-musl/atuin"
+        },
+        "/env/bin/bat": {
+            "path": "/env/bin/bat",
+            "remote_name": "bat",
+            "version": "v0.24.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "github.com/sharkdp/bat",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/bin": {
+            "path": "/env/bin/bin",
+            "remote_name": "bin",
+            "version": "v0.18.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/marcosnils/bin/releases/tag/v0.18.0",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/choose": {
+            "path": "/env/bin/choose",
+            "remote_name": "choose-x86_64-unknown-linux-musl",
+            "version": "v1.3.4",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/theryangeary/choose",
+            "provider": "github",
+            "package_path": ""
+        },
+        "/env/bin/codegpt": {
+            "path": "/env/bin/codegpt",
+            "remote_name": "codegpt",
+            "version": "v0.14.2",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.14.2",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/delta": {
+            "path": "/env/bin/delta",
+            "remote_name": "delta",
+            "version": "0.17.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/dandavison/delta",
+            "provider": "github",
+            "package_path": "delta-0.17.0-x86_64-unknown-linux-musl/delta"
+        },
+        "/env/bin/devbox": {
+            "path": "/env/bin/devbox",
+            "remote_name": "devbox",
+            "version": "0.12.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/jetify-com/devbox/releases/tag/0.12.0",
+            "provider": "",
+            "package_path": "devbox"
+        },
+        "/env/bin/direnv": {
+            "path": "/env/bin/direnv",
+            "remote_name": "direnv.linux-amd64",
+            "version": "v2.34.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/direnv/direnv",
+            "provider": "github",
+            "package_path": ""
+        },
+        "/env/bin/dora": {
+            "path": "/env/bin/dora",
+            "remote_name": "dora",
+            "version": "v0.3.5",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.5",
+            "provider": "",
+            "package_path": "dora"
+        },
+        "/env/bin/eza": {
+            "path": "/env/bin/eza",
+            "remote_name": "eza",
+            "version": "v0.18.23",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.18.23",
+            "provider": "",
+            "package_path": "./eza"
+        },
+        "/env/bin/git-cliff": {
+            "path": "/env/bin/git-cliff",
+            "remote_name": "git-cliff",
+            "version": "v2.4.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.4.0",
+            "provider": "",
+            "package_path": "git-cliff-2.4.0/git-cliff"
+        },
+        "/env/bin/gum": {
+            "path": "/env/bin/gum",
+            "remote_name": "gum",
+            "version": "v0.14.3",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/charmbracelet/gum",
+            "provider": "github",
+            "package_path": "gum_0.14.3_Linux_x86_64/gum"
+        },
+        "/env/bin/ha": {
+            "path": "/env/bin/ha",
+            "remote_name": "ha",
+            "version": "4.35.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/home-assistant/cli",
+            "provider": "github",
+            "package_path": ""
+        },
+        "/env/bin/hub": {
+            "path": "/env/bin/hub",
+            "remote_name": "hub",
+            "version": "v2.14.2",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/github/hub",
+            "provider": "github",
+            "package_path": "hub-linux-amd64-2.14.2/bin/hub"
+        },
+        "/env/bin/hysp": {
+            "path": "/env/bin/hysp",
+            "remote_name": "hysp",
+            "version": "v0.1.2",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/pwnwriter/hysp",
+            "provider": "github",
+            "package_path": "hysp-0.1.2/hysp"
+        },
+        "/env/bin/ipinfo": {
+            "path": "/env/bin/ipinfo",
+            "remote_name": "ipinfo_3.3.1",
+            "version": "ipinfo-3.3.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/ipinfo/cli",
+            "provider": "github",
+            "package_path": "ipinfo_3.3.1_linux_amd64"
+        },
+        "/env/bin/lule": {
+            "path": "/env/bin/lule",
+            "remote_name": "lule",
+            "version": "v0.2.6",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/warpwm/lule",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/micromamba": {
+            "path": "/env/bin/micromamba",
+            "remote_name": "micromamba",
+            "version": "1.5.8-0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/mamba-org/micromamba-releases",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/names-unknown-musl": {
+            "path": "/env/bin/names-unknown-musl",
+            "remote_name": "names-unknown-musl",
+            "version": "v0.14.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/fnichol/names",
+            "provider": "github",
+            "package_path": "names-x86_64-unknown-linux-musl"
+        },
+        "/env/bin/nostromo": {
+            "path": "/env/bin/nostromo",
+            "remote_name": "nostromo",
+            "version": "v0.12.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/pokanop/nostromo",
+            "provider": "github",
+            "package_path": "nostromo"
+        },
+        "/env/bin/oatmeal": {
+            "path": "/env/bin/oatmeal",
+            "remote_name": "oatmeal",
+            "version": "v0.13.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/dustinblackman/oatmeal/releases/tag/v0.13.0",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/ollama": {
+            "path": "/env/bin/ollama",
+            "remote_name": "ollama",
+            "version": "v0.3.2",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.3.2",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/pixi": {
+            "path": "/env/bin/pixi",
+            "remote_name": "pixi-unknown-musl",
+            "version": "v0.26.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.26.1",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/roc": {
+            "path": "/env/bin/roc",
+            "remote_name": "roc",
+            "version": "v0.1.33",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/bresilla/roc",
+            "provider": "github",
+            "package_path": "roc"
+        },
+        "/env/bin/ser": {
+            "path": "/env/bin/ser",
+            "remote_name": "servicer-x86_64-unknown-linux-gnu",
+            "version": "v0.1.13",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "github.com/servicer-labs/servicer",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/starship": {
+            "path": "/env/bin/starship",
+            "remote_name": "starship",
+            "version": "v1.20.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/starship/starship/releases/tag/v1.20.1",
+            "provider": "",
+            "package_path": "starship"
+        },
+        "/env/bin/stew": {
+            "path": "/env/bin/stew",
+            "remote_name": "stew",
+            "version": "v0.4.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/marwanhawari/stew/releases/tag/v0.4.0",
+            "provider": "",
+            "package_path": "stew"
+        },
+        "/env/bin/tab": {
+            "path": "/env/bin/tab",
+            "remote_name": "tab",
+            "version": "v0.5.7",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "github.com/austinjones/tab-rs",
+            "provider": "",
+            "package_path": ""
+        },
+        "/env/bin/tldr": {
+            "path": "/env/bin/tldr",
+            "remote_name": "tealdeer-musl",
+            "version": "v1.6.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "github.com/dbrgn/tealdeer",
+            "provider": "github",
+            "package_path": ""
+        },
+        "/env/bin/vpncloud": {
+            "path": "/env/bin/vpncloud",
+            "remote_name": "vpncloud_static",
+            "version": "v2.3.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/dswd/vpncloud",
+            "provider": "github",
+            "package_path": ""
+        },
+        "/env/bin/zoxide": {
+            "path": "/env/bin/zoxide",
+            "remote_name": "zoxide",
+            "version": "v0.9.4",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/ajeetdsouza/zoxide",
+            "provider": "github",
+            "package_path": "zoxide"
+        }
+    }
+}

@@ -1,0 +1,169 @@
+format = """
+$hostname\
+${custom.distro}\
+$username\
+${custom.direnv}\
+$sudo\
+${custom.tab}\
+${custom.tab2}\
+$status\
+$nix_shell\
+${custom.container2}\
+[| ](fg:7)
+"""
+
+continuation_prompt = " > "
+
+right_format = """
+${custom.container}\
+$c\
+$rust\
+$golang\
+$haskell\
+$julia\
+$nodejs\
+$nim\
+$conda\
+[|](fg:7)
+$git_branch\
+$git_status\
+$directory\
+"""
+
+[hostname]
+style = "bg:237 bold italic fg:15"
+ssh_only = false
+format = "[ $ssh_symbol]($style)[$hostname ]($style)"
+
+[username]
+show_always = true
+style_user = "bg:1 fg:0"
+style_root = "bg:1 fg:0"
+format = '[$user ]($style)'
+
+[directory]
+style = "bg:237 fg:15"
+format = "[ $path ]($style)"
+truncation_length = 3
+
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:1 fg:0"
+format = '[[ $symbol $branch ]($style)]($style)'
+
+[git_status]
+style = "bg:1 fg:0"
+format = '[[($all_status$ahead_behind )]($style)]($style)'
+
+[nix_shell]
+disabled = true
+impure_msg = '[impure shell](bold red)'
+pure_msg = '[pure shell](bold green)'
+unknown_msg = '[unknown shell](bold yellow)'
+format = 'via [☃️ $state( \($name\))](bold blue) '
+
+[custom.env]
+style="fg:4"
+command = "echo $ENVNAME"
+when = """ [[ -n $ENVNAME ]] """
+format = "[|](bg:0 fg:7)[ $output ]($style)[|](bg:0 fg:7)"
+
+[custom.tab]
+style="bg:6 bold italic fg:0"
+command = "echo $TAB | tr -d '/'"
+when = """ [[ -n $TAB ]] """
+format = "[|](bg:0 fg:7)[ t: $output ]($style)"
+
+[custom.tab2]
+style="bg:237 italic fg:15"
+command = "echo $(( $(tab -l 2> /dev/null | wc -l) - 1 ))"
+when = """ [[ ! -n $TAB ]] && [[ $(( $(tab -l 2> /dev/null | wc -l) - 1 )) -gt 0  ]] """
+format = "[|](bg:0 fg:7)[ $output ]($style)"
+
+[custom.snitch]
+style="fg:7"
+command = "snitch list 2>/dev/null | wc -l"
+when = """ [[ -n $ENVNAME ]] """
+format = "[|](bg:0 fg:7)[ TODO: $output ]($style)"
+
+[custom.direnv]
+style="bg:1 fg:0"
+command = "echo ▓"
+when = """ [[ -n $DIRENV_DIR ]] """
+format = "[$output]($style)"
+
+[custom.distro]
+style = "bg:1 fg:0"
+command = "echo $(/env/dot/.func/shell/distrologo)"
+when = true
+format = "[ $output ]($style)"
+
+[custom.container]
+style = "bg:5 bold fg:15"
+command = "echo $(/env/dot/.func/shell/incontainer2)"
+when = """ [[ $(systemd-detect-virt) != "none" ]] """
+format = "[|](bg:0 fg:7)[ $output ]($style)[||](bg:0 fg:7)"
+
+[custom.container2]
+style = "bg:5 bold fg:15"
+command = "echo $(/env/dot/.func/shell/incontainer)"
+when = """ [[ $(systemd-detect-virt) != "none" ]] """
+format = " [ $output ]($style)"
+
+
+[status]
+style = "bg:0 fg:9"
+format = '[ $hex_status ]($style)'
+map_symbol = true
+disabled = false
+
+[sudo]
+style = "bg:6 bold fg:0"
+format = "[ ROOT ]($style)"
+disabled = false
+
+[c]
+symbol = " "
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[julia]
+symbol = " "
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[nim]
+symbol = " "
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:6 fg:0"
+format = '[[ $symbol ($version) ]($style)]($style)'
+
+[conda]
+symbol = "🅒"
+style = "bg:6 fg:0"
+format = "[ via [$symbol $environment ]($style)]($style)"

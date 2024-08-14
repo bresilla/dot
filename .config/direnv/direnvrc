@@ -1,0 +1,190 @@
+#!/bin/sh
+
+export INDIRENV=true;
+local BLUE='\033[0;34m';
+local GREEN='\033[0;32m';
+local RED='\033[0;31m';
+local NC='\033[0m'
+
+use_nix() {
+    [ -x "$(command -v nix)" ] || exit 0
+    if [[ -f .shell.nix ]]; then
+        NIXFILE=$PWD/.shell.nix
+    else
+        NIXFILE=shell.nix
+    fi
+    watch_file $NIXFILE
+    direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)" $NIXFILE
+}
+
+use_flake() {
+    [ -x "$(command -v nix)" ] || exit 0
+    watch_file flake.nix
+    watch_file flake.lock
+    eval "$(nix --verbose -L print-dev-env --profile "$(direnv_layout_dir)/flake-profile")"
+}
+
+use_devbox() {
+    watch_file devbox.json
+    eval $(devbox shell --print-env)
+}
+
+use_devenv() {
+    watch_file devenv.nix
+    watch_file devenv.yaml
+    watch_file devenv.lock
+    eval "$(devenv print-dev-env)"
+}
+
+use_nvidia() {
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+}
+
+nix-profile(){
+    local profile=$PWD/.direnv/nix-profile
+    mkdir -p .direnv
+
+    rm -f "$profile"
+    nix-build --out-link "$profile" profile.nix
+    watch_file profile.nix
+    load_prefix "$profile"
+}
+
+layout_mamba() {
+    export HASHER=`echo $PWD | md5sum | cut -d" " -f1`
+    export MAMBA_ROOT_PREFIX="/pkg/mamba";
+    export VENV=$MAMBA_ROOT_PREFIX/envs/$HASHER
+    eval "$(micromamba shell hook --shell=bash)"
+
+    if [[ -d $VENV/conda-meta ]]; then
+        micromamba activate $VENV
+        micromamba info
+    else
+        micromamba create -n $HASHER mamba libmambapy python=${1:-3.10} -c conda-forge
+        micromamba activate $VENV
+        micromamba info
+    fi
+}
+
+layout_mambaid(){
+    export HASHER=${2:-c50e54e785a4b687578a7c854f5dccc9}
+    export MAMBA_ROOT_PREFIX="/pkg/mamba";
+    export VENV=$MAMBA_ROOT_PREFIX/envs/$HASHER
+    eval "$(micromamba shell hook --shell=bash)"
+
+    if [[ -d $VENV/conda-meta ]]; then
+        micromamba activate $VENV
+        micromamba info
+    else
+        micromamba create -n $HASHER mamba libmambapy python=${1:-3.10} -c conda-forge
+        micromamba activate $VENV
+        micromamba info
+    fi
+}
+
+layout_localmamba() {
+    export MAMBA_ROOT_PREFIX="$PWD/.direnv/mamba";
+    export VENV=$MAMBA_ROOT_PREFIX/envs/`basename $PWD`
+    eval "$(micromamba shell hook --shell=bash)"
+
+    if [[ -d $VENV/conda-meta ]]; then
+        micromamba activate $VENV
+        micromamba info
+    else
+        micromamba create -n `basename $PWD` mamba libmambapy python=${1:-3.9} -c conda-forge
+        micromamba activate $VENV
+        micromamba info
+    fi
+}
+
+layout_ros() {
+    source /etc/lsb-release
+    if [[ $DISTRIB_ID == "Arch" ]]; then
+        echo "IN ARCH - CANT USE ROS"
+        exit
+    fi
+    if [[ ${1} == "noetic" ]]; then
+        source "/opt/ros/${1:-neotic}/setup.sh"
+        echo "ROS1 ENV"
+    else
+        source "/opt/ros/${1:-humble}/setup.sh"
+        # eval "$(register-python-argcomplete3 ros2)
+        # eval "$(register-python-argcomplete3 colcon)
+        echo "ROS2 ENV"
+    fi
+    if [[ -f "$PWD/devel/setup.sh" ]]; then source "$PWD/devel/setup.sh"; fi
+    if [[ -f "$PWD/install/setup.sh" ]]; then source "$PWD/install/setup.sh"; fi
+}
+
+layout_go() {
+  export GOPATH="$PWD/vendor/"
+  PATH_add "$PWD/vendor/bin"
+  PATH_add bin
+}
+
+layout_rust() {
+  export CARGO_HOME="$PWD/vendor/"
+  export RUSTUP_HOME="$PWD/vendor/rustup"
+  PATH_add "$PWD/vendor/bin"
+  PATH_add bin
+}
+
+layout_nim() {
+  export NIMBLE_DIR="$PWD/vendor/"
+  PATH_add "$PWD/vendor/bin"
+  PATH_add bin
+}
+
+layout_julia() {
+  export JULIA_PROJECT=$PWD
+}
+
+local_vimrc() {
+  local extravim="$(find_up .vimrc)"
+  if [ -n "$extravim" ]; then
+    echo "Adding extra .vimrc: ${extravim}"
+    path_add EXTRA_VIM $extravim
+  fi
+}
+
+export_function() {
+  local name=$1
+  local alias_dir=$PWD/.direnv/functions
+  mkdir -p "$alias_dir"
+  PATH_add "$alias_dir"
+  local target="$alias_dir/$name"
+  if declare -f "$name" >/dev/null; then
+    echo "#!/bin/bash" > "$target"
+    declare -f "$name" >> "$target" 2>/dev/null
+    # Notice that we add shell variables to the function trigger.
+    echo "$name \$*" >> "$target"
+    chmod +x "$target"
+  fi
+}
+# EXAMPLE
+# woot() {
+  # echo woot
+# }
+# export_function woot
+
+export_alias() {
+    local name=$1
+    shift
+    local alias_dir=$PWD/.direnv/aliases
+    local target="$alias_dir/$name"
+    mkdir -p "$alias_dir"
+    PATH_add "$alias_dir"
+    echo "#!/usr/bin/sh" > "$target"
+    echo "$@" >> "$target"
+    chmod +x "$target"
+}
+# EXAMPLE
+# export_alias ll "ls -la"
+
+tidyup(){
+    [[ -d "$PWD/.direnv/functions" ]] && rm -r $PWD/.direnv/functions
+    [[ -d "$PWD/.direnv/aliases" ]] && rm -r $PWD/.direnv/aliases
+}

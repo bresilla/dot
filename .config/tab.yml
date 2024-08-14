@@ -1,0 +1,6 @@
+key_bindings:
+  - action: SelectInteractive
+    keys: ctrl-X
+env:
+  DISPLAY: :0
+# workspace: []

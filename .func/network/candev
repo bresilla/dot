@@ -1,0 +1,35 @@
+#! /bin/bash
+
+BAUD=6
+#  0 ---  1 ---  2 ---  3 ---  4 ---  5 ---  6 ---  7 ---  8    BAUD
+# 10     20     50     100    125    250    500    800    1000  Kbits/s
+
+# Detect correct port for device interfaces
+TERM_PORT=$(ls -l /dev/serial/by-id/ | grep 1fc9_00a3 | sed 's/.*\///g' | awk '{if(NR==2) print $0}')
+CANB_PORT=$(ls -l /dev/serial/by-id/ | grep 1fc9_00a3 | sed 's/.*\///g' | awk '{if(NR==1) print $0}')
+
+
+echo "Terminal interface on: $TERM_PORT"
+echo "CAN Bus  interface on: $CANB_PORT"
+
+# Set the mode to slcan
+#chmod a+rw /dev/$TERM_POR
+#echo -ne "set can-mode slcan" > /dev/$TERM_PORT
+
+# Attach to the port with slcand
+DEV=can0
+doas slcand -s$BAUD -o /dev/"$CANB_PORT" $DEV
+
+# Give interface time to come up
+sleep .25
+
+# Enable the inteface
+doas ifconfig $DEV up
+doas ifconfig $DEV txqueuelen 1000
+
+echo "Interface is enabled."
+
+# Turn up the inteface
+doas ip link set dev $DEV up
+
+echo "Interface is UP."
