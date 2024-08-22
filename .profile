@@ -142,6 +142,10 @@ export OLLAMA_HOST=borg.tailscale:11434
 export OATMEAL_OLLAMA_URL=http://borg.tailscale:11434
 export DOCKER_HOST=tcp://borg.tailscale:2375
 
+
+#----------------------------        SOFT-SERVER        ---------------------------
+SOFT_SERVE_DATA_PATH=/git/soft
+
 #---------------------------            CORE            --------------------------
 if [ "$HOSTNAME" = core ]; then
     export SSH_AGENT_PID=""
@@ -149,5 +153,3 @@ if [ "$HOSTNAME" = core ]; then
     export GPG_TTY=$(tty)
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
-
-if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

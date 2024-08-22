@@ -4,9 +4,9 @@
         "/env/bin/argc": {
             "path": "/env/bin/argc",
             "remote_name": "argc",
-            "version": "v1.20.0",
+            "version": "v1.20.1",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/sigoden/argc/releases/tag/v1.20.0",
+            "url": "https://github.com/sigoden/argc/releases/tag/v1.20.1",
             "provider": "",
             "package_path": "argc"
         },
@@ -58,11 +58,11 @@
         "/env/bin/delta": {
             "path": "/env/bin/delta",
             "remote_name": "delta",
-            "version": "0.17.0",
+            "version": "0.18.0",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/dandavison/delta",
-            "provider": "github",
-            "package_path": "delta-0.17.0-x86_64-unknown-linux-musl/delta"
+            "url": "https://github.com/dandavison/delta/releases/tag/0.18.0",
+            "provider": "",
+            "package_path": "delta-0.18.0-x86_64-unknown-linux-musl/delta"
         },
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
@@ -94,11 +94,20 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.18.23",
+            "version": "v0.19.0",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.18.23",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.19.0",
             "provider": "",
             "package_path": "./eza"
+        },
+        "/env/bin/fabric": {
+            "path": "/env/bin/fabric",
+            "remote_name": "fabric-ubuntu-latest-arm64-main",
+            "version": "2.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/danielmiessler/fabric",
+            "provider": "github",
+            "package_path": "fabric-ubuntu-latest-arm64-main"
         },
         "/env/bin/git-cliff": {
             "path": "/env/bin/git-cliff",
@@ -108,6 +117,15 @@
             "url": "https://github.com/orhun/git-cliff/releases/tag/v2.4.0",
             "provider": "",
             "package_path": "git-cliff-2.4.0/git-cliff"
+        },
+        "/env/bin/gitea": {
+            "path": "/env/bin/gitea",
+            "remote_name": "gitea",
+            "version": "v1.22.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "github.com/go-gitea/gitea",
+            "provider": "github",
+            "package_path": ""
         },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
@@ -202,18 +220,27 @@
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "ollama",
-            "version": "v0.3.2",
+            "version": "v0.3.6",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/ollama/ollama/releases/tag/v0.3.2",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.3.6",
             "provider": "",
             "package_path": ""
+        },
+        "/env/bin/pik": {
+            "path": "/env/bin/pik",
+            "remote_name": "pik",
+            "version": "0.5.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/jacek-kurlit/pik",
+            "provider": "github",
+            "package_path": "pik-0.5.0-x86_64-unknown-linux-gnu/pik"
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-unknown-musl",
-            "version": "v0.26.1",
+            "version": "v0.27.1",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.26.1",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.27.1",
             "provider": "",
             "package_path": ""
         },
@@ -234,6 +261,15 @@
             "url": "github.com/servicer-labs/servicer",
             "provider": "",
             "package_path": ""
+        },
+        "/env/bin/soft": {
+            "path": "/env/bin/soft",
+            "remote_name": "soft",
+            "version": "v0.7.6",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/charmbracelet/soft-serve",
+            "provider": "github",
+            "package_path": "soft-serve_0.7.6_Linux_x86_64/soft"
         },
         "/env/bin/starship": {
             "path": "/env/bin/starship",

@@ -39,6 +39,13 @@ create_files(){
     # COLORS.SCSS (used for STYLING)
     printf "\$foreground: $fore;\n\$background: $back;\n\n" > $HOME/.cache/wal/colors.scss
     awk '{print "$color" NR-1 ": " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.scss
+
+    # COLORS.CSS (used for styling web pages)
+    printf "@define-color foreground $fore;\n@define-color background $back;\n" > $HOME/.cache/wal/colors.css
+    awk '{print "@define-color color" NR-1 " " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.css
+    printf ":root {\n\t--foreground: $fore;\n\t--background: $back;\n" > $HOME/.cache/wal/colors_def.css
+    awk '{print "\t--color" NR-1 ": " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_def.css
+    printf "}\n" >> $HOME/.cache/wal/colors_def.css
  
     # COLORS.RASI (used for STYLING)
     printf "* {\n\tforeground: $fore;\n\tbackground: $back;\n" > $HOME/.cache/wal/colors.rasi
