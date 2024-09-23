@@ -259,6 +259,7 @@ done
 #TAB-RS (shotrcut: Ctrl + e)
 bindkey -s '^X' ' tab\n'
 bindkey -s '^A' ' scrr\n'
+# [[ -n $TMUX ]] && tab $(names)
 [[ -n $TAB ]] && export DISPLAY=:0
 
 #---------------------------            EXTERNAL       --------------------------

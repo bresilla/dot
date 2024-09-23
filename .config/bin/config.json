@@ -49,20 +49,20 @@
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
             "remote_name": "codegpt",
-            "version": "v0.14.2",
+            "version": "v0.14.3",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.14.2",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.14.3",
             "provider": "",
             "package_path": ""
         },
         "/env/bin/delta": {
             "path": "/env/bin/delta",
             "remote_name": "delta",
-            "version": "0.18.0",
+            "version": "0.18.1",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/dandavison/delta/releases/tag/0.18.0",
+            "url": "https://github.com/dandavison/delta/releases/tag/0.18.1",
             "provider": "",
-            "package_path": "delta-0.18.0-x86_64-unknown-linux-musl/delta"
+            "package_path": "delta-0.18.1-x86_64-unknown-linux-musl/delta"
         },
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
@@ -85,18 +85,18 @@
         "/env/bin/dora": {
             "path": "/env/bin/dora",
             "remote_name": "dora",
-            "version": "v0.3.5",
+            "version": "v0.3.6",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.5",
+            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.6",
             "provider": "",
             "package_path": "dora"
         },
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.19.0",
+            "version": "v0.19.2",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.19.0",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.19.2",
             "provider": "",
             "package_path": "./eza"
         },
@@ -112,29 +112,29 @@
         "/env/bin/git-cliff": {
             "path": "/env/bin/git-cliff",
             "remote_name": "git-cliff",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.4.0",
+            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.5.0",
             "provider": "",
-            "package_path": "git-cliff-2.4.0/git-cliff"
+            "package_path": "git-cliff-2.5.0/git-cliff"
         },
         "/env/bin/gitea": {
             "path": "/env/bin/gitea",
             "remote_name": "gitea",
-            "version": "v1.22.1",
+            "version": "v1.22.2",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "github.com/go-gitea/gitea",
-            "provider": "github",
+            "url": "https://github.com/go-gitea/gitea/releases/tag/v1.22.2",
+            "provider": "",
             "package_path": ""
         },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
             "remote_name": "gum",
-            "version": "v0.14.3",
+            "version": "v0.14.5",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/charmbracelet/gum",
-            "provider": "github",
-            "package_path": "gum_0.14.3_Linux_x86_64/gum"
+            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.14.5",
+            "provider": "",
+            "package_path": "gum_0.14.5_Linux_x86_64/gum"
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
@@ -184,9 +184,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba",
-            "version": "1.5.8-0",
+            "version": "1.5.9-1",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/mamba-org/micromamba-releases",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/1.5.9-1",
             "provider": "",
             "package_path": ""
         },
@@ -220,27 +220,27 @@
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "ollama",
-            "version": "v0.3.6",
+            "version": "v0.3.9",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/ollama/ollama/releases/tag/v0.3.6",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.3.9",
             "provider": "",
-            "package_path": ""
+            "package_path": "./bin/ollama"
         },
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.5.0",
+            "version": "0.6.3",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/jacek-kurlit/pik",
-            "provider": "github",
-            "package_path": "pik-0.5.0-x86_64-unknown-linux-gnu/pik"
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.6.3",
+            "provider": "",
+            "package_path": "pik-0.6.3-x86_64-unknown-linux-gnu/pik"
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-unknown-musl",
-            "version": "v0.27.1",
+            "version": "v0.29.0",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.27.1",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.29.0",
             "provider": "",
             "package_path": ""
         },
