@@ -119,7 +119,7 @@ layout_ros() {
     if [[ -f "$PWD/install/setup.sh" ]]; then source "$PWD/install/setup.sh"; fi
 }
 
-layout_ros2{}{
+layout_ros2() {
     export TOP_HEAD=$PWD
     source /opt/ros/humble/setup.sh
     source $TOP_HEAD/install/setup.sh
