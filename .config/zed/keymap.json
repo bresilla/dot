@@ -1,5 +1,13 @@
 [
   {
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      "ctrl-/": "editor::ToggleComments",
+      "tab": "workspace::ToggleLeftDock",
+      "#": "editor::ToggleComments"
+    }
+  },
+  {
     "context": "Editor && (vim_mode == normal || vim_mode == visual || vim_mode == insert) && !VimWaiting && !menu",
     "bindings": {
       "ctrl-left": ["workspace::ActivatePaneInDirection", "Left"],
@@ -8,10 +16,9 @@
       "ctrl-down": ["workspace::ActivatePaneInDirection", "Down"],
       "ctrl-alt-up": "editor::MoveLineUp",
       "ctrl-alt-down": "editor::MoveLineDown",
-      // "ctrl-/": "editor::ToggleComments",
-      "#": "editor::ToggleComments",
-      "ctrl-b": "workspace::ToggleLeftDock",
-      "tab": "workspace::ToggleLeftDock"
+      // "#": "editor::ToggleComments",
+      "ctrl-a": "editor::SelectAll",
+      "ctrl-b": "workspace::ToggleLeftDock"
     }
   },
   {
@@ -27,6 +34,7 @@
       "g r": "editor::FindAllReferences",
       "] d": "editor::GoToDiagnostic",
       "[ d": "editor::GoToPrevDiagnostic",
+      //select all
       // Symbol search
       "s s": "outline::Toggle",
       "s S": "project_symbols::Toggle",
@@ -85,10 +93,10 @@
       "A": "project_panel::NewDirectory",
       "r": "project_panel::Rename",
       "d": "project_panel::Delete",
+      // "tab": "workspace::ToggleLeftDock",
       "x": "project_panel::Cut",
       "c": "project_panel::Copy",
-      "p": "project_panel::Paste",
-      "tab": "workspace::ToggleLeftDock"
+      "p": "project_panel::Paste"
     }
   }
 ]

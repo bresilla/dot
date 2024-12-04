@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export INDIRENV=true;
+export DIRENV_TOP=$PWD;
 local BLUE='\033[0;34m';
 local GREEN='\033[0;32m';
 local RED='\033[0;31m';
@@ -122,6 +123,7 @@ layout_ros() {
 layout_ros2() {
     export TOP_HEAD=$PWD
     source /opt/ros/humble/setup.sh
+    if [[ -d "/opt/ros_pack" ]]; then source /opt/ros_pack/install/setup.sh; fi
     source $TOP_HEAD/install/setup.sh
     export_alias build 'cd $TOP_HEAD && colcon build'
     eval "$(register-python-argcomplete3 ros2)"

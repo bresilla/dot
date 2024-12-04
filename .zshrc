@@ -277,3 +277,5 @@ if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresill
 # fi
 
 bresilla
+
+[ -f "/home/bresilla/.ghcup/env" ] && . "/home/bresilla/.ghcup/env" # ghcup-env

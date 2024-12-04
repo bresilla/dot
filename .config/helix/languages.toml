@@ -18,3 +18,9 @@
 #[[grammar]]
 #name = "typst"
 #source = { git = "https://github.com/frozolotl/tree-sitter-typst.git" }
+
+
+[language-server.lspai]
+command = "lspai"
+[[language]]
+name = "cpp"

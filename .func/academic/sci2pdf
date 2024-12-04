@@ -295,6 +295,7 @@ download_paper() {
             ( curl -Ls "$download_link" --output "$filename" || \
                     curl -Ls "$site/$download_link" --output "$filename" )
         [[ ! $quiet = true ]] && echo "${_GREEN}Done!${_RESET}"
+        [[ ! $quiet = true ]] && echo File at: "${_GREEN} "$destination/$filename" ${_RESET}"
         rm "$scitopdf_curl".txt &>/dev/null
         unset download_link
         [[ "$automatically_open" = true ]] && setsid $READER "$destination/$filename"

@@ -128,7 +128,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 #export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 #export CYCLONEDDS_URI='<CycloneDDS><Domain><General><NetworkInterfaceAddress>stargate</></></></>'
 #export CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="stargate"/></></></></>'
-#export ROS_DOMAIN_ID=222
+export ROS_DOMAIN_ID=227
 export WEBOTS_HOME=/usr/local/webots
 export LD_LIBRARY_PATH=/usr/local/webots/lib/controller:$LD_LIBRARY_PATH
 export PYTHONPATH=/usr/local/webots/lib/controller/python:$PYTHONPATH
@@ -153,3 +153,5 @@ if [ "$HOSTNAME" = core ]; then
     export GPG_TTY=$(tty)
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
+
+[ -f "/home/bresilla/.ghcup/env" ] && . "/home/bresilla/.ghcup/env" # ghcup-env
