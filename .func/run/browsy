@@ -61,35 +61,51 @@ elif [ "$another" == "$hist" ] ; then
 
 elif [ "$another" == "$mark" ] ; then
     LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/webmarks_v0.1.json" list -g default| tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
-    [[ -z $LINK ]] && exit 1
-    $BROWSER $LINK
+    if [[ -z $LINK ]]; then
+        browsy
+    else
+        $BROWSER $LINK
+    fi
 
 elif [ "$another" == "$loca" ] ; then
     LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/webmarks_v0.1.json" list -g proxmox | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
-    [[ -z $LINK ]] && exit 1
-    $BROWSER $LINK
+    if [[ -z $LINK ]]; then
+        browsy
+    else
+        $BROWSER $LINK
+    fi
 
 elif [ "$another" == "$list" ] ; then
     LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/playmarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
-    [[ -z $LINK ]] && exit 1
-    /env/dot/.func/media/play $LINK
+    if [[ -z $LINK ]]; then
+        browsy
+    else
+        /env/dot/.func/media/play $LINK
+    fi
 
 elif [ "$another" == "$apps" ] ; then
     LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/climarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
-    [[ -z $LINK ]] && exit 1
-    $BROWSER $LINK
+    if [[ -z $LINK ]]; then
+        browsy
+    else
+        $BROWSER $LINK
+    fi
 
 elif [ "$another" == "$pkgs" ] ; then
     LINK=$runner
-    $BROWSER "https://pkgs.org/search/?q=$LINK"
-
-# elif [ -z "$another" ] ; then
-#     #https://github.com/BelkaDev/RofiFtw
-#     handler=$(dirname $0)/duckduck
-#     rofi "${ROFI_OPTIONS[@]}" -modi blocks -show blocks -blocks-wrap $handler -display-blocks "SEARCH" 2>/dev/null
-#     [ -f "/tmp/ddgrofi.tmp" ] && $BROWSER "https://duckduckgo.com/?q=$(cat "/tmp/ddgrofi.tmp")" || exit 0
+    if [[ -z $LINK ]]; then
+        browsy
+    else
+        $BROWSER "https://pkgs.org/search/?q=$LINK"
+    fi
 
 else
-    $BROWSER "https://duckduckgo.com/?q=$another"
-    #exec nohup $another > /dev/null 2>&1 &
+    # if another is empty then exit
+    [ -z "$another" ] && exit 0
+    # Check if the input is a link
+    if [[ "$another" =~ ^https?:// ]] || [[ "$another" =~ \.[a-z]{2,} ]]; then
+        $BROWSER "$another"
+    else
+        $BROWSER "https://duckduckgo.com/?q=$another"
+    fi
 fi

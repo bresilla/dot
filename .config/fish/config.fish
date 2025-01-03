@@ -1,11 +1,9 @@
-function fish_mode_prompt; end
-function fish_greeting; end
+function fish_mode_prompt
+end
+function fish_greeting
+end
 
 source /home/bresilla/.aliases
-
-function _shko
-    shko -c --short 19 && cd (cat ~/.config/shko/settings/chdir)
-end
 
 function n --wraps nnn --description 'support nnn quit and change directory'
     if test -n "$NNNLVL"
@@ -26,9 +24,7 @@ function n --wraps nnn --description 'support nnn quit and change directory'
     end
 end
 
-
 ###DIRENV
-direnv hook fish | source
-
-###STARSHIP
 starship init fish | source
+direnv hook fish | source
+atuin init fish | source

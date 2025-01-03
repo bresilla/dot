@@ -13,6 +13,7 @@ alias ufw="sudo ufw"
 alias btrfs="sudo btrfs"
 alias ser="sudo /env/bin/ser"
 alias rustdesk="sudo rustdesk"
+alias ssh="TERM=tmux-256color ssh -X"
 
 ##WM
 alias sx="startx"

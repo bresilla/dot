@@ -7,24 +7,6 @@ local GREEN='\033[0;32m';
 local RED='\033[0;31m';
 local NC='\033[0m'
 
-use_nix() {
-    [ -x "$(command -v nix)" ] || exit 0
-    if [[ -f .shell.nix ]]; then
-        NIXFILE=$PWD/.shell.nix
-    else
-        NIXFILE=shell.nix
-    fi
-    watch_file $NIXFILE
-    direnv_load nix-shell --show-trace "$@" --run "$(join_args "$direnv" dump)" $NIXFILE
-}
-
-use_flake() {
-    [ -x "$(command -v nix)" ] || exit 0
-    watch_file flake.nix
-    watch_file flake.lock
-    eval "$(nix --verbose -L print-dev-env --profile "$(direnv_layout_dir)/flake-profile")"
-}
-
 use_devbox() {
     watch_file devbox.json
     eval $(devbox shell --print-env)
@@ -44,14 +26,9 @@ use_nvidia() {
     export __VK_LAYER_NV_optimus=NVIDIA_only
 }
 
-nix-profile(){
-    local profile=$PWD/.direnv/nix-profile
-    mkdir -p .direnv
-
-    rm -f "$profile"
-    nix-build --out-link "$profile" profile.nix
-    watch_file profile.nix
-    load_prefix "$profile"
+layout_pixi() {
+    watch_file pixi.lock
+    eval "$(pixi shell-hook)"
 }
 
 layout_mamba() {
@@ -101,65 +78,20 @@ layout_localmamba() {
     fi
 }
 
-layout_ros() {
-    source /etc/lsb-release
-    if [[ $DISTRIB_ID == "Arch" ]]; then
-        echo "IN ARCH - CANT USE ROS"
-        exit
-    fi
-    if [[ ${1} == "noetic" ]]; then
-        source "/opt/ros/${1:-neotic}/setup.sh"
-        echo "ROS1 ENV"
-    else
-        source "/opt/ros/${1:-humble}/setup.sh"
-        # eval "$(register-python-argcomplete3 ros2)
-        # eval "$(register-python-argcomplete3 colcon)
-        echo "ROS2 ENV"
-    fi
-    if [[ -f "$PWD/devel/setup.sh" ]]; then source "$PWD/devel/setup.sh"; fi
-    if [[ -f "$PWD/install/setup.sh" ]]; then source "$PWD/install/setup.sh"; fi
-}
-
 layout_ros2() {
+    source /etc/lsb-release
     export TOP_HEAD=$PWD
-    source /opt/ros/humble/setup.sh
-    if [[ -d "/opt/ros_pack" ]]; then source /opt/ros_pack/install/setup.sh; fi
+    if [[ $DISTRIB_CODENAME == "jammy" ]]; then
+        source "/opt/ros/humble/setup.sh"
+        echo "UBUNTU 22.04"
+    elif [[ $DISTRIB_CODENAME == "noble" ]]; then
+        source "/opt/ros/jazzy/setup.sh"
+        echo "UBUNTU 24.04"
+    fi
     source $TOP_HEAD/install/setup.sh
     export_alias build 'cd $TOP_HEAD && colcon build'
     eval "$(register-python-argcomplete3 ros2)"
     eval "$(register-python-argcomplete3 colcon)"
-
-}
-
-layout_go() {
-  export GOPATH="$PWD/vendor/"
-  PATH_add "$PWD/vendor/bin"
-  PATH_add bin
-}
-
-layout_rust() {
-  export CARGO_HOME="$PWD/vendor/"
-  export RUSTUP_HOME="$PWD/vendor/rustup"
-  PATH_add "$PWD/vendor/bin"
-  PATH_add bin
-}
-
-layout_nim() {
-  export NIMBLE_DIR="$PWD/vendor/"
-  PATH_add "$PWD/vendor/bin"
-  PATH_add bin
-}
-
-layout_julia() {
-  export JULIA_PROJECT=$PWD
-}
-
-local_vimrc() {
-  local extravim="$(find_up .vimrc)"
-  if [ -n "$extravim" ]; then
-    echo "Adding extra .vimrc: ${extravim}"
-    path_add EXTRA_VIM $extravim
-  fi
 }
 
 export_function() {

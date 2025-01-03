@@ -1,19 +1,24 @@
-require('neoscroll').setup({
-    -- All these keys will be mapped. Pass an empty table ({}) for no mappings
-    -- mappings = {'<ScrollWheelDown>', '<ScrollWheelUp>', '<Pagedown>', '<Pageup>' },
-    hide_cursor = true,          -- Hide cursor while scrolling
-    stop_eof = true,             -- Stop at <EOF> when scrolling downwards
-    respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
-    cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-    easing = false,              -- easing_function will be used in all scrolling animations with some defaults
-    easing_function = function(x) return math.pow(x, 2) end -- default easing function
-
+neoscroll = require('neoscroll')
+neoscroll.setup({
+  hide_cursor = true,          -- Hide cursor while scrolling
+  stop_eof = true,             -- Stop at <EOF> when scrolling downwards
+  respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
+  cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
+  duration_multiplier = 1.0,   -- Global duration multiplier
+  easing = 'linear',           -- Default easing function
+  pre_hook = nil,              -- Function to run before the scrolling animation starts
+  post_hook = nil,             -- Function to run after the scrolling animation ends
+  performance_mode = false,    -- Disable "Performance Mode" on all buffers.
+  ignored_events = {           -- Events ignored while scrolling
+      'WinScrolled', 'CursorMoved'
+  },
 })
 
-local easing1 = [[function(x) return math.pow(x, 2) end]]
-
-local t = {}
-t['<Pageup>'] = {'scroll', {'-vim.wo.scroll', 'true', '8', '16', easing1}}
-t['<Pagedown>'] = {'scroll', { 'vim.wo.scroll', 'true', '8', '16', easing1}}
-
-require('neoscroll.config').set_mappings(t)
+local keymap = {
+  ["<Pageup>"] = function() neoscroll.scroll(-0.2, { move_cursor=true; duration = 100 }) end;
+  ["<Pagedown>"] = function() neoscroll.scroll(0.2, { move_cursor=true; duration = 100 }) end;
+}
+local modes = { 'n', 'v', 'x' }
+for key, func in pairs(keymap) do
+    vim.keymap.set(modes, key, func)
+end

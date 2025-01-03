@@ -1,5 +1,10 @@
 #!/bin/sh
 
 if [ "$2" != "message" ]; then
-    codegpt commit --file $1 --preview
+    # codegpt commit --file $1 --preview
+    codegpt commit --file $1 --preview --no_confirm
 fi
+
+# if [[ "$2" != "message" && "$2" != "commit" ]]; then
+    # codegpt commit --file $1 --preview --no_confirm
+# fi

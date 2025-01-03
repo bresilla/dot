@@ -187,13 +187,6 @@ require("lazy").setup({
                 require('plug.expressline')
             end
         },
-        { 'tjdevries/colorbuddy.nvim',
-            -- version = "1.0.0",
-            lazy = false,
-            config = function()
-                require('plug.colorbuddy')
-            end
-        },
         -- { 'rktjmp/lush.nvim',
         --     lazy = false,
         --     config = function()
@@ -225,6 +218,15 @@ require("lazy").setup({
                     -- hunspell_args = {'d' 'en_US'},
                 }
            end
+        },
+        {
+        	"oncomouse/lushwal.nvim",
+        	cmd = { "LushwalCompile" },
+        	dependencies = {
+        		{ "rktjmp/lush.nvim" },
+        		{ "rktjmp/shipwright.nvim" },
+        	},
+        	lazy = false,
         },
         { 'fedepujol/move.nvim',
             config = function()

@@ -164,7 +164,7 @@ alias \$=''
 [[ -x "$(command -v direnv)" ]] && eval "$(direnv hook zsh)"
 
 ##DEVBOX
-#[[ -x "$(command -v devbox)" ]] && eval "$(devbox global shellenv --init-hook)"
+# [[ -x "$(command -v devbox)" ]] && eval "$(devbox global shellenv --init-hook)"
 
 ###AUTIN
 [[ -x "$(command -v atuin)" ]] && eval "$(atuin init zsh)"
@@ -181,7 +181,7 @@ alias \$=''
 
 ###SSH&GPG
 export GPG_TTY=$(tty)
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+[[ -x "$(command -v gpgconf)" ]] && export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 #--------------------------------------------------------------------------------------------------------------------
 # NNN
