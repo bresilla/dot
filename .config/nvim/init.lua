@@ -1,8 +1,3 @@
--- pack https://github.com/wbthomason/packer.nvim
--- git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/opt/packer.nvim
--- TODO: do something
--- HACK: somethnig
-
 ---------------------------------------------- === OPTIONS === ----------------------------------------------
 vim.api.nvim_set_var( 'python_host_prog', '/usr/bin/python3' )
 vim.api.nvim_set_var( 'python3_host_prog', '/usr/bin/python3' )
@@ -85,50 +80,5 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 
 ---------------------------------------------- === PLUGINS === ----------------------------------------------
 require("config.lazy")
--- require('other_blame')
 
----------------------------------------------- === ATUOCMDS === ----------------------------------------------
--- === DEFAULT FILETYPE === "
-vim.cmd([[retab]])
-
-vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
--- === FOCUS === "
--- vim.cmd([[au WinLeave * set nocursorline nocursorcolumn norelativenumber]])
--- vim.cmd([[au WinEnter * set cursorline cursorcolumn relativenumber]])
-
--- === AUTOSAVE === "
-vim.cmd([[au WinLeave,BufLeave,TabLeave,FocusLost * silent wall]])
-
---- === HIGHLGHT ON YANK
-vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
-vim.highlight.on_yank { on_visual = true }
-
----------------------------------------------- === BINDINGS === ----------------------------------------------
-vim.g.mapleader = " "
-
--- === SWITCH TO LAST TABS === "
-vim.keymap.set('n', '-', "<cmd>:b#<CR>", { noremap = true, silent = true })
-
-
--- === REMOVE HABITS === "
-vim.keymap.set({'n', 'v'}, 'd',              [["_d]])
-vim.keymap.set({'n', 'v'}, 'c',              [["_c]])
-vim.keymap.set('n', '<S-Up>',         [[<Nop>]])
-vim.keymap.set('n', '<S-Down>',       [[<Nop>]])
-
--- === CHANGE CASE === "
-vim.keymap.set('n', '~',          [[g~aw]])
--------------------------------------------- === LAST MAP === ---------------------------------------------
-function closer()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local config = vim.api.nvim_win_get_config(win);
-            if config.relative ~= "" then
-                vim.api.nvim_win_close(win, false); 
-            end
-        end
-end
-
-vim.keymap.set('n', '<ESC>', function() 
-    vim.cmd(':noh')
-    return [[<ESC>]]
-end)
+require("utils.smartclose")

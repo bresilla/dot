@@ -8,6 +8,7 @@ After=network-online.target
 
 [Service]
 ExecStart=/usr/bin/spotifyd --no-daemon --config-path /home/bresilla/.config/spotifyd/spotifyd.conf --onevent /home/bresilla/.config/spotifyd/onevent.sh
+# ExecStart=/usr/bin/spotifyd --no-daemon --verbose
 Restart=always
 RestartSec=12
 

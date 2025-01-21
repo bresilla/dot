@@ -19,8 +19,13 @@
 #name = "typst"
 #source = { git = "https://github.com/frozolotl/tree-sitter-typst.git" }
 
+[language-server.gpt]
+command = "helix-gpt"
+args = ["--handler", "copilot"]
 
-[language-server.lspai]
-command = "lspai"
 [[language]]
-name = "cpp"
+name = "zig"
+language-servers = [
+    "zls",
+    "gpt"
+]

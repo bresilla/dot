@@ -8,6 +8,10 @@ cursorcolumn = true
 mouse = true
 bufferline = "always"
 auto-save = true
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line = "warning"
 
 [editor.cursor-shape]
 insert = "bar"
