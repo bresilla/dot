@@ -82,3 +82,4 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 require("config.lazy")
 
 require("utils.smartclose")
+require("utils.colors")

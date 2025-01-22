@@ -26,7 +26,7 @@ vim.opt.fillchars = { eob = " "}
 require("lazy").setup({
 	spec = {
 		{
-			"rktjmp/shipwright.nvim",
+			"rktjmp/lush.nvim",
 			import = "plugins"
 		},
 	},
@@ -38,6 +38,3 @@ require("lazy").setup({
 		notify = false, -- notify on update
 	},
 })
-
-
-vim.cmd('colorscheme lule')

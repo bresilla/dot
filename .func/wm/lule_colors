@@ -59,6 +59,10 @@ create_files(){
     # COLORS_W.CONF (used by HYPR)
     printf "\$foreground=rgb(${fore//#})\n\$background=rgb(${back//#})\n\n" > $HOME/.cache/wal/colors_hypr.conf
     awk '{print "$color" NR-1 "=rgb("substr($0, 2)")"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_hypr.conf
+    
+    # COLORS.VIM
+    printf "let foreground= \"$fore\"\nlet background= \"$back\"\n" > $HOME/.cache/wal/colors.vim
+    awk '{print "let color" NR-1 "= \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.vim
 
     # SEQUENCES (escape codes sent to all '/dev/pts/*')
     printf "]10;$fore\\]11;$back\\]12;$col1\\]13;$back\\]17;$col1\\]19;$back\\" > $HOME/.cache/wal/sequences
@@ -80,14 +84,14 @@ colors_to_tty &
 
 
 #apply all colors (or specific command) to nvim needs 'pip install neovim-remote' and 'lsof'
-# colors_to_nvim(){
-#     for i in `pidof nvim`; do
-#         for e in `lsof -p "$i" | grep LISTEN | awk -v N=$9 '{print $9}'`; do
-#             nvim --server $e --remote-send ':lua mycolors("$(cat $HOME/.cache/wal/theme)")<CR>' &
-#         done
-#     done
-# }
-# colors_to_nvim &
+colors_to_nvim(){
+    for i in `pidof nvim`; do
+        for e in `lsof -p "$i" | grep LISTEN | awk -v N=$9 '{print $9}'`; do
+            nvim --server $e --remote-send ':lua mycolors("$(cat $HOME/.cache/wal/theme)")<CR>' &
+        done
+    done
+}
+colors_to_nvim &
 
 source $HOME/.cache/wal/colors.sh
 
