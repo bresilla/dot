@@ -77,6 +77,7 @@ vim.o.signcolumn = "yes"                                                -- enabl
 vim.o.list = true                                                       -- display listchars
 vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"  -- set listchars
 
+vim.o.lazyredraw = true
 
 ---------------------------------------------- === PLUGINS === ----------------------------------------------
 require("config.lazy")

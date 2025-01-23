@@ -14,6 +14,7 @@ return {
             preset = 'default',
             ['<Up>'] = { 'select_prev', 'fallback' },
             ['<Down>'] = { 'select_next', 'fallback' },
+            ['<CR>'] = { 'accept', 'fallback' },
             ['<Tab>'] = {
                 function(cmp)
                   if cmp.snippet_active() then return cmp.accept()
@@ -38,7 +39,7 @@ return {
                 draw = {
                     treesitter = { "lsp" },
                     columns = {
-                      { "kind_icon" , gap = 2},
+                      { "kind_icon" , gap = 5},
                       { "label", "label_description", gap = 1 },
                     },
                 },

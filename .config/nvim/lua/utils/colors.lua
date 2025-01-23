@@ -36,7 +36,7 @@ function mycolors(theme)
     local highlights = lush(function()
         return {
             -- Normal { bg = dark and c.r0.lighten(10) or c.r0.darken(10), fg = c.r15 },
-            Normal { },
+            Normal { bg = c.r0 },
             NonText { fg = c.r240 },
 
             ------- BARBAR -------
@@ -94,6 +94,7 @@ function mycolors(theme)
 
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
+            NoiceCmdlinePopupBorder { fg = c.r1 },
 
             -------- COMPLETION MENU -------
             Pmenu { bg = c.r237, fg = c.r15 },
