@@ -52,6 +52,11 @@ return {
                     project = { enable = false },
                     mru = { enable = false },
                 },
+                hide = {
+                    statusline,       -- hide statusline default is true
+                    tabline   ,       -- hide the tabline
+                    winbar    ,       -- hide winbar
+                },
             })
         end,
         lazy = false,

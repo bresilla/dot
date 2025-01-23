@@ -19,18 +19,11 @@ function fileToList(file)
     return lines
 end
 
-function darken_or_lighten(hls_color, theme)
-    if theme == "dark" then
-        return hls_color.lighten(10)
-    else
-        return hls_color.darken(10)
-    end
-end
 
 function mycolors(theme)
     -- Read rainbow colors
     local rainbow = fileToList('/home/bresilla/.cache/lule/colors')
-    local dark = theme == "dark"
+    local dark = (theme == "dark")
 
     -- Read additional rainbow colors
     local c = {}
@@ -40,15 +33,54 @@ function mycolors(theme)
 
     local highlights = lush(function()
         return {
-            Normal { 
-                bg = dark and c.r0.lighten(10) or c.r0.darken(10),
-                fg = c.r15 
-            },
+            -- Normal { bg = dark and c.r0.lighten(10) or c.r0.darken(10), fg = c.r15 },
+            Normal { },
+
+            ------- BARBAR -------
+            BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
+            BufferDefaultCurrentSign { bg = c.r0, fg = c.r1.saturate(10) },
+            BufferDefaultCurrentSignRight { bg = c.r0, fg = c.r1.saturate(10) },
+            BufferDefaultInactive {  bg = dark and c.r0.lighten(10) or c.r0.darken(10) },
+            BufferDefaultInactiveSign { bg = BufferDefaultInactive.bg, fg = c.r0 },
+            BufferDefaultInactiveSignRight { bg = BufferDefaultInactive.bg, fg = c.r0 },
+            BufferDefaultVisible { bg = BufferDefaultInactive.bg },
+            BufferDefaultVisibleSign { bg = BufferDefaultInactive.bg , fg = c.r0 },
+            BufferDefaultVisibleSignRight { bg = BufferDefaultInactive.bg, fg = c.r0 },
+            BufferTabpageFill { bg = BufferDefaultInactive.bg },
+            BufferTabpagesSep { bg = BufferDefaultInactive.bg },
+
+
+            ------- DASHBOARD -------
+            DashboardHeader { bg = c.r0, fg = c.r1 },
+            DashboardCenter { bg = c.r0, fg = c.r1 },
+            DashboardFooter { bg = c.r0, fg = c.r1 },
+
+            ------- LUALINE -------
+            lualine_a_normal { bg = c.r1, fg = c.r1 },
+            lualine_b_normal { bg = c.r1, fg = c.r1 },
+            lualine_c_normal { bg = c.r1, fg = c.r1 },
+            lualine_x_normal { bg = c.r1, fg = c.r1 },
+            lualine_y_normal { bg = c.r1, fg = c.r1 },
+            lualine_z_normal { bg = c.r1, fg = c.r1 },
+
+
+            ------- NvimTree -------
+            NvimTreeNormal { bg = BufferDefaultInactive.bg },
+            NvimTreeCursorLine { bg = c.r0 },
+            WinSeparator { fg = c.r0 },
+
+
+            ------- STATUS-LINE -------
+            StatusLine { bg = BufferDefaultInactive.bg, fg = c.r1 },
+            StatusLineNC { bg = c.r0, fg = c.r1 },
+            ElNormal { bg = c.r1, fg = c.r0, gui = "bold" },
+            ElNormal2 { bg = c.r0, fg = c.r1, gui = "bold" },
+            ElInsert { bg = c.r0, fg = c.r1, gui = "bold" },
+            ElFileType { bg = c.r1, fg = c.r0, gui = "bold" },
+
         }
     end)
-
     lush.apply(highlights)
-
 end
 
 themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"

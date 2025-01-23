@@ -11,10 +11,14 @@ return {
         sidebar_filetypes = {
           NvimTree = true,
         },
+        -- tabpages = false,
+        -- highlight_alternate = false,
+        icons = {
+            separator = {left = '|', right = '|'},
+            separator_at_end = true,
+        },
       })
     end,
     version = '^1.0.0',
   },
 }
-
-
