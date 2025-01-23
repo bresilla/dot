@@ -19,7 +19,6 @@ function fileToList(file)
     return lines
 end
 
-
 function mycolors(theme)
     -- Read rainbow colors
     local rainbow = fileToList('/home/bresilla/.cache/lule/colors')
@@ -67,12 +66,10 @@ function mycolors(theme)
             lualine_y_normal { bg = c.r1, fg = c.r1 },
             lualine_z_normal { bg = c.r1, fg = c.r1 },
 
-
             ------- NvimTree -------
             NvimTreeNormal { bg = c.r237 },
             NvimTreeCursorLine { bg = c.r0 },
             WinSeparator { fg = c.r0 },
-
 
             ------- STATUS-LINE -------
             StatusLine { bg = c.r237, fg = c.r1 },
@@ -95,7 +92,6 @@ function mycolors(theme)
             CursorWord { bg = c.r1, fg = c.r0 },
             CursorJump { bg = c.r0, fg = c.r1 },
 
-
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
 
@@ -110,8 +106,6 @@ function mycolors(theme)
             BlinkCmpGhostText { NonText },
             BlinkCmpDoc { bg = c.r236 },
             BlinkCmpDocSeparator { bg = c.r236, fg = c.r0, gui = "bold" },
-
-
 
             ------- SYNTAX -------
             Constant       { fg = hsl("#de8ff6") }, -- (preferred) any constant
@@ -149,8 +143,6 @@ function mycolors(theme)
             -- Delimiter      { }, --  character that needs attention
             -- SpecialComment { }, -- special things inside a comment
             -- Debug          { }, --    debugging statements
-
-
         }
     end)
     lush.apply(highlights)
@@ -158,3 +150,16 @@ end
 
 themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
 mycolors(themecolor)
+
+vim.keymap.set('n', '<leader>d', function() mycolors() end)
+
+filepathtowatch = '/home/bresilla/.cache/lule/colors'
+
+local watcher = require("utils.watcher")
+
+-- Start watching a file.
+local handle = watcher.watch_file(filepathtowatch, function(fname, status)
+    print("File changed:", fname)
+    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+    mycolors(themecolor)
+end)
