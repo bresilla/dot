@@ -38,6 +38,7 @@ function mycolors(theme)
         return {
             -- Normal { bg = dark and c.r0.lighten(10) or c.r0.darken(10), fg = c.r15 },
             Normal { },
+            NonText { fg = c.r240 },
 
             ------- BARBAR -------
             BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
@@ -99,11 +100,16 @@ function mycolors(theme)
             TelescopeBorder { fg = c.r1 },
 
             -------- COMPLETION MENU -------
-            Pmenu { bg = c.r0, fg = c.r15 },
-            PmenuSel { bg = c.r237, fg = c.r1, gui = "bold" },
+            Pmenu { bg = c.r237, fg = c.r15 },
+            PmenuSel { bg = c.r1, fg = c.r0, gui = "bold" },
             PmenuSbar { bg = c.r237 },
             PmenuThumb { bg = c.r237 },
             NormalFloat { bg = c.r0, fg = c.r15, gui = "bold" },
+            BlinkCmpMenu { Pmenu },
+            BlinkCmpMenuSelection { PmenuSel },
+            BlinkCmpGhostText { NonText },
+            BlinkCmpDoc { bg = c.r236 },
+            BlinkCmpDocSeparator { bg = c.r236, fg = c.r0, gui = "bold" },
 
 
 

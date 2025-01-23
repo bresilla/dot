@@ -32,6 +32,7 @@ local c_footer = {
     "LESS IS SIGNIFICANTLY MORE"
 }
 
+
 local c_center = {    
   { action = 'lua require("persistence").load()', desc = " Restore Session", icon = "", key = "s", key_format = "%s" },
   { action = "qa", desc = " Quit", icon = "", key = "q", key_format = "%s" },
