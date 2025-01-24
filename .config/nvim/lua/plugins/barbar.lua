@@ -7,7 +7,8 @@ return {
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
-      require("barbar").setup({
+      local barbar = require("barbar")
+      barbar.setup({
         sidebar_filetypes = {
           NvimTree = true,
         },

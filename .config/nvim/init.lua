@@ -40,8 +40,8 @@ vim.o.re = 0                                                            -- set r
 vim.o.inccommand = "split"                                              -- incrementally show result of command
 
 vim.o.laststatus = 3                                                    -- always enable statusline
--- vim.o.cursorline = true                                                 -- enable cursorline
--- vim.o.cursorcolumn = true
+vim.o.cursorline = true                                                 -- enable cursorline
+vim.o.cursorcolumn = true
 vim.o.splitbelow = true                                                 -- split below instead of above
 vim.o.splitright = true                                                 -- split right instead of left
 vim.o.startofline = false                                               -- don't go to the start of the line when moving to another file
@@ -53,7 +53,7 @@ vim.o.softtabstop = 4
 vim.o.expandtab = true                                                  -- use spaces instead of tabs
 vim.o.autoindent = true                                                 -- enable autoindent
 vim.o.smarttab = true                                                   -- make tab behaviour smarter
--- vim.o.smartindent = true                                                -- smarter indentation
+vim.o.smartindent = true                                                -- smarter indentation
 
 vim.o.scrolloff = 2                                                     -- make scrolling better
 vim.o.sidescroll = 10                                                   -- make scrolling better
@@ -63,7 +63,7 @@ vim.o.completeopt = 'menu,menuone,noinsert,noselect'                 -- better c
 vim.o.wildmode ='longest,list,full'
 vim.o.wildoptions = "pum"
 vim.o.pumblend = 10
--- vim.o.pumheight = 10                                                    -- limit completion items
+vim.o.pumheight = 10                                                    -- limit completion items
 
 vim.o.synmaxcol = 300                                                   -- set limit for syntax highlighting in a single line
 vim.o.updatetime = 100                                                  -- set faster update time
@@ -74,13 +74,68 @@ vim.o.mouse = "a"                                                       -- enabl
 vim.o.foldmethod = "marker"                                             -- foldmethod using marker
 vim.o.signcolumn = "yes"                                                -- enable sign column all the time, 4 column
 
+vim.g.loaded_netrw = 1                                                  -- disable netrw
+vim.g.loaded_netrwPlugin = 1                                            -- disable netrw plugin
+
 vim.o.list = true                                                       -- display listchars
 vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"  -- set listchars
 
-vim.o.lazyredraw = true
-
 ---------------------------------------------- === PLUGINS === ----------------------------------------------
 require("config.lazy")
-
-require("utils.smartclose")
 require("utils.colors")
+
+
+---------------------------------------------- === ATUOCMDS === ----------------------------------------------
+-- === DEFAULT FILETYPE === "
+vim.cmd([[retab]])
+
+vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
+-- === FOCUS === "
+-- vim.cmd([[au WinLeave * set nocursorline nocursorcolumn norelativenumber]])
+-- vim.cmd([[au WinEnter * set cursorline cursorcolumn relativenumber]])
+
+-- === AUTOSAVE === "
+vim.cmd([[au WinLeave,BufLeave,TabLeave,FocusLost * silent wall]])
+
+--- === HIGHLGHT ON YANK
+vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
+vim.highlight.on_yank { on_visual = true }
+
+---------------------------------------------- === BINDINGS === ----------------------------------------------
+vim.g.mapleader = " "
+
+-- === SWITCH TO LAST TABS === "
+vim.keymap.set('n', '-', "<cmd>:b#<CR>", { noremap = true, silent = true })
+
+
+-- === REMOVE HABITS === "
+vim.keymap.set({'n', 'v'}, 'd',              [["_d]])
+vim.keymap.set({'n', 'v'}, 'c',              [["_c]])
+vim.keymap.set('n', '<S-Up>',         [[<Nop>]])
+vim.keymap.set('n', '<S-Down>',       [[<Nop>]])
+
+-- === CHANGE CASE === "
+vim.keymap.set('n', '~',          [[g~aw]])
+
+-------------------------------------------- === SMART_CLISE === ---------------------------------------------
+vim.api.nvim_create_user_command('Q', function()
+    local listed_buffers = vim.fn.getbufinfo({ buflisted = 1 })
+    if #listed_buffers > 1 then
+        vim.cmd('bd')
+    else
+        vim.cmd('qa')
+    end
+end, {})
+
+vim.keymap.set({'n', 'i'}, '<C-w>', '<cmd>:Q<CR>', { noremap = true, silent = true })
+
+vim.cmd([[
+  cabbrev q  Q
+]])
+
+-------------------------------------------- === LAST MAP === ---------------------------------------------
+
+vim.keymap.set('n', '<ESC>', function() 
+    vim.cmd(':noh')
+    return [[<ESC>]]
+end)

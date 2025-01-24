@@ -27,7 +27,7 @@ require("lazy").setup({
 	spec = {
 		{
 			"rktjmp/lush.nvim",
-			import = "plugins"
+			import = "plugins",
 		},
 	},
 	defaults = {

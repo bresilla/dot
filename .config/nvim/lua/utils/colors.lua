@@ -30,14 +30,42 @@ function mycolors(theme)
         c["r" .. (i - 1)] = hsl(color)
     end
 
-    ac_d = c.r237
-    ac_l = c.r251
+    local dv = 80
+    local lv = 80
+
+    c["error"] = c.r172
+    c["error_light"] = c.r176
+    c["error_dark"] = c.r161
+
+    c["ok"] = c.r196
+    c["ok_light"] = c.r200
+    c["ok_dark"] = c.r185
+
+    c["warn"] = c.r220
+    c["warn_light"] = c.r224
+    c["warn_dark"] = c.r209
+
+    c["info"] = c.r244
+    c["info_light"] = c.r248
+    c["info_dark"] = c.r233
+
+    c["hint"] = c.r117
+    c["hint_light"] = c.r119
+    c["hint_dark"] = c.r113
+
 
     local highlights = lush(function()
         return {
-            -- Normal { bg = dark and c.r0.lighten(10) or c.r0.darken(10), fg = c.r15 },
             Normal { bg = c.r0 },
             NonText { fg = c.r240 },
+            Cursor { bg = c.r1, fg = c.r15 , gui = "bold" },
+            CursorLine { bg = c.r236 },
+            CursorColumn { bg = c.r236 },
+            Visual { bg = c.r237 },
+            Conceal { fg = c.r240 },
+            LineNr { fg = c.r237 },
+            CursorLineNR { fg = c.r246 },
+            NormalFloat { bg = c.r237 },
 
             ------- BARBAR -------
             BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
@@ -52,19 +80,10 @@ function mycolors(theme)
             BufferTabpageFill { bg = c.r237 },
             BufferTabpagesSep { bg = c.r237 },
 
-
             ------- DASHBOARD -------
             DashboardHeader { bg = c.r0, fg = c.r1 },
             DashboardCenter { bg = c.r0, fg = c.r1 },
             DashboardFooter { bg = c.r0, fg = c.r1 },
-
-            ------- LUALINE -------
-            lualine_a_normal { bg = c.r1, fg = c.r1 },
-            lualine_b_normal { bg = c.r1, fg = c.r1 },
-            lualine_c_normal { bg = c.r1, fg = c.r1 },
-            lualine_x_normal { bg = c.r1, fg = c.r1 },
-            lualine_y_normal { bg = c.r1, fg = c.r1 },
-            lualine_z_normal { bg = c.r1, fg = c.r1 },
 
             ------- NvimTree -------
             NvimTreeNormal { bg = c.r237 },
@@ -85,65 +104,117 @@ function mycolors(theme)
             IndentEven { bg = c.r237, fg = c.r236 },
 
             ------- SEARCH -------
-            Search { bg = c.r1, fg = c.r0 },
-            HlSearchCur { bg = c.r1, fg = c.r0 },
-            HlSearchLensCur { bg = c.r0, fg = c.r1 },
-            HlSearchLens { bg = c.r0, fg = c.r1 },
+            Search { bg = c.r238 },
+            CurSearch { bg = c.r1, fg = c.r0 },
+            IncSearch { bg = c.r0, fg = c.r1 },
             CursorWord { bg = c.r1, fg = c.r0 },
             CursorJump { bg = c.r0, fg = c.r1 },
+            MatchParen { bg = c.r1, fg = c.r0 },
 
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
             NoiceCmdlinePopupBorder { fg = c.r1 },
+
+            ------- DIAGNOSTICS -------
+            DiagnosticError { fg = c.error_light,   bg = c.error_dark },
+            DiagnosticWarn  { fg = c.warn_light,    bg = c.warn_dark   },
+            DiagnosticInfo  { fg = c.info_light,    bg = c.info_dark  },
+            DiagnosticHint  { fg = c.hint_light,    bg = c.hint_dark  },
+            DiagnosticOk    { fg = c.ok_light,      bg = c.ok_dark    },
+            DiagnosticFloatingError { DiagnosticError },
+            DiagnosticFloatingWarn  { DiagnosticWarn  },
+            DiagnosticFloatingInfo  { DiagnosticInfo  },
+            DiagnosticFloatingHint  { DiagnosticHint  },
+            DiagnosticFloatingOk    { DiagnosticOk    },
+            DiagnosticVirtualTextError  { DiagnosticError },
+            DiagnosticVirtualTextWarn   { DiagnosticWarn  },
+            DiagnosticVirtualTextInfo   { DiagnosticInfo  },
+            DiagnosticVirtualTextHint   { DiagnosticHint  },
+            DiagnosticVirtualTextOk     { DiagnosticOk    },
+            DiagnosticSignError { DiagnosticError },
+            DiagnosticSignWarn  { DiagnosticWarn  },
+            DiagnosticSignInfo  { DiagnosticInfo  },
+            DiagnosticSignHint  { DiagnosticHint  },
+            DiagnosticSignOk    { DiagnosticOk    },
+            DiagnosticUnnecessary { fg = c.r3 },
 
             -------- COMPLETION MENU -------
             Pmenu { bg = c.r237, fg = c.r15 },
             PmenuSel { bg = c.r1, fg = c.r0, gui = "bold" },
             PmenuSbar { bg = c.r237 },
             PmenuThumb { bg = c.r237 },
-            NormalFloat { bg = c.r0, fg = c.r15, gui = "bold" },
             BlinkCmpMenu { Pmenu },
             BlinkCmpMenuSelection { PmenuSel },
-            BlinkCmpGhostText { NonText },
+            BlinkCmpGhostText { fg = c.r240 },
             BlinkCmpDoc { bg = c.r236 },
             BlinkCmpDocSeparator { bg = c.r236, fg = c.r0, gui = "bold" },
+            BlinkCmpLabelMatch { bg = c.r240, fg = c.r15, gui = "italic" },
+
+            BlinkCmpKindSnippet         { gui = "bold", fg = c.r0, bg = c.r22  },
+            BlinkCmpKindKeyword         { gui = "bold", fg = c.r0, bg = c.r34  },
+            BlinkCmpKindText            { gui = "bold", fg = c.r0, bg = c.r46  },
+            BlinkCmpKindMethod          { gui = "bold", fg = c.r0, bg = c.r58  },
+            BlinkCmpKindConstructor     { gui = "bold", fg = c.r0, bg = c.r70  },
+            BlinkCmpKindFunction        { gui = "bold", fg = c.r0, bg = c.r82  },
+            BlinkCmpKindFolder          { gui = "bold", fg = c.r0, bg = c.r94  },
+            BlinkCmpKindModule          { gui = "bold", fg = c.r0, bg = c.r106 },
+            BlinkCmpKindConstant        { gui = "bold", fg = c.r0, bg = c.r118 },
+            BlinkCmpKindField           { gui = "bold", fg = c.r0, bg = c.r130 },
+            BlinkCmpKindProperty        { gui = "bold", fg = c.r0, bg = c.r142 },
+            BlinkCmpKindEnum            { gui = "bold", fg = c.r0, bg = c.r154 },
+            BlinkCmpKindUnit            { gui = "bold", fg = c.r0, bg = c.r166 },
+            BlinkCmpKindClass           { gui = "bold", fg = c.r0, bg = c.r22  },
+            BlinkCmpKindVariable        { gui = "bold", fg = c.r0, bg = c.r34  },
+            BlinkCmpKindFile            { gui = "bold", fg = c.r0, bg = c.r46  },
+            BlinkCmpKindInterface       { gui = "bold", fg = c.r0, bg = c.r58  },
+            BlinkCmpKindColor           { gui = "bold", fg = c.r0, bg = c.r64  },
+            BlinkCmpKindReference       { gui = "bold", fg = c.r0, bg = c.r82  },
+            BlinkCmpKindEnumMember      { gui = "bold", fg = c.r0, bg = c.r94  },
+            BlinkCmpKindStruct          { gui = "bold", fg = c.r0, bg = c.r106 },
+            BlinkCmpKindValue           { gui = "bold", fg = c.r0, bg = c.r118 },
+            BlinkCmpKindEvent           { gui = "bold", fg = c.r0, bg = c.r124 },
+            BlinkCmpKindOperator        { gui = "bold", fg = c.r0, bg = c.r142 },
+            BlinkCmpKindTypeParameter   { gui = "bold", fg = c.r0, bg = c.r154 },
+            BlinkCmpKindCopilot         { gui = "bold", fg = c.r0, bg = c.r166 },
+
+            
 
             ------- SYNTAX -------
+            String         { fg = c.r1 }, -- a string constant: "this is a string"
+            Character      { fg = c.r1 }, -- a character constant: 'c', '\n'
+
             Constant       { fg = hsl("#de8ff6") }, -- (preferred) any constant
-            String         { fg = c.r1 }, --   a string constant: "this is a string"
-            Character      { String }, --  a character constant: 'c', '\n'
-            Number         { fg = hsl("#8eafff") }, --   a number constant: 234, 0xff
-            Boolean        { Constant }, --  a boolean constant: TRUE, false
-            Float          { Number }, --    a floating point constant: 2.3e10
+            Number         { fg = hsl("#8eafff") }, -- a number constant: 234, 0xff
+            Boolean        { fg = hsl("#8eafff") }, -- a boolean constant: TRUE, false
+            Float          { fg = hsl("#8eafff") }, -- a floating point constant: 2.3e10
 
             Identifier     { fg = hsl("#eefeee") }, -- (preferred) any variable name
             Function       { fg = hsl("#a7aeff") }, -- function name (also: methods for classes)
 
             Statement      { fg = hsl("#cdacfc") }, -- (preferred) any statement
-            -- Conditional    { }, --  if, then, else, endif, switch, etc.
-            -- Repeat         { }, --   for, do, while, etc.
-            -- Label          { }, --    case, default, etc.
-            -- Operator       { }, -- "sizeof", "+", "*", etc.
-            -- Keyword        { }, --  any other keyword
-            -- Exception      { }, --  try, catch, throw
+            Conditional    { fg = hsl("#ffcbfb") }, -- if, then, else, endif, switch, etc.
+            Repeat         { fg = hsl("#ffcbfb") }, -- for, do, while, etc.
+            Label          { fg = hsl("#ffcbfb") }, -- case, default, etc.
+            Operator       { fg = hsl("#ffcbfb") }, -- "sizeof", "+", "*", etc.
+            Keyword        { fg = hsl("#ffcbfb") }, -- any other keyword
+            Exception      { fg = hsl("#ffcbfb") }, -- try, catch, throw
 
             PreProc        { fg = hsl("#ffcbfb") }, -- (preferred) generic Preprocessor
-            -- Include        { }, --  preprocessor #include
-            -- Define         { }, --   preprocessor #define
-            -- Macro          { }, --    same as Define
-            -- PreCondit      { }, --  preprocessor #if, #else, #endif, etc.
+            Include        { fg = hsl("#ffcbfb") }, -- preprocessor #include
+            Define         { fg = hsl("#ffcbfb") }, -- preprocessor #define
+            Macro          { fg = hsl("#ffcbfb") }, -- same as Define
+            PreCondit      { fg = hsl("#ffcbfb") }, -- preprocessor #if, #else, #endif, etc.
 
             Type           { fg = hsl("#f4af6f") }, -- (preferred) int, long, char, etc.
-            -- StorageClass   { }, -- static, register, volatile, etc.
-            -- Structure      { }, --  struct, union, enum, etc.
-            -- Typedef        { }, --  A typedef
+            StorageClass   { fg = hsl("#f4af6f") }, -- static, register, volatile, etc.
+            Structure      { fg = hsl("#f4af6f") }, -- struct, union, enum, etc.
+            Typedef        { fg = hsl("#f4af6f") }, -- A typedef
 
             Special        { fg = hsl("#eeef9f") }, -- (preferred) any special symbol
-            -- SpecialChar    { }, --  special character in a constant
-            -- Tag            { }, --    you can use CTRL-] on this
-            -- Delimiter      { }, --  character that needs attention
-            -- SpecialComment { }, -- special things inside a comment
-            -- Debug          { }, --    debugging statements
+            SpecialComment { fg = hsl("#eeef9f") }, -- special things inside a comment
+            Tag            { fg = hsl("#eeef9f") }, -- you can use CTRL-] on this
+            Delimiter      { fg = hsl("#eeef9f") }, -- character that needs attention
+            Debug          { fg = hsl("#eeef9f") }, -- debugging statements
         }
     end)
     lush.apply(highlights)

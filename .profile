@@ -30,8 +30,8 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 #---------------------------         LOC & TERM          --------------------------
 export COLORTERM=truecolor
 export BROWSER=org.mozilla.firefox
-# export EDITOR=nvim
-export EDITOR=hx
+export EDITOR=nvim
+# export EDITOR=hx
 # export TERMINAL=kitty
 # export CONSOLE=kitty
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)

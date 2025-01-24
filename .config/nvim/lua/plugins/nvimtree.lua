@@ -1,15 +1,15 @@
 vim.keymap.set('n',            '<tab>',             [[:NvimTreeToggle<CR>]])
 
 return {
-    -- nvim tree
     {
         "nvim-tree/nvim-tree.lua",
         version = "1.10.0",
         config = function()
             local nvimtree = require('nvim-tree')
+            local api = require("nvim-tree.api")
+
             nvimtree.setup({
                 on_attach = function(bufnr)
-                    local api = require("nvim-tree.api")
                     local function opts(desc)
                         return {
                             desc = "nvim-tree: " .. desc,
@@ -32,7 +32,7 @@ return {
                 },
                 renderer = {
                     root_folder_label = false,
-                    indent_width = 1,
+                    indent_width = 3,
                     icons = {
                         show = {
                             file = true,
@@ -44,13 +44,55 @@ return {
                             diagnostics = false,
                             bookmarks = false,
                         },
+                        padding = " ", -- padding between icon and filename
+                        glyphs = {
+                            default = "",
+                            symlink = "",
+                            bookmark = "󰆤",
+                            modified = "●",
+                            hidden = "󰜌",
+                            folder = {
+                              arrow_closed = "",
+                              arrow_open = "",
+                              default = "",
+                              open = "",
+                              empty = "",
+                              empty_open = "",
+                              symlink = "",
+                              symlink_open = "",
+                            },
+                            git = {
+                              unstaged = "✗",
+                              staged = "✓",
+                              unmerged = "",
+                              renamed = "➜",
+                              untracked = "★",
+                              deleted = "",
+                              ignored = "◌",
+                            },
+                        },
                     },
+                    indent_markers = {
+                        enable = true,
+                        inline_arrows = true,
+                        icons = {
+                          corner = "└",
+                          edge   = "│",
+                          item   = "├",
+                          bottom = "─",
+                          none   = " ",
+                        },
+                      },
                 },
                 sort = {
                     sorter = "case_sensitive",
                 },
                 view = {
-                    width = 30,
+                    width = {
+                        min = 40,
+                        max = 40,
+                        padding = 1, -- padding on the right
+                    },
                     signcolumn = "no",
                 },
             })

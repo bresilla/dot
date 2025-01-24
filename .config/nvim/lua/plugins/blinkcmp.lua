@@ -1,0 +1,144 @@
+local function lspkind_config()
+    local lspKindConfig = require("lspkind")
+    lspKindConfig.init({
+        symbol_map = {
+            Copilot =       "[]",
+            Text =          "[]",
+            Boolean =       "[]",
+            Character =     "[]",
+            Class =         "[]",
+            Color =         "[]",
+            Constant =      "[]",
+            Constructor =   "[]",
+            Enum =          "[]",
+            EnumMember =    "[]",
+            Event =         "[ﳅ]",
+            Field =         "[]",
+            File =          "[]",
+            Folder =        "[ﱮ]",
+            Function =      "[ﬦ]",
+            Interface =     "[]",
+            Keyword =       "[]",
+            Method =        "[]",
+            Module =        "[]",
+            Number =        "[]",
+            Operator =      "[Ψ]",
+            Parameter =     "[]",
+            Property =      "[ﭬ]",
+            Reference =     "[]",
+            Snippet =       "[]",
+            String =        "[]",
+            Struct =        "[ﯟ]",
+            TypeParameter = "[]",
+            Unit =          "[]",
+            Value =         "[]",
+            Variable =      "[ﳛ]"
+        }
+    })
+end
+
+return {{
+    'saghen/blink.cmp',
+    -- optional: provides snippets for the snippet source
+    dependencies = {
+        'echasnovski/mini.nvim', 
+        "giuxtaposition/blink-cmp-copilot", 
+        { "onsails/lspkind.nvim",
+            config = lspkind_config
+        },
+    },
+    version = '*',
+    config = function()
+        local blink = require('blink.cmp')
+        blink.setup({
+            keymap = {
+                preset = 'default',
+                ['<Up>'] = {'select_prev', 'fallback'},
+                ['<Down>'] = {'select_next', 'fallback'},
+                ['<CR>'] = {'accept', 'fallback'},
+                ['<Tab>'] = {function(cmp)
+                    if cmp.snippet_active() then
+                        return cmp.accept()
+                    else
+                        return cmp.select_and_accept()
+                    end
+                end, 'snippet_forward', 'fallback'}
+            },
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = 'mono'
+            },
+            sources = {
+                default = {'lsp', 'path', 'buffer', "copilot"},
+                providers = {
+                    copilot = {
+                        name = "copilot",
+                        module = "blink-cmp-copilot",
+                        score_offset = 100,
+                        async = true
+                    }
+                }
+            },
+            completion = {
+                menu = {
+                    auto_show = function(ctx)
+                        return ctx.mode ~= 'cmdline' 
+                    end,
+                    draw = {
+                        treesitter = {
+                            "lsp"
+                        },
+                        padding = 0,
+                        columns = {
+                            { "kind_icon" },
+                            { "label", "label_description", gap = 1 }
+                        },
+                        components = {
+                            kind_icon = {
+                                text = function(ctx)
+                                    return require("lspkind").symbolic(ctx.kind, {
+                                        mode = "symbol",
+                                        preset = "codicons"
+                                    })
+                                end
+                            },
+                            kind = {
+                                highlight = function(ctx) 
+                                    return { 
+                                        { -1, 1 + #ctx.icon_gap + 1, group = 'BlinkCmpKind' .. ctx.kind } 
+                                    } 
+                                end,
+                            },
+                            label = {
+                                width = { fill = false, max = 60 },
+                                ellipsis = true,
+                            },
+                        }
+                    },
+                    scrollbar = false,
+                },
+                ghost_text = {
+                    enabled = true
+                },
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 200,
+                    window = {
+                        scrollbar = false,
+                    },
+                },
+                list = {
+                    selection = {
+                        preselect = function(ctx)
+                          return ctx.mode ~= 'cmdline' and not require('blink.cmp').snippet_active({ direction = 1 })
+                        end,
+                        auto_insert = function(ctx) return ctx.mode ~= 'cmdline' end,
+                    },
+                }
+            },
+            signature = {
+                enabled = true,
+            },
+        })
+    end
+}}
