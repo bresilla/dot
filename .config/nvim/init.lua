@@ -109,13 +109,13 @@ vim.keymap.set('n', '-', "<cmd>:b#<CR>", { noremap = true, silent = true })
 
 
 -- === REMOVE HABITS === "
-vim.keymap.set({'n', 'v'}, 'd',              [["_d]])
-vim.keymap.set({'n', 'v'}, 'c',              [["_c]])
-vim.keymap.set('n', '<S-Up>',         [[<Nop>]])
-vim.keymap.set('n', '<S-Down>',       [[<Nop>]])
+vim.keymap.set({'n', 'v'}, 'd',             [["_d]])
+vim.keymap.set({'n', 'v'}, 'c',             [["_c]])
+vim.keymap.set('n', '<S-Up>',               [[<Nop>]])
+vim.keymap.set('n', '<S-Down>',             [[<Nop>]])
 
 -- === CHANGE CASE === "
-vim.keymap.set('n', '~',          [[g~aw]])
+vim.keymap.set('n', '~',                   [[g~aw]])
 
 -------------------------------------------- === SMART_CLISE === ---------------------------------------------
 vim.api.nvim_create_user_command('Q', function()
@@ -135,7 +135,8 @@ vim.cmd([[
 
 -------------------------------------------- === LAST MAP === ---------------------------------------------
 
-vim.keymap.set('n', '<ESC>', function() 
-    vim.cmd(':noh')
+vim.keymap.set('n', '<ESC>', function()
+    vim.cmd(':noh') -- Clear search highlighting
+    vim.fn.setreg('/', '') -- Clear the search register
     return [[<ESC>]]
-end)
+end, { noremap = true, silent = true })

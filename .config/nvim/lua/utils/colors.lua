@@ -110,6 +110,7 @@ function mycolors(theme)
             CursorWord { bg = c.r1, fg = c.r0 },
             CursorJump { bg = c.r0, fg = c.r1 },
             MatchParen { bg = c.r1, fg = c.r0 },
+            IlluminatedWordText { bg = c.r238 },
 
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
