@@ -83,6 +83,9 @@ colors_to_tty(){
 colors_to_tty &
 
 
+rsync -a /home/bresilla/.cache/lule/colors borg.zerotier:~/.cache/lule/colors &> /dev/null & disown
+
+
 #apply all colors (or specific command) to nvim needs 'pip install neovim-remote' and 'lsof'
 # colors_to_nvim(){
 #     for i in `pidof nvim`; do
