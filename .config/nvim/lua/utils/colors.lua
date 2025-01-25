@@ -239,8 +239,8 @@ local handle = watcher.watch_file(filepathtowatch, function(fname, status)
     mycolors(themecolor)
 end)
 
-local timerr = require("utils.timerr")
-local thandle = timerr.run_every_2s(function()
-    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
-    mycolors(themecolor)
-end)
+--local timerr = require("utils.timerr")
+--local thandle = timerr.run_every_2s(function()
+--    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+--    mycolors(themecolor)
+--end)
