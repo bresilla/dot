@@ -64,7 +64,7 @@ function mycolors(theme)
             Visual { bg = c.r237 },
             Conceal { fg = c.r240 },
             LineNr { fg = c.r237 },
-            CursorLineNR { fg = c.r246 },
+            CursorLineNR { fg = c.r246, gui = "bold" },
             NormalFloat { bg = c.r237 },
 
             ------- BARBAR -------
@@ -104,17 +104,23 @@ function mycolors(theme)
             IndentEven { bg = c.r237, fg = c.r236 },
 
             ------- SEARCH -------
+            IlluminatedWordText { bg = c.r237, gui = "bold" },
             Search { bg = c.r238 },
             CurSearch { bg = c.r1, fg = c.r0 },
             IncSearch { bg = c.r0, fg = c.r1 },
             CursorWord { bg = c.r1, fg = c.r0 },
             CursorJump { bg = c.r0, fg = c.r1 },
             MatchParen { bg = c.r1, fg = c.r0 },
-            IlluminatedWordText { bg = c.r238 },
 
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
             NoiceCmdlinePopupBorder { fg = c.r1 },
+
+
+            ------- TERMINAL --------
+            ToggleTermNormal { bg = c.r236 },
+            ToggleTermNormalFloat { bg = c.r236 },
+            ToggleTermFloatBorder { bg = c.r236, fg = c.r236 },
 
             ------- DIAGNOSTICS -------
             DiagnosticError { fg = c.error_light,   bg = c.error_dark },
