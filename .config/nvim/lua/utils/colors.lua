@@ -184,7 +184,6 @@ function mycolors(theme)
             BlinkCmpKindTypeParameter   { gui = "bold", fg = c.r0, bg = c.r154 },
             BlinkCmpKindCopilot         { gui = "bold", fg = c.r0, bg = c.r166 },
 
-            
 
             ------- SYNTAX -------
             String         { fg = c.r1 }, -- a string constant: "this is a string"
@@ -235,10 +234,15 @@ vim.keymap.set('n', '<leader>d', function() mycolors() end)
 filepathtowatch = '/home/bresilla/.cache/lule/colors'
 
 local watcher = require("utils.watcher")
-
--- Start watching a file.
 local handle = watcher.watch_file(filepathtowatch, function(fname, status)
     print("File changed:", fname)
     themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
     mycolors(themecolor)
+end)
+
+local timerr = require("utils.timerr")
+local thandle = timerr.run_every_2s(function()
+    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+    mycolors(themecolor)
+    print("This will run every 2 seconds.")
 end)

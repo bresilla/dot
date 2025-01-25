@@ -63,8 +63,7 @@ return {
 
         vim.keymap.set("n", "<C-b>", "<cmd>lua require('telescope.builtin').git_files()<cr>", {silent = true})
         vim.keymap.set("n", "<C-g>", [[<cmd>lua require('telescope.builtin').live_grep()<cr>]], {silent = true})
-        vim.keymap.set("n", "<C-f>", [[<cmd>lua require('telescope.builtin').find_files()<cr>]], {silent = true})
-        vim.keymap.set("n", "<C-p>", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], {silent = true})
+        vim.keymap.set("n", "<C-p>", [[<cmd>lua require('telescope.builtin').find_files()<cr>]], {silent = true})
         vim.keymap.set("n", "<leader><leader>", [[<cmd>lua require('telescope.builtin').buffers()<cr>]], {silent = true})
 
         vim.keymap.set("n", "<leader>lf", [[<cmd>lua require('telescope.builtin').lsp_code_actions(center_list)<cr>]], {silent = true})
