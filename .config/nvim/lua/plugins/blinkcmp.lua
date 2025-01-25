@@ -41,8 +41,10 @@ return {{
     'saghen/blink.cmp',
     -- optional: provides snippets for the snippet source
     dependencies = {
-        'echasnovski/mini.nvim', 
-        "giuxtaposition/blink-cmp-copilot", 
+        { "saghen/blink.compat",
+            optional = false,
+            version = "*",
+        },
         { "onsails/lspkind.nvim",
             config = lspkind_config
         },
@@ -56,30 +58,35 @@ return {{
                 ['<Up>'] = {'select_prev', 'fallback'},
                 ['<Down>'] = {'select_next', 'fallback'},
                 ['<CR>'] = {'accept', 'fallback'},
-                ['<Tab>'] = {function(cmp)
-                    if cmp.snippet_active() then
-                        return cmp.accept()
-                    else
-                        return cmp.select_and_accept()
-                    end
-                end, 'snippet_forward', 'fallback'}
+                -- ['<Tab>'] = {function(cmp)
+                --     if cmp.snippet_active() then
+                --         return cmp.accept()
+                --     else
+                --         return cmp.select_and_accept()
+                --     end
+                -- end, 'snippet_forward', 'fallback'}
             },
             appearance = {
                 use_nvim_cmp_as_default = true,
                 nerd_font_variant = 'mono'
             },
             sources = {
-                default = {'lsp', 'path', 'buffer', "copilot"},
-                providers = {
-                    copilot = {
-                        name = "copilot",
-                        module = "blink-cmp-copilot",
-                        score_offset = 100,
-                        async = true
-                    }
-                }
+                -- providers = {
+                --     copilot = {
+                --         name = "copilot",
+                --         module = "blink-cmp-copilot",
+                --         score_offset = 100,
+                --         async = true
+                --     }
+                -- },
+                default = {'lsp', 'path', 'buffer'},
             },
             completion = {
+                trigger = {
+                    -- show_on_keyword = false,
+                    show_on_trigger_character = true,
+                    show_on_insert_on_trigger_character = true,
+                },
                 menu = {
                     auto_show = function(ctx)
                         return ctx.mode ~= 'cmdline' 
@@ -118,7 +125,7 @@ return {{
                     scrollbar = false,
                 },
                 ghost_text = {
-                    enabled = true
+                    enabled = false,
                 },
                 documentation = {
                     auto_show = true,
@@ -129,10 +136,8 @@ return {{
                 },
                 list = {
                     selection = {
-                        preselect = function(ctx)
-                          return ctx.mode ~= 'cmdline' and not require('blink.cmp').snippet_active({ direction = 1 })
-                        end,
-                        auto_insert = function(ctx) return ctx.mode ~= 'cmdline' end,
+                        preselect = false,
+                        auto_insert = true,
                     },
                 }
             },

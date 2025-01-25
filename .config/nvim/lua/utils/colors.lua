@@ -66,6 +66,7 @@ function mycolors(theme)
             LineNr { fg = c.r237 },
             CursorLineNR { fg = c.r246, gui = "bold" },
             NormalFloat { bg = c.r237 },
+            Whitespace { fg = c.r240 },
 
             ------- BARBAR -------
             BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
@@ -98,10 +99,9 @@ function mycolors(theme)
             ElInsert { bg = c.r0, fg = c.r1, gui = "bold" },
             ElFileType { bg = c.r1, fg = c.r0, gui = "bold" },
 
-            ------- INDENTATIONS -------
-            IndentLine { bg = c.r237 },
-            IndentOdd { bg = c.r237, fg = c.r0 },
-            IndentEven { bg = c.r237, fg = c.r236 },
+            ------- INDENTATION -------
+            IndentLine { bg = c.r0, fg = c.r237 },
+            IndentLineCurrent { bg = c.r0, fg = c.r240 },
 
             ------- SEARCH -------
             IlluminatedWordText { bg = c.r237, gui = "bold" },
@@ -115,7 +115,6 @@ function mycolors(theme)
             ------- TELESCOPE -------
             TelescopeBorder { fg = c.r1 },
             NoiceCmdlinePopupBorder { fg = c.r1 },
-
 
             ------- TERMINAL --------
             ToggleTermNormal { bg = c.r236 },

@@ -44,7 +44,7 @@ vim.diagnostic.config({
       prefix = '●', -- Could be '■', '▎', 'x'
       severity_sort = true,
       virt_text_pos = 'right_align',
-      suffix = '   -',
+      suffix = '  -',
     },
     float = {
       source = 'always',

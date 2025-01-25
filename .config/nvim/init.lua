@@ -87,7 +87,15 @@ require("utils.colors")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "
-vim.cmd([[retab]])
+vim.api.nvim_create_autocmd("BufEnter", {
+    pattern = "*",
+    callback = function()
+      -- Check if the buffer is a real file (not a dashboard, terminal, etc.)
+      if vim.fn.empty(vim.fn.expand("%")) == 0 and vim.bo.buftype == "" then
+        vim.cmd([[retab]])
+      end
+    end,
+})
 
 vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
 -- === FOCUS === "
@@ -134,7 +142,6 @@ vim.cmd([[
 ]])
 
 -------------------------------------------- === LAST MAP === ---------------------------------------------
-
 vim.keymap.set('n', '<ESC>', function()
     vim.cmd(':noh') -- Clear search highlighting
     vim.fn.setreg('/', '') -- Clear the search register
