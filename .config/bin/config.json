@@ -307,6 +307,15 @@
             "provider": "",
             "package_path": ""
         },
+        "/env/bin/tv": {
+            "path": "/env/bin/tv",
+            "remote_name": "tv",
+            "version": "0.10.0",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/alexpasmantier/television",
+            "provider": "github",
+            "package_path": "tv"
+        },
         "/env/bin/vpncloud": {
             "path": "/env/bin/vpncloud",
             "remote_name": "vpncloud_static",

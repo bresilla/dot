@@ -39,13 +39,25 @@ vim.diagnostic.config({
     virtual_text = {
       format = function(diagnostic)
         local lines = vim.split(diagnostic.message, '\n')
-        return lines[1]
+        local win_width = vim.api.nvim_win_get_width(0)
+        if #lines == 0 or win_width < 50 then return nil end
+        local diag_msg = lines[1]
+        local diag_length = #(diag_msg)
+        local text_length = #(vim.api.nvim_get_current_line())
+        local three_dots = "..."
+        cut_text = math.floor(0.30 * win_width)
+        if diag_length > cut_text then
+            cut_text = math.floor(0.20 * win_width)
+            diag_msg = diag_msg:sub(0, cut_text - #three_dots) .. three_dots
+        end
+        return diag_msg
       end,
       prefix = '●', -- Could be '■', '▎', 'x'
       severity_sort = true,
       virt_text_pos = 'right_align',
       suffix = '  -',
     },
+    underline = true,
     float = {
       source = 'always',
     },
@@ -82,7 +94,18 @@ return {
         'neovim/nvim-lspconfig',
         config = function()
             local lspconfig = require('lspconfig')
+            -- lsp for c and cpp
             lspconfig.clangd.setup{}
+            -- lsp for rust
+            lspconfig.rust_analyzer.setup{
+              settings = {
+                ['rust-analyzer'] = {
+                  diagnostics = {
+                    enable = false;
+                  }
+                }
+              }
+            }
         end
     },
 }

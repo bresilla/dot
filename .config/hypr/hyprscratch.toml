@@ -1,0 +1,8 @@
+[name]
+#Mandatory fields
+title = "title"                        
+command = "command"
+
+#Optional fields
+options = "option1 option2 option3"
+rules = "rule1;rule2;rule3"

@@ -42,15 +42,14 @@ function term(cmd)
             vim.api.nvim_buf_set_keymap(term.bufnr, "n", "<CR>", "<cmd>close<CR>", {noremap = true, silent = true})
             vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<CR>", "<cmd>close<CR>", {noremap = true, silent = true})
         end,
-        -- function to run on closing the terminal
-        on_close = function(term)
+        on_close = function(term) -- function to run on closing the terminal
             vim.cmd("CloseTerminal")
         end,
     })
     newterm:toggle()
 end
 
-vim.keymap.set({'n', 'i'}, '<F7>', [[<CMD>lua term('build && run')<CR>]], {noremap = true, silent = true})
+vim.keymap.set({'n', 'i'}, '<F7>', [[<CMD>lua term('build')<CR>]], {noremap = true, silent = true})
 vim.keymap.set('t', '<F7>', [[<CMD>ToggleTerm<CR>]], {noremap = true, silent = true})
 
 

@@ -1,5 +1,5 @@
-vim.keymap.set('n',            '<C-Pagedown>',             [[:BufferNext<CR>]])
-vim.keymap.set('n',            '<C-Pageup>',               [[:BufferPrevious<CR>]])
+vim.keymap.set('n',            '<C-Pagedown>',             [[:bn<CR>]])
+vim.keymap.set('n',            '<C-Pageup>',               [[:bp<CR>]])
 
 return {
   {'romgrk/barbar.nvim',
@@ -22,4 +22,15 @@ return {
     end,
     version = '^1.0.0',
   },
+  {
+    "tiagovla/scope.nvim",
+    config = function()
+      require('scope').setup({
+        hooks = {
+          pre_tab_enter = function()
+          end,
+      },
+      })
+    end,
+  }
 }

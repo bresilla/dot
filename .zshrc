@@ -7,9 +7,6 @@
 export SHELL=/bin/zsh
 
 #--------------------------------------------------------------------------------------------------------------------
-###CASE INSENSITIVE
-zstyle ':completion:*' completer _expand _complete _ignored
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 # treat `#', `~' and `^' characters as part of patterns for filename generation
 setopt extended_glob
 setopt local_options
@@ -36,25 +33,27 @@ unsetopt no_match
 
 #--------------------------------------------------------------------------------------------------------------------
 ###ZSTYLE
-zstyle ':completion:*' menu select
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
-zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
-zstyle ':completion:*' file-list all
-zstyle ':completion:*' file-sort dummyvalue
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' squeeze-slashes true
-zstyle ':completion:*' complete-options true
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+# zstyle ':completion:*' completer _expand _complete _ignored
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# zstyle ':completion:*' menu select
+# zstyle ':completion:*' use-cache on
+# zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+# zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
+# zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+# zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+# zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+# zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
+# zstyle ':completion:*' file-list all
+# zstyle ':completion:*' file-sort dummyvalue
+# zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+# zstyle ':completion:*' squeeze-slashes true
+# zstyle ':completion:*' complete-options true
+# zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 #--------------------------------------------------------------------------------------------------------------------
 ###HISTORY STAFF
 export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-HISTFILE=~/.config/zsh_history
+HISTFILE=~/.local/share/zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
 # HISTORY_IGNORE='(reboot|restart|poweroff|suspend|_shko)'
@@ -98,14 +97,14 @@ bindkey -M vicmd '^Y' vi-yank-x-selection
 
 #--------------------------------------------------------------------------------------------------------------------
 ###MODULES
-autoload -U colors && colors
+# autoload -U colors && colors
 autoload compinit && compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
 
 # TMOUT=1
 TRAPALRM() { [[ "$WIDGET" != "complete-word" ]] && zle reset-prompt }
 
 [ -d ~/.config/zsh/autosuggestions ] && source ~/.config/zsh/autosuggestions/zsh-autosuggestions.zsh
-[ -d ~/.config/zsh/syntax ] && source ~/.config/zsh/syntax/zsh-syntax-highlighting.zsh
+ # -d ~/.config/zsh/syntax ] && source ~/.config/zsh/syntax/zsh-syntax-highlighting.zsh
 
 fpath+="/home/bresilla/.config/zsh/completions/src"
 
