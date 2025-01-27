@@ -1,68 +1,3 @@
-vim.diagnostic.config({
-    virtual_text = {
-      format = function(diagnostic)
-        local lines = vim.split(diagnostic.message, '\n')
-        local win_width = vim.api.nvim_win_get_width(0)
-        if #lines == 0 or win_width < 50 then return nil end
-
-        local last = lines[1]
-        local diag_msg = string.format("× %s", last:gsub("\r", ""):gsub("\n", "  "))
-        local diag_length = #(diag_msg)
-        local text_length = #(vim.api.nvim_get_current_line())
-        local get_highlight = vim.lsp.diagnostic._get_severity_highlight_name
-        local three_dots = "..."
-
-        cut_text = math.floor(0.25 * win_width)
-
-        if diag_length > cut_text then
-            diag_length = cut_text
-            diag_msg = diag_msg:sub(0, diag_length - #three_dots) .. three_dots
-        end
-
-        if text_length > math.floor(0.75 * win_width) then
-            diag_msg = diag_msg:sub(0, win_width - text_length - #lines - 8 - #three_dots) .. three_dots
-        end
-
-        local virt_texts = string.rep("━", win_width - diag_length - #lines - text_length - 7)
-        for i = 1, #lines do
-            virt_texts = virt_texts .. "×"
-        end
-        virt_texts = virt_texts .. " " .. diag_msg
-        return virt_texts
-      end,
-      suffix = '>',
-    },
-})
-
-
-vim.diagnostic.config({
-    virtual_text = {
-      format = function(diagnostic)
-        local lines = vim.split(diagnostic.message, '\n')
-        local win_width = vim.api.nvim_win_get_width(0)
-        if #lines == 0 or win_width < 50 then return nil end
-        local diag_msg = lines[1]
-        local diag_length = #(diag_msg)
-        local text_length = #(vim.api.nvim_get_current_line())
-        local three_dots = "..."
-        cut_text = math.floor(0.30 * win_width)
-        if diag_length > cut_text then
-            cut_text = math.floor(0.20 * win_width)
-            diag_msg = diag_msg:sub(0, cut_text - #three_dots) .. three_dots
-        end
-        return diag_msg
-      end,
-      prefix = '●', -- Could be '■', '▎', 'x'
-      severity_sort = true,
-      virt_text_pos = 'right_align',
-      suffix = '  -',
-    },
-    underline = true,
-    float = {
-      source = 'always',
-    },
-})
-
 local signs = { 
     Error = "-", 
     Warn =  "-",
@@ -74,19 +9,48 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
-vim.api.nvim_create_autocmd("CursorHold", {
-    buffer = bufnr,
-    callback = function()
-        local opts = {
-            focusable = false,
-            close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-            border = 'none',
-            source = 'always',
-            prefix = ' ',
-            scope = 'cursor',
-          }
-        vim.diagnostic.open_float(nil, opts)
-    end
+vim.diagnostic.config({
+  virtual_lines = { only_current_line = true },
+  virtual_text = {
+    format = function(diagnostic)
+      local diags = vim.diagnostic.get(diagnostic.bufnr, { lnum = diagnostic.lnum })
+      local cursor_pos = vim.api.nvim_win_get_cursor(0)
+      local cursor_line = cursor_pos[1] - 1  -- convert to 0-based
+
+      if cursor_line ~= diagnostic.lnum then
+        local win_width = vim.api.nvim_win_get_width(0)
+        local text_length = #(vim.api.nvim_get_current_line())
+        local diag_msg = diagnostic.message
+        if #(diag_msg) > math.floor(0.20 * win_width) then
+          diag_msg = diag_msg:sub(0, math.floor(0.20 * win_width) - #("...")) .. "..."
+        end
+        diag_msg = " " .. diag_msg
+        for i = 1, #diags do
+          diag_msg = "■" .. diag_msg
+        end
+        return diag_msg
+      end
+      return "[" .. tostring(#diags) .. "]"
+    end,
+    prefix = "",
+    severity_sort = true,
+    virt_text_pos = "right_align", 
+    suffix = "  -",
+  },
+  underline = true,
+  float = {
+    source = "none",
+  },
+})
+
+-- Autocommand to force diagnostics to refresh on every cursor movement
+vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+  callback = function()
+    -- Hide current diagnostics
+    vim.diagnostic.hide(nil, 0)
+    -- Then show them again, causing a redraw
+    vim.diagnostic.show(nil, 0)
+  end,
 })
 
 return {
@@ -108,4 +72,12 @@ return {
             }
         end
     },
+    {
+      "bresilla/lineslua.nvim",
+      config = function()
+        require("lsp_lines").setup({
+          virtual_lines = { only_current_line = true }
+        })
+      end,
+    }
 }

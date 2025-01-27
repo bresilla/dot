@@ -27,8 +27,8 @@ return {
             })
 
             vim.keymap.set(
-                "n", '<space>f', [[<CMD>lua require("conform").format()<CR>]], 
-                {noremap = true, silent = true}
+                "n", '<space>lf', [[<CMD>lua require("conform").format()<CR>]], 
+                {noremap = true, silent = true, desc = "Format" }
             )
         end,
     },

@@ -61,16 +61,32 @@ return {
             }
         })
 
-        vim.keymap.set("n", "<C-b>", "<cmd>lua require('telescope.builtin').git_files()<cr>", {silent = true})
-        vim.keymap.set("n", "<C-g>", [[<cmd>lua require('telescope.builtin').live_grep()<cr>]], {silent = true})
-        vim.keymap.set("n", "<C-p>", [[<cmd>lua require('telescope.builtin').find_files()<cr>]], {silent = true})
-        vim.keymap.set("n", "<leader><leader>", [[<cmd>lua require('telescope.builtin').buffers()<cr>]], {silent = true})
+        vim.keymap.set(
+            "n", "<leader>g", [[<cmd>lua require('telescope.builtin').live_grep()<cr>]],
+            {silent = true, desc = "Live Grep" })
+        vim.keymap.set(
+            "n", "<leader>F", "<cmd>lua require('telescope.builtin').git_files()<cr>", 
+            {silent = true, desc = "Git Files" })
+        vim.keymap.set(
+            "n", "<leader>f", [[<cmd>lua require('telescope.builtin').find_files()<cr>]], 
+            {silent = true, desc = "Find Files" })
+        vim.keymap.set(
+            "n", "<leader>b", [[<cmd>lua require('telescope.builtin').buffers()<cr>]], 
+            {silent = true, desc = "Buffers" })
 
-        vim.keymap.set("n", "<leader>lf", [[<cmd>lua require('telescope.builtin').lsp_code_actions(center_list)<cr>]], {silent = true})
-        vim.keymap.set("n", "<leader>lr", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], {silent = true})
-        vim.keymap.set("n", "<leader>ll", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], {silent = true})
-        vim.keymap.set("n", "<leader>li", [[<cmd>lua require('telescope.builtin').lsp_implementations()<cr>]], {silent = true})
-        vim.keymap.set("n", "<leader>ld", [[<cmd>lua require('telescope.builtin').lsp_definitions()<cr>]], {silent = true})
+
+        vim.keymap.set(
+            "n", "<leader>lr", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], 
+            {silent = true, desc = "LSP References" })
+        vim.keymap.set(
+            "n", "<leader>ll", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], 
+            {silent = true, desc = "LSP References" })
+        vim.keymap.set(
+            "n", "<leader>li", [[<cmd>lua require('telescope.builtin').lsp_implementations()<cr>]], 
+            {silent = true, desc = "LSP Implementations" })
+        vim.keymap.set(
+            "n", "<leader>ld", [[<cmd>lua require('telescope.builtin').lsp_definitions()<cr>]], 
+            {silent = true, desc = "LSP Definitions" })
 
     end,
     dependencies = { 'nvim-lua/plenary.nvim' }

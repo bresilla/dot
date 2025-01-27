@@ -32,25 +32,6 @@ setopt histignorespace
 unsetopt no_match
 
 #--------------------------------------------------------------------------------------------------------------------
-###ZSTYLE
-# zstyle ':completion:*' completer _expand _complete _ignored
-# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-# zstyle ':completion:*' menu select
-# zstyle ':completion:*' use-cache on
-# zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-# zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
-# zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
-# zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-# zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-# zstyle ':completion:*:*:-command-:*:*' group-order alias builtins functions commands
-# zstyle ':completion:*' file-list all
-# zstyle ':completion:*' file-sort dummyvalue
-# zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-# zstyle ':completion:*' squeeze-slashes true
-# zstyle ':completion:*' complete-options true
-# zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-
-#--------------------------------------------------------------------------------------------------------------------
 ###HISTORY STAFF
 export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 HISTFILE=~/.local/share/zsh_history
@@ -104,7 +85,7 @@ autoload compinit && compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
 TRAPALRM() { [[ "$WIDGET" != "complete-word" ]] && zle reset-prompt }
 
 [ -d ~/.config/zsh/autosuggestions ] && source ~/.config/zsh/autosuggestions/zsh-autosuggestions.zsh
- # -d ~/.config/zsh/syntax ] && source ~/.config/zsh/syntax/zsh-syntax-highlighting.zsh
+[ -d ~/.config/zsh/syntax ] && source ~/.config/zsh/syntax/zsh-syntax-highlighting.zsh
 
 fpath+="/home/bresilla/.config/zsh/completions/src"
 
@@ -115,13 +96,6 @@ zle -N run_killer
 bindkey -M vicmd '^k' run_killer
 bindkey -M viins '^k' run_killer
 bindkey '^k' run_killer
-
-###FLATPAK KILLER
-# function run_fkiller(){ fkill; zle reset-prompt; zle redisplay; }
-# zle -N run_fkiller
-# bindkey -M vicmd '^k' run_fkiller
-# bindkey -M viins '^k' run_fkiller
-# bindkey '^f' run_fkiller
 
 ###SYSZ
 function run_sysz(){ sysz; zle reset-prompt; zle redisplay; }
@@ -198,32 +172,13 @@ bindkey -s '^B' 'build\n'
 bindkey -s '^R' 'run\n'
 bindkey -s '^G' 'git go\n'
 
+# 
 #--------------------------------------------------------------------------------------------------------------------
-#RUN OR LS (shotrcut: Enter)
-runner () {
-    # check if the buffer does not contain any words
-    if [ ${#${(z)BUFFER}} -eq 0 ]; then
-      if [[ -n $(echo $ENVNAME) ]]; then
-        printf "\n" && eza -laiSHF --header --git --group-directories-first --git-ignore --tree -L3
-      else
-        printf "\n" && eza -laiSHF --header --git --group-directories-first --tree -L1
-      fi
-    fi
-    zle accept-line
-}
-zle -N runner
-bindkey '^M' runner
-
-function launch {
-    nohup $1 >/dev/null 2>/dev/null & disown; exit
-}
-
-#--------------------------------------------------------------------------------------------------------------------
-###TMUX && CD && ZOXIDE
+###CD && ZOXIDE
 [[ -x "$(command -v zoxide)" ]] && eval "$(zoxide init zsh)"
 cd() {
     if [[ -z $1 ]] && [[ -f "/env/dot/.func/code/pro" ]]; then
-        /env/dot/.func/code/pro
+        cd ~ && cd -
     elif [[ -d $1 ]] || [[ $date =~ ^[-]{1,2}+[a-z]* ]] ; then
         builtin cd $1
     elif [[ $1 == root ]] && [[ -d $(git rev-parse --show-toplevel) ]] ; then
@@ -236,25 +191,6 @@ cd() {
 }
 
 #--------------------------------------------------------------------------------------------------------------------
-#JUMP (shotrcut: Alt + j)
-jump () {
-  export NEWT_COLORS='root=,black entry=black,red'
-  diri=$(whiptail --inputbox 'GOTO:' 8 60 3>&1 1>&2 2>&3)
-  zoxi=$(zoxide query -- $diri)
-  cd $zoxi
-}
-bindkey -s '^[j' ' jump\n'
-
-#--------------------------------------------------------------------------------------------------------------------
-#PROJI (shotrcut: Alt + [1 2 3 4 5 6 7 8 9])
-proj() { cd $(proji ls | head -n-1 | tail -n+4 | sed -n "$1"p | cut -d '|' -f4) }
-for i in 1 2 3 4 5 6 7 8 9
-do
-  #bindkey -s "^[$i" "proj $i\n"
-  bindkey -s "^[$i" "$i\n"
-done
-
-#--------------------------------------------------------------------------------------------------------------------
 #TAB-RS (shotrcut: Ctrl + e)
 bindkey -s '^X' ' tab\n'
 bindkey -s '^A' ' scrr\n'
@@ -264,17 +200,5 @@ bindkey -s '^A' ' scrr\n'
 #---------------------------            EXTERNAL       --------------------------
 [[ -s "$HOME/.external" ]] && source "$HOME/.external"
 if (( ${+CWD_VAR} )); then cd $CWD_VAR; fi
-
-if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-
-# if [ -x "$(command -v tab)" ] && [ -x "$(command -v names)" ]; then
-#     if [[ ! -n $TAB ]]; then
-#         tab $(names)
-#     else
-#         bresilla
-#     fi
-# fi
-
 bresilla
 
-[ -f "/home/bresilla/.ghcup/env" ] && . "/home/bresilla/.ghcup/env" # ghcup-env

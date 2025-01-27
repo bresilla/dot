@@ -172,6 +172,15 @@
             "provider": "github",
             "package_path": "ipinfo_3.3.1_linux_amd64"
         },
+        "/env/bin/lemonade": {
+            "path": "/env/bin/lemonade",
+            "remote_name": "lemonade",
+            "version": "v1.1.1",
+            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "url": "https://github.com/lemonade-command/lemonade",
+            "provider": "github",
+            "package_path": "lemonade"
+        },
         "/env/bin/lspai": {
             "path": "/env/bin/lspai",
             "remote_name": "",

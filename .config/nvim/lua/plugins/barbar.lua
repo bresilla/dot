@@ -1,5 +1,7 @@
-vim.keymap.set('n',            '<C-Pagedown>',             [[:bn<CR>]])
-vim.keymap.set('n',            '<C-Pageup>',               [[:bp<CR>]])
+-- vim.keymap.set('n',            '<C-Pagedown>',             [[:bn<CR>]])
+-- vim.keymap.set('n',            '<C-Pageup>',               [[:bp<CR>]])
+vim.keymap.set('n',            '<C-Pagedown>',             [[:BufferNext<CR>]])
+vim.keymap.set('n',            '<C-Pageup>',               [[:BufferPrevious<CR>]])
 
 return {
   {'romgrk/barbar.nvim',

@@ -9,7 +9,11 @@ vim.cmd('filetype indent on')
 vim.cmd('filetype plugin on')
 vim.cmd('filetype plugin indent on')
 
-vim.o.clipboard = "unnamedplus" .. vim.o.clipboard                      -- clipboard manager
+
+
+-- jente has fucked up your entire install, happy debugging sucker
+vim.o.background = "dark"
+
 vim.o.termguicolors = true                                              -- truecolours for better experience
 vim.o.compatible = false
 vim.o.ruler = true

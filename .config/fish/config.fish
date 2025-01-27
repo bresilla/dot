@@ -3,8 +3,9 @@ end
 function fish_greeting
 end
 
-source /home/bresilla/.aliases
-
+# bresilla
+replay "source /home/bresilla/.profile"
+replay "source /home/bresilla/.aliases"
 #--------------------------------------------------------------------------------------------------------------------
 if test -f ~/.cache/wal/colors.sh
     replay 'source ~/.cache/wal/colors.sh'
@@ -47,20 +48,32 @@ function cd
     end
 end
 
-#--------------------------------------------------------------------------------------------------------------------
-## BINDINGS
-bind \cx 'tab; commandline -f execute'
-bind \cw 'n; commandline -f execute'
-bind \ca 'scrr; commandline -f execute'
-bind \cb 'build; commandline -f execute'
-bind \cr 'run; commandline -f execute'
-bind \cg 'git go; commandline -f execute'
+function cancel-commandline
+    commandline -C 2147483647
+    for i in (seq (commandline -L))
+        echo '^C'
+    end
+    commandline ""
+end
 
 #--------------------------------------------------------------------------------------------------------------------
-starship init fish | source
+## BINDINGS
+# bind \cc 'echo; commandline ""; echo;'
+bind \cx 'tab
+ commandline -f execute'
+bind \cw 'n
+ commandline -f execute'
+bind \ca 'scrr
+ commandline -f execute'
+bind \cb 'build
+ commandline -f execute'
+bind \cr 'run
+ commandline -f execute'
+bind \cg 'git go
+ commandline -f execute'
+
+#--------------------------------------------------------------------------------------------------------------------
 direnv hook fish | source
 atuin init fish | source
 zoxide init fish | source
-
-# bresilla
-# echo "Fish shell is ready!"
+starship init fish | source
