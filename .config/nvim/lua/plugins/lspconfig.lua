@@ -17,7 +17,7 @@ vim.diagnostic.config({
       local cursor_pos = vim.api.nvim_win_get_cursor(0)
       local cursor_line = cursor_pos[1] - 1  -- convert to 0-based
 
-      if cursor_line ~= diagnostic.lnum then
+      if (cursor_line ~= diagnostic.lnum) or (vim.api.nvim_get_mode().mode == "v") then
         local win_width = vim.api.nvim_win_get_width(0)
         local text_length = #(vim.api.nvim_get_current_line())
         local diag_msg = diagnostic.message
@@ -53,22 +53,6 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
   end,
 })
 
--- vim.api.nvim_create_autocmd("VimEnter", {
---   pattern = "*",
---   callback = function()
---       if vim.env.ENV == "pio" then
---         require('lspconfig').ccls.setup {
---           init_options = {
---             compilationDatabaseDirectory = "build";
---             index = { threads = 0; };
---             clang = { excludeArgs = { "-frounding-math"}; };
---           }
---         }
---       else
---         require('lspconfig').clangd.setup{}
---       end
---   end,
--- })
 
 return {
     {
@@ -77,6 +61,7 @@ return {
             local lspconfig = require('lspconfig')
             -- lsp for c and cpp
             if vim.env.ENV == "pio" then
+              -- works with platformio and microcontroller projects
               require('lspconfig').ccls.setup {
                 init_options = {
                   compilationDatabaseDirectory = "build";
@@ -85,6 +70,7 @@ return {
                 }
               }
             else
+              -- works with normal c and cpp projects
               require('lspconfig').clangd.setup{}
             end
             -- lsp for rust

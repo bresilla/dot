@@ -28,9 +28,9 @@ vim.o.swapfile = false                                                  -- disab
 vim.o.writebackup = false                                               -- disable backup
 vim.o.autowrite = true                                                  -- autowrite buffer when it's not focused
 
-vim.wo.wrap = false                                                      -- dont wrap lines
-vim.wo.number = true                                                     -- enable number
-vim.wo.relativenumber = true                                             -- enable relativenumber
+vim.wo.wrap = false                                                     -- dont wrap lines
+vim.wo.number = true                                                    -- enable number
+vim.wo.relativenumber = true                                            -- enable relativenumber
 vim.o.hidden = true                                                     -- keep hidden buffers
 vim.o.showmode = false                                                  -- don't show mode
 vim.o.showcmd = false                                                   -- don't show last command on cmd

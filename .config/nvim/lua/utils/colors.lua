@@ -64,6 +64,7 @@ function mycolors(theme)
             Visual { bg = c.r237 },
             Conceal { fg = c.r240 },
             LineNr { fg = c.r237 },
+            Comment  { fg = c.r238, gui = "italic" },
             CursorLineNR { fg = c.r246, gui = "bold" },
             NormalFloat { bg = c.r237 },
             Whitespace { fg = c.r240 },
