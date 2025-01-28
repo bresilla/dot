@@ -3,6 +3,9 @@
 vim.keymap.set('n',            '<C-Pagedown>',             [[:BufferNext<CR>]])
 vim.keymap.set('n',            '<C-Pageup>',               [[:BufferPrevious<CR>]])
 
+vim.keymap.set('n',            '<C-S-Pagedown>',           [[:BufferMoveNext<CR>]])
+vim.keymap.set('n',            '<C-S-Pageup>',             [[:BufferMovePrevious<CR>]])
+
 return {
   {'romgrk/barbar.nvim',
     dependencies = {
@@ -29,9 +32,14 @@ return {
     config = function()
       require('scope').setup({
         hooks = {
-          pre_tab_enter = function()
+          pre_tab_leave = function()
+            vim.api.nvim_exec_autocmds('User', {pattern = 'ScopeTabLeavePre'})
           end,
-      },
+          post_tab_enter = function()
+            vim.api.nvim_exec_autocmds('User', {pattern = 'ScopeTabEnterPost'})
+          end,
+        },
+    
       })
     end,
   }

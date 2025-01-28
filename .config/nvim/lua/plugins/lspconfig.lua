@@ -34,7 +34,7 @@ vim.diagnostic.config({
     end,
     prefix = "",
     severity_sort = true,
-    virt_text_pos = "right_align", 
+    virt_text_pos = "right_align",
     suffix = "  -",
   },
   underline = true,

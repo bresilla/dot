@@ -7,6 +7,7 @@ return {
                 require('mini.surround').setup({ })
                 require('mini.pairs').setup({ })
                 require('mini.jump2d').setup({ })
+                -- require('mini.indentscope').setup({})
                 require('mini.comment').setup({
                       -- Module mappings. Use `''` (empty string) to disable one.
                     mappings = {

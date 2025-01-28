@@ -102,6 +102,8 @@ function mycolors(theme)
             ------- INDENTATION -------
             IndentLine { bg = c.r0, fg = c.r237 },
             IndentLineCurrent { bg = c.r0, fg = c.r240 },
+            MiniIndentscopeSymbol { IndentLine },
+            MiniIndentscopeSymbolOff { IndentLineCurrent },
 
             ------- SEARCH -------
             IlluminatedWordText { bg = c.r237, gui = "bold" },
