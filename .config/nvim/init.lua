@@ -36,6 +36,8 @@ vim.o.showmode = false                                                  -- don't
 vim.o.showcmd = false                                                   -- don't show last command on cmd
 vim.o.shortmess = vim.o.shortmess .. "F"                                -- dont dhow filename on cmd
 
+vim.o.showtabline = 1                                                   -- always show tabs
+
 vim.o.smartcase = true                                                  -- improve searching using '/'
 vim.o.hlsearch = true                                                   -- highlight matching search
 vim.o.incsearch = true
