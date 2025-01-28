@@ -90,6 +90,7 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 require("config.lazy")
 require("utils.colors")
 
+require("testing.platformio").setup_plugin()
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "

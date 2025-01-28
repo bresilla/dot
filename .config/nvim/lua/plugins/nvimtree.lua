@@ -1,4 +1,4 @@
-vim.keymap.set('n',            '<tab>',             [[:NvimTreeToggle<CR>]])
+vim.keymap.set('n',            '<tab>',             [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
 
 return {
     {
@@ -22,7 +22,7 @@ return {
                     -- default mappings
                     api.config.mappings.default_on_attach(bufnr)
                     -- custom mappings
-                    vim.keymap.set("n", '<tab>', api.tree.close,        opts("Close"))
+                    vim.keymap.set("n", '<tab>', api.tree.close,  opts("Close"))
                 end,
                 hijack_cursor = true,
                 actions = {

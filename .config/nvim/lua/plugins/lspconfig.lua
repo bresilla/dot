@@ -53,13 +53,40 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
   end,
 })
 
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   pattern = "*",
+--   callback = function()
+--       if vim.env.ENV == "pio" then
+--         require('lspconfig').ccls.setup {
+--           init_options = {
+--             compilationDatabaseDirectory = "build";
+--             index = { threads = 0; };
+--             clang = { excludeArgs = { "-frounding-math"}; };
+--           }
+--         }
+--       else
+--         require('lspconfig').clangd.setup{}
+--       end
+--   end,
+-- })
+
 return {
     {
         'neovim/nvim-lspconfig',
         config = function()
             local lspconfig = require('lspconfig')
             -- lsp for c and cpp
-            lspconfig.clangd.setup{}
+            if vim.env.ENV == "pio" then
+              require('lspconfig').ccls.setup {
+                init_options = {
+                  compilationDatabaseDirectory = "build";
+                  index = { threads = 0; };
+                  clang = { excludeArgs = { "-frounding-math"}; };
+                }
+              }
+            else
+              require('lspconfig').clangd.setup{}
+            end
             -- lsp for rust
             lspconfig.rust_analyzer.setup{
               settings = {
