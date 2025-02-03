@@ -87,10 +87,10 @@ scp -r /home/bresilla/.cache/lule/colors borg.zerotier:~/.cache/lule/colors &> /
 
 source $HOME/.cache/wal/colors.sh
 
-bspc config focused_border_color $color1 &
-bspc config normal_border_color $color239 &
-bspc config active_border_color $color239 &
-feh --no-fehbg --bg-scale $(cat $TEMP/lule_wallpaper) &
+# bspc config focused_border_color $color1 &
+# bspc config normal_border_color $color239 &
+# bspc config active_border_color $color239 &
+# feh --no-fehbg --bg-scale $(cat $TEMP/lule_wallpaper) &
 
 zedtheme &
 

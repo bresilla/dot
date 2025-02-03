@@ -3,7 +3,7 @@ end
 function fish_greeting
 end
 
-# bresilla
+# bresilla2
 replay "source /home/bresilla/.profile"
 replay "source /home/bresilla/.aliases"
 #--------------------------------------------------------------------------------------------------------------------
@@ -77,3 +77,7 @@ direnv hook fish | source
 atuin init fish | source
 zoxide init fish | source
 starship init fish | source
+
+sleep 2
+
+bresilla

@@ -124,6 +124,7 @@ function mycolors(theme)
             ToggleTermNormalFloat { bg = c.r236 },
             ToggleTermFloatBorder { bg = c.r236, fg = c.r236 },
 
+
             ------- DIAGNOSTICS -------
             DiagnosticError { fg = c.error_light,   bg = c.error_dark  },
             DiagnosticWarn  { fg =  c.warn_light,   bg =  c.warn_dark  },
