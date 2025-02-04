@@ -17,6 +17,7 @@ function fileToList(file)
         end
     end
     return lines
+
 end
 
 function mycolors(theme)
@@ -59,6 +60,8 @@ function mycolors(theme)
             Normal { bg = c.r0 },
             NonText { fg = c.r240 },
             Cursor { bg = c.r1, fg = c.r15 , gui = "bold" },
+            iCursor { bg = c.r1, fg = c.r15 , gui = "bold" },
+            rCursor { bg = c.r1, fg = c.r15 , gui = "bold" },
             CursorLine { bg = c.r236 },
             CursorColumn { bg = c.r236 },
             Visual { bg = c.r237 },

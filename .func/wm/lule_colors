@@ -84,8 +84,16 @@ colors_to_tty &
 
 
 scp -r /home/bresilla/.cache/lule/colors borg.zerotier:~/.cache/lule/colors &> /dev/null & disown
+scp -r /home/bresilla/.cache/lule/colors robo.zerotier:~/.cache/lule/colors &> /dev/null & disown
 
 source $HOME/.cache/wal/colors.sh
+
+# stupid hyprland things
+c1="rgb(${color1:1})"
+c15="rgb(${color15:1})"
+c238="rgb(${color238:1})"
+hyprctl keyword general:col.active_border $c1 $c15 45deg &
+hyprctl keyword general:col.inactive_border = $c238 &
 
 # bspc config focused_border_color $color1 &
 # bspc config normal_border_color $color239 &

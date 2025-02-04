@@ -31,8 +31,19 @@ return {{
             }
         }
         -- lsp for python
-        lspconfig.pylsp.setup {}
-        -- lspconfig.pylyzer.setup {}
+        lspconfig.pylsp.setup{
+            settings = {
+                pylsp = {
+                plugins = {
+                    pycodestyle = {
+                    ignore = {'W391'},
+                    maxLineLength = 160
+                    }
+                }
+                }
+            }
+        }
+            -- lspconfig.pylyzer.setup {}
         -- lsp for lua
         lspconfig.lua_ls.setup {}
     end,
