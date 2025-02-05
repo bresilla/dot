@@ -6,10 +6,16 @@ vim.api.nvim_create_autocmd("FileType", {
             vim.cmd("source %")
             print("Sourced Lua file: " .. vim.fn.expand("%"))
         end, { buffer = true, desc = "Source current Lua file" })
-        vim.keymap.set("v", "<leader>w", 
-            ":lua Llmchat()<CR>",
+        vim.keymap.set("v", "<leader>c", 
+            ":Chat<CR>",
             { noremap = true, silent = true },
             "llmchat"
         )
     end,
   })
+
+vim.keymap.set("n", "<leader>c", 
+  ":Chat<CR>",
+  { noremap = true, silent = true },
+  "llmchat"
+)

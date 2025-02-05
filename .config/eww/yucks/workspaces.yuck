@@ -55,12 +55,12 @@
         (box :class "wrkspc_box")
         (box :class "wrkspc_box")
         (box :class "wrkspc_box" :spacing 10
-            (box :class {workspace=="7" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="8" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="9" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="10" ? "wrkspc_active" : "wrkspc"})
             (box :class {workspace=="11" ? "wrkspc_active" : "wrkspc"})
             (box :class {workspace=="12" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="13" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="14" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="15" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="16" ? "wrkspc_active" : "wrkspc"})
         )
         (box :class "wrkspc_box")
         (box :class "wrkspc_box")
@@ -83,12 +83,40 @@
         (box :class "wrkspc_box")
         (box :class "wrkspc_box")
         (box :class "wrkspc_box" :spacing 10
-            (box :class {workspace=="13" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="14" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="15" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="16" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="17" ? "wrkspc_active" : "wrkspc"})
-            (box :class {workspace=="18" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="21" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="22" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="23" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="24" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="25" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="26" ? "wrkspc_active" : "wrkspc"})
+        )
+        (box :class "wrkspc_box")
+        (box :class "wrkspc_box")
+    )
+)
+
+(defwindow workspaces_three
+    :monitor 3
+    :stacking "fg"
+    :windowtype "dock"
+    ; :windowtype "normal"
+    :wm-ignore true
+    :geometry (geometry
+        :x "50%"
+        :y "0px"
+        :width "100%"
+        :height "4px"
+        :anchor "top center")
+    (box :class "wrkspc_box"
+        (box :class "wrkspc_box")
+        (box :class "wrkspc_box")
+        (box :class "wrkspc_box" :spacing 10
+            (box :class {workspace=="31" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="32" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="33" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="34" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="35" ? "wrkspc_active" : "wrkspc"})
+            (box :class {workspace=="36" ? "wrkspc_active" : "wrkspc"})
         )
         (box :class "wrkspc_box")
         (box :class "wrkspc_box")
