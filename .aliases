@@ -13,7 +13,8 @@ alias ufw="sudo ufw"
 alias btrfs="sudo btrfs"
 alias ser="sudo /env/bin/ser"
 alias rustdesk="sudo rustdesk"
-alias ssh="TERM=tmux-256color ssh -X"
+# alias ssh="TERM=tmux-256color ssh -X"
+alias ssh="ssh -X"
 alias bolt="boltctl"
 
 ##WM
@@ -117,7 +118,7 @@ alias bm=bibiman
 alias zik='zk --notebook-dir /doc/data/notes/zk'
 
 ##MEDIA
-alias color='pastel format hex'	
+alias color='pastel format hex' 
 alias cal='cal -ymw'
 alias mul="mullvad"
 alias oat="oatmeal"
