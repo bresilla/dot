@@ -172,7 +172,21 @@ bindkey -s '^B' 'build\n'
 bindkey -s '^R' 'run\n'
 bindkey -s '^G' 'git go\n'
 
-# 
+#--------------------------------------------------------------------------------------------------------------------
+#RUN OR LS (shotrcut: Enter)
+runner () {
+    # check if the buffer does not contain any words
+    if [ ${#${(z)BUFFER}} -eq 0 ]; then
+      tput cup 0 0
+      zle redisplay
+      tput cup 0 0
+      #clear
+    fi
+    zle accept-line
+}
+zle -N runner
+bindkey '^M' runner
+
 #--------------------------------------------------------------------------------------------------------------------
 ###CD && ZOXIDE
 [[ -x "$(command -v zoxide)" ]] && eval "$(zoxide init zsh)"

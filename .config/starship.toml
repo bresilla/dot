@@ -33,7 +33,7 @@ $directory\
 [hostname]
 style = "bg:237 bold italic fg:15"
 ssh_only = false
-format = "[ $ssh_symbol]($style)[$hostname ]($style)"
+format = "($style)[ $hostname ]($style)"
 
 [username]
 show_always = true
@@ -45,12 +45,6 @@ format = '[$user ]($style)'
 style = "bg:237 fg:15"
 format = "[ $path ]($style)"
 truncation_length = 3
-
-[directory.substitutions]
-"Documents" = " "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
 
 [git_branch]
 symbol = ""
