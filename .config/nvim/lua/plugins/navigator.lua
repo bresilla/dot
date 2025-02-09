@@ -7,6 +7,11 @@ return {
             vim.keymap.set("n", "<C-k>", [[<cmd>lua require("tmux").move_up()<cr>]], { noremap = true, silent = true })
             vim.keymap.set("n", "<C-j>", [[<cmd>lua require("tmux").move_down()<cr>]], { noremap = true, silent = true })
 
+            vim.keymap.set("n", "<C-Up>", [[<cmd>lua require("tmux").move_up()<cr>]], { noremap = true, silent = true })
+            vim.keymap.set("n", "<C-Down>", [[<cmd>lua require("tmux").move_down()<cr>]], { noremap = true, silent = true })
+            vim.keymap.set("n", "<C-Left>", [[<cmd>lua require("tmux").move_left()<cr>]], { noremap = true, silent = true })
+            vim.keymap.set("n", "<C-Right>", [[<cmd>lua require("tmux").move_right()<cr>]], { noremap = true, silent = true })
+
 
             return require("tmux").setup({
                 copy_sync = {

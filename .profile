@@ -31,9 +31,9 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 export COLORTERM=truecolor
 export BROWSER=org.mozilla.firefox
 export EDITOR=hx
-# export EDITOR=hx
-# export TERMINAL=kitty
-# export CONSOLE=kitty
+export TERMINAL=kitty
+export CONSOLE=kitty
+export TERM=xterm-256color
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)
 
 [[ -v ${DISPLAY} ]] && export DISPLAY=:0
