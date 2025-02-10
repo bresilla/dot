@@ -172,20 +172,35 @@ bindkey -s '^B' 'build\n'
 bindkey -s '^R' 'run\n'
 bindkey -s '^G' 'git go\n'
 
+
 #--------------------------------------------------------------------------------------------------------------------
 #RUN OR LS (shotrcut: Enter)
 runner () {
     # check if the buffer does not contain any words
     if [ ${#${(z)BUFFER}} -eq 0 ]; then
-      tput cup 0 0
-      zle redisplay
-      tput cup 0 0
-      #clear
+      ll
     fi
     zle accept-line
 }
 zle -N runner
 bindkey '^M' runner
+
+#--------------------------------------------------------------------------------------------------------------------
+#RUN OR LS (shotrcut: Enter)
+clr () {
+    # tput cup 0 0
+    # zle redisplay
+    # clear -x
+    # ----
+    # tput reset
+    # zle -I
+    # ----
+    echo -en "\ec"
+    zle -I
+    tput cup 0 0
+}
+zle -N clr
+bindkey '^_' clr
 
 #--------------------------------------------------------------------------------------------------------------------
 ###CD && ZOXIDE

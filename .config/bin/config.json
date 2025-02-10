@@ -8,7 +8,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/sigoden/argc/releases/tag/v1.21.1",
             "provider": "",
-            "package_path": "argc"
+            "package_path": "argc",
+            "pinned": false
         },
         "/env/bin/atuin": {
             "path": "/env/bin/atuin",
@@ -17,7 +18,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/atuinsh/atuin/releases/tag/v18.3.0",
             "provider": "",
-            "package_path": "atuin-x86_64-unknown-linux-musl/atuin"
+            "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
+            "pinned": false
         },
         "/env/bin/bat": {
             "path": "/env/bin/bat",
@@ -26,16 +28,18 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "github.com/sharkdp/bat",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/bin": {
             "path": "/env/bin/bin",
             "remote_name": "bin",
-            "version": "v0.19.1",
+            "version": "v0.20.0",
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/marcosnils/bin/releases/tag/v0.19.1",
+            "url": "https://github.com/marcosnils/bin/releases/tag/v0.20.0",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/choose": {
             "path": "/env/bin/choose",
@@ -44,7 +48,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/theryangeary/choose/releases/tag/v1.3.6",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
@@ -53,7 +58,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.14.6",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/delta": {
             "path": "/env/bin/delta",
@@ -62,7 +68,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/dandavison/delta/releases/tag/0.18.2",
             "provider": "",
-            "package_path": "delta-0.18.2-x86_64-unknown-linux-musl/delta"
+            "package_path": "delta-0.18.2-x86_64-unknown-linux-musl/delta",
+            "pinned": false
         },
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
@@ -71,7 +78,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/jetify-com/devbox/releases/tag/0.13.7",
             "provider": "",
-            "package_path": "devbox"
+            "package_path": "devbox",
+            "pinned": false
         },
         "/env/bin/direnv": {
             "path": "/env/bin/direnv",
@@ -80,7 +88,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/direnv/direnv/releases/tag/v2.35.0",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/distant": {
             "path": "/env/bin/distant",
@@ -89,7 +98,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/chipsenkbeil/distant",
             "provider": "github",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/dora": {
             "path": "/env/bin/dora",
@@ -98,7 +108,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.7",
             "provider": "",
-            "package_path": "dora"
+            "package_path": "dora",
+            "pinned": false
         },
         "/env/bin/eza": {
             "path": "/env/bin/eza",
@@ -107,7 +118,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/eza-community/eza/releases/tag/v0.20.8",
             "provider": "",
-            "package_path": "./eza"
+            "package_path": "./eza",
+            "pinned": false
         },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
@@ -116,7 +128,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/danielmiessler/fabric",
             "provider": "github",
-            "package_path": "fabric-ubuntu-latest-arm64-main"
+            "package_path": "fabric-ubuntu-latest-arm64-main",
+            "pinned": false
         },
         "/env/bin/git-cliff": {
             "path": "/env/bin/git-cliff",
@@ -125,7 +138,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/orhun/git-cliff/releases/tag/v2.6.1",
             "provider": "",
-            "package_path": "git-cliff-2.6.1/git-cliff"
+            "package_path": "git-cliff-2.6.1/git-cliff",
+            "pinned": false
         },
         "/env/bin/gitea": {
             "path": "/env/bin/gitea",
@@ -134,7 +148,18 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/go-gitea/gitea/releases/tag/v1.22.4",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/goose": {
+            "path": "/env/bin/goose",
+            "remote_name": "goose",
+            "version": "v1.0.5",
+            "hash": "1c927c659a52c1f0baad63a5b6c8a60d7386d927d99d7994ea6244098f7ca62e",
+            "url": "https://github.com/block/goose",
+            "provider": "github",
+            "package_path": "goose",
+            "pinned": false
         },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
@@ -143,7 +168,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/charmbracelet/gum/releases/tag/v0.14.5",
             "provider": "",
-            "package_path": "gum_0.14.5_Linux_x86_64/gum"
+            "package_path": "gum_0.14.5_Linux_x86_64/gum",
+            "pinned": false
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
@@ -152,7 +178,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/home-assistant/cli/releases/tag/4.36.0",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/hub": {
             "path": "/env/bin/hub",
@@ -161,7 +188,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/github/hub",
             "provider": "github",
-            "package_path": "hub-linux-amd64-2.14.2/bin/hub"
+            "package_path": "hub-linux-amd64-2.14.2/bin/hub",
+            "pinned": false
         },
         "/env/bin/hysp": {
             "path": "/env/bin/hysp",
@@ -170,7 +198,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/pwnwriter/hysp",
             "provider": "github",
-            "package_path": "hysp-0.1.2/hysp"
+            "package_path": "hysp-0.1.2/hysp",
+            "pinned": false
         },
         "/env/bin/ipinfo": {
             "path": "/env/bin/ipinfo",
@@ -179,7 +208,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/ipinfo/cli",
             "provider": "github",
-            "package_path": "ipinfo_3.3.1_linux_amd64"
+            "package_path": "ipinfo_3.3.1_linux_amd64",
+            "pinned": false
         },
         "/env/bin/lemonade": {
             "path": "/env/bin/lemonade",
@@ -188,7 +218,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/lemonade-command/lemonade",
             "provider": "github",
-            "package_path": "lemonade"
+            "package_path": "lemonade",
+            "pinned": false
         },
         "/env/bin/lspai": {
             "path": "/env/bin/lspai",
@@ -197,7 +228,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/SilasMarvin/lsp-ai",
             "provider": "github",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/lule": {
             "path": "/env/bin/lule",
@@ -206,7 +238,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/warpwm/lule",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
@@ -215,7 +248,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.4-0",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/names": {
             "path": "/env/bin/names",
@@ -224,7 +258,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/fnichol/names",
             "provider": "github",
-            "package_path": "names-x86_64-unknown-linux-musl"
+            "package_path": "names-x86_64-unknown-linux-musl",
+            "pinned": false
         },
         "/env/bin/nostromo": {
             "path": "/env/bin/nostromo",
@@ -233,7 +268,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/pokanop/nostromo",
             "provider": "github",
-            "package_path": "nostromo"
+            "package_path": "nostromo",
+            "pinned": false
         },
         "/env/bin/pik": {
             "path": "/env/bin/pik",
@@ -242,7 +278,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.7.0",
             "provider": "",
-            "package_path": "pik-0.7.0-x86_64-unknown-linux-gnu/pik"
+            "package_path": "pik-0.7.0-x86_64-unknown-linux-gnu/pik",
+            "pinned": false
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
@@ -251,7 +288,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.30.0",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/rathole": {
             "path": "/env/bin/rathole",
@@ -260,7 +298,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/rapiz1/rathole",
             "provider": "github",
-            "package_path": "rathole"
+            "package_path": "rathole",
+            "pinned": false
         },
         "/env/bin/roc": {
             "path": "/env/bin/roc",
@@ -269,7 +308,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/bresilla/roc",
             "provider": "github",
-            "package_path": "roc"
+            "package_path": "roc",
+            "pinned": false
         },
         "/env/bin/ser": {
             "path": "/env/bin/ser",
@@ -278,7 +318,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "github.com/servicer-labs/servicer",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/soft": {
             "path": "/env/bin/soft",
@@ -287,7 +328,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/charmbracelet/soft-serve",
             "provider": "github",
-            "package_path": "soft-serve_0.7.6_Linux_x86_64/soft"
+            "package_path": "soft-serve_0.7.6_Linux_x86_64/soft",
+            "pinned": false
         },
         "/env/bin/starship": {
             "path": "/env/bin/starship",
@@ -296,7 +338,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/starship/starship/releases/tag/v1.21.1",
             "provider": "",
-            "package_path": "starship"
+            "package_path": "starship",
+            "pinned": false
         },
         "/env/bin/stew": {
             "path": "/env/bin/stew",
@@ -305,7 +348,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/marwanhawari/stew/releases/tag/v0.4.0",
             "provider": "",
-            "package_path": "stew"
+            "package_path": "stew",
+            "pinned": false
         },
         "/env/bin/tab": {
             "path": "/env/bin/tab",
@@ -314,7 +358,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "github.com/austinjones/tab-rs",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/tldr": {
             "path": "/env/bin/tldr",
@@ -323,7 +368,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.7.1",
             "provider": "",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/tv": {
             "path": "/env/bin/tv",
@@ -332,7 +378,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/alexpasmantier/television",
             "provider": "github",
-            "package_path": "tv"
+            "package_path": "tv",
+            "pinned": false
         },
         "/env/bin/vpncloud": {
             "path": "/env/bin/vpncloud",
@@ -341,7 +388,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/dswd/vpncloud",
             "provider": "github",
-            "package_path": ""
+            "package_path": "",
+            "pinned": false
         },
         "/env/bin/zoxide": {
             "path": "/env/bin/zoxide",
@@ -350,7 +398,8 @@
             "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
             "url": "https://github.com/ajeetdsouza/zoxide/releases/tag/v0.9.6",
             "provider": "",
-            "package_path": "zoxide"
+            "package_path": "zoxide",
+            "pinned": false
         }
     }
 }
