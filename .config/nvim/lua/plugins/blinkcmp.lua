@@ -109,13 +109,13 @@ return {{
                                     })
                                 end
                             },
-                            kind = {
-                                highlight = function(ctx) 
-                                    return { 
-                                        { -1, 1 + #ctx.icon_gap + 1, group = 'BlinkCmpKind' .. ctx.kind } 
-                                    } 
-                                end,
-                            },
+                            -- kind = {
+                            --     highlight = function(ctx) 
+                            --         return { 
+                            --             { -1, 1 + #ctx.icon_gap + 1, group = 'BlinkCmpKind' .. ctx.kind } 
+                            --         } 
+                            --     end,
+                            -- },
                             label = {
                                 width = { fill = false, max = 60 },
                                 ellipsis = true,
