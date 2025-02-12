@@ -54,6 +54,41 @@ function mycolors(theme)
     c["hint_light"] = c.r119
     c["hint_dark"] = c.r113
 
+    -- Color definitions
+    local grey0 = hsl("#323437")
+    local grey1 = hsl("#373c4d")
+    local grey89 = hsl("#e4e4e4")
+    local grey70 = hsl("#b2b2b2")
+    local grey62 = hsl("#9e9e9e")
+    local grey58 = hsl("#949494")
+    local grey50 = hsl("#808080")
+    local grey39 = hsl("#626262")
+    local grey30 = hsl("#4e4e4e")
+    local grey27 = hsl("#444444")
+    local grey23 = hsl("#3a3a3a")
+    local grey18 = hsl("#2e2e2e")
+    local grey15 = hsl("#262626")
+    local grey11 = hsl("#1c1c1c")
+    local grey7 = hsl("#121212")
+
+    local khaki = hsl("#c6c684")
+    local yellow = hsl("#e3c78a")
+    local orange = hsl("#de935f")
+    local coral = hsl("#f09479")
+    local orchid = hsl("#e196a2")
+    local lime = hsl("#85dc85")
+    local green = hsl("#8cc85f")
+    local emerald = hsl("#36c692")
+    local turquoise = hsl("#79dac8")
+    local blue = hsl("#80a0ff")
+    local sky = hsl("#74b2ff")
+    local lavender = hsl("#adadf3")
+    local purple = hsl("#ae81ff")
+    local violet = hsl("#cf87e8")
+    local cranberry = hsl("#e65e72")
+    local crimson = hsl("#ff5189")
+    local red = hsl("#ff5454")
+
 
     local highlights = lush(function()
         return {
@@ -71,6 +106,40 @@ function mycolors(theme)
             CursorLineNR { fg = c.r246, gui = "bold" },
             NormalFloat { bg = c.r237 },
             Whitespace { fg = c.r240 },
+
+            -- General highlights
+            MoonflyVisual { bg = grey0 },
+            MoonflyWhite { fg = grey89 },
+            MoonflyGrey0 { fg = grey0 },
+            MoonflyGrey89 { fg = grey89 },
+            MoonflyGrey70 { fg = grey70 },
+            MoonflyGrey62 { fg = grey62 },
+            MoonflyGrey58 { fg = grey58 },
+            MoonflyGrey39 { fg = grey39 },
+            MoonflyGrey30 { fg = grey30 },
+            MoonflyGrey27 { fg = grey27 },
+            MoonflyGrey23 { fg = grey23 },
+            MoonflyGrey18 { fg = grey18 },
+            MoonflyGrey15 { fg = grey15 },
+
+            -- Core theme colors
+            MoonflyKhaki { fg = khaki },
+            MoonflyYellow { fg = yellow },
+            MoonflyOrange { fg = orange },
+            MoonflyCoral { fg = coral },
+            MoonflyOrchid { fg = orchid },
+            MoonflyLime { fg = lime },
+            MoonflyGreen { fg = green },
+            MoonflyEmerald { fg = emerald },
+            MoonflyTurquoise { fg = turquoise },
+            MoonflyBlue { fg = blue },
+            MoonflySky { fg = sky },
+            MoonflyLavender { fg = lavender },
+            MoonflyPurple { fg = purple },
+            MoonflyViolet { fg = violet },
+            MoonflyCranberry { fg = cranberry },
+            MoonflyCrimson { fg = crimson },
+            MoonflyRed { fg = red },
 
             ------- BARBAR -------
             BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
@@ -197,33 +266,34 @@ function mycolors(theme)
 
 
             ------- SYNTAX -------
-            String         { fg = c.r1 }, -- a string constant: "this is a string"
-            Character      { fg = c.r1 }, -- a character constant: 'c', '\n'
+            String         { MoonflyKhaki },
+            Character      { MoonflyPurple },
 
-            Constant       { fg = hsl("#de8ff6") }, -- (preferred) any constant
+            Constant       { MoonflyOrange },
             Number         { fg = hsl("#8eafff") }, -- a number constant: 234, 0xff
-            Boolean        { fg = hsl("#8eafff") }, -- a boolean constant: TRUE, false
+            Boolean        { MoonflyCranberry },
             Float          { fg = hsl("#8eafff") }, -- a floating point constant: 2.3e10
 
-            Identifier     { fg = hsl("#eefeee") }, -- (preferred) any variable name
-            Function       { fg = hsl("#a7aeff") }, -- function name (also: methods for classes)
+            Identifier     { MoonflyTurquoise },
+            Function       { MoonflySky },
+            Title          { fg = orange },
 
             Statement      { fg = hsl("#cdacfc") }, -- (preferred) any statement
             Conditional    { fg = hsl("#ffcbfb") }, -- if, then, else, endif, switch, etc.
-            Repeat         { fg = hsl("#ffcbfb") }, -- for, do, while, etc.
-            Label          { fg = hsl("#ffcbfb") }, -- case, default, etc.
-            Operator       { fg = hsl("#ffcbfb") }, -- "sizeof", "+", "*", etc.
+            Repeat         { MoonflyViolet },
+            Label          { MoonflyTurquoise },
+            Operator       { MoonflyCranberry },
             Keyword        { fg = hsl("#ffcbfb") }, -- any other keyword
-            Exception      { fg = hsl("#ffcbfb") }, -- try, catch, throw
+            Exception      { MoonflyCrimson },
 
-            PreProc        { fg = hsl("#ffcbfb") }, -- (preferred) generic Preprocessor
+            PreProc        { MoonflyCranberry },
             Include        { fg = hsl("#ffcbfb") }, -- preprocessor #include
             Define         { fg = hsl("#ffcbfb") }, -- preprocessor #define
             Macro          { fg = hsl("#ffcbfb") }, -- same as Define
             PreCondit      { fg = hsl("#ffcbfb") }, -- preprocessor #if, #else, #endif, etc.
 
-            Type           { fg = hsl("#f4af6f") }, -- (preferred) int, long, char, etc.
-            StorageClass   { fg = hsl("#f4af6f") }, -- static, register, volatile, etc.
+            Type           { fg = emerald },
+            StorageClass   { MoonflyViolet },
             Structure      { fg = hsl("#f4af6f") }, -- struct, union, enum, etc.
             Typedef        { fg = hsl("#f4af6f") }, -- A typedef
 
@@ -232,6 +302,106 @@ function mycolors(theme)
             Tag            { fg = hsl("#eeef9f") }, -- you can use CTRL-] on this
             Delimiter      { fg = hsl("#eeef9f") }, -- character that needs attention
             Debug          { fg = hsl("#eeef9f") }, -- debugging statements
+
+
+
+
+            -- Neovim Tree-sitter
+            sym"@attribute" { MoonflySky },
+            sym"@comment.error" { MoonflyRed },
+            sym"@comment.note" { MoonflyGrey58 },
+            sym"@comment.ok" { MoonflyGreen },
+            sym"@comment.todo" { Todo },
+            sym"@comment.warning" { MoonflyYellow },
+            sym"@constant" { MoonflyTurquoise },
+            sym"@constant.builtin" { MoonflyGreen },
+            sym"@constant.macro" { MoonflyViolet },
+            sym"@constructor" { MoonflyEmerald },
+            sym"@diff.delta" { DiffChange },
+            sym"@diff.minus" { DiffDelete },
+            sym"@diff.plus" { DiffAdd },
+            sym"@function.builtin" { Function },
+            sym"@function.call" { Function },
+            sym"@function.macro" { MoonflyTurquoise },
+            sym"@function.method" { Function },
+            sym"@function.method.call" { Function },
+            sym"@keyword.conditional" { Conditional },
+            sym"@keyword.directive" { PreProc },
+            sym"@keyword.directive.define" { Define },
+            sym"@keyword.exception" { MoonflyViolet },
+            sym"@keyword.import" { Include },
+            sym"@keyword.operator" { MoonflyViolet },
+            sym"@keyword.repeat" { Repeat },
+            sym"@keyword.storage" { StorageClass },
+            sym"@markup.environment" { MoonflyViolet },
+            sym"@markup.environment.name" { MoonflyEmerald },
+            sym"@markup.heading" { MoonflyViolet },
+            sym"@markup.italic" { fg = orchid, italic = true },
+            sym"@markup.link" { MoonflyGreen },
+            sym"@markup.link.label" { MoonflyGreen },
+            sym"@markup.link.url" { fg = purple, underline = true, sp = grey50 },
+            sym"@markup.list" { MoonflyCranberry },
+            sym"@markup.list.checked" { MoonflyTurquoise },
+            sym"@markup.list.unchecked" { MoonflyBlue },
+            sym"@markup.math" { MoonflySky },
+            sym"@markup.quote" { MoonflyGrey58 },
+            sym"@markup.raw" { String },
+            sym"@markup.strikethrough" { strikethrough = true },
+            sym"@markup.strong" { MoonflyOrchid },
+            sym"@markup.underline" { underline = true },
+            sym"@module" { MoonflyTurquoise },
+            sym"@module.builtin" { MoonflyGreen },
+            sym"@none" {},
+            sym"@parameter.builtin" { MoonflyOrchid },
+            sym"@property" { MoonflyLavender },
+            sym"@string.documentation" { MoonflyTurquoise },
+            sym"@string.regexp" { MoonflyTurquoise },
+            sym"@string.special.path" { MoonflyOrchid },
+            sym"@string.special.symbol" { MoonflyPurple },
+            sym"@string.special.url" { MoonflyPurple },
+            sym"@tag" { MoonflyBlue },
+            sym"@tag.attribute" { MoonflyTurquoise },
+            sym"@tag.builtin" { MoonflyBlue },
+            sym"@tag.delimiter" { MoonflyGreen },
+            sym"@type.builtin" { MoonflyEmerald },
+            sym"@type.qualifier" { MoonflyViolet },
+            sym"@variable" { MoonflyWhite },
+            sym"@variable.builtin" { MoonflyGreen },
+            sym"@variable.member" { MoonflyLavender },
+            sym"@variable.parameter" { MoonflyOrchid },
+        
+            -- Neovim LSP semantic highlights
+            sym"@lsp.type.boolean" { sym"@boolean" },
+            sym"@lsp.type.builtinConstant" { sym"@constant.builtin" },
+            sym"@lsp.type.builtinType" { sym"@type.builtin" },
+            sym"@lsp.type.class" { sym"@type" },
+            sym"@lsp.type.enum" { sym"@type" },
+            sym"@lsp.type.enumMember" { sym"@constant" },
+            sym"@lsp.type.escapeSequence" { sym"@string.escape" },
+            sym"@lsp.type.formatSpecifier" { sym"@punctuation.special" },
+            sym"@lsp.type.generic" { sym"@variable" },
+            sym"@lsp.type.interface" { sym"@type" },
+            sym"@lsp.type.keyword" { sym"@keyword" },
+            sym"@lsp.type.lifetime" { sym"@storageclass" },
+            sym"@lsp.type.namespace" { sym"@module" },
+            sym"@lsp.type.number" { sym"@number" },
+            sym"@lsp.type.parameter" { sym"@parameter" },
+            sym"@lsp.type.property" { sym"@property" },
+            sym"@lsp.type.selfKeyword" { sym"@variable.builtin" },
+            sym"@lsp.type.selfParameter" { sym"@variable.builtin" },
+            sym"@lsp.type.string" { sym"@string" },
+            sym"@lsp.type.struct" { sym"@type" },
+            sym"@lsp.type.typeAlias" { sym"@type.definition" },
+            sym"@lsp.type.unresolvedReference" { underline = true, sp = red },
+            sym"@lsp.type.variable" { sym"@variable" },
+        
+            -- Additional LSP modifications
+            sym"@lsp.typemod.class.defaultLibrary" { sym"@type" },
+            sym"@lsp.typemod.enum.defaultLibrary" { sym"@type" },
+            sym"@lsp.typemod.function.defaultLibrary" { sym"@function" },
+            sym"@lsp.typemod.keyword.async" { sym"@keyword" },
+            sym"@lsp.typemod.keyword.injected" { sym"@keyword" },
+            sym"@lsp.typemod.variable.static" { sym"@constant" },
         }
     end)
     lush.apply(highlights)
