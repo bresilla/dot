@@ -27,3 +27,8 @@ sync_address = "http://digi.ocean:8868"
 ## which search mode to use
 ## possible values: prefix, fulltext
 search_mode = "fulltext"
+
+style = "full"
+inline_height = 0
+# show_help = false
+# invert = true

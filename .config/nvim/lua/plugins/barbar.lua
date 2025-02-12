@@ -3,6 +3,9 @@
 vim.keymap.set('n',            '<C-Pagedown>',             [[:BufferNext<CR>]], { noremap = true, silent = true })
 vim.keymap.set('n',            '<C-Pageup>',               [[:BufferPrevious<CR>]], { noremap = true, silent = true })
 
+-- ctrl + > and ctrl + <
+vim.keymap.set('n',            '<C-n>',                   [[:tabn<CR>]], { noremap = true, silent = true })
+
 vim.keymap.set('n',            '<C-S-Pagedown>',           [[:BufferMoveNext<CR>]], { noremap = true, silent = true })
 vim.keymap.set('n',            '<C-S-Pageup>',             [[:BufferMovePrevious<CR>]], { noremap = true, silent = true })
 

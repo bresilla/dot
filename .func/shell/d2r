@@ -1,0 +1,13 @@
+#!/bin/bash
+
+degree=$1
+pi=3.141592653589793
+radian=$(echo "scale=10; $degree * $pi / 180" | bc -l)
+
+# If the result starts with a dot, add a leading zero
+if [[ $radian == .* ]]; then
+    radian="0$radian"
+fi
+
+echo "$radian"
+
