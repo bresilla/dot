@@ -17,3 +17,6 @@ OSS/
 .config/zed/.tmp*
 .func/info
 .func/info/me
+.config/zathura/zathurarc
+.config/zed/themes/wal-theme.json
+.config/systemd/user/gnome-session.target.wants/
