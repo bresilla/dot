@@ -266,7 +266,7 @@ function mycolors(theme)
 
 
             ------- SYNTAX -------
-            String         { MoonflyKhaki },
+            String         { fg = c.r1 }, -- a string constant: "this is a string"
             Character      { MoonflyPurple },
 
             Constant       { MoonflyOrange },
