@@ -7,11 +7,11 @@ image() {
     screenshot_file=/tmp/$(date +%s).png;
     echo $screenshot_file > /tmp/screenshot_file; 
 
-    grim -g "$(slurp)" $screenshot_file
-    wl-copy < $screenshot_file
-    sxiv $screenshot_file &
 
     if [[ -n $argc_ocr ]]; then
+        grim -g "$(slurp)" $screenshot_file
+        wl-copy < $screenshot_file
+        sxiv $screenshot_file &
         TEXT_FILE="/tmp/ocr.txt"
         tesseract "$screenshot_file" "${TEXT_FILE//\.txt/}" 2> /dev/null
         sed -i 's/\x0c//' "$TEXT_FILE"
@@ -23,6 +23,9 @@ image() {
         echo 0
         rm "$TEXT_FILE"
         rm "$screenshot_file"
+    else
+        grim -g "$(slurp)" -t ppm - | satty --filename - --output-filename $screenshot_file
+        wl-copy < $screenshot_file
     fi
 }
 

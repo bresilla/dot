@@ -85,6 +85,7 @@ colors_to_tty &
 
 scp -r /home/bresilla/.cache/lule/colors borg.zerotier:~/.cache/lule/colors &> /dev/null & disown
 scp -r /home/bresilla/.cache/lule/colors robo.zerotier:~/.cache/lule/colors &> /dev/null & disown
+scp -r /home/bresilla/.cache/lule/colors echo.zerotier:~/.cache/lule/colors &> /dev/null & disown
 
 source $HOME/.cache/wal/colors.sh
 
