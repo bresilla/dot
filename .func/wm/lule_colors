@@ -90,8 +90,8 @@ scp -r /home/bresilla/.cache/lule/colors echo.zerotier:~/.cache/lule/colors &> /
 source $HOME/.cache/wal/colors.sh
 
 # stupid hyprland things
-c1="rgb(${color1:1})"
-c15="rgb(${color15:1})"
+c1="rgb(${color240:1})"
+c15="rgb(${color242:1})"
 c238="rgb(${color238:1})"
 hyprctl keyword general:col.active_border $c1 $c15 45deg &
 hyprctl keyword general:col.inactive_border = $c238 &

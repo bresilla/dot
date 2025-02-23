@@ -124,9 +124,9 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.20.21",
-            "hash": "caa477db9a477c64a4d06b6845258ec58a3ef5f004586f861ebdeb2684cfd9cd",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.21",
+            "version": "v0.20.22",
+            "hash": "3e415c0c70b2a5d6fbb516baf448e6c42657a33fb81647824ce102ec8ad7a06b",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.22",
             "provider": "",
             "package_path": "./eza",
             "pinned": false
@@ -154,9 +154,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.7",
-            "hash": "75a7d9262ad2fa870dd3eaa666b5d84b2433b57a05d6c460f3218101c0079be3",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.7",
+            "version": "v1.0.9",
+            "hash": "8b4a0246d6b8c46836ec108ed157f1dd0ac01559b379c589fd653c95ffcba01f",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.9",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -173,10 +173,10 @@
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
-            "remote_name": "ha",
-            "version": "4.36.0",
-            "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.36.0",
+            "remote_name": "ha_amd64",
+            "version": "4.37.0",
+            "hash": "d988a12ba15a2b8a617b9271dbc5d6f86617f89f86138a605be7c38424b7bbe0",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.37.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -264,9 +264,9 @@
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.41.3",
-            "hash": "c86e0680b8473389fea29d02997060fa7c25c6ce46c7c6120bad817ab83fb0d1",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.41.3",
+            "version": "v0.41.4",
+            "hash": "30d08a9e2eb96dc2a7e0358cecf92511d689554fcd473724dfc5f6d6bd620e18",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.41.4",
             "provider": "",
             "package_path": "",
             "pinned": false

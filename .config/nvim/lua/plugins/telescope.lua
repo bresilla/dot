@@ -41,7 +41,7 @@ return {
                             ["<esc>"] = actions.close
                         },
                     }
-                }
+                },
             }
 
             center_list = require'telescope.themes'.get_dropdown({
@@ -97,6 +97,6 @@ return {
     },
     {
         "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
     }
 }

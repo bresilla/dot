@@ -1,6 +1,16 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/nom": {
+            "path": "/env/bin/nom",
+            "remote_name": "nom",
+            "version": "v2.8.0",
+            "hash": "d4bbeebd6133bb6da48d2e0012f3b83f336d39eb1e06b0246a84860033dcf4dd",
+            "url": "https://github.com/guyfedwards/nom",
+            "provider": "github",
+            "package_path": "nom",
+            "pinned": false
+        },
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "ollama",
@@ -9,6 +19,16 @@
             "url": "https://github.com/jmorganca/ollama",
             "provider": "github",
             "package_path": "bin/ollama",
+            "pinned": false
+        },
+        "/env/bin/srss": {
+            "path": "/env/bin/srss",
+            "remote_name": "srss",
+            "version": "v0.1.0",
+            "hash": "afd1aee390d83e64f2326956c2b82acdb0bbfa4842d983916826de77bf75de3c",
+            "url": "https://github.com/sheepla/srss",
+            "provider": "github",
+            "package_path": "srss",
             "pinned": false
         }
     }
