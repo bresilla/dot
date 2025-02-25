@@ -42,6 +42,7 @@ alias zero='sudo zerotier-cli'
 alias ssm='manssh'
 alias blue='bluetuith'
 alias ip="ip -c"
+alias ipi="ipinfo myip"
 
 ##SYSTEM
 alias moonlight="QT_QPA_PLATFORM=xcb moonlight"
