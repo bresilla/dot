@@ -20,3 +20,4 @@ OSS/
 .config/zathura/zathurarc
 .config/zed/themes/wal-theme.json
 .config/systemd/user/gnome-session.target.wants/
+.config/zed/themes/wal-theme.json

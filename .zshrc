@@ -220,14 +220,13 @@ cd() {
 }
 
 #--------------------------------------------------------------------------------------------------------------------
-#TAB-RS (shotrcut: Ctrl + e)
+#TAB-RS (shotrcut: Ctrl + x)
 bindkey -s '^X' ' tab\n'
 bindkey -s '^A' ' scrr\n'
 # [[ -n $TMUX ]] && tab $(names)
 [[ -n $TAB ]] && export DISPLAY=:0
+[[ ! -n $TAB ]] && bresilla
 
 #---------------------------            EXTERNAL       --------------------------
 [[ -s "$HOME/.external" ]] && source "$HOME/.external"
 if (( ${+CWD_VAR} )); then cd $CWD_VAR; fi
-bresilla
-
