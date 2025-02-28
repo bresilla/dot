@@ -83,15 +83,17 @@ layout_ros2() {
     export TOP_HEAD=$PWD
     if [[ $DISTRIB_CODENAME == "jammy" ]]; then
         source "/opt/ros/humble/setup.sh"
+        eval "$(register-python-argcomplete3 ros2)"
+        eval "$(register-python-argcomplete3 colcon)"
         echo "UBUNTU 22.04"
     elif [[ $DISTRIB_CODENAME == "noble" ]]; then
         source "/opt/ros/jazzy/setup.sh"
+        eval "$(register-python-argcomplete ros2)"
+        eval "$(register-python-argcomplete colcon)"
         echo "UBUNTU 24.04"
     fi
     source $TOP_HEAD/install/setup.sh
     export_alias build 'cd $TOP_HEAD && colcon build'
-    eval "$(register-python-argcomplete3 ros2)"
-    eval "$(register-python-argcomplete3 colcon)"
 }
 
 export_function() {

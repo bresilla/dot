@@ -103,7 +103,7 @@ hyprctl keyword general:col.inactive_border = $c238 &
 
 zedtheme &
 
-eww reload
+eww reload &
 swaykill(){
     killall swaybg
     swaybg -i $(cat $TEMP/lule_wallpaper) &
