@@ -154,6 +154,27 @@ vim.cmd([[
   cabbrev q  Q
 ]])
 
+
+-------------------------------------------- === CUSRSON POS === ------------------------------------------
+-- Define an autocommand group to organize related autocommands
+local group = vim.api.nvim_create_augroup('RestoreCursor', { clear = true })
+
+-- Create the autocommand within the defined group
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*',  -- Apply to all buffers
+  group = group,
+  desc = 'Restore cursor position when entering a buffer',
+  callback = function()
+    -- Check if the mark '"' is set in the current buffer
+    if vim.fn.line([['"]]) > 0 and vim.fn.line([['"]]) <= vim.fn.line('$') then
+      -- Move the cursor to the position of the mark '"'
+      vim.api.nvim_win_set_cursor(0, { vim.fn.line([['"]]), 0 })
+    end
+  end,
+})
+
+
+
 -------------------------------------------- === LAST MAP === ---------------------------------------------
 vim.keymap.set('n', '<ESC>', function()
     vim.cmd(':noh') -- Clear search highlighting

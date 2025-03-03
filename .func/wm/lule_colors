@@ -93,6 +93,12 @@ source $HOME/.cache/wal/colors.sh
 c1="rgb(${color240:1})"
 c15="rgb(${color242:1})"
 c238="rgb(${color238:1})"
+
+# sed -i "s/\($color1=rgb(\)130c06/\1FF0000/" file.txt
+# sed -i "s/\($color1=rgb(\)[0-9a-fA-F]\{6\}/\$c1/" /env/dot/.config/hypr/hyprland.conf
+# sed -i "s/\($color15=rgb(\)[0-9a-fA-F]\{6\}/\$c15/" /env/dot/.config/hypr/hyprland.conf
+# sed -i "s/\($color238=rgb(\)[0-9a-fA-F]\{6\}/\$c238/" /env/dot/.config/hypr/hyprland.conf
+
 hyprctl keyword general:col.active_border $c1 $c15 45deg &
 hyprctl keyword general:col.inactive_border = $c238 &
 

@@ -95,7 +95,8 @@ function run_killer(){ killer; zle reset-prompt; zle redisplay; }
 zle -N run_killer
 bindkey -M vicmd '^k' run_killer
 bindkey -M viins '^k' run_killer
-bindkey '^k' run_killer
+# bindkey '^o' run_killer
+bindkey -s '^o' ' pik\n'
 
 ###SYSZ
 function run_sysz(){ sysz; zle reset-prompt; zle redisplay; }
