@@ -53,10 +53,10 @@
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-0.15.2-linux-amd64",
-            "version": "v0.15.2",
-            "hash": "e4c26734da8e18105b2c28948b4a2a2da15c72bd2756751c5ec052322a2438bc",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.15.2",
+            "remote_name": "CodeGPT-0.16.0-linux-amd64",
+            "version": "v0.16.0",
+            "hash": "d316297c8d55a85cda23458bd16e8537d6220f58b55813e9dae218060615151d",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.16.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -124,9 +124,9 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.20.22",
-            "hash": "3e415c0c70b2a5d6fbb516baf448e6c42657a33fb81647824ce102ec8ad7a06b",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.22",
+            "version": "v0.20.23",
+            "hash": "aaef6cdb133f7987e847f107dd216d61d8426c0829d954d71f62be954f7138f7",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.23",
             "provider": "",
             "package_path": "./eza",
             "pinned": false
@@ -144,9 +144,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.9",
-            "hash": "8b4a0246d6b8c46836ec108ed157f1dd0ac01559b379c589fd653c95ffcba01f",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.9",
+            "version": "v1.0.10",
+            "hash": "96f863e3a5d7691c2779e78cb8afb5d682fdf76eca84438f88fa61a4bd53073f",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.10",
             "provider": "",
             "package_path": "goose",
             "pinned": false

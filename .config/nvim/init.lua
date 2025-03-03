@@ -77,8 +77,8 @@ vim.o.mouse = "a" -- enable mouse supportcomment
 vim.o.foldmethod = "marker" -- foldmethod using marker
 vim.o.signcolumn = "yes" -- enable sign column all the time, 4 column
 
-vim.g.loaded_netrw = 1 -- disable netrw
-vim.g.loaded_netrwPlugin = 1 -- disable netrw plugin
+vim.g.loaded_netrw = 0 -- disable netrw
+vim.g.loaded_netrwPlugin = 0 -- disable netrw plugin
 
 vim.o.list = true -- display listchars
 vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬" -- set listchars

@@ -31,6 +31,16 @@
             "package_path": "bin/ollama",
             "pinned": false
         },
+        "/env/bin/rerun": {
+            "path": "/env/bin/rerun",
+            "remote_name": "rerun-cli-0.22.1-x86_64-unknown-linux-gnu",
+            "version": "0.22.1",
+            "hash": "8a68fc3d401b308fd667685699418d55b0794c0ae62518229fb7a80acd4431f0",
+            "url": "https://github.com/rerun-io/rerun",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/srss": {
             "path": "/env/bin/srss",
             "remote_name": "srss",

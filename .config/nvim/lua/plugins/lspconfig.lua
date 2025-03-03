@@ -1,3 +1,6 @@
+vim.keymap.set("n", '<A-g>', [[<CMD>lua require("conform").format()<CR>]], {noremap = true, silent = true })
+
+
 return {{
     'neovim/nvim-lspconfig',
     config = function()
