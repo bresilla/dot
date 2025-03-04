@@ -5,21 +5,23 @@ local function conditional_search_next()
     local search_pattern = vim.fn.getreg('/')
     if search_pattern == "" then
         local current_word = vim.fn.expand('<cword>')
-        local escaped_word = vim.fn.escape(current_word, '\\/.*[]~$^')
-        vim.fn.setreg('/', '\\<' .. escaped_word .. '\\>')
-        vim.o.hlsearch = true
-        vim.cmd('normal! n')
+        -- if #(current_word) > 1 then
+        if string.match(current_word, "^%w") then
+            local escaped_word = vim.fn.escape(current_word, '\\/.*[]~$^')
+            vim.fn.setreg('/', '\\<' .. escaped_word .. '\\>')
+            vim.o.hlsearch = true
+            vim.cmd('normal! n')
+        end
     else    
         vim.cmd('normal! n')
     end
 end
 
 vim.keymap.set('n', 'n', conditional_search_next, { noremap = true, silent = true })
-      
 
 return {
     {
-        "danielosw/nvim-illuminate",
+        "RRethy/vim-illuminate",
         event = "BufRead",
         config = function()
             local illuminate = require("illuminate")
