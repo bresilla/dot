@@ -1,17 +1,17 @@
-local signs = {
-    Error = "-",
-    Warn = "-",
-    Hint = "-",
-    Info = "-"
-}
-for type, icon in pairs(signs) do
-    local hl = "DiagnosticSign" .. type
-    vim.fn.sign_define(hl, {
-        text = icon,
-        texthl = hl,
-        numhl = hl
-    })
-end
+-- local signs = {
+--     Error = "-",
+--     Warn = "-",
+--     Hint = "-",
+--     Info = "-"
+-- }
+-- for type, icon in pairs(signs) do
+--     local hl = "DiagnosticSign" .. type
+--     vim.fn.sign_define(hl, {
+--         text = icon,
+--         texthl = hl,
+--         numhl = hl
+--     })
+-- end
 
 -- Autocommand to force diagnostics to refresh on every cursor movement
 vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
@@ -44,7 +44,7 @@ vim.diagnostic.config({
                 end
                 diag_msg = " " .. diag_msg
                 for i = 1, #diags do
-                    diag_msg = "■" .. diag_msg
+                    diag_msg = "●" .. diag_msg
                 end
                 return diag_msg
             end
@@ -53,7 +53,15 @@ vim.diagnostic.config({
         prefix = "",
         severity_sort = true,
         virt_text_pos = "right_align",
-        suffix = "  -"
+        suffix = " <",
+    },
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '>',
+            [vim.diagnostic.severity.WARN] = '>',
+            [vim.diagnostic.severity.INFO] = '>',
+            [vim.diagnostic.severity.HINT] = '>',
+        },
     },
     underline = true,
     float = {

@@ -48,7 +48,7 @@ vim.o.cursorcolumn = true
 vim.o.splitbelow = true -- split below instead of above
 vim.o.splitright = true -- split right instead of left
 vim.o.startofline = false -- don't go to the start of the line when moving to another file
-vim.o.lazyredraw = true -- lazyredraw to make macro faster
+-- vim.o.lazyredraw = true -- lazyredraw to make macro faster
 
 vim.o.tabstop = 4 -- tabsize
 vim.o.shiftwidth = 4 -- set indentation width

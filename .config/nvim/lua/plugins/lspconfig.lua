@@ -63,7 +63,8 @@ return {{
             },
           },
     }
-}, {
+}, 
+{
     "bresilla/lineslua.nvim",
     lazy = false,
     config = function()
@@ -73,4 +74,5 @@ return {{
             }
         })
     end
-}}
+}
+}
