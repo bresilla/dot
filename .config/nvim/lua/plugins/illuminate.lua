@@ -10,6 +10,7 @@ local function conditional_search_next()
             local escaped_word = vim.fn.escape(current_word, '\\/.*[]~$^')
             vim.fn.setreg('/', '\\<' .. escaped_word .. '\\>')
             vim.o.hlsearch = true
+            require('hlslens').start()
             vim.cmd('normal! n')
         end
     else    
@@ -34,4 +35,13 @@ return {
             })
         end,
     },
+    {
+        'kevinhwang91/nvim-hlslens',
+        config = function()
+            local hlslens = require('hlslens')
+            hlslens.setup({
+                override_lens = "relIdx"
+            })
+        end,
+    }
 }
