@@ -87,7 +87,6 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 require("config.lazy")
 require("utils.colors")
 require("utils.diags")
-require("utils.keybinds")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "

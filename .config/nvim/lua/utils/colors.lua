@@ -160,6 +160,10 @@ function mycolors(theme)
             ScrollbarSearch { fg = c.r1 },
             ScrollbarSearchHandle { bg = c.r236, fg = c.r1 },
 
+
+            -------- ChatGPT ----------
+            ChatGPTSelectedMessage { bg = c.r236 },
+
             ------- DASHBOARD -------
             DashboardHeader { bg = c.r0, fg = c.r1 },
             DashboardCenter { bg = c.r0, fg = c.r1 },
@@ -279,6 +283,7 @@ function mycolors(theme)
             Number         { fg = hsl("#8eafff") }, -- a number constant: 234, 0xff
             Boolean        { MoonflyCranberry },
             Float          { fg = hsl("#8eafff") }, -- a floating point constant: 2.3e10
+            FloatBorder    { bg = c.r0, fg = c.r1 },
 
             Identifier     { MoonflyTurquoise },
             Function       { MoonflySky },
