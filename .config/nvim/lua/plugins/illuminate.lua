@@ -40,7 +40,10 @@ return {
         config = function()
             local hlslens = require('hlslens')
             hlslens.setup({
-                override_lens = "relIdx"
+                override_lens = "relIdx",
+                build_position_cb = function(plist, _, _, _)
+                    require("scrollbar.handlers.search").handler.show(plist.start_pos)
+                end,
             })
         end,
     }

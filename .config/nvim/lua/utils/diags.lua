@@ -36,7 +36,7 @@ vim.diagnostic.config({
             local cursor_line = cursor_pos[1] - 1 -- convert to 0-based
 
             if (cursor_line ~= diagnostic.lnum) or (vim.api.nvim_get_mode().mode == "v") then
-                local win_width = vim.api.nvim_win_get_width(0)
+                local win_width = vim.api.nvim_win_get_width(0)-1
                 local text_length = #(vim.api.nvim_get_current_line())
                 local diag_msg = diagnostic.message
                 if #(diag_msg) > math.floor(0.20 * win_width) then
@@ -44,7 +44,7 @@ vim.diagnostic.config({
                 end
                 diag_msg = " " .. diag_msg
                 for i = 1, #diags do
-                    diag_msg = "●" .. diag_msg
+                    diag_msg = "■" .. diag_msg
                 end
                 return diag_msg
             end
@@ -53,14 +53,14 @@ vim.diagnostic.config({
         prefix = "",
         severity_sort = true,
         virt_text_pos = "right_align",
-        suffix = " <",
+        suffix = " <<",
     },
     signs = {
         text = {
-            [vim.diagnostic.severity.ERROR] = '>',
-            [vim.diagnostic.severity.WARN] = '>',
-            [vim.diagnostic.severity.INFO] = '>',
-            [vim.diagnostic.severity.HINT] = '>',
+            [vim.diagnostic.severity.ERROR] = '>>',
+            [vim.diagnostic.severity.WARN] = '>>',
+            [vim.diagnostic.severity.INFO] = '>>',
+            [vim.diagnostic.severity.HINT] = '>>',
         },
     },
     underline = true,

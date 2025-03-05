@@ -154,6 +154,12 @@ function mycolors(theme)
             BufferTabpageFill { bg = c.r237 },
             BufferTabpagesSep { bg = c.r237 },
 
+
+            ------- Scrollbar -------
+            ScrollbarHandle { bg = c.r236 },
+            ScrollbarSearch { fg = c.r1 },
+            ScrollbarSearchHandle { bg = c.r236, fg = c.r1 },
+
             ------- DASHBOARD -------
             DashboardHeader { bg = c.r0, fg = c.r1 },
             DashboardCenter { bg = c.r0, fg = c.r1 },

@@ -179,6 +179,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 vim.keymap.set('n', '<ESC>', function()
     vim.cmd(':noh') -- Clear search highlighting
     vim.fn.setreg('/', '') -- Clear the search register
+    require('scrollbar.handlers.search').handler.hide()
     return [[<ESC>]]
 end, {
     noremap = true,
