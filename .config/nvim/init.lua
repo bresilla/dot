@@ -128,9 +128,16 @@ vim.keymap.set({'n', 'v'}, 'd', [["_d]])
 vim.keymap.set({'n', 'v'}, 'c', [["_c]])
 vim.keymap.set('n', '<S-Up>', [[<Nop>]])
 vim.keymap.set('n', '<S-Down>', [[<Nop>]])
+vim.keymap.set({'n', 'v'}, 'u', [[<Nop>]])
 
 -- === CHANGE CASE === "
 vim.keymap.set('n', '~', [[g~aw]])
+
+
+-- === OTHERS === "
+vim.keymap.set('n', '<C-a>', 'ggVG')
+vim.keymap.set('n', '<C-u>', '<cmd>:undo<cr>')
+vim.keymap.set('n', '<C-r>', '<cmd>:redo<cr>')
 
 -------------------------------------------- === SMART_CLISE === ---------------------------------------------
 vim.api.nvim_create_user_command('Q', function()

@@ -78,20 +78,6 @@ return {
                 "n", "<leader>e", [[<cmd>lua require("telescope").extensions.file_browser.file_browser()<cr>]],
                 {silent = true, desc = "File Browser" })
 
-
-            vim.keymap.set(
-                "n", "<leader>lr", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], 
-                {silent = true, desc = "LSP References" })
-            vim.keymap.set(
-                "n", "<leader>ll", [[<cmd>lua require('telescope.builtin').lsp_references()<cr>]], 
-                {silent = true, desc = "LSP References" })
-            vim.keymap.set(
-                "n", "<leader>li", [[<cmd>lua require('telescope.builtin').lsp_implementations()<cr>]], 
-                {silent = true, desc = "LSP Implementations" })
-            vim.keymap.set(
-                "n", "<leader>ld", [[<cmd>lua require('telescope.builtin').lsp_definitions()<cr>]], 
-                {silent = true, desc = "LSP Definitions" })
-
         end,
         dependencies = { 'nvim-lua/plenary.nvim' }
     },

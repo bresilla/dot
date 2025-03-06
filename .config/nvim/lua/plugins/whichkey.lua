@@ -67,6 +67,18 @@ return{
                 { "<leader>cr", "<cmd>ChatGPTRun roxygen_edit<CR>", desc = "Roxygen Edit", mode = { "n", "v" } },
                 { "<leader>cl", "<cmd>ChatGPTRun code_readability_analysis<CR>", desc = "Code Readability Analysis", mode = { "n", "v" } },
             })
+
+            wk.add({
+                { "<leader>l", group = "LSP"},
+                { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Rename", mode = { "n", "v" } },
+                { "<leader>lt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", desc = "Type Definition", mode = { "n", "v" } },
+                { "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<CR>", desc = "Implementation", mode = { "n", "v" } },
+                { "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", desc = "Signature Help", mode = { "n", "v" } },
+                { "<leader>lc", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code Action", mode = { "n", "v" } },
+                { "<leader>lf", "<cmd>lua vim.lsp.buf.formatting()<CR>", desc = "Formatting", mode = { "n", "v" } },
+                { "<leader>ll", "<cmd>lua vim.lsp.buf.references()<CR>", desc = "References", mode = { "n", "v" } },
+                { "<leader>lh", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "Hover", mode = { "n", "v" } },
+            })
         end,
     }
 }

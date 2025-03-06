@@ -16,6 +16,7 @@ return {
                     cpp = { 'clang-format' },
                     rust = { 'rustfmt' },
                     zig = { 'zig fmt' },
+                    python = { 'black' },
                 }
             })
 

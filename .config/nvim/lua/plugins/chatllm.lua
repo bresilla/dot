@@ -25,6 +25,28 @@ return {
                 "-H", "HTTP-Referer: http://www.gooogle.com", --should not be empty, otherwise it will not display
                 "-H", "X-Title: ChatGPTnvim"
                 },
+                chat = {
+                    welcome_message = "",
+                    default_system_message = "",
+                    loading_text = "... waiting for answer ...",
+                    question_sign = "", -- 🙂
+                    answer_sign = "ﮧ", -- 🤖
+                    max_line_length = 120,
+                    sessions_window = {
+                        active_sign = "  ",
+                        inactive_sign = "  ",
+                        current_line_sign = "",
+                        border = {
+                            style = "rounded",
+                            text = {
+                                top = " Sessions ",
+                            },
+                        },
+                        win_options = {
+                            winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+                        },
+                    },
+                }
             }
         end, 
     }
