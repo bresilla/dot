@@ -162,24 +162,17 @@ vim.cmd([[
 
 
 -------------------------------------------- === CUSRSON POS === ------------------------------------------
--- Define an autocommand group to organize related autocommands
-local group = vim.api.nvim_create_augroup('RestoreCursor', { clear = true })
-
--- Create the autocommand within the defined group
-vim.api.nvim_create_autocmd('BufEnter', {
-  pattern = '*',  -- Apply to all buffers
-  group = group,
-  desc = 'Restore cursor position when entering a buffer',
+local augroup = vim.api.nvim_create_augroup('RestoreCursor', { clear = true })
+vim.api.nvim_create_autocmd('BufReadPost', {
+  group = augroup,
   callback = function()
-    -- Check if the mark '"' is set in the current buffer
-    if vim.fn.line([['"]]) > 0 and vim.fn.line([['"]]) <= vim.fn.line('$') then
-      -- Move the cursor to the position of the mark '"'
-      vim.api.nvim_win_set_cursor(0, { vim.fn.line([['"]]), 0 })
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      vim.api.nvim_win_set_cursor(0, mark)
     end
   end,
 })
-
-
 
 -------------------------------------------- === LAST MAP === ---------------------------------------------
 vim.keymap.set('n', '<ESC>', function()

@@ -61,23 +61,6 @@ return {
                     },
                 }
             })
-
-            vim.keymap.set(
-                "n", "<leader>g", [[<cmd>lua require('telescope.builtin').live_grep()<cr>]],
-                {silent = true, desc = "Live Grep" })
-            vim.keymap.set(
-                "n", "<leader>F", "<cmd>lua require('telescope.builtin').git_files()<cr>", 
-                {silent = true, desc = "Git Files" })
-            vim.keymap.set(
-                "n", "<leader>f", [[<cmd>lua require('telescope.builtin').find_files()<cr>]], 
-                {silent = true, desc = "Find Files" })
-            vim.keymap.set(
-                "n", "<leader>b", [[<cmd>lua require('telescope.builtin').buffers()<cr>]], 
-                {silent = true, desc = "Buffers" })
-            vim.keymap.set(
-                "n", "<leader>e", [[<cmd>lua require("telescope").extensions.file_browser.file_browser()<cr>]],
-                {silent = true, desc = "File Browser" })
-
         end,
         dependencies = { 'nvim-lua/plenary.nvim' }
     },

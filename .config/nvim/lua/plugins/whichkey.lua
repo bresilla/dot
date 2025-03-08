@@ -51,6 +51,7 @@ return{
                 show_help = true, -- show help message on the command line when the popup is visible
                 -- triggers = "auto", -- automatically setup triggers
             }
+
             wk.add({
                 { "<leader>c", group = "ChatGPT"},
                 { "<leader>cc", "<cmd>ChatGPT<CR>", desc = "ChatGPT", mode = { "n", "v" } },
@@ -71,13 +72,23 @@ return{
             wk.add({
                 { "<leader>l", group = "LSP"},
                 { "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<CR>", desc = "Rename", mode = { "n", "v" } },
-                { "<leader>lt", "<cmd>lua vim.lsp.buf.type_definition()<CR>", desc = "Type Definition", mode = { "n", "v" } },
-                { "<leader>li", "<cmd>lua vim.lsp.buf.implementation()<CR>", desc = "Implementation", mode = { "n", "v" } },
                 { "<leader>ls", "<cmd>lua vim.lsp.buf.signature_help()<CR>", desc = "Signature Help", mode = { "n", "v" } },
                 { "<leader>lc", "<cmd>lua vim.lsp.buf.code_action()<CR>", desc = "Code Action", mode = { "n", "v" } },
                 { "<leader>lf", "<cmd>lua vim.lsp.buf.formatting()<CR>", desc = "Formatting", mode = { "n", "v" } },
-                { "<leader>ll", "<cmd>lua vim.lsp.buf.references()<CR>", desc = "References", mode = { "n", "v" } },
                 { "<leader>lh", "<cmd>lua vim.lsp.buf.hover()<CR>", desc = "Hover", mode = { "n", "v" } },
+                { "<leader>lt", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<cr>", desc = "Type Definitions", mode = { "n", "v" } },
+                { "<leader>ll", "<cmd>lua require('telescope.builtin').lsp_references()<cr>", desc = "References", mode = { "n", "v" } },
+                { "<leader>li", "<cmd>lua require('telescope.builtin').lsp_implementations()<cr>", desc = "Implementations", mode = { "n", "v" } },
+                { "<leader>ld", "<cmd>lua require('telescope.builtin').diagnostics()<cr>", desc = "Diagnostics", mode = { "n", "v" } },
+            })
+
+            -- TELESCOPE
+            wk.add({
+                { "<leader>g", "<cmd>lua require('telescope.builtin').live_grep()<cr>", desc = "Live Grep", mode = { "n", "v" } },
+                { "<leader>F", "<cmd>lua require('telescope.builtin').git_files()<cr>", desc = "Git Files", mode = { "n", "v" } },
+                { "<leader>f", "<cmd>lua require('telescope.builtin').find_files()<cr>", desc = "Find Files", mode = { "n", "v" } },
+                { "<leader>b", "<cmd>lua require('telescope.builtin').buffers()<cr>", desc = "Buffers", mode = { "n", "v" } },
+                { "<leader>e", "<cmd>lua require('telescope.builtin').file_browser()<cr>", desc = "File Browser", mode = { "n", "v" } },
             })
         end,
     }
