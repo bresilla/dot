@@ -122,6 +122,11 @@ vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
     noremap = true,
     silent = true
 })
+vim.keymap.set('n', '+', "<cmd>:NoNeckPain<CR>", {
+    noremap = true,
+    silent = true
+})
+
 
 -- === REMOVE HABITS === "
 vim.keymap.set({'n', 'v'}, 'd', [["_d]])
@@ -170,6 +175,18 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     local lcount = vim.api.nvim_buf_line_count(0)
     if mark[1] > 0 and mark[1] <= lcount then
       vim.api.nvim_win_set_cursor(0, mark)
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*',  -- Apply to all buffers
+  group = group,
+  desc = 'Restore cursor position when entering a buffer',
+  callback = function()
+    -- Check if the mark '"' is set in the current buffer
+    if vim.fn.line([['"]]) > 0 and vim.fn.line([['"]]) <= vim.fn.line('$') then
+      -- Move the cursor to the position of the mark '"'
+      vim.api.nvim_win_set_cursor(0, { vim.fn.line([['"]]), 0 })
     end
   end,
 })
