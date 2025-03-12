@@ -41,6 +41,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/spotifyd": {
+            "path": "/env/bin/spotifyd",
+            "remote_name": "spotifyd",
+            "version": "v0.4.0",
+            "hash": "62dbea1d7358b88aed00b33fbe17c99d0d48bd926521fcd9255488520e1a5e96",
+            "url": "https://github.com/spotifyd/spotifyd",
+            "provider": "github",
+            "package_path": "spotifyd",
+            "pinned": false
+        },
         "/env/bin/srss": {
             "path": "/env/bin/srss",
             "remote_name": "srss",

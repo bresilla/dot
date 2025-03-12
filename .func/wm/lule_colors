@@ -101,6 +101,7 @@ c238="rgb(${color238:1})"
 
 hyprctl keyword general:col.active_border $c1 $c15 45deg &
 hyprctl keyword general:col.inactive_border = $c238 &
+hyprctl hyprpaper reload ,"$(cat $TEMP/lule_wallpaper)"
 
 # bspc config focused_border_color $color1 &
 # bspc config normal_border_color $color239 &
@@ -110,8 +111,8 @@ hyprctl keyword general:col.inactive_border = $c238 &
 zedtheme &
 
 eww reload &
-swaykill(){
-    killall swaybg
-    swaybg -i $(cat $TEMP/lule_wallpaper) &
-}
-swaykill &
+# swaykill(){
+#     killall swaybg
+#     swaybg -i $(cat $TEMP/lule_wallpaper) &
+# }
+# swaykill &
