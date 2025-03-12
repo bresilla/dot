@@ -1,4 +1,5 @@
 format = """
+${custom.ssh}\
 $hostname\
 ${custom.distro}\
 $username\
@@ -30,11 +31,17 @@ $git_status\
 $directory\
 """
 
+[custom.ssh]
+style = "bg:237 bold italic fg:15"
+command = "echo //"
+when = """ [[ -n $SSH_CONNECTION ]] """
+format = "[ $output ]($style)"
+
 [hostname]
 style = "bg:237 bold italic fg:15"
 ssh_only = false
 # format = "($style)[ $hostname ]($style)"
-format = "[ $ssh_symbol]($style)[$hostname ]($style)"
+format = "[$hostname ]($style)"
 
 [username]
 show_always = true
@@ -110,7 +117,6 @@ style = "bg:5 bold fg:0"
 command = "echo $(/env/dot/.func/shell/incontainer)"
 when = """ [[ $(systemd-detect-virt) != "none" ]] """
 format = " [ $output ]($style)"
-
 
 [status]
 style = "bg:0 fg:9"
