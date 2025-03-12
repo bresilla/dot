@@ -35,13 +35,13 @@ $directory\
 style = "bg:237 bold italic fg:15"
 command = "echo //"
 when = """ [[ -n $SSH_CONNECTION ]] """
-format = "[ $output ]($style)"
+format = "[ $output]($style)"
 
 [hostname]
 style = "bg:237 bold italic fg:15"
 ssh_only = false
 # format = "($style)[ $hostname ]($style)"
-format = "[$hostname ]($style)"
+format = "[ $hostname ]($style)"
 
 [username]
 show_always = true
