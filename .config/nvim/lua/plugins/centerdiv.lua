@@ -7,6 +7,7 @@ return {
                     buffers = {
                     blend = -0.5,
                 },
+                 integrations = { NvimTree = { reopen = true } },
             })
         end,
     },

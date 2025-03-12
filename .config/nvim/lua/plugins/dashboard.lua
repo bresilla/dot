@@ -67,7 +67,7 @@ return {
         lazy = false,
         opts = {
           suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-          bypass_save_filetypes = { 'help', 'Dashboard' },
+          bypass_save_filetypes = { 'help', 'Dashboard', 'nofile'},
           auto_restore = false,
         }
     }

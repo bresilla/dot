@@ -172,7 +172,7 @@ function mycolors(theme)
             ------- NvimTree -------
             NvimTreeNormal { bg = c.r237 },
             NvimTreeCursorLine { bg = c.r0 },
-            WinSeparator { fg = c.r0 },
+            WinSeparator { fg = c.r236 },
 
             ------- STATUS-LINE -------
             StatusLine { bg = c.r237, fg = c.r1 },
