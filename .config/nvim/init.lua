@@ -18,7 +18,21 @@ vim.o.ruler = true
 vim.o.shiftround = true
 vim.o.hlsearch = true
 vim.o.cmdheight = 0
+
 vim.o.clipboard = "unnamedplus"
+vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+        ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    },
+    paste = {
+        ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+        ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    },
+}
+vim.g.termfeatures = termfeatures
+
 
 vim.o.autoread = true
 vim.o.history = 5000
@@ -133,7 +147,6 @@ vim.keymap.set({'n', 'v'}, 'd', [["_d]])
 vim.keymap.set({'n', 'v'}, 'c', [["_c]])
 vim.keymap.set('n', '<S-Up>', [[<Nop>]])
 vim.keymap.set('n', '<S-Down>', [[<Nop>]])
-vim.keymap.set({'n', 'v'}, 'u', [[<Nop>]])
 
 -- === CHANGE CASE === "
 vim.keymap.set('n', '~', [[g~aw]])
@@ -141,6 +154,7 @@ vim.keymap.set('n', '~', [[g~aw]])
 
 -- === OTHERS === "
 vim.keymap.set('n', '<C-a>', 'ggVG')
+-- vim.keymap.set({'n', 'v'}, 'u', [[<Nop>]])
 vim.keymap.set('n', '<C-u>', '<cmd>:undo<cr>')
 vim.keymap.set('n', '<C-r>', '<cmd>:redo<cr>')
 
