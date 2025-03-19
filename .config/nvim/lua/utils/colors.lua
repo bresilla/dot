@@ -1,438 +1,394 @@
-local lush = require('lush')
-local hsl = lush.hsl
-
 -- Helper function to check if a file exists
-function file_exists(file)
-    local f = io.open(file, "rb")
-    if f then f:close() end
-    return f ~= nil
+local function file_exists(file)
+  local f = io.open(file, "rb")
+  if f then f:close() end
+  return f ~= nil
 end
 
 -- Helper function to read file into list
-function fileToList(file)
-    local lines = {}
-    if file_exists(file) then
-        for line in io.lines(file) do
-            lines[#lines + 1] = line
-        end
+local function fileToList(file)
+  local lines = {}
+  if file_exists(file) then
+    for line in io.lines(file) do
+      table.insert(lines, line)
     end
-    return lines
+  end
+  return lines
+end
 
+-- Function to apply highlights using Neovim's API.
+local function apply_highlights(highlights)
+  for group, opts in pairs(highlights) do
+    if opts.link then
+      vim.cmd("highlight! link " .. group .. " " .. opts.link)
+    else
+      vim.api.nvim_set_hl(0, group, opts)
+    end
+  end
 end
 
 function mycolors(theme)
-    -- Read rainbow colors
-    local rainbow = fileToList('/home/bresilla/.cache/lule/colors')
-    local dark = (theme == "dark")
+  -- Read rainbow colors from file
+  local rainbow = fileToList('/home/bresilla/.cache/lule/colors')
+  local dark = (theme == "dark")
+  local c = {}
+  for i, color in ipairs(rainbow) do
+    c["r" .. (i - 1)] = color
+  end
 
-    -- Read additional rainbow colors
-    local c = {}
-    for i, color in ipairs(rainbow) do
-        c["r" .. (i - 1)] = hsl(color)
-    end
+  -- Define additional color aliases
+  c.error       = c.r172
+  c.error_light = c.r176
+  c.error_dark  = c.r161
 
-    local dv = 80
-    local lv = 80
+  c.ok       = c.r196
+  c.ok_light = c.r200
+  c.ok_dark  = c.r185
 
-    c["error"] = c.r172
-    c["error_light"] = c.r176
-    c["error_dark"] = c.r161
+  c.warn       = c.r220
+  c.warn_light = c.r224
+  c.warn_dark  = c.r209
 
-    c["ok"] = c.r196
-    c["ok_light"] = c.r200
-    c["ok_dark"] = c.r185
+  c.info       = c.r244
+  c.info_light = c.r248
+  c.info_dark  = c.r233
 
-    c["warn"] = c.r220
-    c["warn_light"] = c.r224
-    c["warn_dark"] = c.r209
+  c.hint       = c.r117
+  c.hint_light = c.r119
+  c.hint_dark  = c.r113
 
-    c["info"] = c.r244
-    c["info_light"] = c.r248
-    c["info_dark"] = c.r233
+  -- Static color definitions (using hex values directly)
+  local grey0   = "#323437"
+  local grey1   = "#373c4d"
+  local grey89  = "#e4e4e4"
+  local grey70  = "#b2b2b2"
+  local grey62  = "#9e9e9e"
+  local grey58  = "#949494"
+  local grey50  = "#808080"
+  local grey39  = "#626262"
+  local grey30  = "#4e4e4e"
+  local grey27  = "#444444"
+  local grey23  = "#3a3a3a"
+  local grey18  = "#2e2e2e"
+  local grey15  = "#262626"
+  local grey11  = "#1c1c1c"
+  local grey7   = "#121212"
 
-    c["hint"] = c.r117
-    c["hint_light"] = c.r119
-    c["hint_dark"] = c.r113
+  local khaki      = "#c6c684"
+  local yellow     = "#e3c78a"
+  local orange     = "#de935f"
+  local coral      = "#f09479"
+  local orchid     = "#e196a2"
+  local lime       = "#85dc85"
+  local green      = "#8cc85f"
+  local emerald    = "#36c692"
+  local turquoise  = "#79dac8"
+  local blue       = "#80a0ff"
+  local sky        = "#74b2ff"
+  local lavender   = "#adadf3"
+  local purple     = "#ae81ff"
+  local violet     = "#cf87e8"
+  local cranberry  = "#e65e72"
+  local crimson    = "#ff5189"
+  local red        = "#ff5454"
 
-    -- Color definitions
-    local grey0 = hsl("#323437")
-    local grey1 = hsl("#373c4d")
-    local grey89 = hsl("#e4e4e4")
-    local grey70 = hsl("#b2b2b2")
-    local grey62 = hsl("#9e9e9e")
-    local grey58 = hsl("#949494")
-    local grey50 = hsl("#808080")
-    local grey39 = hsl("#626262")
-    local grey30 = hsl("#4e4e4e")
-    local grey27 = hsl("#444444")
-    local grey23 = hsl("#3a3a3a")
-    local grey18 = hsl("#2e2e2e")
-    local grey15 = hsl("#262626")
-    local grey11 = hsl("#1c1c1c")
-    local grey7 = hsl("#121212")
+  -- Define highlight groups as a table.
+  local highlights = {
+    Normal = { ctermbg = 0 },
+    NonText = { fg = c.r240 },
+    Cursor = { bg = c.r1, fg = c.r15, bold = true },
+    iCursor = { bg = c.r1, fg = c.r15, bold = true },
+    rCursor = { bg = c.r1, fg = c.r15, bold = true },
+    CursorLine = { bg = c.r236 },
+    CursorColumn = { bg = c.r236 },
+    Visual = { bg = c.r237 },
+    Conceal = { fg = c.r240 },
+    LineNr = { fg = c.r237 },
+    Comment  = { fg = c.r238, italic = true },
+    CursorLineNR = { fg = c.r246, bold = true },
+    NormalFloat = { bg = c.r237 },
+    Whitespace = { fg = c.r240 },
 
-    local khaki = hsl("#c6c684")
-    local yellow = hsl("#e3c78a")
-    local orange = hsl("#de935f")
-    local coral = hsl("#f09479")
-    local orchid = hsl("#e196a2")
-    local lime = hsl("#85dc85")
-    local green = hsl("#8cc85f")
-    local emerald = hsl("#36c692")
-    local turquoise = hsl("#79dac8")
-    local blue = hsl("#80a0ff")
-    local sky = hsl("#74b2ff")
-    local lavender = hsl("#adadf3")
-    local purple = hsl("#ae81ff")
-    local violet = hsl("#cf87e8")
-    local cranberry = hsl("#e65e72")
-    local crimson = hsl("#ff5189")
-    local red = hsl("#ff5454")
+    -- BARBAR
+    BufferDefaultCurrent = { bg = c.r0, fg = c.r1, bold = true },
+    BufferDefaultCurrentSign = { bg = c.r0, fg = c.r1 },
+    BufferDefaultCurrentSignRight = { bg = c.r0, fg = c.r1 },
+    BufferDefaultInactive = { bg = c.r237 },
+    BufferDefaultInactiveSign = { bg = c.r237, fg = c.r0 },
+    BufferDefaultInactiveSignRight = { bg = c.r237, fg = c.r0 },
+    BufferDefaultVisible = { bg = c.r237 },
+    BufferDefaultVisibleSign = { bg = c.r237, fg = c.r0 },
+    BufferDefaultVisibleSignRight = { bg = c.r237, fg = c.r0 },
+    BufferTabpageFill = { bg = c.r237 },
+    BufferTabpagesSep = { bg = c.r237 },
 
+    -- Scrollbar
+    ScrollbarHandle = { bg = c.r236 },
+    ScrollbarSearch = { fg = c.r1 },
+    ScrollbarSearchHandle = { bg = c.r236, fg = c.r1 },
 
-    local highlights = lush(function()
-        return {
-            Normal { bg = c.r0 },
-            NonText { fg = c.r240 },
-            Cursor { bg = c.r1, fg = c.r15 , gui = "bold" },
-            iCursor { bg = c.r1, fg = c.r15 , gui = "bold" },
-            rCursor { bg = c.r1, fg = c.r15 , gui = "bold" },
-            CursorLine { bg = c.r236 },
-            CursorColumn { bg = c.r236 },
-            Visual { bg = c.r237 },
-            Conceal { fg = c.r240 },
-            LineNr { fg = c.r237 },
-            Comment  { fg = c.r238, gui = "italic" },
-            CursorLineNR { fg = c.r246, gui = "bold" },
-            NormalFloat { bg = c.r237 },
-            Whitespace { fg = c.r240 },
+    -- ChatGPT
+    ChatGPTSelectedMessage = { bg = c.r236 },
 
-            -- General highlights
-            MoonflyVisual { bg = grey0 },
-            MoonflyWhite { fg = grey89 },
-            MoonflyGrey0 { fg = grey0 },
-            MoonflyGrey89 { fg = grey89 },
-            MoonflyGrey70 { fg = grey70 },
-            MoonflyGrey62 { fg = grey62 },
-            MoonflyGrey58 { fg = grey58 },
-            MoonflyGrey39 { fg = grey39 },
-            MoonflyGrey30 { fg = grey30 },
-            MoonflyGrey27 { fg = grey27 },
-            MoonflyGrey23 { fg = grey23 },
-            MoonflyGrey18 { fg = grey18 },
-            MoonflyGrey15 { fg = grey15 },
+    -- DASHBOARD
+    DashboardHeader = { bg = c.r0, fg = c.r1 },
+    DashboardCenter = { bg = c.r0, fg = c.r1 },
+    DashboardFooter = { bg = c.r0, fg = c.r1 },
 
-            -- Core theme colors
-            MoonflyKhaki { fg = khaki },
-            MoonflyYellow { fg = yellow },
-            MoonflyOrange { fg = orange },
-            MoonflyCoral { fg = coral },
-            MoonflyOrchid { fg = orchid },
-            MoonflyLime { fg = lime },
-            MoonflyGreen { fg = green },
-            MoonflyEmerald { fg = emerald },
-            MoonflyTurquoise { fg = turquoise },
-            MoonflyBlue { fg = blue },
-            MoonflySky { fg = sky },
-            MoonflyLavender { fg = lavender },
-            MoonflyPurple { fg = purple },
-            MoonflyViolet { fg = violet },
-            MoonflyCranberry { fg = cranberry },
-            MoonflyCrimson { fg = crimson },
-            MoonflyRed { fg = red },
+    -- NvimTree
+    NvimTreeNormal = { bg = c.r237 },
+    NvimTreeCursorLine = { bg = c.r0 },
+    WinSeparator = { fg = c.r236 },
 
-            ------- BARBAR -------
-            BufferDefaultCurrent { bg = c.r0, fg = c.r1, gui = "bold" },
-            BufferDefaultCurrentSign { bg = c.r0, fg = c.r1.saturate(10) },
-            BufferDefaultCurrentSignRight { bg = c.r0, fg = c.r1.saturate(10) },
-            BufferDefaultInactive {  bg = c.r237 },
-            BufferDefaultInactiveSign { bg = c.r237, fg = c.r0 },
-            BufferDefaultInactiveSignRight { bg = c.r237, fg = c.r0 },
-            BufferDefaultVisible { bg = c.r237 },
-            BufferDefaultVisibleSign { bg = c.r237 , fg = c.r0 },
-            BufferDefaultVisibleSignRight { bg = c.r237, fg = c.r0 },
-            BufferTabpageFill { bg = c.r237 },
-            BufferTabpagesSep { bg = c.r237 },
+    -- STATUS-LINE
+    StatusLine = { bg = c.r237, fg = c.r1 },
+    StatusLineNC = { bg = c.r0, fg = c.r1 },
+    ElNormal = { bg = c.r1, fg = c.r0, bold = true },
+    ElNormal2 = { bg = c.r0, fg = c.r1, bold = true },
+    ElInsert = { bg = c.r0, fg = c.r1, bold = true },
+    ElFileType = { bg = c.r1, fg = c.r0, bold = true },
 
+    -- INDENTATION
+    IndentLine = { bg = c.r0, fg = c.r237 },
+    IndentLineCurrent = { bg = c.r0, fg = c.r240 },
+    MiniIndentscopeSymbol = { fg = c.r0, bg = c.r237 },  -- inlined from IndentLine
+    MiniIndentscopeSymbolOff = { fg = c.r0, bg = c.r240 },  -- inlined from IndentLineCurrent
 
-            ------- Scrollbar -------
-            ScrollbarHandle { bg = c.r236 },
-            ScrollbarSearch { fg = c.r1 },
-            ScrollbarSearchHandle { bg = c.r236, fg = c.r1 },
+    -- SEARCH
+    IlluminatedWordText = { bg = c.r237, bold = true },
+    Search = { bg = c.r238 },
+    CurSearch = { bg = c.r1, fg = c.r0 },
+    IncSearch = { bg = c.r0, fg = c.r1 },
+    CursorWord = { bg = c.r1, fg = c.r0 },
+    CursorJump = { bg = c.r0, fg = c.r1 },
+    MatchParen = { bg = c.r1, fg = c.r0 },
 
+    -- TELESCOPE
+    TelescopeBorder = { fg = c.r1 },
+    NoiceCmdlinePopupBorder = { fg = c.r1 },
 
-            -------- ChatGPT ----------
-            ChatGPTSelectedMessage { bg = c.r236 },
+    -- TERMINAL
+    ToggleTermNormal = { bg = c.r236 },
+    ToggleTermNormalFloat = { bg = c.r236 },
+    ToggleTermFloatBorder = { bg = c.r236, fg = c.r236 },
 
-            ------- DASHBOARD -------
-            DashboardHeader { bg = c.r0, fg = c.r1 },
-            DashboardCenter { bg = c.r0, fg = c.r1 },
-            DashboardFooter { bg = c.r0, fg = c.r1 },
+    -- DIAGNOSTICS
+    DiagnosticError = { fg = c.error_light, bg = c.error_dark },
+    DiagnosticWarn = { fg = c.warn_light,  bg = c.warn_dark },
+    DiagnosticInfo = { fg = c.info_light,  bg = c.info_dark },
+    DiagnosticHint = { fg = c.hint_light,  bg = c.hint_dark },
+    DiagnosticOk = { fg = c.ok_light,    bg = c.ok_dark },
+    DiagnosticFloatingError = { fg = c.error_light, bg = c.error_dark },
+    DiagnosticFloatingWarn = { fg = c.warn_light,  bg = c.warn_dark },
+    DiagnosticFloatingInfo = { fg = c.info_light,  bg = c.info_dark },
+    DiagnosticFloatingHint = { fg = c.hint_light,  bg = c.hint_dark },
+    DiagnosticFloatingOk = { fg = c.ok_light,    bg = c.ok_dark },
+    DiagnosticUnderlineError = { bg = c.error_dark },
+    DiagnosticUnderlineWarn = { bg = c.warn_dark },
+    DiagnosticUnderlineInfo = { bg = c.info_dark },
+    DiagnosticUnderlineHint = { bg = c.hint_dark },
+    DiagnosticUnderlineOk = { bg = c.ok_dark },
+    DiagnosticVirtualTextError = { fg = c.error_light, bg = c.error_dark },
+    DiagnosticVirtualTextWarn = { fg = c.warn_light,  bg = c.warn_dark },
+    DiagnosticVirtualTextInfo = { fg = c.info_light,  bg = c.info_dark },
+    DiagnosticVirtualTextHint = { fg = c.hint_light,  bg = c.hint_dark },
+    DiagnosticVirtualTextOk = { fg = c.ok_light,    bg = c.ok_dark },
+    DiagnosticSignError = { fg = c.error_light, bg = c.error_dark },
+    DiagnosticSignWarn = { fg = c.warn_light,  bg = c.warn_dark },
+    DiagnosticSignInfo = { fg = c.info_light,  bg = c.info_dark },
+    DiagnosticSignHint = { fg = c.hint_light,  bg = c.hint_dark },
+    DiagnosticSignOk = { fg = c.ok_light,    bg = c.ok_dark },
+    DiagnosticUnnecessary = { fg = c.r3 },
 
-            ------- NvimTree -------
-            NvimTreeNormal { bg = c.r237 },
-            NvimTreeCursorLine { bg = c.r0 },
-            WinSeparator { fg = c.r236 },
+    -- COMPLETION MENU
+    Pmenu = { bg = c.r237, fg = c.r15 },
+    PmenuSel = { bg = c.r1, fg = c.r0, bold = true },
+    PmenuSbar = { bg = c.r237 },
+    PmenuThumb = { bg = c.r237 },
+    BlinkCmpMenu = { fg = c.r15, bg = c.r237 },  -- inlined from Pmenu
+    BlinkCmpMenuSelection = { fg = c.r0, bg = c.r1, bold = true },  -- inlined from PmenuSel
+    BlinkCmpGhostText = { fg = c.r240 },
+    BlinkCmpDoc = { bg = c.r236 },
+    BlinkCmpDocSeparator = { bg = c.r236, fg = c.r0, bold = true },
+    BlinkCmpLabelMatch = { fg = c.r15, bg = c.r240, italic = true },
 
-            ------- STATUS-LINE -------
-            StatusLine { bg = c.r237, fg = c.r1 },
-            StatusLineNC { bg = c.r0, fg = c.r1 },
-            ElNormal { bg = c.r1, fg = c.r0, gui = "bold" },
-            ElNormal2 { bg = c.r0, fg = c.r1, gui = "bold" },
-            ElInsert { bg = c.r0, fg = c.r1, gui = "bold" },
-            ElFileType { bg = c.r1, fg = c.r0, gui = "bold" },
+    BlinkCmpKindSnippet = { bold = true, fg = c.r0, bg = c.r22 },
+    BlinkCmpKindKeyword = { bold = true, fg = c.r0, bg = c.r34 },
+    BlinkCmpKindText = { bold = true, fg = c.r0, bg = c.r46 },
+    BlinkCmpKindMethod = { bold = true, fg = c.r0, bg = c.r58 },
+    BlinkCmpKindConstructor = { bold = true, fg = c.r0, bg = c.r70 },
+    BlinkCmpKindFunction = { bold = true, fg = c.r0, bg = c.r82 },
+    BlinkCmpKindFolder = { bold = true, fg = c.r0, bg = c.r94 },
+    BlinkCmpKindModule = { bold = true, fg = c.r0, bg = c.r106 },
+    BlinkCmpKindConstant = { bold = true, fg = c.r0, bg = c.r118 },
+    BlinkCmpKindField = { bold = true, fg = c.r0, bg = c.r130 },
+    BlinkCmpKindProperty = { bold = true, fg = c.r0, bg = c.r142 },
+    BlinkCmpKindEnum = { bold = true, fg = c.r0, bg = c.r154 },
+    BlinkCmpKindUnit = { bold = true, fg = c.r0, bg = c.r166 },
+    BlinkCmpKindClass = { bold = true, fg = c.r0, bg = c.r22 },
+    BlinkCmpKindVariable = { bold = true, fg = c.r0, bg = c.r34 },
+    BlinkCmpKindFile = { bold = true, fg = c.r0, bg = c.r46 },
+    BlinkCmpKindInterface = { bold = true, fg = c.r0, bg = c.r58 },
+    BlinkCmpKindColor = { bold = true, fg = c.r0, bg = c.r64 },
+    BlinkCmpKindReference = { bold = true, fg = c.r0, bg = c.r82 },
+    BlinkCmpKindEnumMember = { bold = true, fg = c.r0, bg = c.r94 },
+    BlinkCmpKindStruct = { bold = true, fg = c.r0, bg = c.r106 },
+    BlinkCmpKindValue = { bold = true, fg = c.r0, bg = c.r118 },
+    BlinkCmpKindEvent = { bold = true, fg = c.r0, bg = c.r124 },
+    BlinkCmpKindOperator = { bold = true, fg = c.r0, bg = c.r142 },
+    BlinkCmpKindTypeParameter = { bold = true, fg = c.r0, bg = c.r154 },
+    BlinkCmpKindCopilot = { bold = true, fg = c.r0, bg = c.r166 },
 
-            ------- INDENTATION -------
-            IndentLine { bg = c.r0, fg = c.r237 },
-            IndentLineCurrent { bg = c.r0, fg = c.r240 },
-            MiniIndentscopeSymbol { IndentLine },
-            MiniIndentscopeSymbolOff { IndentLineCurrent },
+    -- SYNTAX
+    String = { fg = c.r1 },
+    Character = { fg = purple },
+    Constant = { fg = orange },
+    Number = { fg = "#8eafff" },
+    Boolean = { fg = cranberry },
+    Float = { fg = "#8eafff" },
+    FloatBorder = { bg = c.r0, fg = c.r1 },
 
-            ------- SEARCH -------
-            IlluminatedWordText { bg = c.r237, gui = "bold" },
-            Search { bg = c.r238 },
-            CurSearch { bg = c.r1, fg = c.r0 },
-            IncSearch { bg = c.r0, fg = c.r1 },
-            CursorWord { bg = c.r1, fg = c.r0 },
-            CursorJump { bg = c.r0, fg = c.r1 },
-            MatchParen { bg = c.r1, fg = c.r0 },
+    Identifier = { fg = turquoise },
+    Function = { fg = sky },
+    Title = { fg = orange },
 
-            ------- TELESCOPE -------
-            TelescopeBorder { fg = c.r1 },
-            NoiceCmdlinePopupBorder { fg = c.r1 },
+    Statement = { fg = "#cdacfc" },
+    Conditional = { fg = "#ffcbfb" },
+    Repeat = { fg = violet },
+    Label = { fg = turquoise },
+    Operator = { fg = cranberry },
+    Keyword = { fg = "#ffcbfb" },
+    Exception = { fg = crimson },
 
-            ------- TERMINAL --------
-            ToggleTermNormal { bg = c.r236 },
-            ToggleTermNormalFloat { bg = c.r236 },
-            ToggleTermFloatBorder { bg = c.r236, fg = c.r236 },
+    PreProc = { fg = cranberry },
+    Include = { fg = "#ffcbfb" },
+    Define = { fg = "#ffcbfb" },
+    Macro = { fg = "#ffcbfb" },
+    PreCondit = { fg = "#ffcbfb" },
 
+    Type = { fg = emerald },
+    StorageClass = { fg = violet },
+    Structure = { fg = "#f4af6f" },
+    Typedef = { fg = "#f4af6f" },
 
-            ------- DIAGNOSTICS -------
-            DiagnosticError { fg = c.error_light,   bg = c.error_dark  },
-            DiagnosticWarn  { fg =  c.warn_light,   bg =  c.warn_dark  },
-            DiagnosticInfo  { fg =  c.info_light,   bg =  c.info_dark  },
-            DiagnosticHint  { fg =  c.hint_light,   bg =  c.hint_dark  },
-            DiagnosticOk    { fg =    c.ok_light,   bg =    c.ok_dark  },
-            DiagnosticFloatingError { DiagnosticError },
-            DiagnosticFloatingWarn  { DiagnosticWarn  },
-            DiagnosticFloatingInfo  { DiagnosticInfo  },
-            DiagnosticFloatingHint  { DiagnosticHint  },
-            DiagnosticFloatingOk    { DiagnosticOk    },
-            DiagnosticUnderlineError { bg = c.error_dark },
-            DiagnosticUnderlineWarn  { bg =  c.warn_dark },
-            DiagnosticUnderlineInfo  { bg =  c.info_dark },
-            DiagnosticUnderlineHint  { bg =  c.hint_dark },
-            DiagnosticUnderlineOk    { bg =    c.ok_dark },
-            DiagnosticVirtualTextError  { DiagnosticError },
-            DiagnosticVirtualTextWarn   { DiagnosticWarn  },
-            DiagnosticVirtualTextInfo   { DiagnosticInfo  },
-            DiagnosticVirtualTextHint   { DiagnosticHint  },
-            DiagnosticVirtualTextOk     { DiagnosticOk    },
-            DiagnosticSignError { DiagnosticError },
-            DiagnosticSignWarn  { DiagnosticWarn  },
-            DiagnosticSignInfo  { DiagnosticInfo  },
-            DiagnosticSignHint  { DiagnosticHint  },
-            DiagnosticSignOk    { DiagnosticOk    },
-            DiagnosticUnnecessary { fg = c.r3 },
+    Special = { fg = "#eeef9f" },
+    SpecialComment = { fg = "#eeef9f" },
+    Tag = { fg = "#eeef9f" },
+    Delimiter = { fg = "#eeef9f" },
+    Debug = { fg = "#eeef9f" },
 
-            -------- COMPLETION MENU -------
-            Pmenu { bg = c.r237, fg = c.r15 },
-            PmenuSel { bg = c.r1, fg = c.r0, gui = "bold" },
-            PmenuSbar { bg = c.r237 },
-            PmenuThumb { bg = c.r237 },
-            BlinkCmpMenu { Pmenu },
-            BlinkCmpMenuSelection { PmenuSel },
-            BlinkCmpGhostText { fg = c.r240 },
-            BlinkCmpDoc { bg = c.r236 },
-            BlinkCmpDocSeparator { bg = c.r236, fg = c.r0, gui = "bold" },
-            BlinkCmpLabelMatch { bg = c.r240, fg = c.r15, gui = "italic" },
+    -- Neovim Tree-sitter
+    ["@attribute"] = { fg = sky },
+    ["@comment.error"] = { fg = red },
+    ["@comment.note"] = { fg = grey58 },
+    ["@comment.ok"] = { fg = green },
+    ["@comment.todo"] = { link = "Todo" },  -- no local variable available; left unchanged
+    ["@comment.warning"] = { fg = yellow },
+    ["@constant"] = { fg = turquoise },
+    ["@constant.builtin"] = { fg = green },
+    ["@constant.macro"] = { fg = violet },
+    ["@constructor"] = { fg = emerald },
+    ["@diff.delta"] = { link = "DiffChange" },  -- no local variable available; left unchanged
+    ["@diff.minus"] = { link = "DiffDelete" },    -- no local variable available; left unchanged
+    ["@diff.plus"] = { link = "DiffAdd" },          -- no local variable available; left unchanged
+    ["@function.builtin"] = { fg = sky },
+    ["@function.call"] = { fg = sky },
+    ["@function.macro"] = { fg = turquoise },
+    ["@function.method"] = { fg = sky },
+    ["@function.method.call"] = { fg = sky },
+    ["@keyword.conditional"] = { fg = "#ffcbfb" },
+    ["@keyword.directive"] = { fg = cranberry },
+    ["@keyword.directive.define"] = { fg = "#ffcbfb" },
+    ["@keyword.exception"] = { fg = violet },
+    ["@keyword.import"] = { fg = "#ffcbfb" },
+    ["@keyword.operator"] = { fg = violet },
+    ["@keyword.repeat"] = { fg = violet },
+    ["@keyword.storage"] = { fg = violet },
+    ["@markup.environment"] = { fg = violet },
+    ["@markup.environment.name"] = { fg = emerald },
+    ["@markup.heading"] = { fg = violet },
+    ["@markup.italic"] = { fg = orchid, italic = true },
+    ["@markup.link"] = { fg = green },
+    ["@markup.link.label"] = { fg = green },
+    ["@markup.link.url"] = { fg = purple, underline = true, sp = grey50 },
+    ["@markup.list"] = { fg = cranberry },
+    ["@markup.list.checked"] = { fg = turquoise },
+    ["@markup.list.unchecked"] = { fg = blue },
+    ["@markup.math"] = { fg = sky },
+    ["@markup.quote"] = { fg = grey58 },
+    ["@markup.raw"] = { fg = c.r1 },  -- inlined from String
+    ["@markup.strikethrough"] = { strikethrough = true },
+    ["@markup.strong"] = { fg = orchid },
+    ["@markup.underline"] = { underline = true },
+    ["@module"] = { fg = turquoise },
+    ["@module.builtin"] = { fg = green },
+    ["@none"] = {},
+    ["@parameter.builtin"] = { fg = orchid },
+    ["@property"] = { fg = lavender },
+    ["@string.documentation"] = { fg = turquoise },
+    ["@string.regexp"] = { fg = turquoise },
+    ["@string.special.path"] = { fg = orchid },
+    ["@string.special.symbol"] = { fg = purple },
+    ["@string.special.url"] = { fg = purple },
+    ["@tag"] = { fg = blue },
+    ["@tag.attribute"] = { fg = turquoise },
+    ["@tag.builtin"] = { fg = blue },
+    ["@tag.delimiter"] = { fg = green },
+    ["@type.builtin"] = { fg = emerald },
+    ["@type.qualifier"] = { fg = violet },
+    ["@variable"] = { fg = grey89 },
+    ["@variable.builtin"] = { fg = green },
+    ["@variable.member"] = { fg = lavender },
+    ["@variable.parameter"] = { fg = orchid },
 
-            BlinkCmpKindSnippet         { gui = "bold", fg = c.r0, bg = c.r22  },
-            BlinkCmpKindKeyword         { gui = "bold", fg = c.r0, bg = c.r34  },
-            BlinkCmpKindText            { gui = "bold", fg = c.r0, bg = c.r46  },
-            BlinkCmpKindMethod          { gui = "bold", fg = c.r0, bg = c.r58  },
-            BlinkCmpKindConstructor     { gui = "bold", fg = c.r0, bg = c.r70  },
-            BlinkCmpKindFunction        { gui = "bold", fg = c.r0, bg = c.r82  },
-            BlinkCmpKindFolder          { gui = "bold", fg = c.r0, bg = c.r94  },
-            BlinkCmpKindModule          { gui = "bold", fg = c.r0, bg = c.r106 },
-            BlinkCmpKindConstant        { gui = "bold", fg = c.r0, bg = c.r118 },
-            BlinkCmpKindField           { gui = "bold", fg = c.r0, bg = c.r130 },
-            BlinkCmpKindProperty        { gui = "bold", fg = c.r0, bg = c.r142 },
-            BlinkCmpKindEnum            { gui = "bold", fg = c.r0, bg = c.r154 },
-            BlinkCmpKindUnit            { gui = "bold", fg = c.r0, bg = c.r166 },
-            BlinkCmpKindClass           { gui = "bold", fg = c.r0, bg = c.r22  },
-            BlinkCmpKindVariable        { gui = "bold", fg = c.r0, bg = c.r34  },
-            BlinkCmpKindFile            { gui = "bold", fg = c.r0, bg = c.r46  },
-            BlinkCmpKindInterface       { gui = "bold", fg = c.r0, bg = c.r58  },
-            BlinkCmpKindColor           { gui = "bold", fg = c.r0, bg = c.r64  },
-            BlinkCmpKindReference       { gui = "bold", fg = c.r0, bg = c.r82  },
-            BlinkCmpKindEnumMember      { gui = "bold", fg = c.r0, bg = c.r94  },
-            BlinkCmpKindStruct          { gui = "bold", fg = c.r0, bg = c.r106 },
-            BlinkCmpKindValue           { gui = "bold", fg = c.r0, bg = c.r118 },
-            BlinkCmpKindEvent           { gui = "bold", fg = c.r0, bg = c.r124 },
-            BlinkCmpKindOperator        { gui = "bold", fg = c.r0, bg = c.r142 },
-            BlinkCmpKindTypeParameter   { gui = "bold", fg = c.r0, bg = c.r154 },
-            BlinkCmpKindCopilot         { gui = "bold", fg = c.r0, bg = c.r166 },
+    -- Neovim LSP semantic highlights
+    ["@lsp.type.boolean"] = { link = "@boolean" },  -- no substitution available
+    ["@lsp.type.builtinConstant"] = { fg = green },
+    ["@lsp.type.builtinType"] = { fg = emerald },
+    ["@lsp.type.class"] = { fg = emerald },
+    ["@lsp.type.enum"] = { fg = emerald },
+    ["@lsp.type.enumMember"] = { fg = turquoise },
+    ["@lsp.type.escapeSequence"] = { link = "@string.escape" },  -- no substitution available
+    ["@lsp.type.formatSpecifier"] = { link = "@punctuation.special" },  -- no substitution available
+    ["@lsp.type.generic"] = { fg = grey89 },
+    ["@lsp.type.interface"] = { fg = emerald },
+    ["@lsp.type.keyword"] = { fg = "#ffcbfb" },
+    ["@lsp.type.lifetime"] = { fg = violet },
+    ["@lsp.type.namespace"] = { fg = turquoise },
+    ["@lsp.type.number"] = { fg = "#8eafff" },
+    ["@lsp.type.parameter"] = { link = "@parameter" },  -- no substitution available
+    ["@lsp.type.property"] = { fg = lavender },
+    ["@lsp.type.selfKeyword"] = { fg = green },
+    ["@lsp.type.selfParameter"] = { fg = green },
+    ["@lsp.type.string"] = { fg = c.r1 },
+    ["@lsp.type.struct"] = { fg = emerald },
+    ["@lsp.type.typeAlias"] = { link = "@type.definition" },  -- no substitution available
+    ["@lsp.type.unresolvedReference"] = { underline = true, sp = red },
+    ["@lsp.type.variable"] = { fg = grey89 },
 
+    -- Additional LSP modifications
+    ["@lsp.typemod.class.defaultLibrary"] = { fg = emerald },
+    ["@lsp.typemod.enum.defaultLibrary"] = { fg = emerald },
+    ["@lsp.typemod.function.defaultLibrary"] = { fg = sky },
+    ["@lsp.typemod.keyword.async"] = { fg = "#ffcbfb" },
+    ["@lsp.typemod.keyword.injected"] = { fg = "#ffcbfb" },
+    ["@lsp.typemod.variable.static"] = { fg = turquoise },
+  }
 
-            ------- SYNTAX -------
-            String         { fg = c.r1 }, -- a string constant: "this is a string"
-            Character      { MoonflyPurple },
-
-            Constant       { MoonflyOrange },
-            Number         { fg = hsl("#8eafff") }, -- a number constant: 234, 0xff
-            Boolean        { MoonflyCranberry },
-            Float          { fg = hsl("#8eafff") }, -- a floating point constant: 2.3e10
-            FloatBorder    { bg = c.r0, fg = c.r1 },
-
-            Identifier     { MoonflyTurquoise },
-            Function       { MoonflySky },
-            Title          { fg = orange },
-
-            Statement      { fg = hsl("#cdacfc") }, -- (preferred) any statement
-            Conditional    { fg = hsl("#ffcbfb") }, -- if, then, else, endif, switch, etc.
-            Repeat         { MoonflyViolet },
-            Label          { MoonflyTurquoise },
-            Operator       { MoonflyCranberry },
-            Keyword        { fg = hsl("#ffcbfb") }, -- any other keyword
-            Exception      { MoonflyCrimson },
-
-            PreProc        { MoonflyCranberry },
-            Include        { fg = hsl("#ffcbfb") }, -- preprocessor #include
-            Define         { fg = hsl("#ffcbfb") }, -- preprocessor #define
-            Macro          { fg = hsl("#ffcbfb") }, -- same as Define
-            PreCondit      { fg = hsl("#ffcbfb") }, -- preprocessor #if, #else, #endif, etc.
-
-            Type           { fg = emerald },
-            StorageClass   { MoonflyViolet },
-            Structure      { fg = hsl("#f4af6f") }, -- struct, union, enum, etc.
-            Typedef        { fg = hsl("#f4af6f") }, -- A typedef
-
-            Special        { fg = hsl("#eeef9f") }, -- (preferred) any special symbol
-            SpecialComment { fg = hsl("#eeef9f") }, -- special things inside a comment
-            Tag            { fg = hsl("#eeef9f") }, -- you can use CTRL-] on this
-            Delimiter      { fg = hsl("#eeef9f") }, -- character that needs attention
-            Debug          { fg = hsl("#eeef9f") }, -- debugging statements
-
-
-
-
-            -- Neovim Tree-sitter
-            sym"@attribute" { MoonflySky },
-            sym"@comment.error" { MoonflyRed },
-            sym"@comment.note" { MoonflyGrey58 },
-            sym"@comment.ok" { MoonflyGreen },
-            sym"@comment.todo" { Todo },
-            sym"@comment.warning" { MoonflyYellow },
-            sym"@constant" { MoonflyTurquoise },
-            sym"@constant.builtin" { MoonflyGreen },
-            sym"@constant.macro" { MoonflyViolet },
-            sym"@constructor" { MoonflyEmerald },
-            sym"@diff.delta" { DiffChange },
-            sym"@diff.minus" { DiffDelete },
-            sym"@diff.plus" { DiffAdd },
-            sym"@function.builtin" { Function },
-            sym"@function.call" { Function },
-            sym"@function.macro" { MoonflyTurquoise },
-            sym"@function.method" { Function },
-            sym"@function.method.call" { Function },
-            sym"@keyword.conditional" { Conditional },
-            sym"@keyword.directive" { PreProc },
-            sym"@keyword.directive.define" { Define },
-            sym"@keyword.exception" { MoonflyViolet },
-            sym"@keyword.import" { Include },
-            sym"@keyword.operator" { MoonflyViolet },
-            sym"@keyword.repeat" { Repeat },
-            sym"@keyword.storage" { StorageClass },
-            sym"@markup.environment" { MoonflyViolet },
-            sym"@markup.environment.name" { MoonflyEmerald },
-            sym"@markup.heading" { MoonflyViolet },
-            sym"@markup.italic" { fg = orchid, italic = true },
-            sym"@markup.link" { MoonflyGreen },
-            sym"@markup.link.label" { MoonflyGreen },
-            sym"@markup.link.url" { fg = purple, underline = true, sp = grey50 },
-            sym"@markup.list" { MoonflyCranberry },
-            sym"@markup.list.checked" { MoonflyTurquoise },
-            sym"@markup.list.unchecked" { MoonflyBlue },
-            sym"@markup.math" { MoonflySky },
-            sym"@markup.quote" { MoonflyGrey58 },
-            sym"@markup.raw" { String },
-            sym"@markup.strikethrough" { strikethrough = true },
-            sym"@markup.strong" { MoonflyOrchid },
-            sym"@markup.underline" { underline = true },
-            sym"@module" { MoonflyTurquoise },
-            sym"@module.builtin" { MoonflyGreen },
-            sym"@none" {},
-            sym"@parameter.builtin" { MoonflyOrchid },
-            sym"@property" { MoonflyLavender },
-            sym"@string.documentation" { MoonflyTurquoise },
-            sym"@string.regexp" { MoonflyTurquoise },
-            sym"@string.special.path" { MoonflyOrchid },
-            sym"@string.special.symbol" { MoonflyPurple },
-            sym"@string.special.url" { MoonflyPurple },
-            sym"@tag" { MoonflyBlue },
-            sym"@tag.attribute" { MoonflyTurquoise },
-            sym"@tag.builtin" { MoonflyBlue },
-            sym"@tag.delimiter" { MoonflyGreen },
-            sym"@type.builtin" { MoonflyEmerald },
-            sym"@type.qualifier" { MoonflyViolet },
-            sym"@variable" { MoonflyWhite },
-            sym"@variable.builtin" { MoonflyGreen },
-            sym"@variable.member" { MoonflyLavender },
-            sym"@variable.parameter" { MoonflyOrchid },
-        
-            -- Neovim LSP semantic highlights
-            sym"@lsp.type.boolean" { sym"@boolean" },
-            sym"@lsp.type.builtinConstant" { sym"@constant.builtin" },
-            sym"@lsp.type.builtinType" { sym"@type.builtin" },
-            sym"@lsp.type.class" { sym"@type" },
-            sym"@lsp.type.enum" { sym"@type" },
-            sym"@lsp.type.enumMember" { sym"@constant" },
-            sym"@lsp.type.escapeSequence" { sym"@string.escape" },
-            sym"@lsp.type.formatSpecifier" { sym"@punctuation.special" },
-            sym"@lsp.type.generic" { sym"@variable" },
-            sym"@lsp.type.interface" { sym"@type" },
-            sym"@lsp.type.keyword" { sym"@keyword" },
-            sym"@lsp.type.lifetime" { sym"@storageclass" },
-            sym"@lsp.type.namespace" { sym"@module" },
-            sym"@lsp.type.number" { sym"@number" },
-            sym"@lsp.type.parameter" { sym"@parameter" },
-            sym"@lsp.type.property" { sym"@property" },
-            sym"@lsp.type.selfKeyword" { sym"@variable.builtin" },
-            sym"@lsp.type.selfParameter" { sym"@variable.builtin" },
-            sym"@lsp.type.string" { sym"@string" },
-            sym"@lsp.type.struct" { sym"@type" },
-            sym"@lsp.type.typeAlias" { sym"@type.definition" },
-            sym"@lsp.type.unresolvedReference" { underline = true, sp = red },
-            sym"@lsp.type.variable" { sym"@variable" },
-        
-            -- Additional LSP modifications
-            sym"@lsp.typemod.class.defaultLibrary" { sym"@type" },
-            sym"@lsp.typemod.enum.defaultLibrary" { sym"@type" },
-            sym"@lsp.typemod.function.defaultLibrary" { sym"@function" },
-            sym"@lsp.typemod.keyword.async" { sym"@keyword" },
-            sym"@lsp.typemod.keyword.injected" { sym"@keyword" },
-            sym"@lsp.typemod.variable.static" { sym"@constant" },
-        }
-    end)
-    lush.apply(highlights)
+  apply_highlights(highlights)
 end
 
-themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+-- Set initial theme based on file value (or default to "dark")
+local themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
 mycolors(themecolor)
 
 vim.keymap.set('n', '<leader>d', function() mycolors() end)
 
-filepathtowatch = '/home/bresilla/.cache/lule/colors'
-
+-- Watch the colors file for changes and reapply the theme.
+local filepathtowatch = '/home/bresilla/.cache/lule/colors'
 local watcher = require("utils.watcher")
 local handle = watcher.watch_file(filepathtowatch, function(fname, status)
-    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
-    mycolors(themecolor)
+  themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+  mycolors(themecolor)
 end)
 
---local timerr = require("utils.timerr")
---local thandle = timerr.run_every_2s(function()
---    themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
---    mycolors(themecolor)
---end)

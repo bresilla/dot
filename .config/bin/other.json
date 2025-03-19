@@ -44,10 +44,10 @@
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "ollama",
-            "version": "v0.5.11",
-            "hash": "e12dbd66cdc8f54c2d60a06d78a73eb0127c5944c81938f13ac44608ef94f299",
-            "url": "https://github.com/jmorganca/ollama",
-            "provider": "github",
+            "version": "v0.6.0",
+            "hash": "0ffba67e4cfd11a4d608e04b69fdcf40c86115fa4f10d4e3942794c442c6588f",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.6.0",
+            "provider": "",
             "package_path": "bin/ollama",
             "pinned": false
         },
@@ -64,10 +64,10 @@
         "/env/bin/spotifyd": {
             "path": "/env/bin/spotifyd",
             "remote_name": "spotifyd",
-            "version": "v0.4.0",
-            "hash": "62dbea1d7358b88aed00b33fbe17c99d0d48bd926521fcd9255488520e1a5e96",
-            "url": "https://github.com/spotifyd/spotifyd",
-            "provider": "github",
+            "version": "v0.4.1",
+            "hash": "7cbdb2a6f2a45828fbc060a66684f67b3fd9b9a101c6b0a2f1b40200676b5956",
+            "url": "https://github.com/Spotifyd/spotifyd/releases/tag/v0.4.1",
+            "provider": "",
             "package_path": "spotifyd",
             "pinned": false
         },

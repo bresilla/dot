@@ -24,17 +24,16 @@ vim.opt.fillchars = { eob = " "}
 
 
 require("lazy").setup({
-	spec = {
-		{
-			"rktjmp/lush.nvim",
-			import = "plugins",
-		},
-	},
-	defaults = {
-		version = false, -- always use the lastest git commit
-	},
-	checker = {
-		enabled = true, -- check for plugin updates periodically
-		notify = false, -- notify on update
-	},
+    spec = {
+        {
+            import = "plugins",
+        },
+    },
+    defaults = {
+        version = false, -- always use the lastest git commit
+    },
+    checker = {
+        enabled = true, -- check for plugin updates periodically
+        notify = false, -- notify on update
+    },
 })
