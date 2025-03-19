@@ -1,6 +1,26 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/fabric": {
+            "path": "/env/bin/fabric",
+            "remote_name": "fabric-linux-amd64",
+            "version": "v1.4.157",
+            "hash": "fe3d753d8be62146f0779401154560c308faa4d9321c7444308acdcb0ccc4423",
+            "url": "https://github.com/danielmiessler/fabric",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/glance": {
+            "path": "/env/bin/glance",
+            "remote_name": "glance",
+            "version": "v0.7.4",
+            "hash": "674a9e1bf9731ac56ea70b9fd2a20a5e0e3d64712f9d888c0ecac400903eed87",
+            "url": "https://github.com/glanceapp/glance",
+            "provider": "github",
+            "package_path": "glance",
+            "pinned": false
+        },
         "/env/bin/neptune": {
             "path": "/env/bin/neptune",
             "remote_name": "Neptune-Cli",

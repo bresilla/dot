@@ -53,10 +53,10 @@
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-0.16.0-linux-amd64",
-            "version": "v0.16.0",
-            "hash": "d316297c8d55a85cda23458bd16e8537d6220f58b55813e9dae218060615151d",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.16.0",
+            "remote_name": "CodeGPT-0.16.1-linux-amd64",
+            "version": "v0.16.1",
+            "hash": "9ec8a52b7b97e0120315ec26f7511b7fd82ebd1eee7d504420a233a6677b2238",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.16.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -104,9 +104,9 @@
         "/env/bin/dora": {
             "path": "/env/bin/dora",
             "remote_name": "dora",
-            "version": "v0.3.9",
-            "hash": "1c9832f62687e1ab1f584b71d13ee158795db991c8c6b67af4a5865320099ef2",
-            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.9",
+            "version": "v0.3.10",
+            "hash": "ebf74c51807e5133c3e5b328d46a246187782f07a4d19c8f6a56cfffec9a1f3c",
+            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.10",
             "provider": "",
             "package_path": "dora",
             "pinned": false
@@ -128,7 +128,7 @@
             "hash": "aaef6cdb133f7987e847f107dd216d61d8426c0829d954d71f62be954f7138f7",
             "url": "https://github.com/eza-community/eza/releases/tag/v0.20.23",
             "provider": "",
-            "package_path": "./eza",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/git-cliff": {
@@ -144,9 +144,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.10",
-            "hash": "96f863e3a5d7691c2779e78cb8afb5d682fdf76eca84438f88fa61a4bd53073f",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.10",
+            "version": "v1.0.13",
+            "hash": "92444d386308c141f6b2e2f3332b477e9122365f01f342a2d203a355620564d8",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.13",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -154,11 +154,11 @@
         "/env/bin/gum": {
             "path": "/env/bin/gum",
             "remote_name": "gum",
-            "version": "v0.15.2",
-            "hash": "6b5d1d375e00930baa1cf2b880b6f085578e258657c02c4324971a3dba3de27b",
-            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.15.2",
+            "version": "v0.16.0",
+            "hash": "61a1fdd6d2bfb80a9ca14225bc3bd12d73db6f525cd683cba9eaa5f975114796",
+            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.0",
             "provider": "",
-            "package_path": "gum_0.15.2_Linux_x86_64/gum",
+            "package_path": "gum_0.16.0_Linux_x86_64/gum",
             "pinned": false
         },
         "/env/bin/ha": {
@@ -191,6 +191,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/just": {
+            "path": "/env/bin/just",
+            "remote_name": "just",
+            "version": "1.40.0",
+            "hash": "3fae4508b25e85bec16c2985bb76f731d35b103434c5bf264af0fa2ab07e889a",
+            "url": "https://github.com/casey/just",
+            "provider": "github",
+            "package_path": "just",
+            "pinned": false
+        },
         "/env/bin/lemonade": {
             "path": "/env/bin/lemonade",
             "remote_name": "lemonade",
@@ -214,9 +224,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.0.5-0",
-            "hash": "cdf5a2e18d213617b6c5c32d8763b4e8fc05f8173b4f4017997683cb984357eb",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.5-0",
+            "version": "2.0.7-0",
+            "hash": "64739ffd9e67cca5f1a524fcd39da5f6ce6847180150b98a54b9178fdfb17252",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.7-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -244,19 +254,19 @@
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.16.0",
-            "hash": "9e3f4832d6e62323ea5a2a54914b89b3186638e94304bbee72143f6acf7216e2",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.16.0",
+            "version": "0.17.0",
+            "hash": "a7cba952409e2d8465362cb36ef33a237c8c7986e2f7d33c2b87ffeffc655ebc",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.17.0",
             "provider": "",
-            "package_path": "pik-0.16.0-x86_64-unknown-linux-gnu/pik",
+            "package_path": "pik-0.17.0-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.41.4",
-            "hash": "30d08a9e2eb96dc2a7e0358cecf92511d689554fcd473724dfc5f6d6bd620e18",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.41.4",
+            "version": "v0.42.1",
+            "hash": "038bb80ee22d61e8906b2cdcc3d20ac081ee90674af1e8a28a39777ce5c7d2e2",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.42.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -313,12 +323,12 @@
         },
         "/env/bin/tv": {
             "path": "/env/bin/tv",
-            "remote_name": "tv-0.10.6-linux-x86_64.sha256",
-            "version": "0.10.6",
-            "hash": "7a60948fe145f574d6ab636fb61bbc074b37a2a6ab63527d00a8f696ea5877ad",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.10.6",
+            "remote_name": "tv",
+            "version": "0.10.7",
+            "hash": "5b5219c9ee61e1c15c6a071ae5270c78bafe049032ba4394d5b47baa5bdb5c2c",
+            "url": "https://github.com/alexpasmantier/television/releases/tag/0.10.7",
             "provider": "",
-            "package_path": "",
+            "package_path": "tv",
             "pinned": false
         },
         "/env/bin/zoxide": {
