@@ -7,4 +7,5 @@
 ln -sf $ENVY/dot/.config/* $HOME/.config
 ln -sf $ENVY/dot/.{aliases,bashrc,func,profile,startup,xinitrc,Xmodmap,zshrc} $HOME
 
-cp $ENVY/dot/.vnc $HOME/.vnc
+[[ ! -d $HOME/.vnc ]] && mkdir $HOME/.vnc
+cp $ENVY/dot/.vnc/* $HOME/.vnc
