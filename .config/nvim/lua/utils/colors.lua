@@ -151,6 +151,8 @@ function mycolors()
     -- NvimTree
     NvimTreeNormal = { bg = ac1 },
     NvimTreeCursorLine = { bg = black },
+    NvimTreeFolderName = { fg = white },
+    NvimTreeOpenedFolderName = { link = "NvimTreeFolderName" },
     WinSeparator = { fg = ac0 },
 
     -- STATUS-LINE
