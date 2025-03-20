@@ -5,7 +5,10 @@ return {
             require("no-neck-pain").setup({
                 width = 150,
                     buffers = {
-                    blend = -0.5,
+                    -- blend = -0.5,
+                    colors = {
+                        blend = -0.5,
+                    }
                 },
                  integrations = { NvimTree = { reopen = true } },
             })

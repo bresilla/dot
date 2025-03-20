@@ -186,6 +186,11 @@ function mycolors()
     ToggleTermNormalFloat = { bg = ac0 },
     ToggleTermFloatBorder = { bg = ac0, fg = ac0 },
 
+    --- GITSIGNS
+    GitGutterAdd = { fg = ok_light },
+    GitGutterChange = { fg = warn_light },
+    GitGutterDelete = { fg = error_light },
+
     -- DIAGNOSTICS
     DiagnosticError = { fg = error_light, bg = error_dark },
     DiagnosticWarn  = { fg = warn_light,  bg = warn_dark },
