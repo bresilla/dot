@@ -21,7 +21,9 @@ return {{
             }
         else
             -- works with normal c and cpp projects
-            require('lspconfig').clangd.setup {}
+            require('lspconfig').clangd.setup {
+                  cmd = { "clangd", "--header-insertion=never" },
+            }
         end
         -- lsp for rust
         lspconfig.rust_analyzer.setup {
