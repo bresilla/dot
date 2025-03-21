@@ -99,7 +99,7 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 
 ---------------------------------------------- === PLUGINS === ----------------------------------------------
 require("config.lazy")
-require("utils.colors")
+require("utils.termcolors")
 require("utils.diags")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
