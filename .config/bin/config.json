@@ -124,11 +124,11 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.20.23",
-            "hash": "aaef6cdb133f7987e847f107dd216d61d8426c0829d954d71f62be954f7138f7",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.23",
+            "version": "v0.20.24",
+            "hash": "582e652b06fb595eaa9486e875501fa97e0bc8a09b24952d1200a03ead0996ae",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.24",
             "provider": "",
-            "package_path": "",
+            "package_path": "eza",
             "pinned": false
         },
         "/env/bin/git-cliff": {
@@ -144,9 +144,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.13",
-            "hash": "92444d386308c141f6b2e2f3332b477e9122365f01f342a2d203a355620564d8",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.13",
+            "version": "v1.0.15",
+            "hash": "61444fb92b3bdf003ce754498bd5acdb1fc4cd48d9d591c0216916973aa4b95c",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.15",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -224,9 +224,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.0.7-0",
-            "hash": "64739ffd9e67cca5f1a524fcd39da5f6ce6847180150b98a54b9178fdfb17252",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.7-0",
+            "version": "2.0.8-0",
+            "hash": "0905ea12f61d85964e6881b579db5291af290e8b666cdd0869828e1c1ba21487",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.8-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -254,11 +254,11 @@
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.17.0",
-            "hash": "a7cba952409e2d8465362cb36ef33a237c8c7986e2f7d33c2b87ffeffc655ebc",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.17.0",
+            "version": "0.18.1",
+            "hash": "a746196571096bc84db188e5ae5731791cde0c2ae1fa50a9a4960bf91863ac60",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.18.1",
             "provider": "",
-            "package_path": "pik-0.17.0-x86_64-unknown-linux-gnu/pik",
+            "package_path": "pik-0.18.1-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
@@ -314,9 +314,9 @@
         "/env/bin/tldr": {
             "path": "/env/bin/tldr",
             "remote_name": "tealdeer-linux-x86_64-musl",
-            "version": "v1.7.1",
-            "hash": "9d9afe7f5b776dc94ff31447e275f5e0ea3723abba8d10239ddcbdf162447dfc",
-            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.7.1",
+            "version": "v1.7.2",
+            "hash": "d30bbd35b962bfab5cd3aaef2ece5316ee6f732d25e3f665ddb2797f9d64ee0f",
+            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.7.2",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -324,11 +324,11 @@
         "/env/bin/tv": {
             "path": "/env/bin/tv",
             "remote_name": "tv",
-            "version": "0.10.7",
-            "hash": "5b5219c9ee61e1c15c6a071ae5270c78bafe049032ba4394d5b47baa5bdb5c2c",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.10.7",
+            "version": "0.10.10",
+            "hash": "eb08d7522a3d4a160adaf4522ca3c0834782c7d0204bb7e64074e6cb5253f4b1",
+            "url": "https://github.com/alexpasmantier/television/releases/tag/0.10.10",
             "provider": "",
-            "package_path": "tv",
+            "package_path": "tv-0.10.10-linux-x86_64/tv",
             "pinned": false
         },
         "/env/bin/zoxide": {

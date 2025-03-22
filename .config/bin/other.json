@@ -1,6 +1,16 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/buf": {
+            "path": "/env/bin/buf",
+            "remote_name": "buf-Linux-x86_64",
+            "version": "v1.50.1",
+            "hash": "55c4d2ac89caa0c91d0015601a2d1d2c62ba71da8e98ac7b34d14c7eaf432996",
+            "url": "https://github.com/bufbuild/buf",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric-linux-amd64",
@@ -9,6 +19,16 @@
             "url": "https://github.com/danielmiessler/fabric",
             "provider": "github",
             "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/git-who": {
+            "path": "/env/bin/git-who",
+            "remote_name": "git-who",
+            "version": "v0.6",
+            "hash": "5eb8ba8a1aca055521fdd29ec2226b02bbb27ab5dbb7973145c3d3bc218af7b4",
+            "url": "https://github.com/sinclairtarget/git-who",
+            "provider": "github",
+            "package_path": "linux_amd64/git-who",
             "pinned": false
         },
         "/env/bin/glance": {
