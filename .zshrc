@@ -179,6 +179,7 @@ bindkey -s '^G' 'git go\n'
 runner () {
     # check if the buffer does not contain any words
     if [ ${#${(z)BUFFER}} -eq 0 ]; then
+      echo
       ll
     fi
     zle accept-line
@@ -187,15 +188,8 @@ zle -N runner
 bindkey '^M' runner
 
 #--------------------------------------------------------------------------------------------------------------------
-#RUN OR LS (shotrcut: Enter)
+#Clear screen
 clr () {
-    # tput cup 0 0
-    # zle redisplay
-    # clear -x
-    # ----
-    # tput reset
-    # zle -I
-    # ----
     echo -en "\ec"
     zle -I
     tput cup 0 0
