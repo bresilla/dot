@@ -31,7 +31,7 @@ vim.g.clipboard = {
         ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
     },
 }
-vim.g.termfeatures = termfeatures
+-- vim.g.termfeatures = termfeatures
 
 
 vim.o.autoread = true
@@ -182,25 +182,15 @@ vim.cmd([[
 
 -------------------------------------------- === CUSRSON POS === ------------------------------------------
 local augroup = vim.api.nvim_create_augroup('RestoreCursor', { clear = true })
-vim.api.nvim_create_autocmd('BufReadPost', {
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  pattern = '*',  -- Apply to all buffers
   group = augroup,
   callback = function()
-    local mark = vim.api.nvim_buf_get_mark(0, '"')
-    local lcount = vim.api.nvim_buf_line_count(0)
-    if mark[1] > 0 and mark[1] <= lcount then
-      vim.api.nvim_win_set_cursor(0, mark)
-    end
-  end,
-})
-vim.api.nvim_create_autocmd('BufEnter', {
-  pattern = '*',  -- Apply to all buffers
-  group = group,
-  desc = 'Restore cursor position when entering a buffer',
-  callback = function()
-    -- Check if the mark '"' is set in the current buffer
-    if vim.fn.line([['"]]) > 0 and vim.fn.line([['"]]) <= vim.fn.line('$') then
-      -- Move the cursor to the position of the mark '"'
-      vim.api.nvim_win_set_cursor(0, { vim.fn.line([['"]]), 0 })
+    local pos = vim.api.nvim_buf_get_mark(0, '"')
+    local line_count = vim.api.nvim_buf_line_count(0)
+    -- Check if the mark is valid
+    if pos[1] > 0 and pos[1] <= line_count then
+      vim.api.nvim_win_set_cursor(0, pos)
     end
   end,
 })
