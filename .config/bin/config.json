@@ -124,11 +124,11 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.20.24",
-            "hash": "582e652b06fb595eaa9486e875501fa97e0bc8a09b24952d1200a03ead0996ae",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.20.24",
+            "version": "v0.21.0",
+            "hash": "150f5bf0a5de6da638819e7e811c48b4c3f98e24a33b48e0068e536575da5bf5",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.0",
             "provider": "",
-            "package_path": "eza",
+            "package_path": "./eza",
             "pinned": false
         },
         "/env/bin/git-cliff": {
@@ -144,9 +144,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.15",
-            "hash": "61444fb92b3bdf003ce754498bd5acdb1fc4cd48d9d591c0216916973aa4b95c",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.15",
+            "version": "v1.0.17",
+            "hash": "039c5233b7816c916f909dc1ee1bc5b93aef805ea73cae6ab13ec40bd3bdca20",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.17",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -254,19 +254,19 @@
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.18.1",
-            "hash": "a746196571096bc84db188e5ae5731791cde0c2ae1fa50a9a4960bf91863ac60",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.18.1",
+            "version": "0.19.0",
+            "hash": "69865e01a55d4ad5a895c02f1b3a1a1bb35125beb2c8053755ca7366b9a5159d",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.19.0",
             "provider": "",
-            "package_path": "pik-0.18.1-x86_64-unknown-linux-gnu/pik",
+            "package_path": "pik-0.19.0-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.42.1",
-            "hash": "038bb80ee22d61e8906b2cdcc3d20ac081ee90674af1e8a28a39777ce5c7d2e2",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.42.1",
+            "version": "v0.44.0",
+            "hash": "560b4c00378f2e2c4bf42283d521a61e9625c1cb24af4207d767e15a0dd63bce",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.44.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -294,11 +294,11 @@
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",
-            "version": "v0.8.2",
-            "hash": "1f6634227c0dcca10605f2b1387591077cd458ad9cd2c59e7df115d3fd292793",
-            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.8.2",
+            "version": "v0.8.5",
+            "hash": "e16da5e363fc1e4880389e7f0d9901f9fbe4b584539de0dfd484fa6784e94a9d",
+            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.8.5",
             "provider": "",
-            "package_path": "soft-serve_0.8.2_Linux_x86_64/soft",
+            "package_path": "soft-serve_0.8.5_Linux_x86_64/soft",
             "pinned": false
         },
         "/env/bin/starship": {
@@ -334,11 +334,11 @@
         "/env/bin/tv": {
             "path": "/env/bin/tv",
             "remote_name": "tv",
-            "version": "0.10.10",
-            "hash": "eb08d7522a3d4a160adaf4522ca3c0834782c7d0204bb7e64074e6cb5253f4b1",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.10.10",
+            "version": "0.11.5",
+            "hash": "a06a9ed49a94e9c423dbe77e0b954c6b59b9f4b488cda8bb753840dac8c72fb5",
+            "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.5",
             "provider": "",
-            "package_path": "tv-0.10.10-linux-x86_64/tv",
+            "package_path": "tv-0.11.5-x86_64-unknown-linux-musl/tv",
             "pinned": false
         },
         "/env/bin/zoxide": {

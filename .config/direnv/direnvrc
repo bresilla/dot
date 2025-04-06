@@ -12,6 +12,11 @@ use_devbox() {
     eval "$(devbox shell --print-env)"
 }
 
+use_pixi(){
+    watch_file pixi.lock 
+    eval "$(pixi shell-hook)"
+}
+
 use_devenv() {
     watch_file devenv.nix
     watch_file devenv.yaml
