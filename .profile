@@ -143,8 +143,8 @@ export OATMEAL_OLLAMA_URL=http://borg.zerotier:11434
 #export DOCKER_HOST=tcp://borg.zerotier:2375
 
 
-#----------------------------        SOFT-SERVER        ---------------------------
-SOFT_SERVE_DATA_PATH=/git/soft
+#----------------------------            OTHER          ---------------------------
+export LOCAL_NOTEBOOK_DEV=1
 
 #---------------------------            CORE            --------------------------
 if [ "$HOSTNAME" = core ]; then
