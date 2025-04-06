@@ -5,7 +5,7 @@
 [[ ! -d "$HOME/.config" ]] && mkdir -p $HOME/.config
 
 ln -sf $ENVY/dot/.config/* $HOME/.config
-ln -sf $ENVY/dot/.{aliases,bashrc,func,profile,startup,xinitrc,Xmodmap,zshrc} $HOME
+ln -sf $ENVY/dot/.{aliases,bashrc,func,profile,startup,xinitrc,winitrc,zshrc} $HOME
 
-[[ ! -d $HOME/.vnc ]] && mkdir $HOME/.vnc
-cp $ENVY/dot/.vnc/* $HOME/.vnc
+# [[ ! -d $HOME/.vnc ]] && mkdir $HOME/.vnc
+# cp $ENVY/dot/.vnc/* $HOME/.vnc

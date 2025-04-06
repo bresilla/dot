@@ -88,6 +88,7 @@ alias pomo='pomo -p /home/bresilla/.config/pomo'
 alias git='hub'
 alias lines='tokei'
 alias search='rg --hidden'
+alias vol=rsmixer
 
 ##BIN
 # alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"

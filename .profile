@@ -155,3 +155,5 @@ fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
 
 [ -f "/home/bresilla/.ghcup/env" ] && . "/home/bresilla/.ghcup/env" # ghcup-env
+
+if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

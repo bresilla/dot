@@ -225,3 +225,5 @@ bindkey -s '^A' ' scrr\n'
 #---------------------------            EXTERNAL       --------------------------
 [[ -s "$HOME/.external" ]] && source "$HOME/.external"
 if (( ${+CWD_VAR} )); then cd $CWD_VAR; fi
+
+if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

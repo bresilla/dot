@@ -1,7 +1,8 @@
 (defpoll timedatectl 
     :interval "1s"
     :initial "1"
-    `timedatectl | grep "RTC time:" | choose 4`
+    ; `timedatectl | grep "RTC time:" | choose 4`
+    `timedatectl | grep Local | xargs | cut -d" " -f5`
 )
 
 (defpoll calendar_day :interval "1h" "date '+%d'")
