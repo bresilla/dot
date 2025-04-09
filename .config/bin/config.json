@@ -141,6 +141,16 @@
             "package_path": "git-cliff-2.8.0/git-cliff",
             "pinned": false
         },
+        "/env/bin/gomi": {
+            "path": "/env/bin/gomi",
+            "remote_name": "gomi",
+            "version": "v1.6.0",
+            "hash": "d23e3858a2dac6093d268ea508f478bde8e45834bc6e1ac9ac9ae465bd12df69",
+            "url": "https://github.com/babarot/gomi",
+            "provider": "github",
+            "package_path": "gomi",
+            "pinned": false
+        },
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
