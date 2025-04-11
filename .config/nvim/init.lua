@@ -123,8 +123,8 @@ vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
 vim.cmd([[au WinLeave,BufLeave,TabLeave,FocusLost * silent wall]])
 
 --- === HIGHLGHT ON YANK
-vim.cmd([[au TextYankPost * silent! lua vim.highlight.on_yank()]])
-vim.highlight.on_yank {
+vim.cmd([[au TextYankPost * silent! lua vim.hl.on_yank()]])
+vim.hl.on_yank {
     on_visual = true
 }
 
