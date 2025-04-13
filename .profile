@@ -29,7 +29,7 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 
 #---------------------------         LOC & TERM          --------------------------
 export COLORTERM=truecolor
-export BROWSER=org.mozilla.firefox
+export BROWSER=app.zen_browser.zen
 export EDITOR=hx
 export TERMINAL=kitty
 export CONSOLE=kitty
