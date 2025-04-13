@@ -171,10 +171,11 @@ n(){
 bindkey -s '^W' ' n\n'
 bindkey -s '^G' 'git go\n'
 
-bindkey -s '^[b' 'r_build\n'
-bindkey -s '^[r' 'r_run\n'
-bindkey -s '^[u' 'r_upload\n'
-bindkey -s '^[m' 'r_monitor\n'
+bindkey -s '^[b' ' r_build\n'
+bindkey -s '^[r' ' r_run\n'
+bindkey -s '^[u' ' r_upload\n'
+bindkey -s '^[m' ' r_monitor\n'
+bindkey -s '^[t' ' r_test\n'
 
 
 #--------------------------------------------------------------------------------------------------------------------
