@@ -1,5 +1,5 @@
 #!/bin/sh
 
-confile=$(fd . /env/dot/ --hidden --type file | fzf)
+confile=$(fd . /env/dot/ --hidden --type file | fzf --preview 'bat --color=always {}')
 
 hx $confile
