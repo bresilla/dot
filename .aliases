@@ -19,6 +19,7 @@ alias bolt="boltctl"
 
 alias dot='/usr/bin/git --git-dir=$HOME/.dot/ --work-tree=$HOME'
 alias run.sh="./run.sh"
+alias run="./run.sh"
 
 ##WM
 alias sx="startx"
