@@ -11,6 +11,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/clipse": {
+            "path": "/env/bin/clipse",
+            "remote_name": "clipse",
+            "version": "v1.1.0",
+            "hash": "d1313377d43591a58140187992b279d497d7fb7069e07268bf64c1dade30c362",
+            "url": "https://github.com/savedra1/clipse",
+            "provider": "github",
+            "package_path": "clipse",
+            "pinned": false
+        },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric-linux-amd64",

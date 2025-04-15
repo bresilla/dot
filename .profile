@@ -149,7 +149,8 @@ export LOCAL_NOTEBOOK_DEV=1
 #---------------------------            CORE            --------------------------
 if [ "$HOSTNAME" = core ]; then
     export SSH_AGENT_PID=""
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
