@@ -24,11 +24,11 @@ return{
                     }
                 },
                 ui = {
-                    window_width = 0.35,                   -- Width as percentage of editor width
+                    window_width = 0.6,                    -- Width as percentage of editor width
                     input_height = 0.15,                   -- Input height as percentage of window height
                     fullscreen = false,                    -- Start in fullscreen mode (default: false)
                     layout = "floating",                   -- Layout of UI window (default: "floating")
-                    float_height = 0.5,                    -- Floating window height as percentage of editor height
+                    floating_height = 0.85,                -- Floating window height as percentage of editor height
                 }
             })
         end,
