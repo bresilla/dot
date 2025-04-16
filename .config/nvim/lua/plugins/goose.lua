@@ -7,9 +7,7 @@ return{
             require('goose').setup({
                 keymap = {
                     global = {
-                        toggle = '<leader>gg',                 -- Open goose. Close if opened 
                         open_input = '<leader>gi',             -- Opens and focuses on input window on insert mode
-                        open_input_new_session = '<leader>gI', -- Opens and focuses on input window on insert mode. Creates a new session
                         open_output = '<leader>go',            -- Opens and focuses on output window 
                         close = '<leader>gq',                  -- Close UI windows
                         toggle_fullscreen = '<leader>gf',      -- Toggle between normal and fullscreen mode
