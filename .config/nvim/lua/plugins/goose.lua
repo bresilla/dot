@@ -3,22 +3,26 @@ return{
         'azorng/goose.nvim',
         branch = 'main',
         config = function()
+                -- Default configuration with all available options
             require('goose').setup({
                 keymap = {
                     global = {
-                    open_input = '<leader>gi',             -- Opens and focuses on input window. Loads current buffer context
-                    open_input_new_session = '<leader>gI', -- Opens and focuses on input window. Loads current buffer context. Creates a new session
-                    open_output = '<leader>go',            -- Opens and focuses on output window. Loads current buffer context
-                    close = '<leader>gq',                  -- Close UI windows
-                    toggle_fullscreen = '<leader>gf',      -- Toggle between normal and fullscreen mode
-                    select_session = '<leader>gs',         -- Select and load a goose session
+                        toggle = '<leader>gg',                 -- Open goose. Close if opened 
+                        open_input = '<leader>gi',             -- Opens and focuses on input window on insert mode
+                        open_input_new_session = '<leader>gI', -- Opens and focuses on input window on insert mode. Creates a new session
+                        open_output = '<leader>go',            -- Opens and focuses on output window 
+                        close = '<leader>gq',                  -- Close UI windows
+                        toggle_fullscreen = '<leader>gf',      -- Toggle between normal and fullscreen mode
+                        select_session = '<leader>gs',         -- Select and load a goose session
                     },
                     window = {
-                    submit = '<cr>',                     -- Submit prompt
-                    close = '<esc>',                     -- Close UI windows
-                    stop = '<C-c>',                      -- Stop a running job
-                    next_message = ']]',                 -- Navigate to next message in the conversation
-                    prev_message = '[[',                 -- Navigate to previous message in the conversation
+                        submit = '<cr>',                     -- Submit prompt
+                        close = '<esc>',                     -- Close UI windows
+                        stop = '<C-c>',                      -- Stop a running job
+                        next_message = ']]',                 -- Navigate to next message in the conversation
+                        prev_message = '[[',                 -- Navigate to previous message in the conversation
+                        mention_file = '@',                  -- Pick a file and add to context. See File Mentions section
+                        toggle_pane = '<C-n>'                -- Toggle between input and output panes
                     }
                 },
                 ui = {

@@ -14,9 +14,9 @@
         "/env/bin/atuin": {
             "path": "/env/bin/atuin",
             "remote_name": "atuin",
-            "version": "v18.4.0",
-            "hash": "2cb609de7b7c194aed249e15308e356d1138979817187e88bf6036f5093d7950",
-            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.4.0",
+            "version": "v18.5.0",
+            "hash": "666f900bc0299bc7f7cf2b3be99398fc8daeb5f3b219373da4e7edfcde7c6219",
+            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.5.0",
             "provider": "",
             "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
             "pinned": false
@@ -74,9 +74,9 @@
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
             "remote_name": "devbox",
-            "version": "0.14.0",
-            "hash": "d242aa17f9460a5976deb0028578ba61cb5c8b90161ac8ce12fae361efcad384",
-            "url": "https://github.com/jetify-com/devbox/releases/tag/0.14.0",
+            "version": "0.14.1",
+            "hash": "e8f9e22ca39623751d086bbec0ada092ccbf6b2fe175c8a27da18e5355fdf08a",
+            "url": "https://github.com/jetify-com/devbox/releases/tag/0.14.1",
             "provider": "",
             "package_path": "devbox",
             "pinned": false
@@ -84,9 +84,9 @@
         "/env/bin/direnv": {
             "path": "/env/bin/direnv",
             "remote_name": "direnv.linux-amd64",
-            "version": "v2.35.0",
-            "hash": "55c294f4376397c68b1f659f049fb104dc2ecd0fcb15a15949d7f748e3f70b66",
-            "url": "https://github.com/direnv/direnv/releases/tag/v2.35.0",
+            "version": "v2.36.0",
+            "hash": "604f3dc51f05620d7ea8d8360b3a18d72ccc842a181edabca4d7bd75b6784f88",
+            "url": "https://github.com/direnv/direnv/releases/tag/v2.36.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -104,11 +104,11 @@
         "/env/bin/dora": {
             "path": "/env/bin/dora",
             "remote_name": "dora",
-            "version": "v0.3.10",
-            "hash": "ebf74c51807e5133c3e5b328d46a246187782f07a4d19c8f6a56cfffec9a1f3c",
-            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.10",
+            "version": "v0.3.11",
+            "hash": "fc86826ca10ae3518b9bf243b44e59d883b4330bfff6db0118e1dab64ed103b4",
+            "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.11",
             "provider": "",
-            "package_path": "dora",
+            "package_path": "dora-cli-x86_64-unknown-linux-gnu/dora",
             "pinned": false
         },
         "/env/bin/dufs": {
@@ -154,9 +154,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.17",
-            "hash": "039c5233b7816c916f909dc1ee1bc5b93aef805ea73cae6ab13ec40bd3bdca20",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.17",
+            "version": "v1.0.18",
+            "hash": "c14d1780b021988b87610c3a4871c511ba6cb8bbc7ac73519a4a37a9560547b6",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.18",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -174,9 +174,9 @@
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.37.0",
-            "hash": "d988a12ba15a2b8a617b9271dbc5d6f86617f89f86138a605be7c38424b7bbe0",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.37.0",
+            "version": "4.38.0",
+            "hash": "c55ac8ed167b975e3c36652cd58b7369add4b0539c0083edf4f36528a5ad1f34",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.38.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -234,9 +234,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.0.8-0",
-            "hash": "0905ea12f61d85964e6881b579db5291af290e8b666cdd0869828e1c1ba21487",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.0.8-0",
+            "version": "2.1.0-0",
+            "hash": "15d4127a9b248907ab99e2804bd86789f1bbd1458d206065c16a9e86c02d6a30",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.1.0-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -274,9 +274,9 @@
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.44.0",
-            "hash": "560b4c00378f2e2c4bf42283d521a61e9625c1cb24af4207d767e15a0dd63bce",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.44.0",
+            "version": "v0.45.0",
+            "hash": "359b821d4e2a1cd156f7de60a175bf6543931b0629f53d528eafae1d6312e06f",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.45.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -344,11 +344,11 @@
         "/env/bin/tv": {
             "path": "/env/bin/tv",
             "remote_name": "tv",
-            "version": "0.11.5",
-            "hash": "a06a9ed49a94e9c423dbe77e0b954c6b59b9f4b488cda8bb753840dac8c72fb5",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.5",
+            "version": "0.11.7",
+            "hash": "41dcc0fcec6fe1dd57905778386d51794917571963ee28a344065c393820380f",
+            "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.7",
             "provider": "",
-            "package_path": "tv-0.11.5-x86_64-unknown-linux-musl/tv",
+            "package_path": "tv-0.11.7-x86_64-unknown-linux-musl/tv",
             "pinned": false
         },
         "/env/bin/zoxide": {

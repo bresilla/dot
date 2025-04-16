@@ -82,6 +82,15 @@ return{
                 { "<leader>ld", "<cmd>lua require('telescope.builtin').diagnostics()<cr>", desc = "Diagnostics", mode = { "n", "v" } },
             })
 
+            wk.add({
+                { "<leader>d", group = "Goose"},
+                { "<leader>dg", "<cmd>Goose<CR>", desc = "Goose", mode = { "n", "v" } },
+                { "<leader>di", "<cmd>GooseInput<CR>", desc = "Input", mode = { "n", "v" } },
+                { "<leader>do", "<cmd>GooseOutput<CR>", desc = "Output", mode = { "n", "v" } },
+                { "<leader>dq", "<cmd>GooseClose<CR>", desc = "Close", mode = { "n", "v" } },
+                { "<leader>df", "<cmd>GooseFullscreen<CR>", desc = "Fullscreen", mode = { "n", "v" } },
+            })
+
             -- TELESCOPE
             wk.add({
                 { "<leader>g", "<cmd>lua require('telescope.builtin').live_grep()<cr>", desc = "Live Grep", mode = { "n", "v" } },

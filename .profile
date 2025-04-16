@@ -138,8 +138,8 @@ export PLATFORMIO_CORE_DIR=/pkg/pio/core
 
 
 #----------------------------        HIVE-SERVER        ---------------------------
-export OLLAMA_HOST=borg.zerotier:11434
-export OATMEAL_OLLAMA_URL=http://borg.zerotier:11434
+export OLLAMA_HOST=echo.zerotier:11434
+export OATMEAL_OLLAMA_URL=http://echo.zerotier:11434
 #export DOCKER_HOST=tcp://borg.zerotier:2375
 
 
