@@ -1,6 +1,6 @@
 return{
     {
-        'bresilla/goose.nvim',
+        'azorng/goose.nvim',
         branch = 'main',
         config = function()
                 -- Default configuration with all available options
@@ -27,7 +27,7 @@ return{
                     window_width = 0.6,                    -- Width as percentage of editor width
                     input_height = 0.15,                   -- Input height as percentage of window height
                     fullscreen = false,                    -- Start in fullscreen mode (default: false)
-                    layout = "floating",                   -- Layout of UI window (default: "floating")
+                    layout = "center",                     -- Layout of UI window (default: "floating")
                     floating_height = 0.85,                -- Floating window height as percentage of editor height
                 }
             })

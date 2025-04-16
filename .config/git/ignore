@@ -3,3 +3,6 @@ LEARN
 **/data
 **/runs
 **/logs
+**/.goose
+**/.direnv
+**/.DS_Store
