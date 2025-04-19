@@ -1,4 +1,4 @@
-vim.keymap.set('n',            '<tab>',             [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
+-- vim.keymap.set('n',            '<tab>',             [[:NvimTreeToggle<CR>]], { noremap = true, silent = true })
 
 return {
     {
