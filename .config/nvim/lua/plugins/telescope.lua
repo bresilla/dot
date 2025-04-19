@@ -1,10 +1,10 @@
 return {
     {
-        'nvim-telescope/telescope.nvim', 
+        'nvim-telescope/telescope.nvim',
         tag = '0.1.8',
         config = function()
             local actions = require('telescope.actions')
-            local sorters = require('telescope.sorters')
+            -- local sorters = require('telescope.sorters')
 
             require('telescope').setup{
                 defaults = {
@@ -31,20 +31,10 @@ return {
                     file_sorter =  require'telescope.sorters'.get_fuzzy_file,
                     color_devicons = true,
                     use_less = true,
-                    mappings = {
-                        i = {
-                            ["<M-s>"] = actions.select_horizontal,
-                            ["<M-v>"] = actions.select_vertical,
-                            ["<CR>"] = actions.select_default + actions.center,
-                        },
-                        n = {
-                            ["<esc>"] = actions.close
-                        },
-                    }
                 },
             }
 
-            center_list = require'telescope.themes'.get_dropdown({
+            require'telescope.themes'.get_dropdown({
                 winblend = 10,
                 width = 0.5,
                 prompt = ">>",
@@ -61,6 +51,7 @@ return {
                     },
                 }
             })
+            require("telescope").load_extension "file_browser"
         end,
         dependencies = { 'nvim-lua/plenary.nvim' }
     },

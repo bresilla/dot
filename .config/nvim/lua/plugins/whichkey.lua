@@ -93,7 +93,7 @@ return{
                 { "<leader>F", "<cmd>lua require('telescope.builtin').git_files()<cr>", desc = "Git Files", mode = { "n", "v" } },
                 { "<leader>f", "<cmd>lua require('telescope.builtin').find_files()<cr>", desc = "Find Files", mode = { "n", "v" } },
                 { "<leader>b", "<cmd>lua require('telescope.builtin').buffers()<cr>", desc = "Buffers", mode = { "n", "v" } },
-                { "<leader>e", "<cmd>lua require('telescope.builtin').file_browser()<cr>", desc = "File Browser", mode = { "n", "v" } },
+                { "<leader>e", ":Telescope file_browser<CR>", desc = "File Browser", mode = { "n", "v" } },
             })
         end,
     }
