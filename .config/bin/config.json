@@ -221,6 +221,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/lf": {
+            "path": "/env/bin/lf",
+            "remote_name": "lf",
+            "version": "r34",
+            "hash": "a59eb8a12a7ae11533fc4e54794445d0a6d3d21a9fbac3f4db203a70c2edead6",
+            "url": "https://github.com/gokcehan/lf",
+            "provider": "github",
+            "package_path": "lf",
+            "pinned": false
+        },
         "/env/bin/lule": {
             "path": "/env/bin/lule",
             "remote_name": "lule",
@@ -349,6 +359,16 @@
             "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.7",
             "provider": "",
             "package_path": "tv-0.11.7-x86_64-unknown-linux-musl/tv",
+            "pinned": false
+        },
+        "/env/bin/yazi": {
+            "path": "/env/bin/yazi",
+            "remote_name": "yazi",
+            "version": "v25.4.8",
+            "hash": "e14ea1804e5db49cccedb4c6ef674b3cc5afa78e4d3e4eb365b197764db0a6cd",
+            "url": "https://github.com/sxyazi/yazi",
+            "provider": "github",
+            "package_path": "yazi-x86_64-unknown-linux-musl/yazi",
             "pinned": false
         },
         "/env/bin/zoxide": {

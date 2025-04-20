@@ -1,0 +1,11 @@
+#!/bin/bash
+
+current_tty=$(tmux display-message -p "#{pane_tty}")  # built‑in tmux variable :contentReference[oaicite:9]{index=9}
+pane_id=$(tmux display-message -p "#{pane_id}")  # built‑in tmux variable :contentReference[oaicite:9]{index=9}
+current_path=$(tmux display-message -p "#{pane_current_path}")  # built‑in tmux variable :contentReference[oaicite:9]{index=9}
+
+if ps -t "$current_tty" -o comm= | grep -qiE '^(n?vim|view|hx)$'; then
+    pick=$(yazi --chooser-file=/dev/stdout $current_path)
+    [[ -n "$pick" ]] && tmux send-keys -t "$pane_id" ":e $pick" C-m
+fi
+
