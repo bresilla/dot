@@ -15,7 +15,8 @@ editor=$(ps -t "$current_tty" -o comm= | awk 'NF' | tail -n1 | tr -d '[:space:]'
 # @cmd pick file with explorer
 # @alias e
 explorer() {
-    pick=$(yazi --chooser-file=/dev/stdout "$current_path")
+    # pick=$(yazi --chooser-file=/dev/stdout "$current_path")
+    pick=$(nnn -p /dev/stdout "$current_path")
     [[ -z "$pick" ]] && exit 0
     case "$editor" in
       nvim|vim|view)
@@ -42,6 +43,5 @@ finder() {
         ;;
     esac
 }
-
 
 eval "$(argc --argc-eval "$0" "$@")"
