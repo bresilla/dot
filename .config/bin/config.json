@@ -18,7 +18,7 @@
             "hash": "666f900bc0299bc7f7cf2b3be99398fc8daeb5f3b219373da4e7edfcde7c6219",
             "url": "https://github.com/atuinsh/atuin/releases/tag/v18.5.0",
             "provider": "",
-            "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/bat": {
@@ -78,7 +78,7 @@
             "hash": "e8f9e22ca39623751d086bbec0ada092ccbf6b2fe175c8a27da18e5355fdf08a",
             "url": "https://github.com/jetify-com/devbox/releases/tag/0.14.1",
             "provider": "",
-            "package_path": "devbox",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/direnv": {
@@ -108,7 +108,7 @@
             "hash": "fc86826ca10ae3518b9bf243b44e59d883b4330bfff6db0118e1dab64ed103b4",
             "url": "https://github.com/dora-rs/dora/releases/tag/v0.3.11",
             "provider": "",
-            "package_path": "dora-cli-x86_64-unknown-linux-gnu/dora",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/dufs": {
@@ -168,7 +168,7 @@
             "hash": "61a1fdd6d2bfb80a9ca14225bc3bd12d73db6f525cd683cba9eaa5f975114796",
             "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.0",
             "provider": "",
-            "package_path": "gum_0.16.0_Linux_x86_64/gum",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/ha": {
@@ -207,8 +207,8 @@
             "version": "1.40.0",
             "hash": "3fae4508b25e85bec16c2985bb76f731d35b103434c5bf264af0fa2ab07e889a",
             "url": "https://github.com/casey/just",
-            "provider": "github",
-            "package_path": "just",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/lemonade": {
@@ -227,8 +227,8 @@
             "version": "r34",
             "hash": "a59eb8a12a7ae11533fc4e54794445d0a6d3d21a9fbac3f4db203a70c2edead6",
             "url": "https://github.com/gokcehan/lf",
-            "provider": "github",
-            "package_path": "lf",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/lule": {
@@ -358,7 +358,7 @@
             "hash": "41dcc0fcec6fe1dd57905778386d51794917571963ee28a344065c393820380f",
             "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.7",
             "provider": "",
-            "package_path": "tv-0.11.7-x86_64-unknown-linux-musl/tv",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/yazi": {

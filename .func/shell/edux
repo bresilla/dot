@@ -4,6 +4,7 @@
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
+curr_edit=$(cat /tmp/current_editing_file)
 
 if ! ps -t "$current_tty" -o comm= | grep -qiE '^(n?vim|view|hx)$'; then
     exit 0
@@ -15,14 +16,15 @@ editor=$(ps -t "$current_tty" -o comm= | awk 'NF' | tail -n1 | tr -d '[:space:]'
 # @cmd pick file with explorer
 # @alias e
 explorer() {
-    curr_edit=$(cat /tmp/current_editing_file)
     if [[ -n "$curr_edit" ]]; then
-        # current_path="$(dirname "$curr_edit")"
         current_path=$curr_edit
     fi
     pick=$(yazi --chooser-file=/dev/stdout "$current_path")
     # pick=$(nnn -p /dev/stdout "$current_path")
     [[ -z "$pick" ]] && exit 0
+    if [[ "$pick" == "$current_path" ]]; then
+        exit 0
+    fi
     case "$editor" in
       nvim|vim|view)
         tmux send-keys -t "$pane_id" ":e $pick" C-m
@@ -38,6 +40,9 @@ explorer() {
 finder() {
     pick=$(fd --hidden -t f . $current_path --exclude .git | tv --preview 'bat -n --color=always {0}')
     [[ -z "$pick" ]] && exit 0
+    if [[ "$pick" == "$current_path" ]]; then
+        exit 0
+    fi
     case "$editor" in
       nvim|vim|view)
         tmux send-keys -t "$pane_id" ":e $pick" C-m
@@ -54,6 +59,9 @@ finder() {
 grepi() {
     pick=$(tv text)
     [[ -z "$pick" ]] && exit 0
+    if [[ "$pick" == "$current_path" ]]; then
+        exit 0
+    fi
     case "$editor" in
       nvim|vim|view)
         tmux send-keys -t "$pane_id" ":e $pick" C-m
