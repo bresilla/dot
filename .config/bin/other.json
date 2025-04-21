@@ -91,6 +91,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/sherlock": {
+            "path": "/env/bin/sherlock",
+            "remote_name": "sherlock",
+            "version": "v0.1.10",
+            "hash": "68de00bd9dedb2e82a8086f938ea0fb936beb97a8f7bed7975e2211f90b1b0e5",
+            "url": "https://github.com/Skxxtz/sherlock",
+            "provider": "github",
+            "package_path": "sherlock",
+            "pinned": false
+        },
         "/env/bin/spotifyd": {
             "path": "/env/bin/spotifyd",
             "remote_name": "spotifyd",

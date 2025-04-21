@@ -1,5 +1,3 @@
 #!/bin/sh
 
-confile=$(fd . /env/dot/ --hidden --type file | fzf --preview 'bat --color=always {}')
-
-hx $confile
+hx $(tv dot)

@@ -31,8 +31,23 @@ explorer() {
 # @cmd pick file with finder
 # @alias f
 finder() {
-    # pick=$(fd -t f --full-path "$current_path" | fzf --preview "bat --style=numbers --color=always --line-range :500 {}")
     pick=$(tv $current_path)
+    [[ -z "$pick" ]] && exit 0
+    case "$editor" in
+      nvim|vim|view)
+        tmux send-keys -t "$pane_id" ":e $pick" C-m
+        ;;
+      hx)
+        tmux send-keys -t "$pane_id" ":open $pick" C-m
+        ;;
+    esac
+}
+
+
+# @cmd grep file for text
+# @alias g
+grepi() {
+    pick=$(tv text)
     [[ -z "$pick" ]] && exit 0
     case "$editor" in
       nvim|vim|view)

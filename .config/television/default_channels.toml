@@ -1,0 +1,5 @@
+# Dotfiles
+[[cable_channel]]
+name = "dot"
+source_command = "fd --exclude .git --hidden -t f . /env/dot"
+preview_command = ":files:"
