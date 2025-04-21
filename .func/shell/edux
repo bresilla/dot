@@ -17,7 +17,8 @@ editor=$(ps -t "$current_tty" -o comm= | awk 'NF' | tail -n1 | tr -d '[:space:]'
 explorer() {
     curr_edit=$(cat /tmp/current_editing_file)
     if [[ -n "$curr_edit" ]]; then
-        current_path="$(dirname "$curr_edit")"
+        # current_path="$(dirname "$curr_edit")"
+        current_path=$curr_edit
     fi
     pick=$(yazi --chooser-file=/dev/stdout "$current_path")
     # pick=$(nnn -p /dev/stdout "$current_path")
@@ -35,7 +36,7 @@ explorer() {
 # @cmd pick file with finder
 # @alias f
 finder() {
-    pick=$(tv $current_path)
+    pick=$(fd --hidden -t f . $current_path --exclude .git | tv --preview 'bat -n --color=always {0}')
     [[ -z "$pick" ]] && exit 0
     case "$editor" in
       nvim|vim|view)
