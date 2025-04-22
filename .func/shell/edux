@@ -38,7 +38,7 @@ explorer() {
 # @cmd pick file with finder
 # @alias f
 finder() {
-    pick=$(fd --hidden -t f . $current_path --exclude .git | tv --preview 'bat -n --color=always {0}')
+    pick=$(tv find)
     [[ -z "$pick" ]] && exit 0
     if [[ "$pick" == "$current_path" ]]; then
         exit 0
