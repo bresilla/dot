@@ -261,6 +261,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/nnn": {
+            "path": "/env/bin/nnn",
+            "remote_name": "nnn-nerd-static",
+            "version": "v5.1",
+            "hash": "ee62ec89e3778f0e878211527beda858286320bbc82d73ebb07c70964d34d631",
+            "url": "https://github.com/jarun/nnn",
+            "provider": "github",
+            "package_path": "nnn-nerd-static",
+            "pinned": false
+        },
         "/env/bin/nostromo": {
             "path": "/env/bin/nostromo",
             "remote_name": "nostromo",
