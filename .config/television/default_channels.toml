@@ -1,5 +1,10 @@
 # Dotfiles
 [[cable_channel]]
 name = "dot"
-source_command = "fd --exclude .git --hidden -t f . /env/dot"
+source_command = "fd --exclude .git --hidden --type file . /env/dot"
+preview_command = ":files:"
+
+[[cable_channel]]
+name = "find"
+source_command = "fd --hidden --type file --exclude .git ."
 preview_command = ":files:"
