@@ -168,9 +168,27 @@ n(){
     . "$NNN_TMPFILE"; rm -f "$NNN_TMPFILE" > /dev/null
   fi
 }
-bindkey -s '^W' ' n\n'
-bindkey -s '^G' 'git go\n'
+#YAZI
+yazicd() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    local cwd
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+        for precmd in $precmd_functions; do
+          $precmd
+        done
+        zle reset-prompt
+        printf '\e[4 q'
+    fi
+    rm -f -- "$tmp"
+}
+zle -N yazicd
+bindkey '^W' yazicd
 
+
+#--------------------------------------------------------------------------------------------------------------------
+# ALT-KEY shortcut
 for key in {a..z}; do
     bindkey -s "^[${key}" " _${key}\n"
 done
