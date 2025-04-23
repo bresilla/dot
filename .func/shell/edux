@@ -21,7 +21,7 @@ explorer() {
     fi
     pick=$(yazi --chooser-file=/dev/stdout "$current_path")
     # pick=$(nnn -p /dev/stdout "$current_path")
-    [[ -z "$pick" ]] && exit 0
+    [[ ! -f "$pick" ]] && exit 0
     if [[ "$pick" == "$current_path" ]]; then
         exit 0
     fi
