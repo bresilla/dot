@@ -128,24 +128,6 @@ vim.hl.on_yank {
     on_visual = true
 }
 
--- === CURR FILE EXPORT ===
-local group = vim.api.nvim_create_augroup("SetCurrentEditingFile", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufFilePost" }, {
-  group = group,
-  callback = function()
-    local file = vim.fn.expand("%:p")
-    vim.fn.setenv("CURRENT_EDITING_FILE", file)
-    vim.fn.writefile({ file }, "/tmp/current_editing_file")
-  end,
-})
-vim.api.nvim_create_autocmd("VimLeave", {
-  group = group,
-  callback = function()
-    vim.fn.writefile({}, "/tmp/current_editing_file")
-  end,
-})
-
-
 ---------------------------------------------- === BINDINGS === ----------------------------------------------
 vim.g.mapleader = " "
 
@@ -212,6 +194,25 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     end
   end,
 })
+
+
+---------------------------------------------- === CURR FILE EXPORT === ----------------------------------------------
+local group = vim.api.nvim_create_augroup("SetCurrentEditingFile", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
+  group = group,
+  callback = function()
+    local file = vim.fn.expand("%:p")
+    vim.fn.setenv("CURRENT_EDITING_FILE", file)
+    vim.fn.writefile({ file }, "/tmp/current_editing_file")
+  end,
+})
+vim.api.nvim_create_autocmd({"VimLeave", "FocusLost"}, {
+  group = group,
+  callback = function()
+    vim.fn.writefile({}, "/tmp/current_editing_file")
+  end,
+})
+
 
 -------------------------------------------- === LAST MAP === ---------------------------------------------
 vim.keymap.set('n', '<ESC>', function()

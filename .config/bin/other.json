@@ -7,8 +7,8 @@
             "version": "v0.29.0",
             "hash": "1eda479ec07842eb97c661d76adca53212cf2dedf832d9ad5182d09d0f274730",
             "url": "https://github.com/sigoden/aichat",
-            "provider": "github",
-            "package_path": "aichat",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/buf": {
@@ -49,6 +49,16 @@
             "url": "https://github.com/danielmiessler/fabric",
             "provider": "github",
             "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/gh": {
+            "path": "/env/bin/gh",
+            "remote_name": "gh",
+            "version": "v2.70.0",
+            "hash": "d2c22fcdb510e312385701f0fcbbc37930b899b55102ab7430a9e441d142c748",
+            "url": "https://github.com/cli/cli",
+            "provider": "github",
+            "package_path": "gh_2.70.0_linux_amd64/bin/gh",
             "pinned": false
         },
         "/env/bin/git-who": {

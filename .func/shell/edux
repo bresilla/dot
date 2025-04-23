@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # get tmux context
 current_tty=$(tmux display-message -p "#{pane_tty}")
