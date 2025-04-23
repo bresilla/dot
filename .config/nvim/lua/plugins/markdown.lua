@@ -14,8 +14,23 @@ return {
             code = {
                 enabled = true,
             },
+            anti_conceal = { 
+                enabled = false 
+            },
             indent = {
-                enabled = true,
+                enabled = false,
+            },
+            filetypes = {
+                'markdown',
+                'markdown.pandoc',
+                'markdown_inline',
+                'markdown.pandoc.inline',
+                'md',
+                'rmd',
+                'qmd',
+                'pandoc.markdown',
+                'pandoc.markdown.inline',
+                "copilot-chat",
             },
         })
     end,

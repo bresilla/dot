@@ -57,14 +57,14 @@ finder() {
 # @cmd grep file for text
 # @alias g
 grepi() {
-    pick=$(tv text)
+    IFS=':' read -r pick nr < <(tv text)
     [[ -z "$pick" ]] && exit 0
     if [[ "$pick" == "$current_path" ]]; then
         exit 0
     fi
     case "$editor" in
       nvim|vim|view)
-        tmux send-keys -t "$pane_id" ":e $pick" C-m
+        tmux send-keys -t "$pane_id" ":e $pick" C-m ": $nr" C-m
         ;;
       hx)
         tmux send-keys -t "$pane_id" ":open $pick" C-m

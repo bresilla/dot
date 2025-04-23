@@ -14,6 +14,8 @@ return {
             border = 'rounded',
             title = 'Copilot',
         },
+        show_help = false,
+        highlight_headers = false,
     },
   },
 }

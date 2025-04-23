@@ -150,6 +150,11 @@ function mycolors()
     CursorJump = { bg = black, fg = accent },
     MatchParen = { bg = accent, fg = black },
 
+
+    -- COPILOT
+    ["CopilotChat.ui.Chat"] = { bg = ac0 },
+
+
     -- TELESCOPE
     TelescopeBorder = { fg = accent },
     NoiceCmdlinePopupBorder = { fg = accent },
