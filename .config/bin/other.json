@@ -1,12 +1,32 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/aichat": {
+            "path": "/env/bin/aichat",
+            "remote_name": "aichat",
+            "version": "v0.29.0",
+            "hash": "1eda479ec07842eb97c661d76adca53212cf2dedf832d9ad5182d09d0f274730",
+            "url": "https://github.com/sigoden/aichat",
+            "provider": "github",
+            "package_path": "aichat",
+            "pinned": false
+        },
         "/env/bin/buf": {
             "path": "/env/bin/buf",
             "remote_name": "buf-Linux-x86_64",
             "version": "v1.50.1",
             "hash": "55c4d2ac89caa0c91d0015601a2d1d2c62ba71da8e98ac7b34d14c7eaf432996",
             "url": "https://github.com/bufbuild/buf",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/chatgpt": {
+            "path": "/env/bin/chatgpt",
+            "remote_name": "chatgpt-linux-amd64",
+            "version": "v1.8.2",
+            "hash": "85322bfa5fbfbc408c3dae592c0e040d5a5252bd46eacb4abff86a98bdef0b8f",
+            "url": "https://github.com/kardolus/chatgpt-cli",
             "provider": "github",
             "package_path": "",
             "pinned": false

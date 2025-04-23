@@ -311,6 +311,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/sc": {
+            "path": "/env/bin/sc",
+            "remote_name": "sc",
+            "version": "2.2.0",
+            "hash": "9d96a505f331a1577581a4cfd4eebf7ddc8e5690d2786935712f96edf4079264",
+            "url": "https://github.com/efugier/smartcat",
+            "provider": "github",
+            "package_path": "sc--x86_64-unknown-linux-gnu/sc",
+            "pinned": false
+        },
         "/env/bin/ser": {
             "path": "/env/bin/ser",
             "remote_name": "servicer-x86_64-unknown-linux-gnu",
