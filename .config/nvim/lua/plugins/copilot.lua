@@ -15,7 +15,9 @@ return {
             title = 'Copilot',
         },
         show_help = false,
-        highlight_headers = false,
+        chat_autocomplete = false,
+        question_header = '  bresilla ',
+        answer_header = '  COPILOT ',
     },
   },
 }

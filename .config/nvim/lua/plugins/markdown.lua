@@ -14,13 +14,16 @@ return {
             code = {
                 enabled = true,
             },
-            anti_conceal = { 
-                enabled = false 
+            anti_conceal = {
+                enabled = false
             },
             indent = {
                 enabled = false,
             },
-            filetypes = {
+            sign = {
+                enabled = false,
+            },
+            file_types = {
                 'markdown',
                 'markdown.pandoc',
                 'markdown_inline',
