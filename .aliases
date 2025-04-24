@@ -127,6 +127,7 @@ alias tec="tectonic -X"
 alias bm=bibiman
 alias zik='zk --notebook-dir /doc/data/notes/zk'
 alias aic=aichat
+alias cop="gh copilot suggest"
 
 ##MEDIA
 alias color='pastel format hex' 
