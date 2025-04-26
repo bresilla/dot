@@ -121,6 +121,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/rustscan": {
+            "path": "/env/bin/rustscan",
+            "remote_name": "rustscan",
+            "version": "2.4.1",
+            "hash": "8a507fbd1821746ce747dcce6c2c4cfa0c6aff9c4d1095967a4c2707db6d1b41",
+            "url": "https://github.com/bee-san/RustScan",
+            "provider": "github",
+            "package_path": "rustscan",
+            "pinned": false
+        },
         "/env/bin/sherlock": {
             "path": "/env/bin/sherlock",
             "remote_name": "sherlock",
