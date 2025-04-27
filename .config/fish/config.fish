@@ -3,79 +3,80 @@ end
 function fish_greeting
 end
 
-# bresilla2
+fish_vi_key_bindings
+
 replay "source /home/bresilla/.profile"
 replay "source /home/bresilla/.aliases"
-#--------------------------------------------------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
 if test -f ~/.cache/wal/colors.sh
     replay 'source ~/.cache/wal/colors.sh'
 end
 
 set -x SHELL /bin/fish
 
-#--------------------------------------------------------------------------------------------------------------------
-## FUNCTIONS
-function n --wraps nnn --description 'support nnn quit and change directory'
-    if test -n "$NNNLVL"
-        if [ (expr $NNNLVL + 0) -ge 1 ]
-            echo "nnn is already running"
-            return
+# ─────────────────────────────────────────────────────────────────────────────
+if type -q direnv
+    direnv hook fish | source
+end
+if type -q atuin
+    atuin init fish | source
+end
+if type -q zoxide
+    zoxide init fish | source
+end
+if type -q starship
+    starship init fish | source
+end
+# ─────────────────────────────────────────────────────────────────────────────
+## BINDINGS
+bind -M insert ctrl-x 'tab' repaint
+bind -M insert ctrl-a 'scrr' repaint
+bind -M insert ctrl-/ 'clear' repaint
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# advanced cd
+function cd --description 'cd with pro-file, git-root, zoxide & default behavior'
+    # first argument
+    set -l dest $argv[1]
+    # 1) no args + pro‐marker file exists → jump home then back
+    if test (count $argv) -eq 0 -a -f /env/dot/.func/code/pro
+        builtin cd ~
+        builtin cd -
+        return
+    end
+    # 2) dest is a directory, or looks like an option “-x” or “--foo”
+    if test -d $dest
+        builtin cd $dest; return
+    else if string match -r '^-{1,2}[a-z]*$' $dest
+        builtin cd $dest; return
+    end
+    # 3) “cd root” → git top-level if in a repo
+    if test "$dest" = "root"
+        set -l gitroot (git rev-parse --show-toplevel 2>/dev/null)
+        if test -d $gitroot
+            builtin cd $gitroot; return
         end
     end
-    if test -n "$XDG_CONFIG_HOME"
-        set -x NNN_TMPFILE "$XDG_CONFIG_HOME/nnn/.lastd"
-    else
-        set -x NNN_TMPFILE "$HOME/.config/nnn/.lastd"
+    # 4) zoxide fallback if installed
+    if type -q zoxide
+        z $dest; return
     end
-    nnn $argv
-    if test -e $NNN_TMPFILE
-        source $NNN_TMPFILE
-        rm $NNN_TMPFILE
-    end
+    # 5) default
+    builtin cd $dest
 end
 
-function cd
-    if test -z "$argv[1]" && test -f "/env/dot/.func/code/pro"
-        /env/dot/.func/code/pro
-    else if test -d "$argv[1]" || string match -qr '^--?[a-z]*' "$argv[1]"
-        builtin cd "$argv[1]"
-    else if test "$argv[1]" = root && git rev-parse --show-toplevel >/dev/null 2>&1
-        cd (git rev-parse --show-toplevel)
-    else if command -v zoxide >/dev/null 2>&1
-        z $argv[1]
-    else
-        builtin cd "$argv[1]"
+# ─────────────────────────────────────────────────────────────────────────────
+function runner --description 'Enter: run ll if no input, else accept line'
+    set -l buf (commandline)
+    if test (string trim $buf | string length) -eq 0
+        echo
+        ll
     end
+    commandline -f execute
 end
+bind enter runner
 
-function cancel-commandline
-    commandline -C 2147483647
-    for i in (seq (commandline -L))
-        echo '^C'
-    end
-    commandline ""
-end
-
-#--------------------------------------------------------------------------------------------------------------------
-## BINDINGS
-# bind \cc 'echo; commandline ""; echo;'
-bind \cx 'tab
- commandline -f execute'
-bind \cw 'n
- commandline -f execute'
-bind \ca 'scrr
- commandline -f execute'
-bind \cb 'build
- commandline -f execute'
-bind \cr 'run
- commandline -f execute'
-bind \cg 'git go
- commandline -f execute'
-
-#--------------------------------------------------------------------------------------------------------------------
-direnv hook fish | source
-atuin init fish | source
-zoxide init fish | source
-starship init fish | source
+# ─────────────────────────────────────────────────────────────────────────────
 
 bresilla
