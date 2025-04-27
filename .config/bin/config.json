@@ -33,10 +33,10 @@
         },
         "/env/bin/bin": {
             "path": "/env/bin/bin",
-            "remote_name": "bin_0.20.0_linux_amd64",
-            "version": "v0.20.0",
-            "hash": "cef1e7e7b97e2ef768cfe6dbebee18db27f27bb9ed668ca0876b4dffd3df5f52",
-            "url": "https://github.com/marcosnils/bin/releases/tag/v0.20.0",
+            "remote_name": "bin_0.21.0_linux_amd64",
+            "version": "v0.21.0",
+            "hash": "728dd14a8b3557f4eb02ca2a7914612024b6f7fc54a8fd55785978a3dbfc2706",
+            "url": "https://github.com/marcosnils/bin/releases/tag/v0.21.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -74,11 +74,11 @@
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
             "remote_name": "devbox",
-            "version": "0.14.1",
-            "hash": "e8f9e22ca39623751d086bbec0ada092ccbf6b2fe175c8a27da18e5355fdf08a",
-            "url": "https://github.com/jetify-com/devbox/releases/tag/0.14.1",
+            "version": "0.14.2",
+            "hash": "8666d39d9f3097452ef73859fabf61a6d4ab61fb80d121dab0ce288756fb395b",
+            "url": "https://github.com/jetify-com/devbox/releases/tag/0.14.2",
             "provider": "",
-            "package_path": "",
+            "package_path": "devbox",
             "pinned": false
         },
         "/env/bin/direnv": {
@@ -124,9 +124,9 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.21.0",
-            "hash": "150f5bf0a5de6da638819e7e811c48b4c3f98e24a33b48e0068e536575da5bf5",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.0",
+            "version": "v0.21.2",
+            "hash": "b04b5d3635471e98c09e7299943a82ac041912cf010f1eaec85e9ea62ccb2887",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.2",
             "provider": "",
             "package_path": "./eza",
             "pinned": false
@@ -154,9 +154,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.18",
-            "hash": "c14d1780b021988b87610c3a4871c511ba6cb8bbc7ac73519a4a37a9560547b6",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.18",
+            "version": "v1.0.20",
+            "hash": "7395f1779845c19814a148af68fa215b8120392f3e48606d946626732078f77e",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.20",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -224,21 +224,11 @@
         "/env/bin/lf": {
             "path": "/env/bin/lf",
             "remote_name": "lf",
-            "version": "r34",
-            "hash": "a59eb8a12a7ae11533fc4e54794445d0a6d3d21a9fbac3f4db203a70c2edead6",
-            "url": "https://github.com/gokcehan/lf",
+            "version": "r35",
+            "hash": "e0b63c5e0cd7c87a6ef5554a375c41ec3a8d871070d7ab9096d30839e671b04a",
+            "url": "https://github.com/gokcehan/lf/releases/tag/r35",
             "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/lule": {
-            "path": "/env/bin/lule",
-            "remote_name": "lule",
-            "version": "v0.2.6",
-            "hash": "96778ffe4ea9dc9b854ad1f1bdb9bbaddad56352a9af4a3b7db533d7f4b2f288",
-            "url": "https://github.com/warpwm/lule",
-            "provider": "",
-            "package_path": "",
+            "package_path": "lf",
             "pinned": false
         },
         "/env/bin/micromamba": {
@@ -294,20 +284,10 @@
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.45.0",
-            "hash": "359b821d4e2a1cd156f7de60a175bf6543931b0629f53d528eafae1d6312e06f",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.45.0",
+            "version": "v0.46.0",
+            "hash": "8727562a4bedca0322f30ac83fe6139c563704891023821c6b8f9f5d507e0191",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.46.0",
             "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/rerun": {
-            "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.22.1-x86_64-unknown-linux-gnu",
-            "version": "0.22.1",
-            "hash": "8a68fc3d401b308fd667685699418d55b0794c0ae62518229fb7a80acd4431f0",
-            "url": "https://github.com/rerun-io/rerun",
-            "provider": "github",
             "package_path": "",
             "pinned": false
         },
@@ -374,11 +354,11 @@
         "/env/bin/tv": {
             "path": "/env/bin/tv",
             "remote_name": "tv",
-            "version": "0.11.7",
-            "hash": "41dcc0fcec6fe1dd57905778386d51794917571963ee28a344065c393820380f",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.7",
+            "version": "0.11.9",
+            "hash": "6c38b86a013e278100193d0df342def0bc4cdb15a1ab3bda1e63ef7a499759db",
+            "url": "https://github.com/alexpasmantier/television/releases/tag/0.11.9",
             "provider": "",
-            "package_path": "",
+            "package_path": "tv-0.11.9-x86_64-unknown-linux-musl/tv",
             "pinned": false
         },
         "/env/bin/yazi": {

@@ -154,9 +154,7 @@ vim.keymap.set('n', '~', [[g~aw]])
 
 -- === OTHERS === "
 vim.keymap.set('n', '<C-a>', 'ggVG')
--- vim.keymap.set({'n', 'v'}, 'u', [[<Nop>]])
-vim.keymap.set('n', '<C-u>', '<cmd>:undo<cr>')
-vim.keymap.set('n', '<C-r>', '<cmd>:redo<cr>')
+
 
 -------------------------------------------- === SMART_CLISE === ---------------------------------------------
 vim.api.nvim_create_user_command('Q', function()
