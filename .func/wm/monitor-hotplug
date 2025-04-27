@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# Log for debugging (optional)
-echo "[Monitor hotplug] $(date)" >> /tmp/monitor-hotplug.log
- 
-eww open workspaces_zero || true
-eww open workspaces_one || true
-eww open workspaces_two || true
-eww open workspaces_three || true

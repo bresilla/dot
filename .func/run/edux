@@ -6,12 +6,7 @@ pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
 curr_edit=$(cat /tmp/current_editing_file)
 
-
 view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
-echo $view
-# sleep 5
-
-
 case "$view" in
   nvim|vim|view)
     comd=":e"
@@ -24,9 +19,6 @@ case "$view" in
     ;;
 esac
 
-echo $comd
-# sleep 5
-
 # @cmd pick file with explorer
 # @alias e
 explorer() {
@@ -36,7 +28,13 @@ explorer() {
         if cwd="$(cat -- "$tmp_dir")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
             if [ -f "$cwd" ]; then
                 parent_dir=$(dirname "$cwd")
-                tmux send-keys -t "$pane_id" "cd $parent_dir && $EDITOR $cwd" C-m
+                filetype=$(xdg-mime query filetype $cwd | cut -d"/" -f1)
+                if [[ $filetype = "text" ]]; then
+                    tmux send-keys -t "$pane_id" "cd $parent_dir && $EDITOR $cwd" C-m
+                else
+                    tmux send-keys -t "$pane_id" "cd $parent_dir && xdg-open $cwd" C-m
+                fi
+                    
             elif [ -d "$cwd" ]; then
                 tmux send-keys -t "$pane_id" "cd $cwd" C-m
             fi
