@@ -6,70 +6,67 @@ pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
 curr_edit=$(cat /tmp/current_editing_file)
 
-if ! ps -t "$current_tty" -o comm= | grep -qiE '^(n?vim|view|hx)$'; then
-    exit 0
-fi
 
-editor=$(ps -t "$current_tty" -o comm= | awk 'NF' | tail -n1 | tr -d '[:space:]')
+view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
+echo $view
+# sleep 5
 
+
+case "$view" in
+  nvim|vim|view)
+    comd=":e"
+    ;;
+  hx)
+    comd=":o"
+    ;;
+  zsh|fish|bash|sh)
+    comd="$EDITOR"
+    ;;
+esac
+
+echo $comd
+# sleep 5
 
 # @cmd pick file with explorer
 # @alias e
 explorer() {
-    if [[ -n "$curr_edit" ]]; then
-        current_path=$curr_edit
+    if [[ "$comd" == "$EDITOR" ]]; then
+        local tmp_dir="$(mktemp -t "yazi-cwd.XXXXXX")"
+        yazi "$current_path" --cwd-file="$tmp_dir" --chooser-file="$tmp_dir"
+        if cwd="$(cat -- "$tmp_dir")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+            if [ -f "$cwd" ]; then
+                parent_dir=$(dirname "$cwd")
+                tmux send-keys -t "$pane_id" "cd $parent_dir && $EDITOR $cwd" C-m
+            elif [ -d "$cwd" ]; then
+                tmux send-keys -t "$pane_id" "cd $cwd" C-m
+            fi
+        fi
+        rm -f -- "$tmp_dir"
+    else
+        [[ -n "$curr_edit" ]] && current_path=$curr_edit
+        pick=$(yazi --chooser-file=/dev/stdout)
+        [[ ! -f "$pick" ]] && exit 0
+        tmux send-keys -t "$pane_id" "$comd $pick" C-m
     fi
-    pick=$(yazi --chooser-file=/dev/stdout "$current_path")
-    # pick=$(nnn -p /dev/stdout "$current_path")
-    [[ ! -f "$pick" ]] && exit 0
-    if [[ "$pick" == "$current_path" ]]; then
-        exit 0
-    fi
-    case "$editor" in
-      nvim|vim|view)
-        tmux send-keys -t "$pane_id" ":e $pick" C-m
-        ;;
-      hx)
-        tmux send-keys -t "$pane_id" ":open $pick" C-m
-        ;;
-    esac
 }
 
 # @cmd pick file with finder
-# @alias f
-finder() {
+# @alias p
+picker() {
     pick=$(tv find)
     [[ -z "$pick" ]] && exit 0
-    if [[ "$pick" == "$current_path" ]]; then
-        exit 0
-    fi
-    case "$editor" in
-      nvim|vim|view)
-        tmux send-keys -t "$pane_id" ":e $pick" C-m
-        ;;
-      hx)
-        tmux send-keys -t "$pane_id" ":open $pick" C-m
-        ;;
-    esac
+    [[ "$pick" == "$current_path" ]] && exit 0
+    tmux send-keys -t "$pane_id" "$comd $pick" C-m
 }
 
 
-# @cmd grep file for text
-# @alias g
-grepi() {
+# @cmd find text in file
+# @alias f
+finder() {
     IFS=':' read -r pick nr < <(tv text)
     [[ -z "$pick" ]] && exit 0
-    if [[ "$pick" == "$current_path" ]]; then
-        exit 0
-    fi
-    case "$editor" in
-      nvim|vim|view)
-        tmux send-keys -t "$pane_id" ":e $pick" C-m ": $nr" C-m
-        ;;
-      hx)
-        tmux send-keys -t "$pane_id" ":open $pick" C-m
-        ;;
-    esac
+    [[ "$pick" == "$current_path" ]] && exit 0
+    tmux send-keys -t "$pane_id" "$comd $pick" C-m
 }
 
 eval "$(argc --argc-eval "$0" "$@")"

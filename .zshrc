@@ -159,32 +159,32 @@ export GPG_TTY=$(tty)
 
 #--------------------------------------------------------------------------------------------------------------------
 # NNN
-[[ -e ~/.config/nnn/config.sh ]] && emulate sh -c 'source ~/.config/nnn/config.sh'
-n(){
-  export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-  if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then echo "already running"; return; fi
-  nnn -deuUHQ "$@"
-  if [ -f "$NNN_TMPFILE" ]; then
-    . "$NNN_TMPFILE"; rm -f "$NNN_TMPFILE" > /dev/null
-  fi
-}
-#YAZI
-yazicd() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    local cwd
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-        for precmd in $precmd_functions; do
-          $precmd
-        done
-        zle reset-prompt
-        printf '\e[4 q'
-    fi
-    rm -f -- "$tmp"
-}
-zle -N yazicd
-bindkey '^W' yazicd
+# [[ -e ~/.config/nnn/config.sh ]] && emulate sh -c 'source ~/.config/nnn/config.sh'
+# n(){
+#   export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+#   if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then echo "already running"; return; fi
+#   nnn -deuUHQ "$@"
+#   if [ -f "$NNN_TMPFILE" ]; then
+#     . "$NNN_TMPFILE"; rm -f "$NNN_TMPFILE" > /dev/null
+#   fi
+# }
+# #YAZI
+# yazicd() {
+#     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+#     local cwd
+#     yazi "$@" --cwd-file="$tmp"
+#     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+#         builtin cd -- "$cwd"
+#         for precmd in $precmd_functions; do
+#           $precmd
+#         done
+#         zle reset-prompt
+#         printf '\e[4 q'
+#     fi
+#     rm -f -- "$tmp"
+# }
+# zle -N yazicd
+# bindkey '^W' yazicd
 
 
 #--------------------------------------------------------------------------------------------------------------------
