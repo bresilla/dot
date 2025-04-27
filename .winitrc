@@ -25,10 +25,4 @@ export QT_QPA_PLATFORM=xcb
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-if [ "$(iwctl station wlan0 get-networks | tail +5 | grep eduroam)" ]; then 
-  sed -i 's/DP-4/DP-5/' /home/bresilla/.config/hypr/hyprland.conf
-else
-  sed -i 's/DP-5/DP-4/' /home/bresilla/.config/hypr/hyprland.conf
-fi
-
 exec Hyprland
