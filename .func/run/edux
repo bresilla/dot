@@ -4,11 +4,12 @@
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
-[[ -f /tmp/current_editing_file ]] && curr_edit=$(cat /tmp/current_editing_file)
+curr_edit=$(cat /tmp/current_editing_file)
 
 view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
 case "$view" in
   nvim|vim|view)
+    precm=":! echo oo"
     comd=":e"
     ;;
   hx)
@@ -34,12 +35,14 @@ explorer() {
                 else
                     tmux send-keys -t "$pane_id" "cd $parent_dir && xdg-open $cwd" C-m
                 fi
+                    
             elif [ -d "$cwd" ]; then
                 tmux send-keys -t "$pane_id" "cd $cwd" C-m
             fi
         fi
         rm -f -- "$tmp_dir"
     else
+        # tmux send-keys -t "$pane_id" "$precm" C-m
         [[ -n "$curr_edit" ]] && current_path=$curr_edit
         pick=$(yazi $curr_edit --chooser-file=/dev/stdout)
         [[ ! -f "$pick" ]] && exit 0
@@ -64,6 +67,43 @@ finder() {
     [[ -z "$pick" ]] && exit 0
     [[ "$pick" == "$current_path" ]] && exit 0
     tmux send-keys -t "$pane_id" "$comd $pick" C-m
+}
+
+# @cmd run goose
+goose() {
+  local session="goose_$current_path"
+  local cmd=goose
+  local current
+  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" "$cmd"
+      tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" \
+      -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
+}
+
+
+# @cmd run debuger
+debug() {
+  local session="goose_$current_path"
+  local cmd=gdb
+  local current
+  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" "$cmd"
+      tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" \
+      -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
 }
 
 eval "$(argc --argc-eval "$0" "$@")"
