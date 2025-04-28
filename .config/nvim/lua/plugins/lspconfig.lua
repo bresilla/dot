@@ -1,5 +1,14 @@
 vim.keymap.set("n", '<A-g>', [[<CMD>lua require("conform").format()<CR>]], {noremap = true, silent = true })
 
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true, {bufnr = args.buf})
+        end
+    end
+})
 
 return {{
     'neovim/nvim-lspconfig',
@@ -22,7 +31,7 @@ return {{
         else
             -- works with normal c and cpp projects
             require('lspconfig').clangd.setup {
-                  cmd = { "clangd", "--header-insertion=never" },
+                cmd = { "clangd", "--header-insertion=never" },
             }
         end
         -- lsp for rust

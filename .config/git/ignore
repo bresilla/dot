@@ -5,4 +5,5 @@ LEARN
 **/logs
 **/.goose
 **/.direnv
+**/.devbox
 **/.DS_Store

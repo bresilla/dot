@@ -4,7 +4,7 @@
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
-curr_edit=$(cat /tmp/current_editing_file)
+[[ -f /tmp/current_editing_file ]] && curr_edit=$(cat /tmp/current_editing_file)
 
 view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
 case "$view" in
@@ -34,7 +34,6 @@ explorer() {
                 else
                     tmux send-keys -t "$pane_id" "cd $parent_dir && xdg-open $cwd" C-m
                 fi
-                    
             elif [ -d "$cwd" ]; then
                 tmux send-keys -t "$pane_id" "cd $cwd" C-m
             fi
