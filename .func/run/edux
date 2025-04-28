@@ -41,7 +41,7 @@ explorer() {
         rm -f -- "$tmp_dir"
     else
         [[ -n "$curr_edit" ]] && current_path=$curr_edit
-        pick=$(yazi --chooser-file=/dev/stdout)
+        pick=$(yazi $curr_edit --chooser-file=/dev/stdout)
         [[ ! -f "$pick" ]] && exit 0
         tmux send-keys -t "$pane_id" "$comd $pick" C-m
     fi
