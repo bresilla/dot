@@ -170,6 +170,9 @@ function mycolors()
     GitGutterChange = { fg = warn_light },
     GitGutterDelete = { fg = error_light },
 
+    --- LSP INLINE HINTS
+    LspInlayHint = { fg = c.r53 },
+
     -- DIAGNOSTICS
     DiagnosticError = { fg = error_light, bg = error_dark },
     DiagnosticWarn  = { fg = warn_light,  bg = warn_dark },
