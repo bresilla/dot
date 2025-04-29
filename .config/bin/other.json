@@ -134,9 +134,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.0.34",
-            "hash": "088b423bbf922c75232d69c296a4196791b66ea87738af9112e514671afa3a8b",
-            "url": "https://github.com/opencode-ai/opencode/releases/tag/v0.0.34",
+            "version": "v0.0.35",
+            "hash": "d4a7feb1d7be732cc55402119bbb9ed5e9039262cb10c515fb8ccc7d129091ab",
+            "url": "https://github.com/opencode-ai/opencode/releases/tag/v0.0.35",
             "provider": "",
             "package_path": "opencode",
             "pinned": false

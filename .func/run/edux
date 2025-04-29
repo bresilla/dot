@@ -106,4 +106,23 @@ debug() {
   fi
 }
 
+
+# @cmd run compile
+compile() {
+  local session="compile_$current_path"
+  local cmd="bash -c 'direnv allow && _b'"
+  local current
+  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" "$cmd"
+      tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" \
+      -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
+}
+
 eval "$(argc --argc-eval "$0" "$@")"
