@@ -231,6 +231,16 @@
             "package_path": "lf",
             "pinned": false
         },
+        "/env/bin/mdbook": {
+            "path": "/env/bin/mdbook",
+            "remote_name": "mdbook",
+            "version": "v0.4.48",
+            "hash": "e23d989471ca052fba75a288d5dfa054150c51897cd944667a9b3e636486dc4f",
+            "url": "https://github.com/rust-lang/mdBook",
+            "provider": "github",
+            "package_path": "mdbook",
+            "pinned": false
+        },
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
