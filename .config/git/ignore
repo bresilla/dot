@@ -7,3 +7,6 @@ LEARN
 **/.direnv
 **/.devbox
 **/.DS_Store
+**/.cache
+**/.gdb_history
+.execs

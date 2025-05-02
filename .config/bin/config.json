@@ -154,9 +154,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.20",
-            "hash": "7395f1779845c19814a148af68fa215b8120392f3e48606d946626732078f77e",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.20",
+            "version": "v1.0.21",
+            "hash": "6d718d4a2a5a24ac48a3d61ff85496b89c0d043f48349819ed3783e9a8189670",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.21",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -237,8 +237,8 @@
             "version": "v0.4.48",
             "hash": "e23d989471ca052fba75a288d5dfa054150c51897cd944667a9b3e636486dc4f",
             "url": "https://github.com/rust-lang/mdBook",
-            "provider": "github",
-            "package_path": "mdbook",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/micromamba": {

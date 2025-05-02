@@ -155,4 +155,4 @@ if [ "$HOSTNAME" = core ]; then
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
 
-if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+# if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

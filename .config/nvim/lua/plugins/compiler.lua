@@ -18,6 +18,30 @@ local function ToggleInlayHintsBuffer()
 end
 vim.keymap.set("n", "<leader>lp", ToggleInlayHintsBuffer, { desc = "Toggle LSP inlay hints"})
 
+vim.api.nvim_create_user_command('DapSaveGDB', function()
+  local path = '/tmp/gdb_breakpoints.gdb'
+  local bps   = require('dap.breakpoints').get()
+  local f, err = io.open(path, 'w')
+  if not f then
+    vim.notify('Error opening '..path..': '..err, vim.log.levels.ERROR)
+    return
+  end
+  for buf, buf_bps in pairs(bps) do
+    local filename = vim.api.nvim_buf_get_name(buf)
+    for _, bp in ipairs(buf_bps) do
+      if bp.condition and bp.condition ~= '' then
+        f:write(string.format("break %s:%d if %s\n", filename, bp.line, bp.condition))
+      else
+        f:write(string.format("break %s:%d\n", filename, bp.line))
+      end
+    end
+  end
+  f:close()
+  vim.notify('Breakpoints saved to '..path, vim.log.levels.INFO)
+end, {
+  desc = 'Dump all DAP breakpoints to /tmp/gdb_breakpoints.gdb',
+})
+
 
 return {
     {

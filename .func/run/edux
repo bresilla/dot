@@ -87,41 +87,24 @@ goose() {
   fi
 }
 
-
-# @cmd run debuger
+# @cmd run debugger
 debug() {
-  local session="goose_$current_path"
-  local cmd=gdb
+  # if [[ "$view" == "nvim" ]]; then
+    # tmux send-keys -t "$pane_id" ":help" C-m
+  # fi
+  local session="debug_$current_path"
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" "$cmd"
+      # tmux new-session -d -s "$session" bash -c 'gdb $(cat .execs | gum choose --select-if-one); exec "$SHELL" -i'
+      tmux new-session -d -s "$session" bash -c 'gdb --quiet $(cat .execs | gum choose --select-if-one)'
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
-}
-
-
-# @cmd run compile
-compile() {
-  local session="compile_$current_path"
-  local cmd="bash -c 'direnv allow && _b'"
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" "$cmd"
-      tmux set-option -t "$session" status off
-    fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
+      -x C -y C -w 45% -h 90% -E "tmux attach-session -t $session"
   fi
 }
 

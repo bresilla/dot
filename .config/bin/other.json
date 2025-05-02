@@ -61,6 +61,16 @@
             "package_path": "gh_2.71.2_linux_amd64/bin/gh",
             "pinned": false
         },
+        "/env/bin/gh-dash": {
+            "path": "/env/bin/gh-dash",
+            "remote_name": "gh-dash_v4.14.0_linux-amd64",
+            "version": "v4.14.0",
+            "hash": "66f28648475453adec907bd4a6eda873322ccf7bb1d2904b8c1651550f1f3db8",
+            "url": "https://github.com/dlvhdr/gh-dash",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/git-who": {
             "path": "/env/bin/git-who",
             "remote_name": "git-who",
@@ -146,8 +156,8 @@
             "remote_name": "rerun-cli-0.23.1-x86_64-unknown-linux-gnu",
             "version": "0.23.1",
             "hash": "89151e068764b73001884defd9339187ef5a7172678c29d3916fa97fc23f8372",
-            "url": "https://github.com/rerun-io/rerun/releases/tag/0.23.1",
-            "provider": "",
+            "url": "https://github.com/rerun-io/rerun",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },

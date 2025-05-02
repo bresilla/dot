@@ -6,5 +6,5 @@ preview_command = ":files:"
 
 [[cable_channel]]
 name = "find"
-source_command = "fd --hidden --type file --exclude .git --exclude .cache ."
+source_command = "fd --hidden --type file --exclude .git --exclude .cache --exclude docs --exclude book ."
 preview_command = ":files:"
