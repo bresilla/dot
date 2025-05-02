@@ -131,6 +131,16 @@
             "package_path": "nom",
             "pinned": false
         },
+        "/env/bin/oc": {
+            "path": "/env/bin/oc",
+            "remote_name": "opencloud-2.2.0-linux-amd64",
+            "version": "v2.2.0",
+            "hash": "ac2e682481a05179a3593f011cb88648ea9c77ec8acf908e420fd4143f10b20f",
+            "url": "https://github.com/opencloud-eu/opencloud",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "ollama",
