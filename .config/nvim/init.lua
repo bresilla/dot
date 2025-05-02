@@ -101,6 +101,7 @@ vim.o.listchars = "extends:›,precedes:‹,nbsp:␣,trail:·,tab:→\\ ,eol:¬"
 require("config.lazy")
 require("utils.termcolors")
 require("utils.diags")
+require("utils.navigation")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "
@@ -132,14 +133,14 @@ vim.hl.on_yank {
 vim.g.mapleader = " "
 
 -- === SWITCH TO LAST TABS === "
-vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
-    noremap = true,
-    silent = true
-})
-vim.keymap.set('n', '+', "<cmd>:NoNeckPain<CR>", {
-    noremap = true,
-    silent = true
-})
+-- vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
+--     noremap = true,
+--     silent = true
+-- })
+-- vim.keymap.set('n', '+', "<cmd>:NoNeckPain<CR>", {
+--     noremap = true,
+--     silent = true
+-- })
 
 
 -- === REMOVE HABITS === "
