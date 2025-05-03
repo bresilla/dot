@@ -27,12 +27,14 @@ end
 if type -q starship
     starship init fish | source
 end
+if type -q carapace
+    carapace fish | source
+end
+
 # ─────────────────────────────────────────────────────────────────────────────
 ## BINDINGS
-bind -M insert ctrl-x 'tab' repaint
-bind -M insert ctrl-a 'scrr' repaint
-bind -M insert ctrl-/ 'clear' repaint
-
+bind -M insert ctrl-x tab repaint
+bind -M insert ctrl-a scrr repaint
 
 # ─────────────────────────────────────────────────────────────────────────────
 # advanced cd
@@ -47,36 +49,31 @@ function cd --description 'cd with pro-file, git-root, zoxide & default behavior
     end
     # 2) dest is a directory, or looks like an option “-x” or “--foo”
     if test -d $dest
-        builtin cd $dest; return
+        builtin cd $dest
+        return
     else if string match -r '^-{1,2}[a-z]*$' $dest
-        builtin cd $dest; return
+        builtin cd $dest
+        return
     end
     # 3) “cd root” → git top-level if in a repo
-    if test "$dest" = "root"
+    if test "$dest" = root
         set -l gitroot (git rev-parse --show-toplevel 2>/dev/null)
         if test -d $gitroot
-            builtin cd $gitroot; return
+            builtin cd $gitroot
+            return
         end
     end
     # 4) zoxide fallback if installed
     if type -q zoxide
-        z $dest; return
+        z $dest
+        return
     end
     # 5) default
     builtin cd $dest
 end
 
 # ─────────────────────────────────────────────────────────────────────────────
-function runner --description 'Enter: run ll if no input, else accept line'
-    set -l buf (commandline)
-    if test (string trim $buf | string length) -eq 0
-        echo
-        ll
-    end
-    commandline -f execute
-end
-bind enter runner
 
-# ─────────────────────────────────────────────────────────────────────────────
+bind \r clear-screen repaint
 
 bresilla

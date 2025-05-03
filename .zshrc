@@ -32,24 +32,6 @@ setopt histignorespace
 unsetopt no_match
 
 #--------------------------------------------------------------------------------------------------------------------
-###HISTORY STAFF
-export HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
-HISTFILE=~/.local/share/zsh_history
-HISTSIZE=100000
-SAVEHIST=100000
-# HISTORY_IGNORE='(reboot|restart|poweroff|suspend|_shko)'
-setopt append_history
-setopt sharehistory
-setopt incappendhistory
-setopt inc_append_history
-setopt hist_ignore_all_dups
-setopt hist_reduce_blanks
-setopt hist_ignore_space
-setopt interactive_comments
-setopt no_beep
-
-
-#--------------------------------------------------------------------------------------------------------------------
 ###VI MODE
 bindkey -v
 DEFAULT_VI_MODE=viins
@@ -143,6 +125,13 @@ alias \$=''
 ###AUTIN
 [[ -x "$(command -v atuin)" ]] && eval "$(atuin init zsh)"
 
+
+###CARAPACE
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+[[ -x "$(command -v carapace)" ]] && source <(carapace _carapace)
+zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+
 ###NOSTROMO
 [[ -x "$(command -v nostromo)" ]] && source <(nostromo completion zsh)
 
@@ -214,7 +203,7 @@ clr () {
     tput cup 0 0
 }
 zle -N clr
-bindkey '^_' clr
+bindkey -M vicmd '^M' clr
 
 #--------------------------------------------------------------------------------------------------------------------
 ###CD && ZOXIDE
