@@ -102,14 +102,98 @@ local function jump_last_non_header_source()
   vim.cmd('buffer ' .. target.bufnr)
 end
 
--- mappings
-vim.keymap.set('n', '=', toggle_header_source, {
-  noremap = true, silent = true,
-  desc = 'Toggle between header and source (.h/.c, .hh/.cc, .hpp/.cpp, .hxx/.cxx) in $TOP_HEAD',
+
+-- define the file patterns you care about
+local cpp_patterns = { "*.h",  "*.hh",  "*.hpp",  "*.hxx",
+                       "*.c",  "*.cc",  "*.cpp",  "*.cxx" }
+
+-- autocmd that fires when entering any of those buffers
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = cpp_patterns,
+  callback = function()
+    -- buffer-local toggle header/source
+    vim.keymap.set('n', '=', toggle_header_source, {
+      buffer = true,
+      noremap = true,
+      silent = true,
+      desc = 'Toggle between header and source in $TOP_HEAD',
+    })
+    -- buffer-local jump-last, skipping header/source partner
+    vim.keymap.set('n', '-', jump_last_non_header_source, {
+      buffer = true,
+      noremap = true,
+      silent = true,
+      desc = 'Go to last buffer, but skip header/source pair',
+    })
+  end,
 })
 
-vim.keymap.set('n', '-', jump_last_non_header_source, {
-  noremap = true, silent = true,
-  desc = 'Go to last buffer, but skip header/source pair if that was the alternate',
+vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
+    noremap = true,
+    silent = true
+})
+
+
+
+------------ BUFER SAVE ------------
+-- Save list of open buffer filenames into a project‐specific file
+local function SavBufTmp()
+  -- get the current working directory, then its basename
+  local cwd = vim.loop.cwd() or vim.fn.getcwd()
+  local proj = vim.fn.fnamemodify(cwd, ':t')
+
+  -- build the outfile path
+  local outfile = string.format('/tmp/nvim_%s_open_buffers', proj)
+
+  -- gather all listed buffers
+  local bufs = vim.fn.getbufinfo({ buflisted = 1 })
+  local names = {}
+  for _, info in ipairs(bufs) do
+    if info.name ~= '' then
+      table.insert(names, vim.fn.fnamemodify(info.name, ':p'))
+    end
+  end
+
+  -- write them out, one per line
+  vim.fn.writefile(names, outfile)
+  vim.notify(
+    string.format('Saved %d buffer names to %s', #names, outfile),
+    vim.log.levels.INFO
+  )
+end
+
+-- define the :SavBufTmp command
+vim.api.nvim_create_user_command('SavBufTmp', SavBufTmp, {
+  desc = 'Dump all open buffer filenames into /tmp/nvim_<project>_open_buffers',
+})
+
+-- optional keymap: <leader>sb → :SavBufTmp
+vim.keymap.set('n', '<leader>sb', '<cmd>SavBufTmp<CR>', {
+  noremap = true,
+  silent  = true,
+  desc    = 'Save list of open buffer filenames',
+})
+
+
+
+------------ SAVE CURRENT FILE ------------
+-- group for tracking the current editing file
+local group = vim.api.nvim_create_augroup("SetCurrentEditingFile", { clear = true })
+
+-- helper to build the per‐project filename
+local function get_current_file_outpath()
+  local cwd = vim.loop.cwd() or vim.fn.getcwd()
+  local proj = vim.fn.fnamemodify(cwd, ":t")
+  return string.format("/tmp/nvim_%s_current_file", proj)
+end
+
+-- on BufEnter or when Neovim gains focus, write the current file path
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
+  group = group,
+  callback = function()
+    local file = vim.fn.expand("%:p")
+    vim.fn.setenv("CURRENT_EDITING_FILE", file)
+    vim.fn.writefile({ file }, get_current_file_outpath())
+  end,
 })
 
