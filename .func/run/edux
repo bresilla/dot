@@ -1,32 +1,29 @@
 #!/bin/bash
 
-# get tmux context
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
-
 view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
 case "$view" in
   nvim|vim|view)
-    precm=":! echo oo"
-    comd=":e"
+    context="editor"
     ;;
   hx)
-    comd=":o"
+    context="editor"
     ;;
   zsh|fish|bash|sh)
-    comd="$EDITOR"
+    context="shell"
     ;;
 esac
-# nvim_%s_current_file
 only_name=$(basename "$current_path")
 full_name=/tmp/"$view"_"$only_name"_current_file
 curr_edit=$(cat $full_name)
+comd=":e"
 
 # @cmd pick file with explorer
 # @alias e
 explorer() {
-    if [[ "$comd" == "$EDITOR" ]]; then
+    if [[ "$context" == "shell" ]]; then
         local tmp_dir="$(mktemp -t "yazi-cwd.XXXXXX")"
         yazi "$current_path" --cwd-file="$tmp_dir" --chooser-file="$tmp_dir"
         if cwd="$(cat -- "$tmp_dir")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
@@ -44,7 +41,6 @@ explorer() {
         fi
         rm -f -- "$tmp_dir"
     else
-        # tmux send-keys -t "$pane_id" "$precm" C-m
         [[ -n "$curr_edit" ]] && current_path=$curr_edit
         pick=$(yazi $curr_edit --chooser-file=/dev/stdout)
         [[ ! -f "$pick" ]] && exit 0
@@ -102,9 +98,7 @@ goose() {
 
 # @cmd run debugger
 debug() {
-  # if [[ "$view" == "nvim" ]]; then
-    # tmux send-keys -t "$pane_id" ":help" C-m
-  # fi
+  [[ "$context" != "editor" ]] && exit 
   local session="debug_$current_path"
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
@@ -117,7 +111,44 @@ debug() {
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
-      -x C -y C -w 45% -h 90% -E "tmux attach-session -t $session"
+      -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
+}
+
+
+# @cmd run compile
+compile() {
+  [[ "$context" != "editor" ]] && exit 
+  local session="debug_$current_path"
+  local current
+  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" bash -c '_b; echo; read -p ""' 
+      tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" \
+      -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
+}
+
+# @cmd run runner
+runner() {
+  [[ "$context" != "editor" ]] && exit 
+  local session="debug_$current_path"
+  local current
+  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+      tmux new-session -d -s "$session" bash -c '_r; echo; read -p ""' 
+      tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" \
+      -w 80% -h 70% -E "tmux attach-session -t $session"
   fi
 }
 

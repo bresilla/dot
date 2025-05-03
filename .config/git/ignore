@@ -9,4 +9,5 @@ LEARN
 **/.DS_Store
 **/.cache
 **/.gdb_history
-.execs
+**/.execs
+**/.tmp
