@@ -1,8 +1,9 @@
--- Toggle between .hpp and .cpp in $TOP_HEAD when you press '-'
-local function toggle_cpp_header()
-  local fname = vim.fn.expand('%:t')       -- e.g. "file1.hpp" or "file1.cpp"
-  local basename = vim.fn.expand('%:t:r')  -- e.g. "file1"
-  local ext = vim.fn.expand('%:e')         -- "hpp" or "cpp"
+-- Toggle between various header and source extensions in $TOP_HEAD when you press '-'
+local function toggle_header_source()
+  local fname    = vim.fn.expand('%:t')       -- filename, e.g. "file1.hpp" or "file1.cxx"
+  local basename = vim.fn.expand('%:t:r')     -- base name without extension, e.g. "file1"
+  -- get the extension and normalize to lowercase
+  local ext = string.lower(vim.fn.expand('%:e'))
 
   local search_dir = vim.env.TOP_HEAD
   if not search_dir or search_dir == '' then
@@ -10,33 +11,49 @@ local function toggle_cpp_header()
     return
   end
 
-  local target_ext
-  if ext == 'hpp' then
-    target_ext = 'cpp'
-  elseif ext == 'cpp' then
-    target_ext = 'hpp'
+  -- Define header and source extension groups
+  local header_exts = { 'h', 'hh', 'hpp', 'hxx' }
+  local source_exts = { 'c', 'cc', 'cpp', 'cxx' }
+
+  -- Helper: check if a value exists in list
+  local function contains(list, value)
+    for _, v in ipairs(list) do
+      if v == value then
+        return true
+      end
+    end
+    return false
+  end
+
+  -- Determine candidate extensions based on current file type
+  local candidates
+  if contains(header_exts, ext) then
+    candidates = source_exts
+  elseif contains(source_exts, ext) then
+    candidates = header_exts
   else
-    vim.notify('Not a .cpp or .hpp file: ' .. fname, vim.log.levels.INFO)
+    vim.notify('Not a recognized header/source file: ' .. fname, vim.log.levels.INFO)
     return
   end
 
-  -- search for basename.target_ext under $TOP_HEAD
-  local pattern = string.format('**/%s.%s', basename, target_ext)
-  local matches = vim.fn.globpath(search_dir, pattern, false, true)
-
-  if #matches == 0 then
-    vim.notify(string.format('No %s found for %s', target_ext, fname), vim.log.levels.INFO)
-    return
+  -- Try each candidate extension in order, open the first match
+  for _, cand_ext in ipairs(candidates) do
+    local pattern = string.format('**/%s.%s', basename, cand_ext)
+    local matches = vim.fn.globpath(search_dir, pattern, '', true)
+    if not vim.tbl_isempty(matches) then
+      vim.cmd('edit ' .. vim.fn.fnameescape(matches[1]))
+      return
+    end
   end
 
-  -- open the first match
-  vim.cmd('edit ' .. vim.fn.fnameescape(matches[1]))
+  -- If no matches found
+  vim.notify(string.format('No matching file found for %s with extensions: %s', fname, table.concat(candidates, ", ")), vim.log.levels.INFO)
 end
 
--- bind '-' in normal mode to our toggle function
-vim.keymap.set('n', '-', toggle_cpp_header, {
+-- Bind '-' in normal mode to our toggle function
+vim.keymap.set('n', '-', toggle_header_source, {
   noremap = true,
-  silent = true,
-  desc = "Toggle between .hpp and .cpp in $TOP_HEAD"
+  silent  = true,
+  desc    = 'Toggle between header and source (.h/.c, .hh/.cc, .hpp/.cpp, .hxx/.cxx) in $TOP_HEAD',
 })
 
