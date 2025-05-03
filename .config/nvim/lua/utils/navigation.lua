@@ -136,16 +136,13 @@ vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
 
 
 ------------ BUFER SAVE ------------
--- Save list of open buffer filenames into a project‐specific file
-local function SavBufTmp()
-  -- get the current working directory, then its basename
+-- Save list of open buffer filenames and current file into a project‐specific file in /tmp
+local function sav_buf_tmp()
   local cwd = vim.loop.cwd() or vim.fn.getcwd()
   local proj = vim.fn.fnamemodify(cwd, ':t')
-
-  -- build the outfile path
-  local outfile = string.format('/tmp/nvim_%s_open_buffers', proj)
-
-  -- gather all listed buffers
+  local file = vim.fn.expand("%:p")
+  local buf_out_file = string.format('/tmp/nvim_%s_open_buffers', proj)
+  local cur_file_out_file = string.format('/tmp/nvim_%s_current_file', proj)
   local bufs = vim.fn.getbufinfo({ buflisted = 1 })
   local names = {}
   for _, info in ipairs(bufs) do
@@ -153,47 +150,15 @@ local function SavBufTmp()
       table.insert(names, vim.fn.fnamemodify(info.name, ':p'))
     end
   end
-
-  -- write them out, one per line
-  vim.fn.writefile(names, outfile)
-  vim.notify(
-    string.format('Saved %d buffer names to %s', #names, outfile),
-    vim.log.levels.INFO
-  )
+  vim.fn.writefile(names, buf_out_file)
+  vim.fn.writefile({file}, cur_file_out_file)
 end
 
--- define the :SavBufTmp command
-vim.api.nvim_create_user_command('SavBufTmp', SavBufTmp, {
-  desc = 'Dump all open buffer filenames into /tmp/nvim_<project>_open_buffers',
-})
-
--- optional keymap: <leader>sb → :SavBufTmp
-vim.keymap.set('n', '<leader>sb', '<cmd>SavBufTmp<CR>', {
-  noremap = true,
-  silent  = true,
-  desc    = 'Save list of open buffer filenames',
-})
-
-
-
------------- SAVE CURRENT FILE ------------
--- group for tracking the current editing file
 local group = vim.api.nvim_create_augroup("SetCurrentEditingFile", { clear = true })
-
--- helper to build the per‐project filename
-local function get_current_file_outpath()
-  local cwd = vim.loop.cwd() or vim.fn.getcwd()
-  local proj = vim.fn.fnamemodify(cwd, ":t")
-  return string.format("/tmp/nvim_%s_current_file", proj)
-end
-
--- on BufEnter or when Neovim gains focus, write the current file path
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
   group = group,
   callback = function()
-    local file = vim.fn.expand("%:p")
-    vim.fn.setenv("CURRENT_EDITING_FILE", file)
-    vim.fn.writefile({ file }, get_current_file_outpath())
+    sav_buf_tmp()
   end,
 })
 
