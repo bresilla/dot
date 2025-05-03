@@ -21,10 +21,7 @@ esac
 # nvim_%s_current_file
 only_name=$(basename "$current_path")
 full_name=/tmp/"$view"_"$only_name"_current_file
-# echo $full_name
 curr_edit=$(cat $full_name)
-# echo $curr_edit
-# sleep 10
 
 # @cmd pick file with explorer
 # @alias e
@@ -72,6 +69,16 @@ finder() {
     [[ -z "$pick" ]] && exit 0
     [[ "$pick" == "$current_path" ]] && exit 0
     tmux send-keys -t "$pane_id" "$comd $pick" C-m
+}
+
+
+# @cmd list buffers
+# @alias b
+buffers() {
+    buffers_list=/tmp/"$view"_"$only_name"_open_buffers
+    pick=$(cat $buffers_list | tv --preview 'bat -n --color=always {0}')
+    [[ -z "$pick" ]] && exit 0
+    tmux send-keys -t "$pane_id" "$comd $(pick)" C-m
 }
 
 # @cmd run goose
