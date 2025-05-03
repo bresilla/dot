@@ -47,8 +47,8 @@
             "version": "v1.3.0",
             "hash": "41676d3502e26a41d3adad4ec4240f4774852a1a57c06571554f5b274b97ae25",
             "url": "https://github.com/carapace-sh/carapace-bin",
-            "provider": "github",
-            "package_path": "carapace",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/choose": {

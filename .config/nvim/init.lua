@@ -132,17 +132,6 @@ vim.hl.on_yank {
 ---------------------------------------------- === BINDINGS === ----------------------------------------------
 vim.g.mapleader = " "
 
--- === SWITCH TO LAST TABS === "
--- vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
---     noremap = true,
---     silent = true
--- })
--- vim.keymap.set('n', '+', "<cmd>:NoNeckPain<CR>", {
---     noremap = true,
---     silent = true
--- })
-
-
 -- === REMOVE HABITS === "
 vim.keymap.set({'n', 'v'}, 'd', [["_d]])
 vim.keymap.set({'n', 'v'}, 'c', [["_c]])
