@@ -127,10 +127,10 @@ alias \$=''
 
 
 ###CARAPACE
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-[[ -x "$(command -v carapace)" ]] && source <(carapace _carapace)
-zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
+# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+# [[ -x "$(command -v carapace)" ]] && source <(carapace _carapace)
+# zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 
 ###NOSTROMO
 [[ -x "$(command -v nostromo)" ]] && source <(nostromo completion zsh)
