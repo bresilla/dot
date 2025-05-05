@@ -10,9 +10,9 @@ result_count_fg = 'bright-red'
 result_name_fg = 'bright-blue'
 result_line_number_fg = 'bright-yellow'
 result_value_fg = 'white'
-selection_fg = '236'
-selection_bg = 'bright-black'
-match_fg = 'bright-red'
+selection_fg = 'red'
+selection_bg = '#333333'
+match_fg = 'red'
 # preview
 preview_title_fg = 'bright-magenta'
 # modes
