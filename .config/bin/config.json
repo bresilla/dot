@@ -217,8 +217,8 @@
             "version": "v0.28.2",
             "hash": "fd00658cf11a93814af330e4284c59b5ebec6b73895983845e366b26425c655f",
             "url": "https://github.com/jj-vcs/jj",
-            "provider": "github",
-            "package_path": "./jj",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/just": {

@@ -3,10 +3,16 @@ local function toggle_header_source()
   local fname    = vim.fn.expand('%:t')
   local basename = vim.fn.expand('%:t:r')
   local ext      = string.lower(vim.fn.expand('%:e'))
-  local search_dir = vim.env.TOP_HEAD
-  if not search_dir or search_dir == '' then
-    vim.notify('Environment variable TOP_HEAD is not set', vim.log.levels.WARN)
+
+  -- read and split PFLDS into a Lua table of dirs
+  local pflds = vim.env.PFLDS or ''
+  if pflds == '' then
+    vim.notify('Environment variable PFLDS is not set', vim.log.levels.WARN)
     return
+  end
+  local search_dirs = {}
+  for dir in string.gmatch(pflds, '([^:]+)') do
+    table.insert(search_dirs, dir)
   end
 
   local header_exts = { 'h', 'hh', 'hpp', 'hxx' }
@@ -27,18 +33,23 @@ local function toggle_header_source()
     return
   end
 
+  -- search each directory in turn for a matching basename + candidate ext
   for _, cand_ext in ipairs(candidates) do
     local pattern = string.format('**/%s.%s', basename, cand_ext)
-    local matches = vim.fn.globpath(search_dir, pattern, '', true)
-    if not vim.tbl_isempty(matches) then
-      vim.cmd('edit ' .. vim.fn.fnameescape(matches[1]))
-      return
+    for _, dir in ipairs(search_dirs) do
+      local matches = vim.fn.globpath(dir, pattern, false, true)
+      if not vim.tbl_isempty(matches) then
+        vim.cmd('edit ' .. vim.fn.fnameescape(matches[1]))
+        return
+      end
     end
   end
 
   vim.notify(string.format(
-    'No matching file found for %s with extensions: %s',
-    fname, table.concat(candidates, ", ")
+    'No matching file found for %s in PFLDS dirs (%s) with extensions: %s',
+    fname,
+    table.concat(search_dirs, ", "),
+    table.concat(candidates, ", ")
   ), vim.log.levels.INFO)
 end
 
