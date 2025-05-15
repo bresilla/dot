@@ -210,6 +210,26 @@
             "provider": "github",
             "package_path": "srss",
             "pinned": false
+        },
+        "/env/bin/trunk": {
+            "path": "/env/bin/trunk",
+            "remote_name": "trunk",
+            "version": "v0.21.14",
+            "hash": "22be59a5067bb43a390462d9a8db159fca1eac10085b815b2562114d935ba02a",
+            "url": "https://github.com/trunk-rs/trunk",
+            "provider": "github",
+            "package_path": "trunk",
+            "pinned": false
+        },
+        "/env/bin/wasm-pack": {
+            "path": "/env/bin/wasm-pack",
+            "remote_name": "wasm-pack",
+            "version": "v0.13.1",
+            "hash": "0eb85a72632d6f6563d51c91af5ac8f394eab5183d0815f7d534f9d82ce6f3c2",
+            "url": "https://github.com/rustwasm/wasm-pack",
+            "provider": "github",
+            "package_path": "wasm-pack-v0.13.1-x86_64-unknown-linux-musl/wasm-pack",
+            "pinned": false
         }
     }
 }

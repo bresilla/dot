@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#
 
 function launch {
     nohup $1 >/dev/null 2>/dev/null & disown; exit
@@ -13,9 +12,4 @@ function launch {
 ###HISTORY STAFF
 HISTFILE=~/.config/bash_history
 
-#/env/dot/.func/system/bresilla forever
-
-#--------------------------------------------------------------------------------------------------------------------
-###THEME
-source ~/.config/promptline
-#--------------------------------------------------------------------------------------------------------------------
+eval "$(direnv hook bash)"

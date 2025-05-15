@@ -71,11 +71,28 @@ finder() {
 # @cmd list buffers
 # @alias b
 buffers() {
+    [[ "$context" != "editor" ]] && exit 
     buffers_list=/tmp/"$view"_"$only_name"_open_buffers
     [[ ! -f "$buffers_list" ]] && exit 0
     pick=$(cat $buffers_list | tv --preview 'bat -n --color=always {0}')
     [[ -z "$pick" ]] && exit 0
     tmux send-keys -t "$pane_id" "$comd $pick" C-m
+}
+
+
+# @cmd list quickfixes
+# @alias q
+quickfix() {
+    [[ "$context" != "editor" ]] && exit 
+    quickfix_list=$current_path/.quickfix
+    [[ ! -f "$quickfix_list" ]] && exit 0
+    pick=$(cat $quickfix_list | tv)
+    file=$(echo $pick | cut -d: -f1)
+    line=$(echo $pick | cut -d: -f2)
+    col=$(echo $pick | cut -d: -f3)
+    [[ -z "$file" ]] && exit 0
+    tmux send-keys -t "$pane_id" ":e $file" C-m
+    tmux send-keys -t "$pane_id" ":cal cursor($line, $col)" C-m
 }
 
 # @cmd run goose

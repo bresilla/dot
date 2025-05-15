@@ -11,3 +11,6 @@ LEARN
 **/.gdb_history
 **/.execs
 **/.tmp
+** codegrab-output.md
+**/.quickfix
+**/.todo

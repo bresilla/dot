@@ -20,7 +20,9 @@ return {
             
             local keymap = {
                 ["<Pageup>"] = function() neoscroll.scroll(-0.2, { move_cursor=true; duration = 100 }) end;
+                ["<S-j>"] = function() neoscroll.scroll(-0.2, { move_cursor=true; duration = 100 }) end;
                 ["<Pagedown>"] = function() neoscroll.scroll(0.2, { move_cursor=true; duration = 100 }) end;
+                ["<S-k>"] = function() neoscroll.scroll(0.2, { move_cursor=true; duration = 100 }) end;
             }
             local modes = { 'n', 'v', 'x' }
             for key, func in pairs(keymap) do
