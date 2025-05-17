@@ -14,11 +14,11 @@
         "/env/bin/atuin": {
             "path": "/env/bin/atuin",
             "remote_name": "atuin",
-            "version": "v18.5.0",
-            "hash": "666f900bc0299bc7f7cf2b3be99398fc8daeb5f3b219373da4e7edfcde7c6219",
-            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.5.0",
+            "version": "v18.6.1",
+            "hash": "92801fbaa0849ec4e459feb3bd670c900b78cb27cc2ad4b970986e9e9f66d019",
+            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.6.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
             "pinned": false
         },
         "/env/bin/bat": {
@@ -44,11 +44,11 @@
         "/env/bin/carapace": {
             "path": "/env/bin/carapace",
             "remote_name": "carapace",
-            "version": "v1.3.0",
-            "hash": "41676d3502e26a41d3adad4ec4240f4774852a1a57c06571554f5b274b97ae25",
-            "url": "https://github.com/carapace-sh/carapace-bin",
+            "version": "v1.3.1",
+            "hash": "aa789bb053cf2188fb13680f68b35a7ef41894222df2a01db731b885cb61935d",
+            "url": "https://github.com/carapace-sh/carapace-bin/releases/tag/v1.3.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "carapace",
             "pinned": false
         },
         "/env/bin/choose": {
@@ -63,10 +63,10 @@
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-0.16.1-linux-amd64",
-            "version": "v0.16.1",
-            "hash": "9ec8a52b7b97e0120315ec26f7511b7fd82ebd1eee7d504420a233a6677b2238",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v0.16.1",
+            "remote_name": "CodeGPT-1.0.0-linux-amd64",
+            "version": "v1.0.0",
+            "hash": "aa117a8a644470a737fd9c2cd051add9cf00bd2039f67956e4bd7db17154b36a",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.0.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -134,9 +134,9 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.21.2",
-            "hash": "b04b5d3635471e98c09e7299943a82ac041912cf010f1eaec85e9ea62ccb2887",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.2",
+            "version": "v0.21.3",
+            "hash": "db5a384cda401cdead545225db5738c08035de4b86ca177c6c06107f9d265b6f",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.3",
             "provider": "",
             "package_path": "./eza",
             "pinned": false
@@ -164,9 +164,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.21",
-            "hash": "6d718d4a2a5a24ac48a3d61ff85496b89c0d043f48349819ed3783e9a8189670",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.21",
+            "version": "v1.0.23",
+            "hash": "7cca902773517d9685e004158a8118e9e0f805ffd252c9bb361459dc4643f19f",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.23",
             "provider": "",
             "package_path": "goose",
             "pinned": false
@@ -214,11 +214,19 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
+<<<<<<< Updated upstream
             "version": "v0.28.2",
             "hash": "fd00658cf11a93814af330e4284c59b5ebec6b73895983845e366b26425c655f",
             "url": "https://github.com/jj-vcs/jj",
             "provider": "",
             "package_path": "",
+=======
+            "version": "v0.29.0",
+            "hash": "f14e6c1630c68d89fcfc303fe2e42a7ca188175958df3da3016fa9cc10f9bff6",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.29.0",
+            "provider": "",
+            "package_path": "./jj",
+>>>>>>> Stashed changes
             "pinned": false
         },
         "/env/bin/just": {
@@ -254,19 +262,19 @@
         "/env/bin/mdbook": {
             "path": "/env/bin/mdbook",
             "remote_name": "mdbook",
-            "version": "v0.4.48",
-            "hash": "e23d989471ca052fba75a288d5dfa054150c51897cd944667a9b3e636486dc4f",
-            "url": "https://github.com/rust-lang/mdBook",
+            "version": "v0.4.49",
+            "hash": "7e64ca95d8df0542eddcd4d604d3544d92c70f4fe18c930489eb01a67784d449",
+            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.4.49",
             "provider": "",
-            "package_path": "",
+            "package_path": "mdbook",
             "pinned": false
         },
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.1.0-0",
-            "hash": "15d4127a9b248907ab99e2804bd86789f1bbd1458d206065c16a9e86c02d6a30",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.1.0-0",
+            "version": "2.1.1-0",
+            "hash": "0d2dd49fb0171f27a63175e2c21941aafabdd6e46f521c498620b4b14ff604d8",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.1.1-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -304,11 +312,11 @@
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.20.0",
-            "hash": "c7c2e8cc85d99459bdaa8f1c419b2c7565fc9295f9c4cabdf2130c0e9808c48d",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.20.0",
+            "version": "0.22.0",
+            "hash": "0794dc692728ad66771916a2312a696553e36efe483cedacec5f60cae7c89654",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.22.0",
             "provider": "",
-            "package_path": "pik-0.20.0-x86_64-unknown-linux-gnu/pik",
+            "package_path": "pik-0.22.0-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
