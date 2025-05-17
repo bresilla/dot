@@ -214,19 +214,11 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-<<<<<<< Updated upstream
-            "version": "v0.28.2",
-            "hash": "fd00658cf11a93814af330e4284c59b5ebec6b73895983845e366b26425c655f",
-            "url": "https://github.com/jj-vcs/jj",
-            "provider": "",
-            "package_path": "",
-=======
             "version": "v0.29.0",
             "hash": "f14e6c1630c68d89fcfc303fe2e42a7ca188175958df3da3016fa9cc10f9bff6",
             "url": "https://github.com/jj-vcs/jj/releases/tag/v0.29.0",
             "provider": "",
             "package_path": "./jj",
->>>>>>> Stashed changes
             "pinned": false
         },
         "/env/bin/just": {
@@ -357,6 +349,16 @@
             "url": "https://github.com/servicer-labs/servicer",
             "provider": "github",
             "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/serpl": {
+            "path": "/env/bin/serpl",
+            "remote_name": "serpl",
+            "version": "0.3.3",
+            "hash": "81a8b7b025394355ebd50c16585b78d989784e9385a1efa980c6d7595a986f3c",
+            "url": "https://github.com/yassinebridi/serpl",
+            "provider": "github",
+            "package_path": "serpl",
             "pinned": false
         },
         "/env/bin/soft": {
