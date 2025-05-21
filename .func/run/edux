@@ -71,7 +71,7 @@ finder() {
 # @cmd find text in file
 # @alias o
 replace() {
-    serpl -p "#{pane_current_path}"
+    serpl -p $current_path
 }
 
 # @cmd list buffers
