@@ -181,6 +181,16 @@
             "package_path": "rustscan",
             "pinned": false
         },
+        "/env/bin/sdt": {
+            "path": "/env/bin/sdt",
+            "remote_name": "systemd-manager-tui",
+            "version": "v1.0.1",
+            "hash": "fc3b11212dc5108073714fc47eff9453fa16d6a53a5436b813f42e4c82695c33",
+            "url": "https://github.com/matheus-git/systemd-manager-tui",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/sherlock": {
             "path": "/env/bin/sherlock",
             "remote_name": "sherlock",
@@ -209,6 +219,16 @@
             "url": "https://github.com/sheepla/srss",
             "provider": "github",
             "package_path": "srss",
+            "pinned": false
+        },
+        "/env/bin/systemd-manager-tui": {
+            "path": "/env/bin/systemd-manager-tui",
+            "remote_name": "systemd-manager-tui",
+            "version": "v1.0.1",
+            "hash": "fc3b11212dc5108073714fc47eff9453fa16d6a53a5436b813f42e4c82695c33",
+            "url": "https://github.com/matheus-git/systemd-manager-tui",
+            "provider": "github",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/trunk": {

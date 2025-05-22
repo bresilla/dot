@@ -327,8 +327,8 @@
             "version": "v0.3.0",
             "hash": "0d8cf36979cc2cc82df6d72a7c3573274853617b3f1777f3b732f8f2c89c5d40",
             "url": "https://github.com/lotabout/rargs",
-            "provider": "github",
-            "package_path": "rargs",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/sc": {

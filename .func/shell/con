@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# @cmd connect to remote server via rdp
+# @alias r
+# @arg host!
+# @option -s --size
+# @option -p --password
+# @option -u --user
+rdp() {
+    [[ -z $argc_password ]] && argc_password=Batman:7
+    [[ -z $argc_user ]] && argc_user=bresilla
+    [[ -z $argc_size ]] && argc_size=1920x1080
+    /usr/bin/xfreerdp3 +grab-keyboard -compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /size:$argc_size /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /smart-sizing /v:$argc_host
+}
+
+# @cmd connect to remote server via vnc
+# @alias v
+# @arg host!
+# # @option -p --password
+vnc() {
+    [[ -z $argc_password ]] && argc_password=Batman:7
+    VNC_PASSWORD=$argc_password vncviewer $argc_host:1
+}
+
+# @cmd connect to remote server via sunshine
+# @alias s
+# @arg host!
+sun() {
+    moonlight stream -1080 -fps 30 -bitrate 3000 -app Desktop $argc_host
+}
+
+eval "$(argc --argc-eval "$0" "$@")"
