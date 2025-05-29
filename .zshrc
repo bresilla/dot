@@ -233,3 +233,8 @@ bindkey -s '^A' ' scrr\n'
 #--------------------------------------------------------------------------------------------------------------------
 
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+# nostromo [section begin]
+autoload -U compinit; compinit
+source <(nostromo completion zsh)
+# nostromo [section end]

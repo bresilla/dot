@@ -13,3 +13,7 @@ function launch {
 HISTFILE=~/.config/bash_history
 
 eval "$(direnv hook bash)"
+
+# nostromo [section begin]
+source <(nostromo completion bash)
+# nostromo [section end]
