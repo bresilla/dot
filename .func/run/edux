@@ -111,7 +111,7 @@ goose() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" "$cmd"
+      tmux new-session -d -s "$session" -c "$current_path" bash -c "$cmd || read -p ''"
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
