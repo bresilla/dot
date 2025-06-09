@@ -111,7 +111,7 @@ goose() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" "$cmd"
+      tmux new-session -d -s "$session" -c "$current_path" "$cmd"
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
@@ -129,7 +129,7 @@ debuger() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" bash -c 'gdb --quiet $(cat .execs | gum choose --select-if-one)'
+      tmux new-session -d -s "$session" -c "$current_path" bash -c 'gdb --quiet $(cat .execs | gum choose --select-if-one)'
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
@@ -148,7 +148,7 @@ builder() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" bash -c '_b || read -p ""' 
+      tmux new-session -d -s "$session" -c "$current_path" bash -c '_b || read -p ""' 
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
@@ -166,7 +166,7 @@ runner() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" bash -c '_r; read -p ""' 
+      tmux new-session -d -s "$session" -c "$current_path" bash -c '_r; read -p ""' 
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \

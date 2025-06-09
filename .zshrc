@@ -238,3 +238,4 @@ if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresill
 autoload -U compinit; compinit
 source <(nostromo completion zsh)
 # nostromo [section end]
+fpath=(~/.zfunc $fpath)
