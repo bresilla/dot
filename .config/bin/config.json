@@ -81,6 +81,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/deno": {
+            "path": "/env/bin/deno",
+            "remote_name": "deno",
+            "version": "v2.3.6",
+            "hash": "1ec4660ac9564b2fe22f0ab01d22646518c8cb98e396f351012d8904f0e9c465",
+            "url": "https://github.com/denoland/deno",
+            "provider": "github",
+            "package_path": "deno",
+            "pinned": false
+        },
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
             "remote_name": "devbox",

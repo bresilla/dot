@@ -74,9 +74,9 @@
         "/env/bin/git-who": {
             "path": "/env/bin/git-who",
             "remote_name": "git-who",
-            "version": "v0.7",
-            "hash": "43a5923e5142621f52c21a2fa560a25c72969b4f17f5330e3e33cb8a64dfc99b",
-            "url": "https://github.com/sinclairtarget/git-who/releases/tag/v0.7",
+            "version": "v1.1",
+            "hash": "182f15c91c5d5d29605daba74e002f0622478aab8d797ec90f19f302f72fddac",
+            "url": "https://github.com/sinclairtarget/git-who/releases/tag/v1.1",
             "provider": "",
             "package_path": "linux_amd64/git-who",
             "pinned": false
@@ -94,10 +94,10 @@
         "/env/bin/hugo": {
             "path": "/env/bin/hugo",
             "remote_name": "hugo",
-            "version": "v0.147.0",
-            "hash": "5ed1b0dcda1364cdf19db4a017f11ca24a185b3e1a1bcc2e5834300df5ededb9",
-            "url": "https://github.com/gohugoio/hugo",
-            "provider": "github",
+            "version": "v0.147.8",
+            "hash": "069a943978b2f58d18b3a8b30155bd8a675c8e694003d1822a54d82e16adb1dd",
+            "url": "https://github.com/gohugoio/hugo/releases/tag/v0.147.8",
+            "provider": "",
             "package_path": "hugo",
             "pinned": false
         },
@@ -154,9 +154,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.0.46",
-            "hash": "22df46451f9ae24b2c99030692b70c6f844b612ea1a47581664801de7c32368c",
-            "url": "https://github.com/opencode-ai/opencode/releases/tag/v0.0.46",
+            "version": "v0.0.53",
+            "hash": "d5ea33dcbf7b1df76cac2b4deea915f043586cf41eea52340039fd98317425c2",
+            "url": "https://github.com/opencode-ai/opencode/releases/tag/v0.0.53",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
