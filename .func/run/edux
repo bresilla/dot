@@ -104,14 +104,14 @@ quickfix() {
 # @cmd run goose
 goose() {
   local session="goose_$current_path"
-  local cmd=goose
+  local cmd=claude
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" bash -c "$cmd || read -p ''"
+      tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
       tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" \
