@@ -156,8 +156,8 @@
             "remote_name": "opencode",
             "version": "v0.0.53",
             "hash": "d5ea33dcbf7b1df76cac2b4deea915f043586cf41eea52340039fd98317425c2",
-            "url": "https://github.com/opencode-ai/opencode/releases/tag/v0.0.53",
-            "provider": "",
+            "url": "https://github.com/opencode-ai/opencode",
+            "provider": "github",
             "package_path": "opencode",
             "pinned": false
         },

@@ -16,3 +16,5 @@ LEARN
 **/.todo
 **/codegrab-output.md
 **/.libs
+
+**/.claude/settings.local.json

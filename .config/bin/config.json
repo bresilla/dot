@@ -44,11 +44,11 @@
         "/env/bin/carapace": {
             "path": "/env/bin/carapace",
             "remote_name": "carapace",
-            "version": "v1.3.1",
-            "hash": "aa789bb053cf2188fb13680f68b35a7ef41894222df2a01db731b885cb61935d",
-            "url": "https://github.com/carapace-sh/carapace-bin/releases/tag/v1.3.1",
+            "version": "v1.3.3",
+            "hash": "53c674f0d008c5c54e970e9b9417296b30a1e1dd8a2302f9e3607e2069bf034e",
+            "url": "https://github.com/carapace-sh/carapace-bin/releases/tag/v1.3.3",
             "provider": "",
-            "package_path": "",
+            "package_path": "carapace",
             "pinned": false
         },
         "/env/bin/choose": {
@@ -63,10 +63,10 @@
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-1.1.0-linux-amd64",
-            "version": "v1.1.0",
-            "hash": "0567cc1ccb655302b495bde42bc20d18c0699cb497669674f130e55947411684",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.1.0",
+            "remote_name": "CodeGPT-1.1.1-linux-amd64",
+            "version": "v1.1.1",
+            "hash": "44d409c9c4ea03165d37011e38a9ba717325d2c7381b7feb570eb3c111db391a",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.1.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -84,10 +84,10 @@
         "/env/bin/deno": {
             "path": "/env/bin/deno",
             "remote_name": "deno",
-            "version": "v2.3.6",
-            "hash": "1ec4660ac9564b2fe22f0ab01d22646518c8cb98e396f351012d8904f0e9c465",
-            "url": "https://github.com/denoland/deno",
-            "provider": "github",
+            "version": "v2.3.7",
+            "hash": "48b6203ef92fe37e723cb5e9513b61038007c1254979d4b4cf7abcbebc9e4c30",
+            "url": "https://github.com/denoland/deno/releases/tag/v2.3.7",
+            "provider": "",
             "package_path": "deno",
             "pinned": false
         },
@@ -144,59 +144,59 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.21.3",
-            "hash": "db5a384cda401cdead545225db5738c08035de4b86ca177c6c06107f9d265b6f",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.3",
+            "version": "v0.21.6",
+            "hash": "b57a0afff81b87e936078336a4892d8828e761907e69c36fae6142551197f505",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.21.6",
             "provider": "",
-            "package_path": "",
+            "package_path": "./eza",
             "pinned": false
         },
         "/env/bin/git-cliff": {
             "path": "/env/bin/git-cliff",
             "remote_name": "git-cliff",
-            "version": "v2.8.0",
-            "hash": "74eea1a4459977974a56e56bd3e552dcaad2f46b237219c4961894cb055b7cca",
-            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.8.0",
+            "version": "v2.9.1",
+            "hash": "5a44bacc74cbdbaed8fbbd1f1a5e506ade98745cb5c7155c94bf0cfe91e3b9c5",
+            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.9.1",
             "provider": "",
-            "package_path": "git-cliff-2.8.0/git-cliff",
+            "package_path": "git-cliff-2.9.1/git-cliff",
             "pinned": false
         },
         "/env/bin/gomi": {
             "path": "/env/bin/gomi",
             "remote_name": "gomi",
-            "version": "v1.6.0",
-            "hash": "d23e3858a2dac6093d268ea508f478bde8e45834bc6e1ac9ac9ae465bd12df69",
-            "url": "https://github.com/babarot/gomi",
-            "provider": "github",
+            "version": "v1.6.1",
+            "hash": "10fd2c2f7c0b08841fd3b6077cb39a78c5904107f8261044b86c338e0f27e40a",
+            "url": "https://github.com/babarot/gomi/releases/tag/v1.6.1",
+            "provider": "",
             "package_path": "gomi",
             "pinned": false
         },
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.0.24",
-            "hash": "2fb83bc297efa46c5ee4416f5e5fec8f6fcacb4ad97fa3f3282c924413d88db8",
-            "url": "https://github.com/block/goose/releases/tag/v1.0.24",
+            "version": "v1.0.29",
+            "hash": "c9b8deec99f8562c9a91afb06b95271511563798dbc7c22a4f1dec71dae61de9",
+            "url": "https://github.com/block/goose/releases/tag/v1.0.29",
             "provider": "",
-            "package_path": "goose",
+            "package_path": "./goose",
             "pinned": false
         },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
             "remote_name": "gum",
-            "version": "v0.16.0",
-            "hash": "61a1fdd6d2bfb80a9ca14225bc3bd12d73db6f525cd683cba9eaa5f975114796",
-            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.0",
+            "version": "v0.16.2",
+            "hash": "f7cc6192ce6475343bcc1a6275b1101c2081abeae4119bf0f09fabfa0a70b8bd",
+            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.2",
             "provider": "",
-            "package_path": "",
+            "package_path": "gum_0.16.2_Linux_x86_64/gum",
             "pinned": false
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.38.0",
-            "hash": "c55ac8ed167b975e3c36652cd58b7369add4b0539c0083edf4f36528a5ad1f34",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.38.0",
+            "version": "4.39.0",
+            "hash": "13ab13d3ad7e471d6474f8a1f648151aba90afa02bfe285f14c7de17b113432e",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.39.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -224,11 +224,11 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-            "version": "v0.29.0",
-            "hash": "f14e6c1630c68d89fcfc303fe2e42a7ca188175958df3da3016fa9cc10f9bff6",
-            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.29.0",
+            "version": "v0.30.0",
+            "hash": "2dbc59727cd3ed0b3650047c410709180bed4f3b44d8810a96c57b4b2b6f7576",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.30.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "./jj",
             "pinned": false
         },
         "/env/bin/just": {
@@ -264,19 +264,19 @@
         "/env/bin/mdbook": {
             "path": "/env/bin/mdbook",
             "remote_name": "mdbook",
-            "version": "v0.4.49",
-            "hash": "7e64ca95d8df0542eddcd4d604d3544d92c70f4fe18c930489eb01a67784d449",
-            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.4.49",
+            "version": "v0.4.51",
+            "hash": "c71a6e49ca02aa557172c5c236135f2ac1c1e68ad2e4794c5199ba1cbac6e9ca",
+            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.4.51",
             "provider": "",
-            "package_path": "",
+            "package_path": "mdbook",
             "pinned": false
         },
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.1.1-0",
-            "hash": "0d2dd49fb0171f27a63175e2c21941aafabdd6e46f521c498620b4b14ff604d8",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.1.1-0",
+            "version": "2.3.0-1",
+            "hash": "83f38b81295dade6b242b40dbab81bcd9fb03bb196928ab15f552cbafe82386b",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.0-1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -287,8 +287,18 @@
             "version": "v0.14.0",
             "hash": "073057b7ffdb4fe500591532873b3e42d1a66d8575e494fbb4103e09da4ad1ed",
             "url": "https://github.com/fnichol/names",
-            "provider": "",
-            "package_path": "",
+            "provider": "github",
+            "package_path": "names-x86_64-unknown-linux-musl",
+            "pinned": false
+        },
+        "/env/bin/names-unknown-musl": {
+            "path": "/env/bin/names-unknown-musl",
+            "remote_name": "names-x86_64-unknown-linux-musl",
+            "version": "v0.14.0",
+            "hash": "073057b7ffdb4fe500591532873b3e42d1a66d8575e494fbb4103e09da4ad1ed",
+            "url": "https://github.com/fnichol/names",
+            "provider": "github",
+            "package_path": "names-x86_64-unknown-linux-musl",
             "pinned": false
         },
         "/env/bin/nnn": {
@@ -311,22 +321,32 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/opencode": {
+            "path": "/env/bin/opencode",
+            "remote_name": "opencode",
+            "version": "v0.1.140",
+            "hash": "56b3adcef1ad6e5d12120070e301600a83e193344128baa75de68923644102ba",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.1.140",
+            "provider": "",
+            "package_path": "opencode",
+            "pinned": false
+        },
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.23.1",
-            "hash": "16dcc2936ea97645dbe0d07e082b7e0e4534f8fbce4d20db664e1064d61710c5",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.23.1",
+            "version": "0.24.0",
+            "hash": "1fca265971daca3a56587eea8f6d91ff77c0900f802a1d1d5510ea34d414d1ab",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.24.0",
             "provider": "",
-            "package_path": "pik-0.23.1-x86_64-unknown-linux-gnu/pik",
+            "package_path": "pik-0.24.0-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.47.0",
-            "hash": "5693adc130753bdabc131acb181a727e30a4757e38e97692f255eb76e1c5a5b8",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.47.0",
+            "version": "v0.48.2",
+            "hash": "a1c031aeb1f3745f017f421aae747a724f1419c7267a088e7044a5b2019ab701",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.48.2",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -339,6 +359,16 @@
             "url": "https://github.com/lotabout/rargs",
             "provider": "",
             "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/roc": {
+            "path": "/env/bin/roc",
+            "remote_name": "roc",
+            "version": "0.2.3",
+            "hash": "860f0c34aef28bb04a2eddc64285c4c71356023013ada1efad2519b6b07de43a",
+            "url": "https://github.com/bresilla/roc",
+            "provider": "github",
+            "package_path": "roc",
             "pinned": false
         },
         "/env/bin/sc": {
@@ -364,11 +394,11 @@
         "/env/bin/serpl": {
             "path": "/env/bin/serpl",
             "remote_name": "serpl",
-            "version": "0.3.3",
-            "hash": "81a8b7b025394355ebd50c16585b78d989784e9385a1efa980c6d7595a986f3c",
-            "url": "https://github.com/yassinebridi/serpl",
+            "version": "0.3.4",
+            "hash": "f5fbabf25456c23eef70cb1fa6f6628c1fcc4b95a1720e16eb46b28bede69a7a",
+            "url": "https://github.com/yassinebridi/serpl/releases/tag/0.3.4",
             "provider": "",
-            "package_path": "",
+            "package_path": "serpl",
             "pinned": false
         },
         "/env/bin/soft": {
@@ -424,19 +454,19 @@
         "/env/bin/yazi": {
             "path": "/env/bin/yazi",
             "remote_name": "yazi",
-            "version": "v25.4.8",
-            "hash": "e14ea1804e5db49cccedb4c6ef674b3cc5afa78e4d3e4eb365b197764db0a6cd",
-            "url": "https://github.com/sxyazi/yazi",
+            "version": "v25.5.31",
+            "hash": "21fdd539eb2fc4e3f8cee48d312890a41d9e6633c5c595df80d365f9930b9cf9",
+            "url": "https://github.com/sxyazi/yazi/releases/tag/v25.5.31",
             "provider": "",
-            "package_path": "",
+            "package_path": "yazi-x86_64-unknown-linux-musl/yazi",
             "pinned": false
         },
         "/env/bin/zoxide": {
             "path": "/env/bin/zoxide",
             "remote_name": "zoxide",
-            "version": "v0.9.7",
-            "hash": "cb6835d6e90db4d68a4fae945b41b6732e6628888a225d7538a006151e54844a",
-            "url": "https://github.com/ajeetdsouza/zoxide/releases/tag/v0.9.7",
+            "version": "v0.9.8",
+            "hash": "a55e651f93824e68058938dfb1dd12e34ace0712553cee35df2fd853726cd49b",
+            "url": "https://github.com/ajeetdsouza/zoxide/releases/tag/v0.9.8",
             "provider": "",
             "package_path": "zoxide",
             "pinned": false
