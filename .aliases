@@ -57,7 +57,7 @@ alias cp="rsync -uahP --inplace --no-whole-file --info=progress2"
 alias cat='bat --paging=never'
 alias ll='eza -liSHF --header --git --group-directories-first'
 alias la='eza -laiSHF --header --git --group-directories-first'
-alias lt='eza -liSHF --header --git --group-directories-first --tree -L3'
+alias lt='eza -liSHF --header --git --git-ignore --group-directories-first --tree -L3'
 alias lu='dutree -d1 --usage -x .git -x .direnv'
 alias df='dfc -dTmw -p -/dev/loop,tmp,dev,run,one,efivarfs'
 alias lsblk='lsblk --output NAME,SIZE,FSUSE%,MODEL,TRAN,TYPE,FSTYPE,UUID,LABEL,MOUNTPOINT,STATE,HOTPLUG'
@@ -93,6 +93,9 @@ alias search='rg --hidden'
 alias vol=rsmixer
 alias rm="gomi -rf"
 alias dims="hyprctl activewindow | grep size | head -2 | tail -1 | choose 1 | tr ',' 'x'"
+
+# alias claude='deno run --allow-env --allow-read --allow-sys --allow-write --allow-net npm:@anthropic-ai/claude-code'
+alias rerun='WAYLAND_DISPLAY= rerun'
 
 ##BIN
 # alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"

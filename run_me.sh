@@ -9,3 +9,9 @@ ln -sf $ENVY/dot/.{aliases,bashrc,func,profile,startup,xinitrc,winitrc,zshrc} $H
 
 # [[ ! -d $HOME/.vnc ]] && mkdir $HOME/.vnc
 # cp $ENVY/dot/.vnc/* $HOME/.vnc
+#
+
+echo 'export PATH=/env/bin:$PATH' | sudo tee /etc/profile.d/envy.sh
+echo 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done' | sudo tee -a /etc/zsh/zshrc
+echo 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done' | sudo tee -a /etc/bash.bashrc
+echo 'set -gx PATH /env/bin $PATH' | sudo tee /etc/fish/conf.d/envy.fish

@@ -48,7 +48,7 @@
             "hash": "53c674f0d008c5c54e970e9b9417296b30a1e1dd8a2302f9e3607e2069bf034e",
             "url": "https://github.com/carapace-sh/carapace-bin/releases/tag/v1.3.3",
             "provider": "",
-            "package_path": "carapace",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/choose": {
@@ -88,7 +88,7 @@
             "hash": "48b6203ef92fe37e723cb5e9513b61038007c1254979d4b4cf7abcbebc9e4c30",
             "url": "https://github.com/denoland/deno/releases/tag/v2.3.7",
             "provider": "",
-            "package_path": "deno",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/devbox": {
@@ -148,7 +148,7 @@
             "hash": "b57a0afff81b87e936078336a4892d8828e761907e69c36fae6142551197f505",
             "url": "https://github.com/eza-community/eza/releases/tag/v0.21.6",
             "provider": "",
-            "package_path": "./eza",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/git-cliff": {
@@ -158,7 +158,7 @@
             "hash": "5a44bacc74cbdbaed8fbbd1f1a5e506ade98745cb5c7155c94bf0cfe91e3b9c5",
             "url": "https://github.com/orhun/git-cliff/releases/tag/v2.9.1",
             "provider": "",
-            "package_path": "git-cliff-2.9.1/git-cliff",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/gomi": {
@@ -168,7 +168,7 @@
             "hash": "10fd2c2f7c0b08841fd3b6077cb39a78c5904107f8261044b86c338e0f27e40a",
             "url": "https://github.com/babarot/gomi/releases/tag/v1.6.1",
             "provider": "",
-            "package_path": "gomi",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/goose": {
@@ -178,7 +178,7 @@
             "hash": "c9b8deec99f8562c9a91afb06b95271511563798dbc7c22a4f1dec71dae61de9",
             "url": "https://github.com/block/goose/releases/tag/v1.0.29",
             "provider": "",
-            "package_path": "./goose",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/gum": {
@@ -188,7 +188,7 @@
             "hash": "f7cc6192ce6475343bcc1a6275b1101c2081abeae4119bf0f09fabfa0a70b8bd",
             "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.2",
             "provider": "",
-            "package_path": "gum_0.16.2_Linux_x86_64/gum",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/ha": {
@@ -228,7 +228,7 @@
             "hash": "2dbc59727cd3ed0b3650047c410709180bed4f3b44d8810a96c57b4b2b6f7576",
             "url": "https://github.com/jj-vcs/jj/releases/tag/v0.30.0",
             "provider": "",
-            "package_path": "./jj",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/just": {
@@ -268,7 +268,7 @@
             "hash": "c71a6e49ca02aa557172c5c236135f2ac1c1e68ad2e4794c5199ba1cbac6e9ca",
             "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.4.51",
             "provider": "",
-            "package_path": "mdbook",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/micromamba": {
@@ -324,9 +324,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.1.140",
-            "hash": "56b3adcef1ad6e5d12120070e301600a83e193344128baa75de68923644102ba",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.1.140",
+            "version": "v0.3.5",
+            "hash": "e88c58c780e18df99afe7e4b06a9c78e62f73e46eb23bac59a5762f24bdfa607",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.3.5",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -338,7 +338,7 @@
             "hash": "1fca265971daca3a56587eea8f6d91ff77c0900f802a1d1d5510ea34d414d1ab",
             "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.24.0",
             "provider": "",
-            "package_path": "pik-0.24.0-x86_64-unknown-linux-gnu/pik",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/pixi": {
@@ -367,8 +367,8 @@
             "version": "0.2.3",
             "hash": "860f0c34aef28bb04a2eddc64285c4c71356023013ada1efad2519b6b07de43a",
             "url": "https://github.com/bresilla/roc",
-            "provider": "github",
-            "package_path": "roc",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/sc": {
@@ -398,7 +398,7 @@
             "hash": "f5fbabf25456c23eef70cb1fa6f6628c1fcc4b95a1720e16eb46b28bede69a7a",
             "url": "https://github.com/yassinebridi/serpl/releases/tag/0.3.4",
             "provider": "",
-            "package_path": "serpl",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/soft": {
@@ -458,7 +458,7 @@
             "hash": "21fdd539eb2fc4e3f8cee48d312890a41d9e6633c5c595df80d365f9930b9cf9",
             "url": "https://github.com/sxyazi/yazi/releases/tag/v25.5.31",
             "provider": "",
-            "package_path": "yazi-x86_64-unknown-linux-musl/yazi",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/zoxide": {
@@ -468,7 +468,7 @@
             "hash": "a55e651f93824e68058938dfb1dd12e34ace0712553cee35df2fd853726cd49b",
             "url": "https://github.com/ajeetdsouza/zoxide/releases/tag/v0.9.8",
             "provider": "",
-            "package_path": "zoxide",
+            "package_path": "",
             "pinned": false
         }
     }

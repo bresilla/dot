@@ -17,3 +17,6 @@ eval "$(direnv hook bash)"
 # nostromo [section begin]
 # source <(nostromo completion bash)
 # nostromo [section end]
+#
+
+alias claude='deno run --allow-env --allow-read --allow-sys --allow-write --allow-net npm:@anthropic-ai/claude-code'

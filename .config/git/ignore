@@ -18,3 +18,9 @@ LEARN
 **/.libs
 
 **/.claude/settings.local.json
+CLAUDE.md
+.claude
+.vscode
+build
+.direnv
+.devbox

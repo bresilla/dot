@@ -122,6 +122,7 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_QPA_PLATFORM=xcb
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export QT_QPA_PLATFORMTHEME=qt5ct
+export GOOSE_DISABLE_KEYRING=1
 
 
 #---------------------------            ROS             --------------------------
