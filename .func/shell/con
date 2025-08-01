@@ -3,23 +3,24 @@
 # @cmd connect to remote server via rdp
 # @alias r
 # @arg host!
-# @option -s --size
-# @option -p --password
 # @option -u --user
+# @option -p --password
 rdp() {
     [[ -z $argc_password ]] && argc_password=Batman:7
     [[ -z $argc_user ]] && argc_user=bresilla
-    [[ -z $argc_size ]] && argc_size=1920x1080
-    /usr/bin/xfreerdp3 +grab-keyboard -compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /size:$argc_size /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /smart-sizing /v:$argc_host
+
+    /usr/bin/xfreerdp3 +grab-keyboard -compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host
 }
 
 # @cmd connect to remote server via vnc
 # @alias v
 # @arg host!
-# # @option -p --password
+# @option -d --display
+# @option -p --password
 vnc() {
     [[ -z $argc_password ]] && argc_password=Batman:7
-    VNC_PASSWORD=$argc_password vncviewer $argc_host:1
+    [[ -z $argc_display ]] && argc_display=1
+    VNC_PASSWORD=$argc_password vncviewer $argc_host:$argc_display
 }
 
 # @cmd connect to remote server via sunshine

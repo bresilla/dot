@@ -163,10 +163,10 @@
         },
         "/env/bin/rerun": {
             "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.23.4-x86_64-unknown-linux-gnu",
-            "version": "0.23.4",
-            "hash": "1161229fd4181eadba3a35c4c92c28f49fcf90a4747447aeeffa14b63d92d806",
-            "url": "https://github.com/rerun-io/rerun/releases/tag/0.23.4",
+            "remote_name": "rerun-cli-0.24.0-x86_64-unknown-linux-gnu",
+            "version": "0.24.0",
+            "hash": "27ced74ffe4301b4ebd4f956b49e8b56b312913e64584762c4fbbcbf6724dc5c",
+            "url": "https://github.com/rerun-io/rerun/releases/tag/0.24.0",
             "provider": "",
             "package_path": "",
             "pinned": false

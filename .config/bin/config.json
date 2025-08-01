@@ -71,6 +71,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/crush": {
+            "path": "/env/bin/crush",
+            "remote_name": "crush",
+            "version": "v0.1.4",
+            "hash": "40c93e05a00450f7055623defac8c77a3dd7b03ce9f2703495fce8844bea6ad8",
+            "url": "https://github.com/charmbracelet/crush",
+            "provider": "github",
+            "package_path": "crush_0.1.4_Linux_x86_64/crush",
+            "pinned": false
+        },
         "/env/bin/delta": {
             "path": "/env/bin/delta",
             "remote_name": "delta",
@@ -324,9 +334,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.3.5",
-            "hash": "e88c58c780e18df99afe7e4b06a9c78e62f73e46eb23bac59a5762f24bdfa607",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.3.5",
+            "version": "v0.3.85",
+            "hash": "409cdf492dc2aa473e9a40786205730b64aa7a452f23864791ce4df17fdb042b",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.3.85",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -429,6 +439,16 @@
             "url": "https://github.com/austinjones/tab-rs",
             "provider": "github",
             "package_path": "tab",
+            "pinned": false
+        },
+        "/env/bin/tattoy": {
+            "path": "/env/bin/tattoy",
+            "remote_name": "tattoy",
+            "version": "tattoy-v0.1.7",
+            "hash": "bc0012e9e24969e20be191cb58a470d3cabdb01dae0a9cd1a81c1f96b7593908",
+            "url": "https://github.com/tattoy-org/tattoy",
+            "provider": "github",
+            "package_path": "tattoy",
             "pinned": false
         },
         "/env/bin/tldr": {
