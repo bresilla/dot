@@ -33,7 +33,7 @@ export BROWSER=app.zen_browser.zen
 export EDITOR=hx
 export TERMINAL=kitty
 export CONSOLE=kitty
-export TERM=xterm-256color
+# export TERM=xterm-256color
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)
 
 [[ -v ${DISPLAY} ]] && export DISPLAY=:0
@@ -129,7 +129,7 @@ export GOOSE_DISABLE_KEYRING=1
 #export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 #export CYCLONEDDS_URI='<CycloneDDS><Domain><General><NetworkInterfaceAddress>stargate</></></></>'
 #export CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="stargate"/></></></></>'
-export ROS_DOMAIN_ID=227
+export ROS_DOMAIN_ID=226
 export WEBOTS_HOME=/usr/local/webots
 export LD_LIBRARY_PATH=/usr/local/webots/lib/controller:$LD_LIBRARY_PATH
 export PYTHONPATH=/usr/local/webots/lib/controller/python:$PYTHONPATH

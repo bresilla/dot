@@ -24,3 +24,7 @@ CLAUDE.md
 build
 .direnv
 .devbox
+.agents
+.agent
+AGENT.md
+AGENTS.md

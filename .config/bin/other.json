@@ -24,10 +24,10 @@
         "/env/bin/chatgpt": {
             "path": "/env/bin/chatgpt",
             "remote_name": "chatgpt-linux-amd64",
-            "version": "v1.8.2",
-            "hash": "85322bfa5fbfbc408c3dae592c0e040d5a5252bd46eacb4abff86a98bdef0b8f",
-            "url": "https://github.com/kardolus/chatgpt-cli",
-            "provider": "github",
+            "version": "v1.8.5",
+            "hash": "21f1912e1de5bdd515493c02faf9d3ea8c14bb78614713d761e37a617e9217c8",
+            "url": "https://github.com/kardolus/chatgpt-cli/releases/tag/v1.8.5",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
@@ -74,9 +74,9 @@
         "/env/bin/git-who": {
             "path": "/env/bin/git-who",
             "remote_name": "git-who",
-            "version": "v1.1",
-            "hash": "182f15c91c5d5d29605daba74e002f0622478aab8d797ec90f19f302f72fddac",
-            "url": "https://github.com/sinclairtarget/git-who/releases/tag/v1.1",
+            "version": "v1.2",
+            "hash": "4b48777412903d316f3475c4a5baa3e7535aabb985a8806327659f6dd32f0869",
+            "url": "https://github.com/sinclairtarget/git-who/releases/tag/v1.2",
             "provider": "",
             "package_path": "linux_amd64/git-who",
             "pinned": false
@@ -84,9 +84,9 @@
         "/env/bin/glance": {
             "path": "/env/bin/glance",
             "remote_name": "glance",
-            "version": "v0.7.13",
-            "hash": "003de9e77ae4235ab7138a94091dcb3e3da3666a4ea7513259b115ebce9b5284",
-            "url": "https://github.com/glanceapp/glance/releases/tag/v0.7.13",
+            "version": "v0.8.4",
+            "hash": "97c9fec0d6ffcc50d6ae5bf9f7c00ca1126708a3936a6503959daf1595e1fe88",
+            "url": "https://github.com/glanceapp/glance/releases/tag/v0.8.4",
             "provider": "",
             "package_path": "glance",
             "pinned": false
@@ -194,10 +194,10 @@
         "/env/bin/sherlock": {
             "path": "/env/bin/sherlock",
             "remote_name": "sherlock",
-            "version": "v0.1.10",
-            "hash": "68de00bd9dedb2e82a8086f938ea0fb936beb97a8f7bed7975e2211f90b1b0e5",
-            "url": "https://github.com/Skxxtz/sherlock",
-            "provider": "github",
+            "version": "v0.1.13-hotfix-2",
+            "hash": "282b598f636f11aceac5694aea11a38d74c3230f291b68dc43b23d31b2e77a93",
+            "url": "https://github.com/Skxxtz/sherlock/releases/tag/v0.1.13-hotfix-2",
+            "provider": "",
             "package_path": "sherlock",
             "pinned": false
         },
