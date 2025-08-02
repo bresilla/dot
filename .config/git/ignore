@@ -22,6 +22,7 @@ CLAUDE.md
 .claude
 .vscode
 build
+.other
 .direnv
 .devbox
 .agents

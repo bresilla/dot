@@ -7,6 +7,10 @@ export DOWN=$HOME/down
 export SYNC=$HOME/sync
 export TEMP=/tmp
 
+export PATH=/usr/local/cuda-12.9/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
+
+
 #export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$LD_LIBRARY_PATH
 #export RPATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$RPATH
 #export RUNPATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$RUNPATH
@@ -33,7 +37,7 @@ export BROWSER=app.zen_browser.zen
 export EDITOR=hx
 export TERMINAL=kitty
 export CONSOLE=kitty
-# export TERM=xterm-256color
+export TERM=xterm-256color
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)
 
 [[ -v ${DISPLAY} ]] && export DISPLAY=:0
