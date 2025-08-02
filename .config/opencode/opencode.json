@@ -32,8 +32,8 @@
       "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
       "tools": {
         "write": false,
-        "edit": false,
-      },
-    },
-  },
+        "edit": false
+      }
+    }
+  }
 }

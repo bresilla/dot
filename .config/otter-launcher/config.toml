@@ -1,7 +1,7 @@
 [general]
 default_module = "i" # The module to run when no prefix is matched
 empty_module = "f" # run with an empty prompt
-exec_cmd = "sh -c" # The exec command of your shell, default to sh
+exec_cmd = "bash -c" # The exec command of your shell, default to sh
 # for example: "bach -c" for bash; "zsh -c" for zsh. This can also runs wm exec commands, like hyprctl dispatch exec
 vi_mode = false # set true to use vi keybinds, false to use emacs keybinds; default to emacs
 esc_to_abort = true # allow to quit with esc keypress; a useful option for vi users
@@ -50,7 +50,20 @@ flatpak_apps() {
 }
 selected="$(flatpak_apps | sort | fzf -m -d / --with-nth -1 --reverse --padding 1,3 --prompt 'Launch Apps: ')"
 [ -z "$selected" ] && exit
-setsid -f flatpak run "$selected" &
+setsid -f flatpak run "$selected"
+"""
+
+
+[[modules]]
+description = "launch appimage apps"
+prefix = "a"
+cmd = """
+appimage_apps() {
+    find /env/app -maxdepth 1 -type f 
+}
+selected="$(appimage_apps | sort | fzf -m -d / --with-nth -1 --reverse --padding 1,3 --prompt 'Launch Apps: ')"
+[ -z "$selected" ] && exit
+nohup bash -c "\"$selected\"" >/dev/null 2>&1 &
 """
 
 

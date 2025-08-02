@@ -15,6 +15,8 @@ case "$view" in
     context="shell"
     ;;
 esac
+
+
 only_name=$(basename "$current_path")
 full_name=/tmp/"$view"_"$only_name"_current_file
 curr_edit=$(cat $full_name)
@@ -103,44 +105,42 @@ quickfix() {
 
 # @cmd run goose
 goose() {
-  local session="goose_$current_path"
   local cmd=opencode
+  local session=$(echo "opencode_$current_path" | tr '/.' '_')
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
-      tmux set-option -t "$session" status off
+        tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
+        tmux set-option -t "$session" status off
     fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
+    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
   fi
 }
 
 # @cmd run goose
 claude() {
-  local session="claude_$current_path"
   local cmd=claude
+  local session=$(echo "claude_$current_path" | tr '/.' '_')
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
-      tmux set-option -t "$session" status off
+        tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
+        tmux set-option -t "$session" status off
     fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
+    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
   fi
 }
 
 # @cmd run debuger
 debuger() {
   [[ "$context" != "editor" ]] && exit 
-  local session="debug_$current_path"
+  local session=$(echo "debug_$current_path" | tr '/.' '_')
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
@@ -159,7 +159,7 @@ debuger() {
 # @cmd run builder
 builder() {
   [[ "$context" != "editor" ]] && exit 
-  local session="debug_$current_path"
+  local session=$(echo "builder_$current_path" | tr '/.' '_')
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
@@ -177,7 +177,7 @@ builder() {
 # @cmd run runner
 runner() {
   [[ "$context" != "editor" ]] && exit 
-  local session="debug_$current_path"
+  local session=$(echo "runner_$current_path" | tr '/.' '_')
   local current
   current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
   if [ "$current" = "$session" ]; then
