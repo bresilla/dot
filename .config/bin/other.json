@@ -143,12 +143,12 @@
         },
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
-            "remote_name": "ollama",
-            "version": "v0.6.6",
-            "hash": "44de20ac2077c9ee2a22e76be61f0a18424d001c7b39d334c6903fdb4f29e868",
-            "url": "https://github.com/ollama/ollama/releases/tag/v0.6.6",
+            "remote_name": "libggml-cpu-x64.so",
+            "version": "v0.10.1",
+            "hash": "c2626942f1948815dd09610b2516baf032f27f6811f73c3b16da8a9022500e8e",
+            "url": "https://github.com/ollama/ollama/releases/tag/v0.10.1",
             "provider": "",
-            "package_path": "bin/ollama",
+            "package_path": "./lib/ollama/libggml-cpu-x64.so",
             "pinned": false
         },
         "/env/bin/opencode": {

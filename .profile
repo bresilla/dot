@@ -139,8 +139,7 @@ export PLATFORMIO_CORE_DIR=/pkg/pio/core
 
 
 #----------------------------        HIVE-SERVER        ---------------------------
-export OLLAMA_HOST=echo.zerotier:11434
-export OATMEAL_OLLAMA_URL=http://echo.zerotier:11434
+export OLLAMA_HOST=borg.skynet:11434
 #export DOCKER_HOST=tcp://borg.zerotier:2375
 
 
@@ -149,7 +148,8 @@ export LOCAL_NOTEBOOK_DEV=1
 
 #---------------------------            CORE            --------------------------
 if [ "$HOSTNAME" = core ]; then
-    export SSH_AGENT_PID=""
+    # eval $(gnome-keyring-daemon --start)
+    export SSH_AUTH_SOCK
     # export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)

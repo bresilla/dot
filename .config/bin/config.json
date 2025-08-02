@@ -41,6 +41,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/chafa": {
+            "path": "/env/bin/chafa",
+            "remote_name": "",
+            "version": "1.16.2",
+            "hash": "14cf13bf2cafc552dd4b58ac93f5b8ab8f52928969f977ba4e0190e6da896497",
+            "url": "https://github.com/hpjansson/chafa",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/choose": {
             "path": "/env/bin/choose",
             "remote_name": "choose-x86_64-unknown-linux-musl",
@@ -314,15 +324,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-<<<<<<< Updated upstream
-            "version": "v0.3.85",
-            "hash": "409cdf492dc2aa473e9a40786205730b64aa7a452f23864791ce4df17fdb042b",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.3.85",
-=======
             "version": "v0.3.110",
             "hash": "6eb466f3861128284160c97946ac5c76354caa7f595d01dac52939321cd52db2",
             "url": "https://github.com/sst/opencode/releases/tag/v0.3.110",
->>>>>>> Stashed changes
             "provider": "",
             "package_path": "opencode",
             "pinned": false
