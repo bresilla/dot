@@ -71,6 +71,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/codex": {
+            "path": "/env/bin/codex",
+            "remote_name": "codex-x86_64-unknown-linux-gnu",
+            "version": "rust-v0.11.0",
+            "hash": "247172e8b573ee108364d68dc9095223fdefadfb348e9f90b9dd1c10720c68b9",
+            "url": "https://github.com/openai/codex",
+            "provider": "github",
+            "package_path": "codex-x86_64-unknown-linux-gnu",
+            "pinned": false
+        },
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
