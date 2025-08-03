@@ -4,7 +4,9 @@
   "model": "anthropic/claude-sonnet-4",
   "autoupdate": true,
   "permission": {
-    "bash": "ask"
+    "bash": "ask",
+    "write": "ask",
+    "edit": "ask"
   },
   "mode": {
     "build": {

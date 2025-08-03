@@ -113,7 +113,7 @@ goose() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
+        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$cmd; read -p ''"
         tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
@@ -130,7 +130,7 @@ claude() {
     tmux detach-client
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$cmd; read -p ''"
+        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$cmd; read -p ''"
         tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
