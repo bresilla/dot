@@ -103,6 +103,9 @@ return {
                     }
                 }
             }
+            lspconfig.qmlls.setup {
+                cmd = {"qmlls6"},
+            }
             -- lsp for python
             lspconfig.pylsp.setup{
                 settings = {
@@ -133,7 +136,7 @@ return {
                 },
             },
         }
-    }, 
+    },
     {
         'mfussenegger/nvim-dap',
     },
