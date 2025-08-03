@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#chci if in tmux display-popup and if yes then exit
+
+
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
@@ -120,7 +123,7 @@ goose() {
   fi
 }
 
-# @cmd run goose
+# @cmd run claude
 claude() {
   local cmd=claude
   local session=$(echo "claude_$current_path" | tr '/.' '_')
@@ -131,6 +134,22 @@ claude() {
   else
     if ! tmux has-session -t "$session" 2>/dev/null; then
         tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$cmd; read -p ''"
+        tmux set-option -t "$session" status off
+    fi
+    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
+  fi
+}
+
+# @cmd run term
+# @arg vb!
+term() {
+  local session=$(echo "claude_$current_path_$argc_vb" | tr '/.' '_')
+  local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+  if [ "$current" = "$session" ]; then
+    tmux detach-client
+  else
+    if ! tmux has-session -t "$session" 2>/dev/null; then
+        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" zsh -i
         tmux set-option -t "$session" status off
     fi
     tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
