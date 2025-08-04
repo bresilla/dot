@@ -20,195 +20,54 @@ case "$view" in
 esac
 
 
-only_name=$(basename "$current_path")
-full_name=/tmp/"$view"_"$only_name"_current_file
-curr_edit=$(cat $full_name)
-comd=":e"
-
-# @cmd pick file with explorer
-# @alias e
-explorer() {
-    if [[ "$context" == "shell" ]]; then
-        local tmp_dir="$(mktemp -t "yazi-cwd.XXXXXX")"
-        yazi "$current_path" --cwd-file="$tmp_dir" --chooser-file="$tmp_dir"
-        if cwd="$(cat -- "$tmp_dir")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-            if [ -f "$cwd" ]; then
-                parent_dir=$(dirname "$cwd")
-                filetype=$(xdg-mime query filetype $cwd | cut -d"/" -f1)
-                if [[ $filetype = "text" ]]; then
-                    tmux send-keys -t "$pane_id" "cd $parent_dir && $EDITOR $cwd" C-m
-                else
-                    tmux send-keys -t "$pane_id" "cd $parent_dir && xdg-open $cwd" C-m
-                fi
-            elif [ -d "$cwd" ]; then
-                tmux send-keys -t "$pane_id" "cd $cwd" C-m
-            fi
-        fi
-        rm -f -- "$tmp_dir"
+# @cmd pick file with exp
+# @arg val!
+inter() {
+    name="popup_inter_${current_path}_${argc_val}_${pane_id}_${view}"
+    local session=$(echo $name | tr '/.%' '_')
+    local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+    if [[ "$current" == "$session" || "$current" == *"popup"* ]]; then
+        tmux detach-client
     else
-        [[ -n "$curr_edit" ]] && current_path=$curr_edit
-        pick=$(yazi $curr_edit --chooser-file=/dev/stdout)
-        [[ ! -f "$pick" ]] && exit 0
-        tmux send-keys -t "$pane_id" "$comd $pick" C-m
+        if ! tmux has-session -t "$session" 2>/dev/null; then
+            tmux new-session -d -s "$session" -c "$current_path" -E bash -c "/env/dot/.func/run/inter $argc_val $current_path $context $pane_id $view"
+            tmux set-option -t "$session" status off
+        fi
+        tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
 }
 
-# @cmd pick file with finder
-# @alias p
-picker() {
-    pick=$(tv find)
-    [[ -z "$pick" ]] && exit 0
-    [[ "$pick" == "$current_path" ]] && exit 0
-    tmux send-keys -t "$pane_id" "$comd $pick" C-m
-}
 
-
-# @cmd find text in file
-# @alias f
-finder() {
-    IFS=':' read -r pick nr < <(tv text)
-    [[ -z "$pick" ]] && exit 0
-    [[ "$pick" == "$current_path" ]] && exit 0
-    tmux send-keys -t "$pane_id" "$comd $pick" C-m
-}
-
-
-# @cmd find text in file
-# @alias o
-replace() {
-    serpl -p $current_path
-}
-
-# @cmd list buffers
-# @alias b
-buffers() {
-    [[ "$context" != "editor" ]] && exit 
-    buffers_list=/tmp/"$view"_"$only_name"_open_buffers
-    [[ ! -f "$buffers_list" ]] && exit 0
-    pick=$(cat $buffers_list | tv --preview 'bat -n --color=always {0}')
-    [[ -z "$pick" ]] && exit 0
-    tmux send-keys -t "$pane_id" "$comd $pick" C-m
-}
-
-
-# @cmd list quickfixes
-# @alias q
-quickfix() {
-    [[ "$context" != "editor" ]] && exit 
-    quickfix_list=$current_path/.quickfix
-    [[ ! -f "$quickfix_list" ]] && exit 0
-    pick=$(cat $quickfix_list | tv)
-    file=$(echo $pick | cut -d: -f1)
-    line=$(echo $pick | cut -d: -f2)
-    col=$(echo $pick | cut -d: -f3)
-    [[ -z "$file" ]] && exit 0
-    tmux send-keys -t "$pane_id" ":e $file" C-m
-    tmux send-keys -t "$pane_id" ":cal cursor($line, $col)" C-m
-}
-
-# @cmd run goose
-goose() {
-  local cmd=opencode
-  local session=$(echo "opencode_$current_path" | tr '/.' '_')
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$cmd; read -p ''"
-        tmux set-option -t "$session" status off
+# @cmd run runn
+# @arg cmd!
+runn() {
+    local session=$(echo "popup_runn_$current_path$argc_cmd" | tr '/.' '_')
+    local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+    if [[ "$current" == "$session" || "$current" == *"popup"* ]]; then
+        tmux detach-client
+    else
+        if ! tmux has-session -t "$session" 2>/dev/null; then
+            tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$argc_cmd; read -p ''"
+            tmux set-option -t "$session" status off
+        fi
+        tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
-    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
-}
-
-# @cmd run claude
-claude() {
-  local cmd=claude
-  local session=$(echo "claude_$current_path" | tr '/.' '_')
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$cmd; read -p ''"
-        tmux set-option -t "$session" status off
-    fi
-    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
 }
 
 # @cmd run term
 # @arg vb!
 term() {
-  local session=$(echo "claude_$current_path_$argc_vb" | tr '/.' '_')
-  local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-        tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" zsh -i
-        tmux set-option -t "$session" status off
+    local session=$(echo "popup_term_$current_path_$argc_vb" | tr '/.' '_')
+    local current=$(tmux display-message -p -F"#{session_name}" 2>/dev/null)
+    if [[ "$current" == "$session" || "$current" == *"popup"* ]]; then
+        tmux detach-client
+    else
+        if ! tmux has-session -t "$session" 2>/dev/null; then
+            tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" zsh -i
+            tmux set-option -t "$session" status off
+        fi
+        tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
-    tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
-}
-
-# @cmd run debuger
-debuger() {
-  [[ "$context" != "editor" ]] && exit 
-  local session=$(echo "debug_$current_path" | tr '/.' '_')
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" bash -c 'gdb --quiet $(cat .execs | gum choose --select-if-one)'
-      tmux set-option -t "$session" status off
-    fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
-}
-
-
-# @cmd run builder
-builder() {
-  [[ "$context" != "editor" ]] && exit 
-  local session=$(echo "builder_$current_path" | tr '/.' '_')
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" bash -c '_b || read -p ""' 
-      tmux set-option -t "$session" status off
-    fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
-}
-
-# @cmd run runner
-runner() {
-  [[ "$context" != "editor" ]] && exit 
-  local session=$(echo "runner_$current_path" | tr '/.' '_')
-  local current
-  current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
-  if [ "$current" = "$session" ]; then
-    tmux detach-client
-  else
-    if ! tmux has-session -t "$session" 2>/dev/null; then
-      tmux new-session -d -s "$session" -c "$current_path" bash -c '_r; read -p ""' 
-      tmux set-option -t "$session" status off
-    fi
-    tmux display-popup -d "#{pane_current_path}" \
-      -w 80% -h 70% -E "tmux attach-session -t $session"
-  fi
 }
 
 eval "$(argc --argc-eval "$0" "$@")"
