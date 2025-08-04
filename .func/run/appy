@@ -1,3 +1,33 @@
 #!/bin/bash
 
-otter-launcher
+# otter-launcher
+
+#!/bin/bash
+
+if [ "$1" == "fzf" ] || [ -z "$1" ]; then
+    runner=fzy
+elif [ "$1" == "rofi" ]; then
+    runner=rofit
+fi
+
+source /home/bresilla/.cache/wal/colors.sh
+
+# applaunch=$(flatpak list --columns=application | sort -u | $runner)
+
+applaunch=$({ flatpak list --app --columns=application; find /env/app -maxdepth 1 -type f -printf '%f\n'; } | sort -u | $runner)
+
+echo "$applaunch"
+
+if [ -z "$applaunch" ]; then
+    echo "No application found"
+    exit 1
+fi
+
+if [[ $applaunch == *.AppImage ]]; then
+    setsid -f bash -c "/env/app/$applaunch"
+else
+    setsid -f flatpak run "$applaunch"
+fi
+
+
+sleep 0.5

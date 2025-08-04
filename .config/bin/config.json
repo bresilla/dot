@@ -1,6 +1,16 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/aichat": {
+            "path": "/env/bin/aichat",
+            "remote_name": "aichat",
+            "version": "v0.30.0",
+            "hash": "8378dfc295093efadc3ddddd17f2b49223f120a14ef3503159f375d68f287346",
+            "url": "https://github.com/sigoden/aichat",
+            "provider": "github",
+            "package_path": "aichat",
+            "pinned": false
+        },
         "/env/bin/argc": {
             "path": "/env/bin/argc",
             "remote_name": "argc",
@@ -437,16 +447,6 @@
             "version": "v1.7.2",
             "hash": "d30bbd35b962bfab5cd3aaef2ece5316ee6f732d25e3f665ddb2797f9d64ee0f",
             "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.7.2",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/tv": {
-            "path": "/env/bin/tv",
-            "remote_name": "tv",
-            "version": "0.12.5",
-            "hash": "7ff2c59767be76a5675e7f84d062e0d87f469ffb7c1dafed64532f82d7c4eba7",
-            "url": "https://github.com/alexpasmantier/television/releases/tag/0.12.5",
             "provider": "",
             "package_path": "",
             "pinned": false

@@ -1,16 +1,6 @@
 {
     "default_path": "/env/bin",
     "bins": {
-        "/env/bin/aichat": {
-            "path": "/env/bin/aichat",
-            "remote_name": "aichat",
-            "version": "v0.29.0",
-            "hash": "1eda479ec07842eb97c661d76adca53212cf2dedf832d9ad5182d09d0f274730",
-            "url": "https://github.com/sigoden/aichat",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
         "/env/bin/buf": {
             "path": "/env/bin/buf",
             "remote_name": "buf-Linux-x86_64",
