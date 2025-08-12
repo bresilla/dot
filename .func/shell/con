@@ -9,8 +9,8 @@ rdp() {
     [[ -z $argc_password ]] && argc_password=Batman:7
     [[ -z $argc_user ]] && argc_user=bresilla
 
-    # flatpak run com.freerdp.FreeRDP +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
-    /usr/bin/xfreerdp3 +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
+    flatpak run com.freerdp.FreeRDP +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
+    # /usr/bin/xfreerdp3 +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
 }
 
 # @cmd connect to remote server via vnc

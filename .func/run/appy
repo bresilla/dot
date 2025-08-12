@@ -28,6 +28,3 @@ if [[ $applaunch == *.AppImage ]]; then
 else
     setsid -f flatpak run "$applaunch"
 fi
-
-
-sleep 0.5

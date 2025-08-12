@@ -89,7 +89,7 @@ alias pomo='pomo -p /home/bresilla/.config/pomo'
 alias git='hub'
 alias lines='tokei'
 alias search='rg --hidden'
-alias vol=rsmixer
+alias vol=ncpamixer
 alias rm="gomi -rf"
 alias dims="hyprctl activewindow | grep size | head -2 | tail -1 | choose 1 | tr ',' 'x'"
 

@@ -24,11 +24,11 @@
         "/env/bin/atuin": {
             "path": "/env/bin/atuin",
             "remote_name": "atuin",
-            "version": "v18.7.1",
-            "hash": "55e3128c0efee82cd03d539b1d32ff8aa5effb41ec9903830182a35332fa86a6",
-            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.7.1",
+            "version": "v18.8.0",
+            "hash": "02a6df8a357efc3b9654343af85a588982c92d271ecf9a913a73e2047456ce90",
+            "url": "https://github.com/atuinsh/atuin/releases/tag/v18.8.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
             "pinned": false
         },
         "/env/bin/bat": {
@@ -73,10 +73,10 @@
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-1.1.1-linux-amd64",
-            "version": "v1.1.1",
-            "hash": "44d409c9c4ea03165d37011e38a9ba717325d2c7381b7feb570eb3c111db391a",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.1.1",
+            "remote_name": "CodeGPT-1.2.0-linux-amd64",
+            "version": "v1.2.0",
+            "hash": "b0168c8a40e7183ce5a7f88fb179abf1c496dd13118bb80406b19dc36b752ab3",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.2.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -84,21 +84,21 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.11.0",
-            "hash": "73bd957a1a74c9872c8432843f795a81c7eda7bdb9e378e2e237ca2be2f37b1e",
-            "url": "https://github.com/openai/codex",
+            "version": "rust-v0.20.0",
+            "hash": "93da8ea375bd75be74799e9b60d724864a827a577b1b4011024aed85900222a5",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.20.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
         },
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
-            "version": "v0.1.4",
-            "hash": "40c93e05a00450f7055623defac8c77a3dd7b03ce9f2703495fce8844bea6ad8",
-            "url": "https://github.com/charmbracelet/crush",
-            "provider": "github",
-            "package_path": "crush_0.1.4_Linux_x86_64/crush",
+            "version": "v0.4.0",
+            "hash": "17d2432a167e7387aae4f5d6931eea6da2f3a0204e43fdea297fbc53ade02eef",
+            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.4.0",
+            "provider": "",
+            "package_path": "crush_0.4.0_Linux_x86_64/crush",
             "pinned": false
         },
         "/env/bin/delta": {
@@ -124,11 +124,11 @@
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
             "remote_name": "devbox",
-            "version": "0.15.0",
-            "hash": "797125a6b9ecd53e139d7c5fd923cf9160fb4d1f2714590a652ee74a9d4c4000",
-            "url": "https://github.com/jetify-com/devbox/releases/tag/0.15.0",
+            "version": "0.15.1",
+            "hash": "d6a9ccece5fde306e503c0db3f6b0ab0df02a780dcf899f41caee55d30d9a324",
+            "url": "https://github.com/jetify-com/devbox/releases/tag/0.15.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "devbox",
             "pinned": false
         },
         "/env/bin/direnv": {
@@ -164,9 +164,9 @@
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric-linux-amd64",
-            "version": "v1.4.272",
-            "hash": "5f55f029dd188a3734088142127b540a0a1447517a92d4a74229165a3a7f1c9c",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.272",
+            "version": "v1.4.281",
+            "hash": "95f4eea99ca40486f1c6176bdf882a91bc7df2d29c5b846ce3d1ee53679c0d42",
+            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.281",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -194,11 +194,11 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.1.4",
-            "hash": "0cf73f07c8cbdb7e7ef01c08d579f2665634d262288d06604d9a0a7355ddf8f6",
-            "url": "https://github.com/block/goose/releases/tag/v1.1.4",
+            "version": "v1.2.0",
+            "hash": "e9ce2bdf66a67d38fc9957a4e9522b87d15dc45e765807cd58371a2d4e4c0942",
+            "url": "https://github.com/block/goose/releases/tag/v1.2.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "./goose",
             "pinned": false
         },
         "/env/bin/gum": {
@@ -214,9 +214,9 @@
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.39.0",
-            "hash": "13ab13d3ad7e471d6474f8a1f648151aba90afa02bfe285f14c7de17b113432e",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.39.0",
+            "version": "4.40.0",
+            "hash": "4e28c0c013ec187274f40b48a8aba264b42cc44aacedbcbf72f848cf33738b5e",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.40.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -244,11 +244,11 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-            "version": "v0.31.0",
-            "hash": "1885b3f590c875a298ac812e47194d01f7d31e42f21b3481393c3dfa65f6e4f4",
-            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.31.0",
+            "version": "v0.32.0",
+            "hash": "f037e7fed577d60319e07bfe114eb63ae8ed53478c6d6da98d9cda6afba9543c",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.32.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "./jj",
             "pinned": false
         },
         "/env/bin/just": {
@@ -311,6 +311,26 @@
             "package_path": "names-x86_64-unknown-linux-musl",
             "pinned": false
         },
+        "/env/bin/netbird": {
+            "path": "/env/bin/netbird",
+            "remote_name": "netbird",
+            "version": "v0.54.0",
+            "hash": "ecc77fee8ea0c0f20cbbccd0a0f59b9388aea7e23b7fd417ea2866cd0a909615",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.54.0",
+            "provider": "",
+            "package_path": "netbird",
+            "pinned": false
+        },
+        "/env/bin/newt": {
+            "path": "/env/bin/newt",
+            "remote_name": "newt_linux_amd64",
+            "version": "1.4.0",
+            "hash": "d0fc8574199effc2672a8cbfcbf5e2b1008afd97e32a5f5a6434b2c99d7820ea",
+            "url": "https://github.com/fosrl/newt",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/nnn": {
             "path": "/env/bin/nnn",
             "remote_name": "nnn-nerd-static",
@@ -334,9 +354,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.3.112",
-            "hash": "aa110793d2c102cc9543f6280639f889c3e4e633d0ff649673ed9dab0e8600ec",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.3.112",
+            "version": "v0.4.12",
+            "hash": "77d60ca05a9d3c1ac27c32d0d748a3a323df3c5bac246858dbb6bc06db8d2f07",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.4.12",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -434,10 +454,10 @@
         "/env/bin/tattoy": {
             "path": "/env/bin/tattoy",
             "remote_name": "tattoy",
-            "version": "tattoy-v0.1.7",
-            "hash": "bc0012e9e24969e20be191cb58a470d3cabdb01dae0a9cd1a81c1f96b7593908",
-            "url": "https://github.com/tattoy-org/tattoy",
-            "provider": "github",
+            "version": "tattoy-v0.1.8",
+            "hash": "ea8ed195cfb095f86d9ad6553bf552eee01241647b43b3c82e15d4e53d482ca5",
+            "url": "https://github.com/tattoy-org/tattoy/releases/tag/tattoy-v0.1.8",
+            "provider": "",
             "package_path": "tattoy",
             "pinned": false
         },
