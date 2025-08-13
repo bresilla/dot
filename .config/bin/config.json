@@ -351,6 +351,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/olm": {
+            "path": "/env/bin/olm",
+            "remote_name": "olm_linux_amd64",
+            "version": "1.0.0",
+            "hash": "bba0ccea9a8bf45545cb6cafab52a4e4193d58e42ae8ff400aa32164691e89b4",
+            "url": "https://github.com/fosrl/olm",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
