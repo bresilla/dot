@@ -331,16 +331,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/nnn": {
-            "path": "/env/bin/nnn",
-            "remote_name": "nnn-nerd-static",
-            "version": "v5.1",
-            "hash": "ee62ec89e3778f0e878211527beda858286320bbc82d73ebb07c70964d34d631",
-            "url": "https://github.com/jarun/nnn",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
         "/env/bin/nostromo": {
             "path": "/env/bin/nostromo",
             "remote_name": "nostromo",
@@ -388,6 +378,16 @@
             "hash": "5d09087330db4f9bf62813bab77528afc8afdbb949f7a1427da1b881c2052d95",
             "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.50.2",
             "provider": "",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/pocket-id": {
+            "path": "/env/bin/pocket-id",
+            "remote_name": "pocket-id-linux-amd64",
+            "version": "v1.7.0",
+            "hash": "b76270413213ea7de7f8749341cc2d3490132576fa91353a0ae222d772470799",
+            "url": "https://github.com/pocket-id/pocket-id",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },
