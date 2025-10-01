@@ -57,8 +57,9 @@ create_files(){
     awk '{print "color" NR-1 "\t " $0}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.conf
 
     # COLORS_W.CONF (used by HYPR)
-    printf "\$foreground=rgb(${fore//#})\n\$background=rgb(${back//#})\n\n" > $HOME/.cache/wal/colors_hypr.conf
-    awk '{print "$color" NR-1 "=rgb("substr($0, 2)")"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_hypr.conf
+    printf "\$foreground=rgb(${fore//#})\n\$background=rgb(${back//#})\n\n" > $HOME/.cache/wal/colors_hypr_2.conf
+    awk '{print "$color" NR-1 "=rgb("substr($0, 2)")"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_hypr_2.conf
+    cp $HOME/.cache/wal/colors_hypr_2.conf $HOME/.cache/wal/colors_hypr.conf
     
     # COLORS.VIM
     printf "let foreground= \"$fore\"\nlet background= \"$back\"\n" > $HOME/.cache/wal/colors.vim
@@ -89,6 +90,9 @@ colors_to_tty &
 
 source $HOME/.cache/wal/colors.sh
 
+hyprctl hyprpaper preload $(cat /home/bresilla/.cache/wal/wallpaper)
+hyprctl hyprpaper wallpaper ",$(cat /home/bresilla/.cache/wal/wallpaper)"
+
 # stupid hyprland things
 c1="rgb(${color240:1})"
 c15="rgb(${color242:1})"
@@ -99,9 +103,9 @@ c238="rgb(${color238:1})"
 # sed -i "s/\($color15=rgb(\)[0-9a-fA-F]\{6\}/\$c15/" /env/dot/.config/hypr/hyprland.conf
 # sed -i "s/\($color238=rgb(\)[0-9a-fA-F]\{6\}/\$c238/" /env/dot/.config/hypr/hyprland.conf
 
-hyprctl keyword general:col.active_border $c1 $c15 45deg &
-hyprctl keyword general:col.inactive_border = $c238 &
-hyprctl hyprpaper reload ,"$(cat $TEMP/lule_wallpaper)"
+# hyprctl keyword general:col.active_border $c1 $c15 45deg &
+# hyprctl keyword general:col.inactive_border = $c238 &
+# hyprctl hyprpaper reload ,"$(cat $TEMP/lule_wallpaper)"
 
 # bspc config focused_border_color $color1 &
 # bspc config normal_border_color $color239 &
@@ -110,7 +114,6 @@ hyprctl hyprpaper reload ,"$(cat $TEMP/lule_wallpaper)"
 
 zedtheme &
 
-eww reload &
 # swaykill(){
 #     killall swaybg
 #     swaybg -i $(cat $TEMP/lule_wallpaper) &

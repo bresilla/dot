@@ -3,14 +3,33 @@
 # @cmd connect to remote server via rdp
 # @alias r
 # @arg host!
+# @flag -x --xfreerdp3
 # @option -u --user
 # @option -p --password
+# @option -s --size mon%
 rdp() {
     [[ -z $argc_password ]] && argc_password=Batman:7
     [[ -z $argc_user ]] && argc_user=bresilla
 
-    # flatpak run com.freerdp.FreeRDP +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
-    /usr/bin/xfreerdp3 +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /rfx /gfx /v:$argc_host +f
+    if [[ -z $argc_xfreerdp3 ]]; then
+        local runner="flatpak run com.freerdp.FreeRDP"
+    else
+        local runner="/usr/bin/xfreerdp3"
+    fi
+
+    if [[ -z $argc_size ]]; then
+        $runner +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /dynamic-resolution /sound:sys:alsa /mouse:relative:on +mouse-relative /gfx /rfx /network:lan /sec:nla /v:$argc_host
+    else
+
+        WIDTH_PRE=$(hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .width')
+        HEIGHT_PRE=$(hyprctl monitors -j | jq -r '.[] | select(.focused==true) | .height')
+
+        SCALE_RAW="${argc_size%%%}"
+        WIDTH=$(awk -v w="$WIDTH_PRE" -v p="$SCALE_RAW" 'BEGIN{printf "%d", w*p/100}')
+        HEIGHT=$(awk -v h="$HEIGHT_PRE" -v p="$SCALE_RAW" 'BEGIN{printf "%d", h*p/100}')
+
+        $runner +compression +clipboard +home-drive /u:$argc_user /p:"$argc_password" /size:"${WIDTH}x${HEIGHT}" /smart-sizing /sound:sys:alsa /mouse:relative:on +mouse-relative /gfx /sec:nla /v:$argc_host
+    fi
 }
 
 # @cmd connect to remote server via vnc

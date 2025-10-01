@@ -1,52 +1,212 @@
-#!/bin/bash
+#!/bin/python
 
-# Remote host details
-REMOTE_USER="bresilla" # Replace with your username on the remote host
-REMOTE_HOST="borg.zerotier"
-REMOTE_SCRIPT="/pkg/mamba/envs/diffusers/bin/python /home/bresilla/code/animegen/animegen.py"
-REMOTE_FILE="/tmp/wall.png"
+import os
+import time
+import random
+import json
+import requests
+from datetime import datetime
+from urllib.parse import urlparse, parse_qs
 
-# Get the loop count from the command-line argument
-LOOP_COUNT="$1"
+colors = [
+    {"name": "vibrant green"}, {"name": "electric blue"}, {"name": "crimson red"},
+    {"name": "neon purple"}, {"name": "sunset orange"}, {"name": "magenta pink"},
+    {"name": "teal"}, {"name": "amber yellow"}, {"name": "turquoise"}, {"name": "violet"},
+    {"name": "chartreuse"}, {"name": "cobalt blue"}, {"name": "scarlet"}, {"name": "lime"},
+    {"name": "cerulean"}, {"name": "fuchsia"}, {"name": "emerald"}, {"name": "sapphire"},
+    {"name": "golden yellow"}, {"name": "neon cyan"}
+]
 
-# Check if the argument is missing or not a number
-if [ -z "$LOOP_COUNT" ] || ! [[ "$LOOP_COUNT" =~ ^[0-9]+$ ]]; then
-    LOOP_COUNT=1  # Default to 1 if no argument or not a number
-    echo "No valid loop count provided. Running once."
-else
-    echo "Running $LOOP_COUNT times."
-fi
+scifi_environments = [
+    "a luminous futuristic city of glass towers",
+    "a colossal space station interior with parallax windows",
+    "an alien planet with ringed skies and twin moons",
+    "a neon-lit skybridge over a sprawling megacity",
+    "a storm-wracked orbital dock above a blue world",
+    "a canyon of hovering monoliths under auroras",
+    "an asteroid hangar bay with open starfields",
+    "a ringworld terrace with endless horizon",
+    "a desert colony with wind-carved domes",
+    "a bioluminescent jungle on an exoplanet"
+]
+
+fantasy_environments = [
+    "an ancient forest of towering oaks and fireflies",
+    "a misty valley at dawn with stone ruins",
+    "a mountain citadel crowned by banners",
+    "a floating island archipelago above clouds",
+    "a crystalline cave with glowing veins",
+    "a coastal cliff fortress over stormy seas",
+    "a bioluminescent grove with standing stones",
+    "a basalt plain with rivers of lava",
+    "a moonlit swamp with will-o'-wisps",
+    "a thundering waterfall canyon with ivy-clad bridges"
+]
+
+creatures_scifi = {
+    "Synthetic Android": "sleek synthetic musculature, polished plating, and luminous sensor eyes",
+    "Battle Cyborg": "reinforced exoskeleton, hydraulic augmentations, and modular hardpoints",
+    "Nano-Swarm Host": "shifting nanite skin, fractal patterns, and constantly reassembling armor",
+    "Exosuit Pilot": "human silhouette inside a biomechanical powered suit with glowing joints",
+    "AI Construct": "semi-material holographic contours fused with hard-light armor",
+    "Replicant-Type": "near-human dermal microtextures with unnaturally precise motion",
+    "Sentinel-Type": "multi-limbed articulated frame with clustered optics",
+    "Crystal Mechanoid": "angular crystalline body with refractive cores and glowing seams",
+    "Photonic Warden": "light-woven outline with prismatic semi-solid armor",
+    "Grav-Knight": "segmented plates levitating on micro-grav rings around a central frame",
+    "Void-Touched": "edge-blurred silhouette with starlit veins and phase-sheened armor",
+    "Stormforged": "ion filaments arcing across magnetized plates and a thunder-core reactor",
+    "Plantoid": "leaf-veined composite panels and photosynthetic filigree over alloy struts",
+    "Lithoid": "faceted mineral integument with geode-like lumens and crystalline ridges",
+    "Aquatic": "streamlined chassis with fin-like crests and iridescent dermal layers",
+    "Machine": "precision-machined plates, exposed servos, and softly pulsing arrays"
+}
+
+creatures_fantasy = {
+    "Elf": "elegant slender build, luminous eyes, and rune-etched armor filigree",
+    "Dwarf": "compact powerful frame, braided hair, and ornate plate with runic inlays",
+    "Orc": "broad muscled stature, tusked visage, and rugged layered armor",
+    "Dragonkin": "scaled limbs, horned crest, and ember-glowing accents along the spine",
+    "Fae": "otherworldly features, gossamer accents, and shimmering auric markings",
+    "Dryad": "bark-kissed skin, leaf-veined patterns, and living vine adornments",
+    "Treant": "towering wooden frame, mossy braids, and crystal-sapped joints",
+    "Merfolk": "streamlined form, fin crests, and pearl-lustre scales",
+    "Giant": "monolithic proportions, stone-braced greaves, and mountain-forged gear",
+    "Elemental": "body of roiling elemental matter bound by sigils and runic bands",
+    "Lich": "regal skeletal visage, arcane seals, and cold-burning soulflame",
+    "Wraith": "half-ethereal silhouette with trailing gloom and moonlit edges",
+    "Vampire": "aristocratic poise, pale luminance, and nocturnal regalia",
+    "Angel": "radiant countenance, feathered pinions, and celestial platework",
+    "Demon": "obsidian horns, ember cracks, and infernal sigils across armor",
+    "Centaur": "equine lower body with archer’s harness and ceremonial plates",
+    "Satyr": "sure-footed stance, curled horns, and vine-lashed leathers",
+    "Kitsune": "fox-eared grace, flowing tails, and charm sigils on silk armor",
+    "Oni": "imposing horned presence, lacquered plates, and storm-charm cords",
+    "Golem": "hewn-stone musculature bound by glowing glyphs and metal staples"
+}
+
+inspirations = "Evangelion, Gundam, Dragonball"
+
+def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=True, safety_tolerance=3, explicit_color=None, explicit_creature=None, explicit_environment=None, raw=False, aspect_ratio="16:9"):
+    if seed is not None:
+        random.seed(seed)
+    t = theme if theme in ("sci-fi", "fantasy") else random.choice(["sci-fi", "fantasy"])
+    color = explicit_color if explicit_color else random.choice(colors)["name"]
+    if t == "sci-fi":
+        creatures = creatures_scifi
+        environments = scifi_environments
+        hero_weapon = "an energy katana"
+        theme_tag = "pure SCI-FI anime scene"
+    else:
+        creatures = creatures_fantasy
+        environments = fantasy_environments
+        hero_weapon = "a sword/katana"
+        theme_tag = "pure FANTASY anime scene"
+    creature_key = explicit_creature if explicit_creature in creatures else random.choice(list(creatures.keys()))
+    creature_desc = creatures[creature_key]
+    environment = explicit_environment if explicit_environment in environments else random.choice(environments)
+
+    base = (
+        f"Epic {theme_tag}, anime-first aesthetics, bold and vibrant witthout borders."
+        f"Humanoid {creature_key} with {creature_desc}, accented by {color} highlights, standing in {environment}. "
+        f"Third-person perspective, slightly low or angled view for scale and drama. "
+        f"The entire composition must feel anime all over: anime shading, anime outlines, anime colors, anime cinematic intensity. "
+        f"Full-body shot, head to toe visible, clean edges, uncropped. "
+        f"The {creature_key} faces a hero and the camera; the hero faces the {creature_key} with back to the camera and wields {hero_weapon}. "
+        f"The hero is an anime girl character, long hair, and a cute and friendly body. She is ready to fight and defend herself."
+        f"Strictly {t} worldbuilding; do not mix genres. Image should be safe for work."
+        f"Inspired by animes such as {inspirations}."
+        f"Accent colors: {color} should be used as the main color, elements of creature and alien should have a accent color."
+    )
+
+    payload = {
+        "prompt": base,
+        "aspect_ratio": aspect_ratio,
+        "prompt_upsampling": bool(prompt_upsampling),
+        "safety_tolerance": int(safety_tolerance),
+        "output_format": output_format,
+        "raw": bool(raw)
+    }
+    picks = {"theme": t, "color": color, "creature": creature_key, "environment": environment}
+    return base, payload, picks
 
 
-# Loop the specified number of times
-for i in $(seq 1 "$LOOP_COUNT"); do
-    echo "Iteration $i:"
+def generate_image(bfl_api_key, payload):
+    r = requests.post(
+        "https://api.bfl.ai/v1/flux-pro-1.1-ultra",
+        headers={"accept": "application/json", "x-key": bfl_api_key, "Content-Type": "application/json"},
+        data=json.dumps(payload),
+        timeout=60
+    )
+    r.raise_for_status()
+    data = r.json()
+    polling_url = data.get("polling_url")
+    if not polling_url:
+        raise RuntimeError("Missing polling_url")
+    while True:
+        time.sleep(0.5)
+        pr = requests.get(polling_url, headers={"accept": "application/json", "x-key": bfl_api_key}, timeout=60)
+        pr.raise_for_status()
+        res = pr.json()
+        status = res.get("status")
+        if status == "Ready":
+            return {"request_id": data.get("id"), "result_url": res.get("result", {}).get("sample"), "meta": res}
+        if status in ("Error", "Failed"):
+            raise RuntimeError(json.dumps(res))
 
-    # Generate 5 names using the "names" tool - MOVED INSIDE THE LOOP
-    NAMES=$(names -n 5)
+def infer_extension_from_url(url, fallback="png"):
+    path = urlparse(url).path.lower()
+    if path.endswith(".png"):
+        return "png"
+    if path.endswith(".jpg") or path.endswith(".jpeg"):
+        return "jpg"
+    q = parse_qs(urlparse(url).query)
+    if "format" in q:
+        fmt = q["format"][0].lower()
+        if fmt in ("png", "jpg", "jpeg"):
+            return "png" if fmt == "jpeg" else fmt
+    return fallback
 
-    # Check if names were generated successfully
-    if [ -z "$NAMES" ]; then
-        echo "Error: Failed to generate names."
-        exit 1
-    fi
+def download_image(url, filename=None):
+    ext = infer_extension_from_url(url)
+    base_dir = "/env/set/.animegen"
+    os.makedirs(base_dir, exist_ok=True)
+    if filename is None:
+        ts = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+        filename = f"flux_ultra_{ts}.{ext}"
+    if not os.path.isabs(filename):
+        filepath = os.path.join(base_dir, filename)
+    else:
+        filepath = filename
+    resp = requests.get(url, timeout=60)
+    resp.raise_for_status()
+    with open(filepath, "wb") as f:
+        f.write(resp.content)
+    return filepath
 
-    # Select the first name from the generated names for the local file name
-    SELECTED_NAME=$(echo "$NAMES" | head -n 1 | tr -cd '[:alnum:]._-') # Sanitize the name
-    LOCAL_DESTINATION="./${SELECTED_NAME}.png"
 
+if __name__ == "__main__":
+    seed = None
+    explicit_color = None
+    explicit_creature = None
+    explicit_environment = None
+    theme = None
+    prompt, api_payload, picks = build_prompt(
+        seed=seed,
+        theme=theme,
+        output_format="png",
+        aspect_ratio="16:9",
+        prompt_upsampling=True,
+        safety_tolerance=2,
+        explicit_color=explicit_color,
+        explicit_creature=explicit_creature,
+        explicit_environment=explicit_environment,
+        raw=False
+    )
+    print(prompt)
+    if os.getenv("BFL_API_KEY"):
+        result = generate_image(os.getenv("BFL_API_KEY"), api_payload)
+        print(json.dumps({"picks": picks, "request_id": result["request_id"], "result_url": result["result_url"]}, indent=2))
+        saved = download_image(result["result_url"])
+        print(json.dumps({"saved_file": saved}, indent=2))
 
-    # SSH into the remote host and run the Python script
-    ssh "${REMOTE_USER}@${REMOTE_HOST}" "${REMOTE_SCRIPT}"
-
-    # Check if the remote file was created
-    if ssh "${REMOTE_USER}@${REMOTE_HOST}" "[ -f ${REMOTE_FILE} ]"; then
-        # Copy the file from the remote host to the local machine
-        scp "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_FILE}" "${LOCAL_DESTINATION}"
-        echo "File copied successfully to ${LOCAL_DESTINATION}"
-    else
-        echo "Error: ${REMOTE_FILE} was not found on the remote host."
-        exit 1
-    fi
-
-done

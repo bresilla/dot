@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# bring network down so it releases the interface
+nmcli radio wifi off
+
+# unload driver
+sudo modprobe -r iwlwifi
+
+# reload driver (this uploads firmware again)
+sudo modprobe iwlwifi
+
+# bring network back
+nmcli radio wifi on
+

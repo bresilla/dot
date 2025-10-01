@@ -64,19 +64,29 @@
         "/env/bin/choose": {
             "path": "/env/bin/choose",
             "remote_name": "choose-x86_64-unknown-linux-musl",
-            "version": "v1.3.6",
-            "hash": "35208ad7ff64c518f721c3b4e5425c85e708bd4e391579e4cb2c5c7e4bd7409c",
-            "url": "https://github.com/theryangeary/choose/releases/tag/v1.3.6",
+            "version": "v1.3.7",
+            "hash": "f9958b15b9c5e2ed21162dcd21e514b51a03efc8dcbf730546c3dbef8a2eba2a",
+            "url": "https://github.com/theryangeary/choose/releases/tag/v1.3.7",
+            "provider": "",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/cloudflared": {
+            "path": "/env/bin/cloudflared",
+            "remote_name": "cloudflared-linux-amd64",
+            "version": "2025.9.1",
+            "hash": "3dc1dc4252eae3c691861f926e2b8640063a2ce534b07b7a3f4ec2de439ecfe3",
+            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.9.1",
             "provider": "",
             "package_path": "",
             "pinned": false
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-1.2.0-linux-amd64",
-            "version": "v1.2.0",
-            "hash": "b0168c8a40e7183ce5a7f88fb179abf1c496dd13118bb80406b19dc36b752ab3",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.2.0",
+            "remote_name": "CodeGPT-1.2.1-linux-amd64",
+            "version": "v1.2.1",
+            "hash": "d9a654090cd9bde51dde773c100d450feb335f6d8ae4844d81d3f488862fc9ea",
+            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.2.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -84,9 +94,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.20.0",
-            "hash": "93da8ea375bd75be74799e9b60d724864a827a577b1b4011024aed85900222a5",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.20.0",
+            "version": "rust-v0.42.0",
+            "hash": "fd337adc73eb863cd1b879caf382a03cf056af60fba2e437dea8273ec2927b72",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.42.0",
             "provider": "",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -94,11 +104,11 @@
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
-            "version": "v0.4.0",
-            "hash": "17d2432a167e7387aae4f5d6931eea6da2f3a0204e43fdea297fbc53ade02eef",
-            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.4.0",
+            "version": "v0.10.4",
+            "hash": "7ef1e19aa49ca16a5cc31feec9c28036d75ecc7a3c39619b2f414c62bdc65d81",
+            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.10.4",
             "provider": "",
-            "package_path": "crush_0.4.0_Linux_x86_64/crush",
+            "package_path": "crush_0.10.4_Linux_x86_64/crush",
             "pinned": false
         },
         "/env/bin/delta": {
@@ -114,19 +124,19 @@
         "/env/bin/deno": {
             "path": "/env/bin/deno",
             "remote_name": "deno",
-            "version": "v2.4.3",
-            "hash": "e3df6f7a64c45297eee1ce7d36618f1932df81448f2a1b5ede72c28b1c226635",
-            "url": "https://github.com/denoland/deno/releases/tag/v2.4.3",
+            "version": "v2.5.2",
+            "hash": "10e6388b1c295acbc68d34e46f6e52ef5ea8ff743008db69315e89d963cce44d",
+            "url": "https://github.com/denoland/deno/releases/tag/v2.5.2",
             "provider": "",
-            "package_path": "",
+            "package_path": "deno",
             "pinned": false
         },
         "/env/bin/devbox": {
             "path": "/env/bin/devbox",
             "remote_name": "devbox",
-            "version": "0.15.1",
-            "hash": "d6a9ccece5fde306e503c0db3f6b0ab0df02a780dcf899f41caee55d30d9a324",
-            "url": "https://github.com/jetify-com/devbox/releases/tag/0.15.1",
+            "version": "0.16.0",
+            "hash": "1afc0081de3d55d25c95084f9f2a1978e0e6e782b8f2fb0502b7a6371d57b643",
+            "url": "https://github.com/jetify-com/devbox/releases/tag/0.16.0",
             "provider": "",
             "package_path": "devbox",
             "pinned": false
@@ -144,41 +154,41 @@
         "/env/bin/dufs": {
             "path": "/env/bin/dufs",
             "remote_name": "dufs",
-            "version": "v0.43.0",
-            "hash": "b36e319a9d82b6b46db5e51b0e6f105d54b03f184d5ed0446eb3b86a049a8bb7",
-            "url": "https://github.com/sigoden/dufs",
-            "provider": "github",
+            "version": "v0.45.0",
+            "hash": "15c44dcc5c8c1bcb72e0337af99233991e557b0b789f57113552d8501f38f98c",
+            "url": "https://github.com/sigoden/dufs/releases/tag/v0.45.0",
+            "provider": "",
             "package_path": "dufs",
             "pinned": false
         },
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.23.0",
-            "hash": "86b4fed4aee5449e133a2f844498a86053a05e5f782c9bb3f4ddf6d5262d8477",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.23.0",
+            "version": "v0.23.3",
+            "hash": "ec9c6f006658cfb69aeb86117b7becefddf7273eb78b872777e9fdc0023dcdd1",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.23.3",
             "provider": "",
-            "package_path": "",
+            "package_path": "./eza",
             "pinned": false
         },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
-            "remote_name": "fabric-linux-amd64",
-            "version": "v1.4.281",
-            "hash": "95f4eea99ca40486f1c6176bdf882a91bc7df2d29c5b846ce3d1ee53679c0d42",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.281",
+            "remote_name": "fabric",
+            "version": "v1.4.319",
+            "hash": "9b678d6011a2ab448b0a0b5734487e004dc92e10e6ca4c62369a54dcf84d25e4",
+            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.319",
             "provider": "",
-            "package_path": "",
+            "package_path": "fabric",
             "pinned": false
         },
         "/env/bin/git-cliff": {
             "path": "/env/bin/git-cliff",
             "remote_name": "git-cliff",
-            "version": "v2.10.0",
-            "hash": "f598bb1e6318d0b77cc9086eda7c10b0b32143fec3499d339c42a19eaf7c6a1b",
-            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.10.0",
+            "version": "v2.10.1",
+            "hash": "7e73c74920120a90ec24195cc0dcbae1b53d7322a3ea4ba14f80dfe18c4ee852",
+            "url": "https://github.com/orhun/git-cliff/releases/tag/v2.10.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "git-cliff-2.10.1/git-cliff",
             "pinned": false
         },
         "/env/bin/gomi": {
@@ -191,32 +201,22 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/goose": {
-            "path": "/env/bin/goose",
-            "remote_name": "goose",
-            "version": "v1.2.0",
-            "hash": "e9ce2bdf66a67d38fc9957a4e9522b87d15dc45e765807cd58371a2d4e4c0942",
-            "url": "https://github.com/block/goose/releases/tag/v1.2.0",
-            "provider": "",
-            "package_path": "./goose",
-            "pinned": false
-        },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
             "remote_name": "gum",
-            "version": "v0.16.2",
-            "hash": "f7cc6192ce6475343bcc1a6275b1101c2081abeae4119bf0f09fabfa0a70b8bd",
-            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.16.2",
+            "version": "v0.17.0",
+            "hash": "a3bee34940d5dd86d51c154e024abdc5a21bf176dfdf93797f34581085d1922c",
+            "url": "https://github.com/charmbracelet/gum/releases/tag/v0.17.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "gum_0.17.0_Linux_x86_64/gum",
             "pinned": false
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.40.0",
-            "hash": "4e28c0c013ec187274f40b48a8aba264b42cc44aacedbcbf72f848cf33738b5e",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.40.0",
+            "version": "4.41.0",
+            "hash": "8410521ca79384bab9f6b6b7c0f733760c47aad310e1f88d9e9fdaa674062108",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.41.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -244,9 +244,9 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-            "version": "v0.32.0",
-            "hash": "f037e7fed577d60319e07bfe114eb63ae8ed53478c6d6da98d9cda6afba9543c",
-            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.32.0",
+            "version": "v0.33.0",
+            "hash": "9a96670a09a260c5e1381eda2a49f4033f358e0be321af23e424d1bdbdf5c76a",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.33.0",
             "provider": "",
             "package_path": "./jj",
             "pinned": false
@@ -254,11 +254,11 @@
         "/env/bin/just": {
             "path": "/env/bin/just",
             "remote_name": "just",
-            "version": "1.42.4",
-            "hash": "fd103ebd407b481066bf3fcec1ce443f67f829a6230a1291224ab7aa42b5d1e2",
-            "url": "https://github.com/casey/just/releases/tag/1.42.4",
+            "version": "1.43.0",
+            "hash": "67ac1a1c905d4de14293bed368dd1f272423375d5f7132f522c0e8385061fd8c",
+            "url": "https://github.com/casey/just/releases/tag/1.43.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "just",
             "pinned": false
         },
         "/env/bin/lemonade": {
@@ -274,11 +274,11 @@
         "/env/bin/lf": {
             "path": "/env/bin/lf",
             "remote_name": "lf",
-            "version": "r36",
-            "hash": "e82f0d4ab9770f488a44c65e1b925c4349f44b092fdb5d6aa5aaa9423932dae9",
-            "url": "https://github.com/gokcehan/lf/releases/tag/r36",
+            "version": "r38",
+            "hash": "af027865de6762227907ba7d56872cd8f0bc2a38d7b3dd26d8320a693167eb0f",
+            "url": "https://github.com/gokcehan/lf/releases/tag/r38",
             "provider": "",
-            "package_path": "",
+            "package_path": "lf",
             "pinned": false
         },
         "/env/bin/mdbook": {
@@ -294,9 +294,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.3.1-0",
-            "hash": "69be35f63f8db980d643d5c9be32108fbe231a647e770fe86c52f72d5e797b7f",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.1-0",
+            "version": "2.3.2-0",
+            "hash": "ffc3cb8d52d4d6b354bdbb979c407719c485392b74e462cbd50811aa88e58f85",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.2-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -314,9 +314,9 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.54.0",
-            "hash": "ecc77fee8ea0c0f20cbbccd0a0f59b9388aea7e23b7fd417ea2866cd0a909615",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.54.0",
+            "version": "v0.58.2",
+            "hash": "48f4a83074ad28db69e76bb6d8290e489e7b73708bc519c446675d301c1c3ec6",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.58.2",
             "provider": "",
             "package_path": "netbird",
             "pinned": false
@@ -324,10 +324,10 @@
         "/env/bin/newt": {
             "path": "/env/bin/newt",
             "remote_name": "newt_linux_amd64",
-            "version": "1.4.0",
-            "hash": "d0fc8574199effc2672a8cbfcbf5e2b1008afd97e32a5f5a6434b2c99d7820ea",
-            "url": "https://github.com/fosrl/newt",
-            "provider": "github",
+            "version": "1.5.1",
+            "hash": "4e4b1c4be2678557ce20a6ad50819989bae05069218c16dd96a2b04de3bfbad1",
+            "url": "https://github.com/fosrl/newt/releases/tag/1.5.1",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
@@ -344,39 +344,49 @@
         "/env/bin/olm": {
             "path": "/env/bin/olm",
             "remote_name": "olm_linux_amd64",
-            "version": "1.0.0",
-            "hash": "bba0ccea9a8bf45545cb6cafab52a4e4193d58e42ae8ff400aa32164691e89b4",
-            "url": "https://github.com/fosrl/olm",
-            "provider": "github",
+            "version": "1.1.3",
+            "hash": "f968fdc6b2b629929765ff55021308d720f86dfb40fd02529e0248e317e958da",
+            "url": "https://github.com/fosrl/olm/releases/tag/1.1.3",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.4.12",
-            "hash": "77d60ca05a9d3c1ac27c32d0d748a3a323df3c5bac246858dbb6bc06db8d2f07",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.4.12",
+            "version": "v0.13.7",
+            "hash": "050746513334b2698fbc50b6b1bc0866a87c34865781083bdfa0e5217d7baf9f",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.13.7",
             "provider": "",
             "package_path": "opencode",
+            "pinned": false
+        },
+        "/env/bin/pas": {
+            "path": "/env/bin/pas",
+            "remote_name": "prs-v0.5.4-linux-x64",
+            "version": "v0.5.4",
+            "hash": "b741866903990d8a9654580aeb3b57d704428de24f00db81a6d5a04d2145d14c",
+            "url": "https://github.com/timvisee/prs",
+            "provider": "github",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.25.0",
-            "hash": "56a8d96cbf4def3394aa3f88cc5ee5edb93922ed01618a8ed836abe13b8eca3c",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.25.0",
+            "version": "0.26.1",
+            "hash": "2dc45bc02d63f5d919be7b96e6d3e7c8f15571fbc4bd562d339d61ed88294a7a",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.26.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "pik-0.26.1-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.50.2",
-            "hash": "5d09087330db4f9bf62813bab77528afc8afdbb949f7a1427da1b881c2052d95",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.50.2",
+            "version": "v0.55.0",
+            "hash": "22a2c9eb9e7f1696b54305aa55f56342c7ff33896330af32bf4fbc41f32a4571",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.55.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -384,10 +394,10 @@
         "/env/bin/pocket-id": {
             "path": "/env/bin/pocket-id",
             "remote_name": "pocket-id-linux-amd64",
-            "version": "v1.7.0",
-            "hash": "b76270413213ea7de7f8749341cc2d3490132576fa91353a0ae222d772470799",
-            "url": "https://github.com/pocket-id/pocket-id",
-            "provider": "github",
+            "version": "v1.11.2",
+            "hash": "e314a86342e4d5a5397b48ad49f96939e20ac0f4f2f91473bffa95307dc95a66",
+            "url": "https://github.com/pocket-id/pocket-id/releases/tag/v1.11.2",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
@@ -434,11 +444,11 @@
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",
-            "version": "v0.9.1",
-            "hash": "1fced00f409fbfd251e3e8662f6463a810777759b997cac91a9ac03efabae04e",
-            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.9.1",
+            "version": "v0.10.0",
+            "hash": "ca4c6b722b60759e104ed1142978b584abec679886d6cfbf54f9232dc30d4385",
+            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.10.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "soft-serve_0.10.0_Linux_x86_64/soft",
             "pinned": false
         },
         "/env/bin/starship": {
