@@ -74,9 +74,9 @@
         "/env/bin/cloudflared": {
             "path": "/env/bin/cloudflared",
             "remote_name": "cloudflared-linux-amd64",
-            "version": "2025.9.1",
-            "hash": "3dc1dc4252eae3c691861f926e2b8640063a2ce534b07b7a3f4ec2de439ecfe3",
-            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.9.1",
+            "version": "2025.10.0",
+            "hash": "d334c30ab628d4698455acadae5bdb3e33705a5f8dade510ce5ac7fc75d327fe",
+            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.10.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -94,9 +94,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.42.0",
-            "hash": "fd337adc73eb863cd1b879caf382a03cf056af60fba2e437dea8273ec2927b72",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.42.0",
+            "version": "rust-v0.46.0",
+            "hash": "4ab5c8a474305fddbba0b6dcee791954be7727e336f9e640c33e6d59c5169032",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.46.0",
             "provider": "",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -104,11 +104,11 @@
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
-            "version": "v0.10.4",
-            "hash": "7ef1e19aa49ca16a5cc31feec9c28036d75ecc7a3c39619b2f414c62bdc65d81",
-            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.10.4",
+            "version": "v0.11.1",
+            "hash": "30f261f04ce3aa051a1717e1cd905cd317152bb465573ad0c9a2df55c2a3ed43",
+            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.11.1",
             "provider": "",
-            "package_path": "crush_0.10.4_Linux_x86_64/crush",
+            "package_path": "crush_0.11.1_Linux_x86_64/crush",
             "pinned": false
         },
         "/env/bin/delta": {
@@ -124,9 +124,9 @@
         "/env/bin/deno": {
             "path": "/env/bin/deno",
             "remote_name": "deno",
-            "version": "v2.5.2",
-            "hash": "10e6388b1c295acbc68d34e46f6e52ef5ea8ff743008db69315e89d963cce44d",
-            "url": "https://github.com/denoland/deno/releases/tag/v2.5.2",
+            "version": "v2.5.4",
+            "hash": "d96ceee08834553afb6d6cc6bc76cc3120ce765fe309ce1813b0dd1428c0bce9",
+            "url": "https://github.com/denoland/deno/releases/tag/v2.5.4",
             "provider": "",
             "package_path": "deno",
             "pinned": false
@@ -164,9 +164,9 @@
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
-            "version": "v0.23.3",
-            "hash": "ec9c6f006658cfb69aeb86117b7becefddf7273eb78b872777e9fdc0023dcdd1",
-            "url": "https://github.com/eza-community/eza/releases/tag/v0.23.3",
+            "version": "v0.23.4",
+            "hash": "ab0e34c82c8c89151237f6d7873d360e30654494d747c13375279b0409e6c0e5",
+            "url": "https://github.com/eza-community/eza/releases/tag/v0.23.4",
             "provider": "",
             "package_path": "./eza",
             "pinned": false
@@ -244,9 +244,9 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-            "version": "v0.33.0",
-            "hash": "9a96670a09a260c5e1381eda2a49f4033f358e0be321af23e424d1bdbdf5c76a",
-            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.33.0",
+            "version": "v0.34.0",
+            "hash": "e2c9f06b02dba2953f0db7c09877df266a4f427fac14d76c06a49b14fd46f471",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.34.0",
             "provider": "",
             "package_path": "./jj",
             "pinned": false
@@ -314,9 +314,9 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.58.2",
-            "hash": "48f4a83074ad28db69e76bb6d8290e489e7b73708bc519c446675d301c1c3ec6",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.58.2",
+            "version": "v0.59.6",
+            "hash": "cb3f945de2da0b5da88ae7ab31523d9e3fc545665d644d294d1edef5e2b6711c",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.6",
             "provider": "",
             "package_path": "netbird",
             "pinned": false
@@ -324,9 +324,9 @@
         "/env/bin/newt": {
             "path": "/env/bin/newt",
             "remote_name": "newt_linux_amd64",
-            "version": "1.5.1",
-            "hash": "4e4b1c4be2678557ce20a6ad50819989bae05069218c16dd96a2b04de3bfbad1",
-            "url": "https://github.com/fosrl/newt/releases/tag/1.5.1",
+            "version": "1.5.2",
+            "hash": "c726f39d06446798206ac2c2f5f6380cce2fc62704a1c6260c1b9049978967d6",
+            "url": "https://github.com/fosrl/newt/releases/tag/1.5.2",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -341,12 +341,22 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/nyx": {
+            "path": "/env/bin/nyx",
+            "remote_name": "nyx",
+            "version": "v1.0.0",
+            "hash": "1edae1a442e5545073d2038ee5a6b00027575dd86be17dc082f0f07bdc433efc",
+            "url": "https://github.com/cicero-ai/nyx",
+            "provider": "github",
+            "package_path": "nyx",
+            "pinned": false
+        },
         "/env/bin/olm": {
             "path": "/env/bin/olm",
             "remote_name": "olm_linux_amd64",
-            "version": "1.1.3",
-            "hash": "f968fdc6b2b629929765ff55021308d720f86dfb40fd02529e0248e317e958da",
-            "url": "https://github.com/fosrl/olm/releases/tag/1.1.3",
+            "version": "1.1.4",
+            "hash": "71b1ea757e0d6e66ac70d4578008d0eecaf9af5047256755aa4716f4ee4366a5",
+            "url": "https://github.com/fosrl/olm/releases/tag/1.1.4",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -354,9 +364,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.13.7",
-            "hash": "050746513334b2698fbc50b6b1bc0866a87c34865781083bdfa0e5217d7baf9f",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.13.7",
+            "version": "v0.15.3",
+            "hash": "aa5a4b29ff4f2e13611f70b5e2c48eb3099268ff281c9300279c196269e3a129",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.15.3",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -384,19 +394,9 @@
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.55.0",
-            "hash": "22a2c9eb9e7f1696b54305aa55f56342c7ff33896330af32bf4fbc41f32a4571",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.55.0",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/pocket-id": {
-            "path": "/env/bin/pocket-id",
-            "remote_name": "pocket-id-linux-amd64",
-            "version": "v1.11.2",
-            "hash": "e314a86342e4d5a5397b48ad49f96939e20ac0f4f2f91473bffa95307dc95a66",
-            "url": "https://github.com/pocket-id/pocket-id/releases/tag/v1.11.2",
+            "version": "v0.56.0",
+            "hash": "aab2c4913e3029d55718ec5c1bd0a03500694a0377f6eeedab5e04c2b75542fc",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.56.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -484,9 +484,9 @@
         "/env/bin/tldr": {
             "path": "/env/bin/tldr",
             "remote_name": "tealdeer-linux-x86_64-musl",
-            "version": "v1.7.2",
-            "hash": "d30bbd35b962bfab5cd3aaef2ece5316ee6f732d25e3f665ddb2797f9d64ee0f",
-            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.7.2",
+            "version": "v1.8.0",
+            "hash": "9b8b049467a9c7b7f0e9277a27db1f4887649b2f81b5c703c5cfb11bae7be0da",
+            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.8.0",
             "provider": "",
             "package_path": "",
             "pinned": false

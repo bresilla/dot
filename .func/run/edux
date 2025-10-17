@@ -70,4 +70,4 @@ term() {
     fi
 }
 
-eval "$(argc --argc-eval "$0" "$@")"
+eval "$(argc --argc-eval "$0" "$@")

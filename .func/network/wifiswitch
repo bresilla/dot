@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+# @cmd iwd
+iwd() {
+    printf "[device]\nwifi.backend=iwd\n" | sudo tee /etc/NetworkManager/conf.d/wifi_backend.conf >/dev/null
+    sudo systemctl disable --now wpa_supplicant.service
+    sudo systemctl mask wpa_supplicant.service
+    sudo systemctl restart NetworkManager.service
+}
+
+
+# @cmd wpa
+wpa() {
+    sudo rm -f /etc/NetworkManager/conf.d/wifi_backend.conf
+    sudo systemctl unmask wpa_supplicant.service
+    sudo systemctl enable --now wpa_supplicant.service
+    sudo systemctl restart NetworkManager.service
+}
+
+eval "$(argc --argc-eval "$0" "$@")"

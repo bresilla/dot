@@ -91,6 +91,16 @@
             "package_path": "hugo",
             "pinned": false
         },
+        "/env/bin/hyprdynamicmonitors": {
+            "path": "/env/bin/hyprdynamicmonitors",
+            "remote_name": "hyprdynamicmonitors",
+            "version": "v1.1.2",
+            "hash": "226f33364e12127bd0344f9e6d0b130af5a8d4ef503d13269e0c6a41d038e8c7",
+            "url": "https://github.com/fiffeek/hyprdynamicmonitors",
+            "provider": "github",
+            "package_path": "hyprdynamicmonitors",
+            "pinned": false
+        },
         "/env/bin/lule": {
             "path": "/env/bin/lule",
             "remote_name": "lule",

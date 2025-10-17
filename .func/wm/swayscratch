@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 2 ]; then
+  echo "usage: swayscratch <name> \"[float;size W% H%;center;border=TYPE] cmd...\"" >&2
+  exit 1
+fi
+
+NAME="$1"
+SPEC_AND_CMD="$2"
+MARK="swayscratch-${NAME}"
+
+SPEC="$(printf '%s' "$SPEC_AND_CMD" | sed -n 's/^\(\[[^]]*\]\).*/\1/p')"
+CMD="$(printf '%s' "$SPEC_AND_CMD" | sed -n 's/^\[[^]]*\][[:space:]]*\(.*\)$/\1/p')"
+
+WIDTH_PPT="$(printf '%s' "$SPEC" | sed -n 's/.*size[[:space:]]\+\([0-9]\{1,3\}\)%[[:space:]]\+\([0-9]\{1,3\}\)%.*/\1/p')"
+HEIGHT_PPT="$(printf '%s' "$SPEC" | sed -n 's/.*size[[:space:]]\+\([0-9]\{1,3\}\)%[[:space:]]\+\([0-9]\{1,3\}\)%.*/\2/p')"
+CENTER_FLAG="$(printf '%s' "$SPEC" | grep -q 'center' && echo 1 || echo 0)"
+BORDER_TYPE="$(printf '%s' "$SPEC" | sed -n 's/.*border[=:]\([a-zA-Z0-9_-]\+\).*/\1/p')"
+
+[ -z "${WIDTH_PPT}" ] && WIDTH_PPT=80
+[ -z "${HEIGHT_PPT}" ] && HEIGHT_PPT=80
+[ -z "${BORDER_TYPE}" ] && BORDER_TYPE="pixel"
+
+marked_id() {
+  swaymsg -t get_tree | jq -r --arg m "$MARK" '
+    .. | objects | select(.marks? and (.marks|index($m))) | .id
+  ' | head -n1
+}
+
+named_id() {
+  swaymsg -t get_tree | jq -r --arg n "$NAME" '
+    .. | objects | select(.type?=="con" and .name?==$n) | .id
+  ' | head -n1
+}
+
+visible_marked() {
+  swaymsg -t get_tree | jq -e --arg m "$MARK" '
+    .. | objects | select(.marks? and (.marks|index($m))) | .visible==true
+  ' >/dev/null
+}
+
+show_and_size() {
+  if [ "$CENTER_FLAG" = "1" ]; then
+    swaymsg "[con_mark=\"$MARK\"] scratchpad show, floating enable, border ${BORDER_TYPE}, resize set width ${WIDTH_PPT} ppt height ${HEIGHT_PPT} ppt, move position center" >/dev/null
+  else
+    swaymsg "[con_mark=\"$MARK\"] scratchpad show, floating enable, border ${BORDER_TYPE}, resize set width ${WIDTH_PPT} ppt height ${HEIGHT_PPT} ppt" >/dev/null
+  fi
+}
+
+hide_to_scratch() {
+  swaymsg "[con_mark=\"$MARK\"] move scratchpad" >/dev/null
+}
+
+MID="$(marked_id || true)"
+if [ -n "${MID:-}" ]; then
+  if visible_marked; then
+    hide_to_scratch
+  else
+    show_and_size
+  fi
+  exit 0
+fi
+
+NID="$(named_id || true)"
+if [ -n "${NID:-}" ] && [ "$NID" != "null" ]; then
+  swaymsg "[con_id=$NID]" "mark \"$MARK\", floating enable, border ${BORDER_TYPE}, move scratchpad" >/dev/null
+  show_and_size
+  exit 0
+fi
+
+swaymsg -- exec "$CMD" >/dev/null 2>&1
+
+for _ in $(seq 1 120); do
+  sleep 0.05
+  NID="$(named_id || true)"
+  if [ -n "${NID:-}" ] && [ "$NID" != "null" ]; then
+    swaymsg "[con_id=$NID]" "mark \"$MARK\", floating enable, border ${BORDER_TYPE}, move scratchpad" >/dev/null
+    show_and_size
+    exit 0
+  fi
+done
+
+exit 1
