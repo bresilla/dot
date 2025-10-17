@@ -43,21 +43,76 @@ end, {
 })
 
 
-return {
+
+-------------------------------------- LANGUAGE SERVERS
+
+local lsps = {}
+
+if vim.env.ENV == "pio" then
+  table.insert(lsps, {
+    "ccls",
     {
-        "williamboman/mason.nvim",
-        config = function()
-            require("mason").setup({
-                ui = {
-                    icons = {
-                        package_installed = "✓",
-                        package_pending = "➜",
-                        package_uninstalled = "✗"
-                    }
-                }
-            })
-        end,
+      init_options = {
+        compilationDatabaseDirectory = "build",
+        index = { threads = 0 },
+        clang = { excludeArgs = { "-frounding-math" } },
+      },
     },
+  })
+else
+  table.insert(lsps, {
+    "clangd",
+    {
+      cmd = { "clangd", "--header-insertion=never" },
+    },
+  })
+end
+
+table.insert(lsps, {
+  "rust_analyzer",
+  {
+    settings = {
+      ["rust-analyzer"] = {
+        diagnostics = { enable = false },
+      },
+    },
+  },
+})
+
+table.insert(lsps, {
+  "qmlls",
+  {
+    cmd = { "qmlls6" },
+  },
+})
+
+table.insert(lsps, {
+  "pylsp",
+  {
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = { "W391" },
+            maxLineLength = 160,
+          },
+        },
+      },
+    },
+  },
+})
+
+table.insert(lsps, { "lua_ls" })
+
+for _, lsp in pairs(lsps) do
+  local name, config = lsp[1], lsp[2]
+  if config then
+    vim.lsp.config(name, config)
+  end
+  vim.lsp.enable(name)
+end
+
+return {
     {
         "bresilla/lineslua.nvim",
         lazy = false,
@@ -70,74 +125,12 @@ return {
         end
     },
     {
-        'neovim/nvim-lspconfig',
-        config = function()
-            local lspconfig = require('lspconfig')
-            -- lsp for c and cpp
-            if vim.env.ENV == "pio" then
-                -- works with platformio and microcontroller projects
-                require('lspconfig').ccls.setup {
-                    init_options = {
-                        compilationDatabaseDirectory = "build",
-                        index = {
-                            threads = 0
-                        },
-                        clang = {
-                            excludeArgs = {"-frounding-math"}
-                        }
-                    }
-                }
-            else
-                -- works with normal c and cpp projects
-                require('lspconfig').clangd.setup {
-                    cmd = { "clangd", "--header-insertion=never" },
-                }
-            end
-            -- lsp for rust
-            lspconfig.rust_analyzer.setup {
-                settings = {
-                    ['rust-analyzer'] = {
-                        diagnostics = {
-                            enable = false
-                        }
-                    }
-                }
-            }
-            lspconfig.qmlls.setup {
-                cmd = {"qmlls6"},
-            }
-            -- lsp for python
-            lspconfig.pylsp.setup{
-                settings = {
-                    pylsp = {
-                    plugins = {
-                        pycodestyle = {
-                        ignore = {'W391'},
-                        maxLineLength = 160
-                        }
-                    }
-                    }
-                }
-            }
-                -- lspconfig.pylyzer.setup {}
-            -- lsp for lua
-            lspconfig.lua_ls.setup {}
-        end,
-        dependencies = {
-            {
-                "folke/lazydev.nvim",
-                ft = "lua", -- only load on lua files
-                opts = {
-                library = {
-                    -- See the configuration section for more details
-                    -- Load luvit types when the `vim.uv` word is found
-                    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                },
-                },
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
             },
-        }
-    },
-    {
-        'mfussenegger/nvim-dap',
+        },
     },
 }
