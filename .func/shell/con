@@ -18,12 +18,6 @@ rdp() {
         [[ ! -x $runner ]] && runner="/usr/bin/xfreerdp"
     fi
 
-    if [[ $argc_host == *:* ]]; then
-        host_port="$argc_host"
-    else
-        host_port="${argc_host}:3389"
-    fi
-
     if [[ -z $argc_size ]]; then
         size_line="/dynamic-resolution"
         size_line_b=""
@@ -38,7 +32,7 @@ rdp() {
     fi
 
     printf "%s\n" \
-        "/v:${host_port}" \
+        "/v:${argc_host}" \
         "/u:${argc_user}" \
         "/p:${argc_password}" \
         "$size_line" \
