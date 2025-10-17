@@ -94,7 +94,6 @@ alias rm="gomi -rf"
 alias dims="hyprctl activewindow | grep size | head -2 | tail -1 | choose 1 | tr ',' 'x'"
 alias step=step-cli
 
-# alias claude='deno run --allow-env --allow-read --allow-sys --allow-write --allow-net npm:@anthropic-ai/claude-code'
 alias rerun='WAYLAND_DISPLAY= rerun'
 
 ##BIN

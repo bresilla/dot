@@ -8,14 +8,10 @@ export SYNC=$HOME/sync
 export TEMP=/tmp
 
 export PATH=/usr/local/cuda-12.9/bin:$PATH
-export PATH="/home/bresilla/.deno/bin:$PATH"
+export PATH="/home/bresilla/.deno/bin:/home/bresilla/.bun/bin:/.npm-global/bin:$PATH"
+export PATH="/opt/TurboVNC/bin/:$PATH"
 export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
 
-
-#export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$LD_LIBRARY_PATH
-#export RPATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$RPATH
-#export RUNPATH=/usr/local/lib:/usr/local/cuda-12.1/lib64:$RUNPATH
-#export PATH=/usr/local/bin:/usr/local/cuda-12.1/bin:$PATH
 
 #USER BINARIES AND SCRIPTS
 [[ -d "/env/bin" ]] && PATH="$PATH:/env/bin"
@@ -40,8 +36,6 @@ export TERMINAL=kitty
 export CONSOLE=kitty
 export TERM=xterm-256color
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)
-
-[[ -v ${DISPLAY} ]] && export DISPLAY=:0
 
 #---------------------------         LANGUAGES          --------------------------
 #C++
@@ -106,28 +100,9 @@ export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
 export GRAVEYARD=/tmp/graveyard-$USER
 
 #---------------------------     HOME_CLEANUP          --------------------------
-export WAKATIME_HOME="$XDG_CONFIG_HOME"/wakatime
-export TASKDATA="$XDG_DATA_HOME"/task
-export TASKRC="$XDG_CONFIG_HOME"/task/taskrc
 export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
-export GTK_RC_FILES="$XDG_CONFIG_HOME"/gtk-1.0/gtkrc
 export CCACHE_DIR="$XDG_CACHE_HOME"/ccache
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
-export VSCODE_PORTABLE="$XDG_DATA_HOME"/vscode
-export NOSTROMO_HOME="$XDG_DATA_HOME"/nostromo
-
-
-#---------------------------         HYPRLAND           --------------------------
-export GTK_USE_PORTAL=1
-export XDG_CURRENT_DESKTOP=Hyprland
-export XDG_SESSION_TYPE=wayland
-export XDG_SESSION_DESKTOP=Hyprland
-export QT_QPA_PLATFORM=wayland
-export QT_AUTO_SCREEN_SCALE_FACTOR=1
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export QT_QPA_PLATFORMTHEME=qt5ct
-export GOOSE_DISABLE_KEYRING=1
 
 
 #---------------------------            ROS             --------------------------
@@ -160,5 +135,3 @@ if [ "$HOSTNAME" = core ]; then
     export GPG_TTY=$(tty)
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
-
-# if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

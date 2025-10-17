@@ -40,8 +40,9 @@ inter() {
 
 # @cmd run runn
 # @arg cmd!
+# @option --name
 runn() {
-    local session=$(echo "popup_runn_$current_path$argc_cmd" | tr '/.' '_')
+    local session=$(echo "popup_runn_$current_path$argc_cmd$argc_name" | tr '/.' '_')
     local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
     if [[ "$current" == "$session" || "$current" == *"popup"* ]]; then
         tmux detach-client

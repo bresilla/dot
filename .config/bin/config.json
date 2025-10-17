@@ -51,6 +51,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/bun": {
+            "path": "/env/bin/bun",
+            "remote_name": "bun",
+            "version": "bun-v1.3.0",
+            "hash": "8f702b465d0d849730a2b38010e9df031d2578b82fee8ceb0af4787e64137e4c",
+            "url": "https://github.com/oven-sh/bun/releases/tag/bun-v1.3.0",
+            "provider": "",
+            "package_path": "bun-linux-x64-musl/bun",
+            "pinned": false
+        },
         "/env/bin/chafa": {
             "path": "/env/bin/chafa",
             "remote_name": "",
@@ -168,7 +178,7 @@
             "hash": "ab0e34c82c8c89151237f6d7873d360e30654494d747c13375279b0409e6c0e5",
             "url": "https://github.com/eza-community/eza/releases/tag/v0.23.4",
             "provider": "",
-            "package_path": "./eza",
+            "package_path": "eza",
             "pinned": false
         },
         "/env/bin/fabric": {
@@ -397,6 +407,19 @@
             "version": "v0.56.0",
             "hash": "aab2c4913e3029d55718ec5c1bd0a03500694a0377f6eeedab5e04c2b75542fc",
             "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.56.0",
+<<<<<<< Updated upstream
+=======
+            "provider": "",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/pocket-id": {
+            "path": "/env/bin/pocket-id",
+            "remote_name": "pocket-id-linux-amd64",
+            "version": "v1.13.1",
+            "hash": "1e061e735d5bf651ee470ed75675e7582b646d152915cc6af6f8f839134e1df7",
+            "url": "https://github.com/pocket-id/pocket-id/releases/tag/v1.13.1",
+>>>>>>> Stashed changes
             "provider": "",
             "package_path": "",
             "pinned": false
