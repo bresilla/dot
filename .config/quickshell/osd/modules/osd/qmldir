@@ -1,0 +1,6 @@
+singleton Theme Theme.qml
+singleton Proc Proc.qml
+OSDManager OSDManager.qml
+VolumeOSD VolumeOSD.qml
+BrightnessOSD BrightnessOSD.qml
+StyledProgressBar StyledProgressBar.qml
