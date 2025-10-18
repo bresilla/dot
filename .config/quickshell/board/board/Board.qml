@@ -1,9 +1,9 @@
 import QtQuick
 import Quickshell
 import "." as Board
-import "./panels/clock"
-import "./panels/calendar"
-import "./panels/media"
+import "../panels/clock"
+import "../panels/calendar"
+import "../panels/media"
 import "./cards"
 
 Scope {
@@ -35,7 +35,7 @@ Scope {
             Rectangle {
                 id: container
                 anchors.fill: parent
-                color: WalColors.color238
+                color: Theme.color238
                 opacity: 0.98
                 radius: 20
                 

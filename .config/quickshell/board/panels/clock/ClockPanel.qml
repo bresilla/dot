@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import "../.."
+import "../../board"
 
 Rectangle {
     id: root
@@ -21,7 +21,7 @@ Rectangle {
     }
     
     radius: Theme.cornerRadius
-    color: WalColors.color236
+    color: Theme.color236
     border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
     border.width: 1
     
@@ -36,7 +36,7 @@ Rectangle {
             Text {
                 text: String(systemClock.date.getHours()).padStart(2, '0').charAt(0)
                 font.pixelSize: root.digitSize
-                color: WalColors.color1
+                color: Theme.color1
                 font.weight: Font.Medium
                 width: root.digitWidth
                 horizontalAlignment: Text.AlignHCenter
@@ -45,7 +45,7 @@ Rectangle {
             Text {
                 text: String(systemClock.date.getHours()).padStart(2, '0').charAt(1)
                 font.pixelSize: root.digitSize
-                color: WalColors.color1
+                color: Theme.color1
                 font.weight: Font.Medium
                 width: root.digitWidth
                 horizontalAlignment: Text.AlignHCenter
@@ -55,7 +55,7 @@ Rectangle {
                 id: colonBlink
                 text: ":"
                 font.pixelSize: root.digitSize
-                color: WalColors.color1
+                color: Theme.color1
                 font.weight: Font.Medium
                 width: root.digitWidth * 0.4
                 horizontalAlignment: Text.AlignHCenter
@@ -72,7 +72,7 @@ Rectangle {
             Text {
                 text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(0)
                 font.pixelSize: root.digitSize
-                color: WalColors.color1
+                color: Theme.color1
                 font.weight: Font.Medium
                 width: root.digitWidth
                 horizontalAlignment: Text.AlignHCenter
@@ -81,7 +81,7 @@ Rectangle {
             Text {
                 text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(1)
                 font.pixelSize: root.digitSize
-                color: WalColors.color1
+                color: Theme.color1
                 font.weight: Font.Medium
                 width: root.digitWidth
                 horizontalAlignment: Text.AlignHCenter
@@ -92,9 +92,9 @@ Rectangle {
             text: systemClock.date.toLocaleDateString(Qt.locale(), "MMM dd")
             font.pixelSize: root.digitSize * 0.25
             color: Qt.rgba(
-                parseInt(WalColors.color1?.substring(1, 3) || "ff", 16) / 255,
-                parseInt(WalColors.color1?.substring(3, 5) || "ff", 16) / 255,
-                parseInt(WalColors.color1?.substring(5, 7) || "ff", 16) / 255,
+                parseInt(Theme.color1?.substring(1, 3) || "ff", 16) / 255,
+                parseInt(Theme.color1?.substring(3, 5) || "ff", 16) / 255,
+                parseInt(Theme.color1?.substring(5, 7) || "ff", 16) / 255,
                 0.7
             )
             anchors.horizontalCenter: parent.horizontalCenter

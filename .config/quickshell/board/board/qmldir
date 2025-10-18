@@ -1,0 +1,6 @@
+module board.default.board
+
+Watcher 1.0 Watcher.qml
+Board 1.0 Board.qml
+singleton Proc 1.0 Proc.qml
+singleton Theme 1.0 Theme.qml

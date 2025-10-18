@@ -2,6 +2,7 @@
 
 import QtQuick
 import Quickshell
+import "./board"
 
 ShellRoot {
     id: root
@@ -9,6 +10,6 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
         
-        BoardMonitor {}
+        Watcher {}
     }
 }

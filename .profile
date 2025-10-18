@@ -61,7 +61,7 @@ export PIXI_DIR=/pkg/pixi/
 
 #---------------------------             LULE           --------------------------
 export BAT_THEME="TwoDark"
-export LULE_W="/env/set/.wallpaper"
+export LULE_W="/env/set/.animegen"
 export LULE_S="/env/dot/.func/wm/lule_colors"
 export LULE_C="/home/bresilla/.config/lule/configs.json"
 export GUM_CHOOSE_CURSOR_FOREGROUND="1"

@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell.Services.Mpris
-import "../.."
+import "../../board"
 import "."
 
 Rectangle {
@@ -40,7 +40,7 @@ Rectangle {
     }
 
     radius: Theme.cornerRadius
-    color: WalColors.color236
+    color: Theme.color236
     border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
     border.width: 1
 

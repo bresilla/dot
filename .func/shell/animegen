@@ -110,7 +110,7 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         f"Epic {theme_tag} scene — bold, vibrant, and borderless with pure anime-first aesthetics. "
         f"Set in a richly detailed {environment}, filled with volumetric lighting, soft shadows, and cinematic fog for mood and scale. "
         f"A humanoid {creature_key} with {creature_desc}, accented by {color} highlights, stands prominently and faces both the hero and the camera. "
-        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with {color} tails, embodying a confident and determined presence. "
+        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with {color} tails, waeing a dress, embodying a confident and determined presence. "
         f"Full-body shot — head to toe visible, clean edges, uncropped, no borders. "
         f"She faces the {creature_key} with her back to the camera, standing in a grounded combat-ready pose using a {hero_weapon}."
         f"Third-person perspective with a slightly low or dynamic angle to enhance scale and cinematic drama. "
