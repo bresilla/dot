@@ -8,6 +8,16 @@ PanelWindow {
     implicitWidth: Screen.width * 0.005
     color: "transparent"
 
+    // Listen for window events to refresh workspace data
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
+                Hyprland.refreshWorkspaces();
+            }
+        }
+    }
+
     FileView {
         id: wal
         path: Quickshell.env("HOME") + "/.cache/wal/colors.json"
@@ -50,11 +60,15 @@ PanelWindow {
                     required property HyprlandWorkspace modelData
                     readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
                     readonly property bool isOnThisMonitor: modelData.monitor === box.currentMonitor
+                    readonly property bool hasWindows: modelData.lastIpcObject && modelData.lastIpcObject.windows && modelData.lastIpcObject.windows > 0
+
                     visible: !isSpecial && isOnThisMonitor
                     width: wsList.width
                     height: visible ? wsList.thisheight / 20 : 0
                     radius: 4
-                    color: modelData.active ? wal.adapter.colors["color2"] : wal.adapter.colors["color7"]
+                    color: modelData.active ? wal.adapter.colors["color2"] : 
+                           hasWindows ? wal.adapter.colors["color243"] : 
+                           wal.adapter.colors["color239"]
                     opacity: modelData.active ? 1.0 : 0.6
                     Behavior on color { ColorAnimation { duration: 200 } }
                     Behavior on opacity { NumberAnimation { duration: 200 } }
