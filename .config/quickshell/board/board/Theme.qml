@@ -3,12 +3,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-QtObject {
+Singleton {
     id: root
     
-    // Wal colors integration
-    FileView {
-        id: wal
+    property var wal: FileView {
         path: Quickshell.env("HOME") + "/.cache/wal/colors.json"
         watchChanges: true
         onFileChanged: reload()
