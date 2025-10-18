@@ -29,25 +29,79 @@ Scope {
     property int currentWorkspace: focusedWorkspace?.id ?? 1
     property int previousWorkspace: currentWorkspace
     property bool shouldShowOSD: false
+    property real morphProgress: 0.0
     
-    onFocusedWorkspaceChanged: {
-        if (previousWorkspace !== currentWorkspace && previousWorkspace !== 0) {
-            const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor;
-            
-            if (isOnThisMonitor) {
-                shouldShowOSD = true;
-                hideTimer.restart();
-            } else {
-                shouldShowOSD = false;
+    readonly property int containerHeight: monitorHeight * 0.5
+    readonly property int itemHeight: containerHeight / 10
+    readonly property int spacing: 10
+    readonly property int containerStartY: (monitorHeight - containerHeight) / 2
+    
+    function getWorkspaceYOffset(workspaceId) {
+        var index = workspaceId - 1;
+        var offset = (itemHeight * index) + (spacing * index);
+        console.log("getWorkspaceYOffset for ws", workspaceId, "index:", index, "offset:", offset);
+        return offset;
+    }
+    
+    property real startYOffset: 0
+    property real endYOffset: 0
+    property real currentYOffset: 0
+    
+    onCurrentWorkspaceChanged: {
+        const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor;
+        
+        if (isOnThisMonitor && previousWorkspace !== currentWorkspace) {
+            startYOffset = getWorkspaceYOffset(previousWorkspace);
+            endYOffset = getWorkspaceYOffset(currentWorkspace);
+            currentYOffset = startYOffset;
+            console.log("Switching from ws", previousWorkspace, "to", currentWorkspace);
+            console.log("startYOffset:", startYOffset, "endYOffset:", endYOffset);
+            shouldShowOSD = true;
+            morphProgress = 0.0;
+            morphInAnimation.start();
+            hideTimer.restart();
+            previousWorkspace = currentWorkspace;
+        } else if (!isOnThisMonitor) {
+            shouldShowOSD = false;
+        }
+    }
+    
+    NumberAnimation {
+        id: morphInAnimation
+        target: root
+        property: "morphProgress"
+        from: 0.0
+        to: 1.0
+        duration: 300
+        easing.type: Easing.OutCubic
+        onRunningChanged: {
+            if (!running) {
+                currentYOffset = endYOffset;
             }
         }
-        previousWorkspace = currentWorkspace;
+    }
+    
+    onMorphProgressChanged: {
+        if (morphInAnimation.running) {
+            currentYOffset = startYOffset + (endYOffset - startYOffset) * morphProgress;
+        }
+    }
+    
+    NumberAnimation {
+        id: morphOutAnimation
+        target: root
+        property: "morphProgress"
+        from: 1.0
+        to: 0.0
+        duration: 300
+        easing.type: Easing.InCubic
+        onFinished: shouldShowOSD = false
     }
     
     Timer {
         id: hideTimer
-        interval: 750
-        onTriggered: shouldShowOSD = false
+        interval: 800
+        onTriggered: morphOutAnimation.start()
     }
     
     PanelWindow {
@@ -61,7 +115,7 @@ Scope {
             top: true
         }
         
-        implicitWidth: 110
+        implicitWidth: 140
         implicitHeight: containerHeight + (spacing * 9)
         
         exclusiveZone: 0
@@ -75,62 +129,44 @@ Scope {
         readonly property int lineWidth: Screen.width * 0.005
         
         margins {
-            left: barOnRight ? 0 : lineWidth + 10
-            right: barOnRight ? lineWidth + 10 : 0
+            left: barOnRight ? 0 : -lineWidth
+            right: barOnRight ? -lineWidth : 0
             top: containerStartY
         }
         
-        Column {
-            id: osdContainer
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: osdWindow.implicitWidth
-            height: osdWindow.containerHeight
-            spacing: osdWindow.spacing
+        Rectangle {
+            id: morphingOSD
+            visible: shouldShowOSD
             
-            Repeater {
-                model: Hyprland.workspaces
-                
-                delegate: Item {
-                    required property HyprlandWorkspace modelData
-                    
-                    readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
-                    readonly property bool isOnThisMonitor: modelData.monitor?.name === currentMonitor?.name
-                    readonly property bool isActive: modelData.active
-                    
-                    visible: !isSpecial && isOnThisMonitor
-                    width: osdContainer.width
-                    height: visible ? osdContainer.height / 10 : 0
-                    
-                    Rectangle {
-                        anchors.centerIn: parent
-                        width: parent.width
-                        height: parent.height
-                        radius: width / 2
-                        visible: isActive
-                        color: wal.adapter.colors["color1"] || "#CC000000"
-                        border.color: wal.adapter.colors["color0"] || "#000000"
-                        border.width: 6
-                        
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData.id
-                            font.pixelSize: 50
-                            font.bold: true
-                            font.weight: Font.Black
-                            color: wal.adapter.colors["color0"] || "#ffffff"
-                        }
-                        
-                        opacity: shouldShowOSD ? 1.0 : 0.0
-                        
-                        Behavior on opacity {
-                            NumberAnimation { 
-                                duration: shouldShowOSD ? 100 : 500
-                                easing.type: Easing.InOutQuad
-                            }
-                        }
-                    }
-                }
+            anchors {
+                left: barOnRight ? undefined : parent.left
+                right: barOnRight ? parent.right : undefined
+                leftMargin: barOnRight ? 0 : 30 * morphProgress
+                rightMargin: barOnRight ? 30 * morphProgress : 0
+            }
+            
+            y: currentYOffset
+            
+            readonly property real startWidth: osdWindow.lineWidth * 0.7
+            readonly property real startHeight: osdWindow.itemHeight
+            readonly property real endSize: 110
+            
+            width: startWidth + (endSize - startWidth) * morphProgress
+            height: startHeight + (endSize - startHeight) * morphProgress
+            radius: 4 + (51 * morphProgress)
+            
+            color: wal.adapter.colors["color1"] || "#CC000000"
+            border.color: wal.adapter.colors["color0"] || "#000000"
+            border.width: 2 + (4 * morphProgress)
+            
+            Text {
+                anchors.centerIn: parent
+                text: currentWorkspace
+                font.pixelSize: 20 + (30 * morphProgress)
+                font.bold: true
+                font.weight: Font.Black
+                color: wal.adapter.colors["color0"] || "#ffffff"
+                opacity: morphProgress > 0.3 ? 1.0 : 0.0
             }
         }
     }

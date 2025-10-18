@@ -104,9 +104,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.46.0",
-            "hash": "4ab5c8a474305fddbba0b6dcee791954be7727e336f9e640c33e6d59c5169032",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.46.0",
+            "version": "rust-v0.47.0",
+            "hash": "c3cf0ce22113b184c113dd1a58c85c01a2443dc99cd6b5ec42f766096df9e815",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.47.0",
             "provider": "",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -114,11 +114,11 @@
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
-            "version": "v0.11.1",
-            "hash": "30f261f04ce3aa051a1717e1cd905cd317152bb465573ad0c9a2df55c2a3ed43",
-            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.11.1",
+            "version": "v0.11.2",
+            "hash": "135f7a1f5b30ef633a275ee6259047dd755bb2aadcdb7dd72024b2bc8e68fe86",
+            "url": "https://github.com/charmbracelet/crush/releases/tag/v0.11.2",
             "provider": "",
-            "package_path": "crush_0.11.1_Linux_x86_64/crush",
+            "package_path": "crush_0.11.2_Linux_x86_64/crush",
             "pinned": false
         },
         "/env/bin/delta": {
@@ -158,6 +158,16 @@
             "hash": "1f1b93dd6f38523fde26dfac96151ef9d31a374e3005cd3345fb93555ae0c9b5",
             "url": "https://github.com/direnv/direnv/releases/tag/v2.37.1",
             "provider": "",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/dstask": {
+            "path": "/env/bin/dstask",
+            "remote_name": "dstask-linux-amd64",
+            "version": "0.28",
+            "hash": "eedf5f445fde57d4262554b61b9bb085b12df7968a29c6e78a0e8b1d73793f42",
+            "url": "https://github.com/naggie/dstask",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },
@@ -304,9 +314,9 @@
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.3.2-0",
-            "hash": "ffc3cb8d52d4d6b354bdbb979c407719c485392b74e462cbd50811aa88e58f85",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.2-0",
+            "version": "2.3.3-0",
+            "hash": "9496f94a8b78c536573c93d946ec9bba74bd9ff79ee55aaa4b546e30db8f511b",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.3-0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -324,9 +334,9 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.59.6",
-            "hash": "cb3f945de2da0b5da88ae7ab31523d9e3fc545665d644d294d1edef5e2b6711c",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.6",
+            "version": "v0.59.7",
+            "hash": "e0ab20436afd5c6c20a4f18548b8bf8e4508e192129978b9303c1f30995d117b",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.7",
             "provider": "",
             "package_path": "netbird",
             "pinned": false
@@ -374,9 +384,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.15.3",
-            "hash": "aa5a4b29ff4f2e13611f70b5e2c48eb3099268ff281c9300279c196269e3a129",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.15.3",
+            "version": "v0.15.7",
+            "hash": "7228503a3613f7edf1ecae82c48c93b27acb0d28ccd74ed2f46cf7e1bfed1d94",
+            "url": "https://github.com/sst/opencode/releases/tag/v0.15.7",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -407,8 +417,6 @@
             "version": "v0.56.0",
             "hash": "aab2c4913e3029d55718ec5c1bd0a03500694a0377f6eeedab5e04c2b75542fc",
             "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.56.0",
-<<<<<<< Updated upstream
-=======
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -419,7 +427,6 @@
             "version": "v1.13.1",
             "hash": "1e061e735d5bf651ee470ed75675e7582b646d152915cc6af6f8f839134e1df7",
             "url": "https://github.com/pocket-id/pocket-id/releases/tag/v1.13.1",
->>>>>>> Stashed changes
             "provider": "",
             "package_path": "",
             "pinned": false
