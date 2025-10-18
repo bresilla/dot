@@ -13,6 +13,7 @@ BaseCard {
     Text {
         anchors.centerIn: parent
         text: "Clock"
+        font.family: "IosevkaTerm Nerd Font Mono"
         font.pixelSize: Theme.fontSizeLarge
         color: Theme.surfaceText
     }

@@ -5,7 +5,7 @@ import "../../board"
 Rectangle {
     id: root
     
-    readonly property real digitSize: Math.min(width, height) * 0.27
+    readonly property real digitSize: Math.min(width, height) * 0.35
     readonly property real digitWidth: digitSize * 0.58
     
     SystemClock {
@@ -27,7 +27,7 @@ Rectangle {
     
     Column {
         anchors.centerIn: parent
-        spacing: root.height * 0.05
+        spacing: root.height * 0.02
         
         Row {
             spacing: root.digitWidth * 0.15
@@ -35,6 +35,7 @@ Rectangle {
             
             Text {
                 text: String(systemClock.date.getHours()).padStart(2, '0').charAt(0)
+                font.family: "IosevkaTerm Nerd Font Mono"
                 font.pixelSize: root.digitSize
                 color: Theme.color1
                 font.weight: Font.Medium
@@ -44,6 +45,7 @@ Rectangle {
             
             Text {
                 text: String(systemClock.date.getHours()).padStart(2, '0').charAt(1)
+                font.family: "IosevkaTerm Nerd Font Mono"
                 font.pixelSize: root.digitSize
                 color: Theme.color1
                 font.weight: Font.Medium
@@ -54,6 +56,7 @@ Rectangle {
             Text {
                 id: colonBlink
                 text: ":"
+                font.family: "IosevkaTerm Nerd Font Mono"
                 font.pixelSize: root.digitSize
                 color: Theme.color1
                 font.weight: Font.Medium
@@ -71,6 +74,7 @@ Rectangle {
             
             Text {
                 text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(0)
+                font.family: "IosevkaTerm Nerd Font Mono"
                 font.pixelSize: root.digitSize
                 color: Theme.color1
                 font.weight: Font.Medium
@@ -80,6 +84,7 @@ Rectangle {
             
             Text {
                 text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(1)
+                font.family: "IosevkaTerm Nerd Font Mono"
                 font.pixelSize: root.digitSize
                 color: Theme.color1
                 font.weight: Font.Medium
@@ -90,7 +95,8 @@ Rectangle {
         
         Text {
             text: systemClock.date.toLocaleDateString(Qt.locale(), "MMM dd")
-            font.pixelSize: root.digitSize * 0.25
+            font.family: "IosevkaTerm Nerd Font Mono"
+            font.pixelSize: root.digitSize * 0.375
             color: Qt.rgba(
                 parseInt(Theme.color1?.substring(1, 3) || "ff", 16) / 255,
                 parseInt(Theme.color1?.substring(3, 5) || "ff", 16) / 255,

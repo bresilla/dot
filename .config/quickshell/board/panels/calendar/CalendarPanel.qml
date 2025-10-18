@@ -104,10 +104,11 @@ Rectangle {
                 radius: Theme.cornerRadius
                 color: prevMonthArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
 
-                DankIcon {
+                Text {
                     anchors.centerIn: parent
-                    name: "chevron_left"
-                    size: 14
+                    text: "<"
+                    font.family: "IosevkaTerm Nerd Font Mono"
+                    font.pixelSize: 14
                     color: Theme.primary
                 }
 
@@ -142,10 +143,11 @@ Rectangle {
                 radius: Theme.cornerRadius
                 color: nextMonthArea.containsMouse ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.12) : "transparent"
 
-                DankIcon {
+                Text {
                     anchors.centerIn: parent
-                    name: "chevron_right"
-                    size: 14
+                    text: ">"
+                    font.family: "IosevkaTerm Nerd Font Mono"
+                    font.pixelSize: 14
                     color: Theme.primary
                 }
 

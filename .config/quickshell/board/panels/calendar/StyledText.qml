@@ -2,5 +2,5 @@ import QtQuick
 
 Text {
     color: Theme.surfaceText
-    font.family: "Inter"
+    font.family: "IosevkaTerm Nerd Font Mono"
 }

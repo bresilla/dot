@@ -21,11 +21,11 @@ Rectangle {
         return Math.max(0, Math.min(1, calculatedRatio))
     }
     
-    readonly property real scaledIconSize: Math.min(width, height) * 0.12
+    readonly property real scaledIconSize: Math.min(width, height) * 0.15
     readonly property real scaledFontSmall: Math.min(width, height) * 0.05
     readonly property real scaledFontMedium: Math.min(width, height) * 0.055
     readonly property real scaledSpacing: Math.min(width, height) * 0.02
-    readonly property real scaledButtonSize: Math.min(width, height) * 0.12
+    readonly property real scaledButtonSize: Math.min(width, height) * 0.14
 
     onActivePlayerChanged: {
         if (activePlayer?.positionSupported) {
@@ -53,7 +53,7 @@ Rectangle {
         visible: !activePlayer
 
         DankIcon {
-            name: "music_note"
+            name: "󰝚"
             size: scaledIconSize
             color: Qt.rgba(Theme.surfaceText.r, Theme.surfaceText.g, Theme.surfaceText.b, 0.5)
             anchors.horizontalCenter: parent.horizontalCenter
@@ -209,7 +209,7 @@ Rectangle {
 
                     DankIcon {
                         anchors.centerIn: parent
-                        name: "shuffle"
+                        name: "󰒟"
                         size: scaledButtonSize * 0.35
                         color: activePlayer?.shuffle ? Theme.primary : Theme.surfaceText
                     }
@@ -235,7 +235,7 @@ Rectangle {
 
                     DankIcon {
                         anchors.centerIn: parent
-                        name: "skip_previous"
+                        name: "󰒮"
                         size: scaledButtonSize * 0.5
                         color: Theme.surfaceText
                     }
@@ -265,7 +265,7 @@ Rectangle {
 
                     DankIcon {
                         anchors.centerIn: parent
-                        name: activePlayer?.playbackState === MprisPlaybackState.Playing ? "pause" : "play_arrow"
+                        name: activePlayer?.playbackState === MprisPlaybackState.Playing ? "󰏤" : "󰐊"
                         size: scaledButtonSize * 0.6
                         color: Theme.background
                     }
@@ -287,7 +287,7 @@ Rectangle {
 
                     DankIcon {
                         anchors.centerIn: parent
-                        name: "skip_next"
+                        name: "󰒭"
                         size: scaledButtonSize * 0.5
                         color: Theme.surfaceText
                     }
@@ -310,7 +310,7 @@ Rectangle {
 
                     DankIcon {
                         anchors.centerIn: parent
-                        name: activePlayer?.loopState === MprisLoopState.Track ? "repeat_one" : "repeat"
+                        name: activePlayer?.loopState === MprisLoopState.Track ? "󰑘" : "󰑖"
                         size: scaledButtonSize * 0.35
                         color: activePlayer?.loopState !== MprisLoopState.None ? Theme.primary : Theme.surfaceText
                     }
