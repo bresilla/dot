@@ -51,7 +51,7 @@ PanelWindow {
                 width: parent.width * 0.5
                 height: Math.min(parent.height, contentHeight)
                 property int thisheight: parent.height
-                spacing: 8
+                spacing: 10
                 interactive: false
                 orientation: ListView.Vertical
                 model: Hyprland.workspaces
@@ -66,9 +66,9 @@ PanelWindow {
                     width: wsList.width
                     height: visible ? wsList.thisheight / 20 : 0
                     radius: 4
-                    color: modelData.active ? wal.adapter.colors["color2"] : 
-                           hasWindows ? wal.adapter.colors["color243"] : 
-                           wal.adapter.colors["color239"]
+                    color: modelData.active ? wal.adapter.colors["color1"] : 
+                           hasWindows ? wal.adapter.colors["color244"] : 
+                           wal.adapter.colors["color240"]
                     opacity: modelData.active ? 1.0 : 0.6
                     Behavior on color { ColorAnimation { duration: 200 } }
                     Behavior on opacity { NumberAnimation { duration: 200 } }
