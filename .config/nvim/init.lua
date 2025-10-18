@@ -102,6 +102,7 @@ require("config.lazy")
 require("utils.termcolors")
 require("utils.diags")
 require("utils.navigation")
+require("utils.lspconfig")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "
