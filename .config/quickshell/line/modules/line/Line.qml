@@ -47,7 +47,8 @@ PanelWindow {
 
             ListView {
                 id: wsList
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
                 width: parent.width * 0.5
                 height: Math.min(parent.height, contentHeight)
                 property int thisheight: parent.height
