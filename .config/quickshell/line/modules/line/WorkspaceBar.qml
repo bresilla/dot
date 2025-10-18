@@ -4,8 +4,11 @@ import Quickshell.Hyprland
 import QtQuick
 
 PanelWindow {
+    property real lineWidth: Screen.width * 0.005
+    
     anchors { top: true; left: true; bottom: true }
-    implicitWidth: Screen.width * 0.005
+    margins.left: lineWidth
+    implicitWidth: Screen.width * 0.02
     color: "transparent"
 
     // Listen for window events to refresh workspace data
@@ -42,14 +45,13 @@ PanelWindow {
 
         Item {
             id: wsArea
-            width: parent.width * 0.5
-            anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
+            anchors { fill: parent; margins: 5 }
 
             ListView {
                 id: wsList
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width * 0.5
+                width: parent.width
                 height: Math.min(parent.height, contentHeight)
                 property int thisheight: parent.height
                 spacing: 10
@@ -73,8 +75,14 @@ PanelWindow {
                     opacity: modelData.active ? 1.0 : 0.6
                     Behavior on color { ColorAnimation { duration: 200 } }
                     Behavior on opacity { NumberAnimation { duration: 200 } }
-                    
 
+                    Text {
+                        anchors.centerIn: parent
+                        text: modelData.id
+                        font.pixelSize: parent.height * 0.5
+                        font.bold: true
+                        color: wal.adapter.special.foreground
+                    }
 
                     MouseArea {
                         anchors.fill: parent
@@ -87,4 +95,3 @@ PanelWindow {
 
     Component.onCompleted: Hyprland.refreshWorkspaces()
 }
-

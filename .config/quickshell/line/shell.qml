@@ -12,4 +12,6 @@ ShellRoot {
         active: true
         sourceComponent: Line{}
     }
+    
+    WorkspaceOSD {}
 }
