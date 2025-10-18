@@ -1,0 +1,67 @@
+#!/bin/bash
+
+current_workspace=$(hyprctl activeworkspace -j | jq '.id')
+current_monitor=$(hyprctl activeworkspace -j | jq '.monitor' | tr -d '"')
+
+
+# @cmd move up a workspace
+# @alias u
+# @option -s --step
+up() {
+    step=${argc_step:-1}
+    
+    # Get regular workspaces for current monitor (exclude special workspaces with negative IDs)
+    workspace_ids=($(hyprctl workspaces -j | jq --arg mon "$current_monitor" '[.[] | select(.monitor == $mon and .id > 0) | .id] | sort | .[]'))
+    
+    # Find current workspace index
+    current_index=-1
+    for i in "${!workspace_ids[@]}"; do
+        if [[ "${workspace_ids[$i]}" == "$current_workspace" ]]; then
+            current_index=$i
+            break
+        fi
+    done
+    
+    # Calculate target index with wrapping
+    target_index=$((current_index - step))
+    if [[ $target_index -lt 0 ]]; then
+        # Wrap to end
+        target_index=$((${#workspace_ids[@]} + target_index))
+    fi
+    
+    target_workspace=${workspace_ids[$target_index]}
+    hyprctl dispatch workspace "$target_workspace"
+}
+
+
+# @cmd move down a workspace
+# @alias d
+# @option -s --step
+down() {
+    step=${argc_step:-1}
+    
+    # Get regular workspaces for current monitor (exclude special workspaces with negative IDs)
+    workspace_ids=($(hyprctl workspaces -j | jq --arg mon "$current_monitor" '[.[] | select(.monitor == $mon and .id > 0) | .id] | sort | .[]'))
+    
+    # Find current workspace index
+    current_index=-1
+    for i in "${!workspace_ids[@]}"; do
+        if [[ "${workspace_ids[$i]}" == "$current_workspace" ]]; then
+            current_index=$i
+            break
+        fi
+    done
+    
+    # Calculate target index with wrapping
+    target_index=$((current_index + step))
+    if [[ $target_index -ge ${#workspace_ids[@]} ]]; then
+        # Wrap to beginning
+        target_index=$((target_index - ${#workspace_ids[@]}))
+    fi
+    
+    target_workspace=${workspace_ids[$target_index]}
+    hyprctl dispatch workspace "$target_workspace"
+}
+
+eval "$(argc --argc-eval "$0" "$@")"
+

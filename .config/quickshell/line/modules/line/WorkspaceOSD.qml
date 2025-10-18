@@ -1,10 +1,14 @@
-import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
+import QtQuick
 
 Scope {
     id: root
+    required property var modelData
+    readonly property var currentMonitor: Hyprland.monitorFor(modelData)
+    readonly property int monitorHeight: modelData ? modelData.height : 1080
+    readonly property int monitorWidth: modelData ? modelData.width : 1920
     
     FileView {
         id: wal
@@ -19,28 +23,22 @@ Scope {
             property var colors: ({})
         }
     }
-    
-    property int currentWorkspace: Hyprland.focusedWorkspace?.id ?? 1
+
+    property var focusedWorkspace: Hyprland.focusedWorkspace
+    property int currentWorkspace: focusedWorkspace?.id ?? 1
     property int previousWorkspace: currentWorkspace
-    property bool shouldShow: false
+    property bool shouldShowOSD: false
     
-    property int activeIndex: {
-        let count = 0;
-        for (let i = 0; i < Hyprland.workspaces.length; i++) {
-            let ws = Hyprland.workspaces.at(i);
-            if (ws.id >= 0 && !ws.name?.startsWith("special:")) {
-                if (ws.active) return count;
-                count++;
-            }
-        }
-        return 0;
-    }
-    
-    onCurrentWorkspaceChanged: {
+    onFocusedWorkspaceChanged: {
         if (previousWorkspace !== currentWorkspace && previousWorkspace !== 0) {
-            console.log("Workspace changed from", previousWorkspace, "to:", currentWorkspace, "index:", activeIndex);
-            root.shouldShow = true;
-            hideTimer.restart();
+            const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor;
+            
+            if (isOnThisMonitor) {
+                shouldShowOSD = true;
+                hideTimer.restart();
+            } else {
+                shouldShowOSD = false;
+            }
         }
         previousWorkspace = currentWorkspace;
     }
@@ -48,90 +46,89 @@ Scope {
     Timer {
         id: hideTimer
         interval: 750
-        onTriggered: root.shouldShow = false
+        onTriggered: shouldShowOSD = false
     }
     
     PanelWindow {
-        visible: root.shouldShow
+        id: osdWindow
+        screen: modelData
+        visible: shouldShowOSD
         
         anchors {
             left: true
             top: true
         }
         
-        implicitWidth: 105
-        implicitHeight: 105
+        implicitWidth: 120
+        implicitHeight: containerHeight + (spacing * 9)
         
         exclusiveZone: 0
         color: "#00000000"
         mask: Region {}
         
+        readonly property int containerHeight: monitorHeight * 0.5
+        readonly property int itemHeight: containerHeight / 10
+        readonly property int spacing: 10
+        readonly property int containerStartY: (monitorHeight - containerHeight) / 2
+        readonly property int lineWidth: Screen.width * 0.005
+        
         margins {
-            left: Screen.width * 0.005 + 5
-            top: {
-                let itemHeight = screen.height / 20;
-                let spacing = 10;
-                let totalHeight = 10 * itemHeight + 9 * spacing;
-                let listTop = (screen.height - totalHeight) / 2;
-                let wsIndex = currentWorkspace - 1; // workspace 1 = index 0
-                return listTop + wsIndex * (itemHeight + spacing) + (itemHeight - implicitHeight) / 2 + 10;
-            }
+            left: lineWidth + 10
+            top: containerStartY
         }
         
-        Rectangle {
-            id: osdCircle
-            anchors.fill: parent
-            radius: width / 2
-            color: wal.adapter.colors["color1"] || "#CC000000"
-            border.color: wal.adapter.colors["color0"] || "#000000"
-            border.width: 6
+        Column {
+            id: osdContainer
+            anchors.left: parent.left
+            anchors.top: parent.top
+            width: osdWindow.implicitWidth
+            height: osdWindow.containerHeight
+            spacing: osdWindow.spacing
             
-            Text {
-                anchors.centerIn: parent
-                text: root.currentWorkspace
-                font.pixelSize: 50
-                font.bold: true
-                font.weight: Font.Black
-                color: wal.adapter.colors["color0"] || "#ffffff"
-            }
-            
-            states: [
-                State {
-                    name: "visible"
-                    when: root.shouldShow
-                    PropertyChanges { target: osdCircle; opacity: 1.0 }
-                },
-                State {
-                    name: "hidden"
-                    when: !root.shouldShow
-                    PropertyChanges { target: osdCircle; opacity: 0.0 }
-                }
-            ]
-            
-            transitions: [
-                Transition {
-                    from: "visible"
-                    to: "hidden"
-                    SequentialAnimation {
-                        PauseAnimation { duration: 250 }
-                        NumberAnimation { 
-                            property: "opacity"
-                            to: 0
-                            duration: 500
-                            easing.type: Easing.InOutQuad
+            Repeater {
+                model: Hyprland.workspaces
+                
+                delegate: Item {
+                    required property HyprlandWorkspace modelData
+                    
+                    readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
+                    readonly property bool isOnThisMonitor: modelData.monitor?.name === currentMonitor?.name
+                    readonly property bool isActive: modelData.active
+                    
+                    visible: !isSpecial && isOnThisMonitor
+                    width: osdContainer.width
+                    height: visible ? osdContainer.height / 10 : 0
+                    
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: parent.width
+                        height: parent.height
+                        radius: width / 2
+                        visible: isActive
+                        color: wal.adapter.colors["color1"] || "#CC000000"
+                        border.color: wal.adapter.colors["color0"] || "#000000"
+                        border.width: 6
+                        
+                        Text {
+                            anchors.centerIn: parent
+                            text: modelData.id
+                            font.pixelSize: 50
+                            font.bold: true
+                            font.weight: Font.Black
+                            color: wal.adapter.colors["color0"] || "#ffffff"
+                        }
+                        
+                        opacity: shouldShowOSD ? 1.0 : 0.0
+                        
+                        Behavior on opacity {
+                            NumberAnimation { 
+                                duration: shouldShowOSD ? 100 : 500
+                                easing.type: Easing.InOutQuad
+                            }
                         }
                     }
-                },
-                Transition {
-                    from: "hidden"
-                    to: "visible"
-                    NumberAnimation { 
-                        property: "opacity"
-                        to: 1.0
-                        duration: 100
-                    }
                 }
-            ]
+            }
         }
     }
 }

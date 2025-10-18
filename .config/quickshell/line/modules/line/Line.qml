@@ -3,20 +3,12 @@ import Quickshell.Io
 import Quickshell.Hyprland
 import QtQuick
 
-PanelWindow {
-    anchors { top: true; left: true; bottom: true }
-    implicitWidth: Screen.width * 0.005
-    color: "transparent"
-
-    // Listen for window events to refresh workspace data
-    Connections {
-        target: Hyprland
-        function onRawEvent(event) {
-            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
-                Hyprland.refreshWorkspaces();
-            }
-        }
-    }
+Scope {
+    id: root
+    required property var modelData
+    readonly property var currentMonitor: Hyprland.monitorFor(modelData)
+    readonly property int monitorHeight: modelData ? modelData.height : 1080
+    readonly property int monitorWidth: modelData ? modelData.width : 1920
 
     FileView {
         id: wal
@@ -32,59 +24,66 @@ PanelWindow {
         }
     }
 
-    Rectangle {
-        id: box
-        anchors { fill: parent; margins: 0 }
-        color: "#000000"
-        opacity: 0.95
-        Behavior on color { ColorAnimation { duration: 300 } }
-        readonly property var currentMonitor: Hyprland.monitorFor(screen)
-
-        Item {
-            id: wsArea
-            width: parent.width * 0.5
-            anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom }
-
-            ListView {
-                id: wsList
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                width: parent.width * 0.5
-                height: Math.min(parent.height, contentHeight)
-                property int thisheight: parent.height
-                spacing: 10
-                interactive: false
-                orientation: ListView.Vertical
-                model: Hyprland.workspaces
-
-                delegate: Rectangle {
-                    required property HyprlandWorkspace modelData
-                    readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
-                    readonly property bool isOnThisMonitor: modelData.monitor === box.currentMonitor
-                    readonly property bool hasWindows: modelData.lastIpcObject && modelData.lastIpcObject.windows && modelData.lastIpcObject.windows > 0
-
-                    visible: !isSpecial && isOnThisMonitor
-                    width: wsList.width
-                    height: visible ? wsList.thisheight / 20 : 0
-                    radius: 4
-                    color: modelData.active ? wal.adapter.colors["color1"] : 
-                           hasWindows ? wal.adapter.colors["color244"] : 
-                           wal.adapter.colors["color240"]
-                    opacity: modelData.active ? 1.0 : 0.6
-                    Behavior on color { ColorAnimation { duration: 200 } }
-                    Behavior on opacity { NumberAnimation { duration: 200 } }
-                    
-
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: modelData.activate()
-                    }
-                }
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
+                Hyprland.refreshWorkspaces();
             }
         }
     }
 
-    Component.onCompleted: Hyprland.refreshWorkspaces()
+    PanelWindow {
+        id: lineWindow
+        screen: modelData
+        anchors { top: true; left: true; bottom: true }
+        implicitWidth: Screen.width * 0.005
+        color: "transparent"
+
+        Rectangle {
+            id: box
+            anchors { fill: parent; margins: 0 }
+            color: "#000000"
+            opacity: 0.95
+            Behavior on color { ColorAnimation { duration: 300 } }
+
+            Column {
+                id: wsContainer
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: parent.width * 0.7
+                height: monitorHeight * 0.5
+                spacing: 10
+                Repeater {
+                    model: Hyprland.workspaces
+                    delegate: Rectangle {
+                        required property HyprlandWorkspace modelData
+                        readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
+                        readonly property bool isOnThisMonitor: modelData.monitor?.name === currentMonitor?.name
+                        readonly property bool hasWindows: modelData.lastIpcObject && modelData.lastIpcObject.windows > 0
+                        visible: !isSpecial && isOnThisMonitor
+                        width: wsContainer.width
+                        height: visible ? wsContainer.height / 10 : 0
+                        radius: 4
+                        color: modelData.active ? wal.adapter.colors["color1"] : 
+                               hasWindows ? wal.adapter.colors["color244"] : 
+                               wal.adapter.colors["color240"]
+                        opacity: modelData.active ? 1.0 : 0.6
+                        Behavior on color { ColorAnimation { duration: 200 } }
+                        Behavior on opacity { NumberAnimation { duration: 200 } }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: modelData.activate()
+                        }
+                    }
+                }
+            }
+        }
+
+        Component.onCompleted: {
+            Hyprland.refreshWorkspaces();
+        }
+    }
 }
 

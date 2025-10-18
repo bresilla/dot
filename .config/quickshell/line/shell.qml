@@ -8,10 +8,13 @@ import "./modules/line/"
 ShellRoot {
     id: root
 
-    Loader {
-        active: true
-        sourceComponent: Line{}
+    Variants {
+        model: Quickshell.screens
+        Line {}
     }
-    
-    WorkspaceOSD {}
+
+    Variants {
+        model: Quickshell.screens
+        WorkspaceOSD {}
+    }
 }
