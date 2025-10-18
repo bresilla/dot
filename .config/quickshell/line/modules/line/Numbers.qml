@@ -61,7 +61,7 @@ Scope {
             top: true
         }
         
-        implicitWidth: 120
+        implicitWidth: 110
         implicitHeight: containerHeight + (spacing * 9)
         
         exclusiveZone: 0
