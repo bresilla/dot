@@ -97,11 +97,13 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         environments = scifi_environments
         hero_weapon = "an energy katana"
         theme_tag = "pure SCI-FI anime scene"
+        clothes = "futuristic armor"
     else:
         creatures = creatures_fantasy
         environments = fantasy_environments
         hero_weapon = "a sword/katana"
         theme_tag = "pure FANTASY anime scene"
+        clothes = "fantasy robes"
     creature_key = explicit_creature if explicit_creature in creatures else random.choice(list(creatures.keys()))
     creature_desc = creatures[creature_key]
     environment = explicit_environment if explicit_environment in environments else random.choice(environments)
@@ -110,14 +112,14 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         f"Epic {theme_tag} scene — bold, vibrant, and borderless with pure anime-first aesthetics. "
         f"Set in a richly detailed {environment}, filled with volumetric lighting, soft shadows, and cinematic fog for mood and scale. "
         f"A humanoid {creature_key} with {creature_desc}, accented by {color} highlights, stands prominently and faces both the hero and the camera. "
-        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with {color} tails, waeing a dress, embodying a confident and determined presence. "
+        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with {color} tails, wearing {clothes}, embodying a confident and determined presence. "
         f"Full-body shot — head to toe visible, clean edges, uncropped, no borders. "
         f"She faces the {creature_key} with her back to the camera, standing in a grounded combat-ready pose using a {hero_weapon}."
         f"Third-person perspective with a slightly low or dynamic angle to enhance scale and cinematic drama. "
         f"The composition must exude anime energy: crisp outlines, expressive shading, vivid color dominated by {color}, and cinematic intensity. "
         f"Strictly {t}-themed worldbuilding — no genre mixing. The image must be safe for work; the hero should not wear a bikini or revealing outfit. "
         f"Inspired by animes such as {inspirations}. "
-        f"Use {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements."
+        f"Use {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements. Try to use only shades of {color}"
     )
 
 

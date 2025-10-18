@@ -1,10 +1,13 @@
 import QtQuick
+import Quickshell
 import Quickshell.Services.Mpris
 import "../../board"
 import "."
 
 Rectangle {
     id: root
+    
+    readonly property real screenBasedLineHeight: Screen.height * 0.005
     
     property MprisPlayer activePlayer: MprisController.activePlayer
     property real currentPosition: activePlayer?.positionSupported ? activePlayer.position : 0
@@ -74,35 +77,23 @@ Rectangle {
             width: parent.width
             height: scaledSpacing * 2
             
-            Rectangle {
+            StyledProgressBar {
                 anchors.centerIn: parent
                 width: parent.width * 0.5
-                height: 4
-                radius: 2
-                color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                value: activePlayer?.volume ?? 0
+                lineHeight: 10
+                showIndicator: true
+                interactive: activePlayer !== null
                 
-                Rectangle {
-                    width: parent.width * (activePlayer?.volume ?? 0)
-                    height: parent.height
-                    radius: parent.radius
-                    color: Theme.primary
-                    
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
-                        }
+                onClicked: position => {
+                    if (activePlayer) {
+                        activePlayer.volume = position
                     }
                 }
                 
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: mouse => {
-                        if (activePlayer) {
-                            activePlayer.volume = mouse.x / width
-                        }
+                onSeeking: position => {
+                    if (activePlayer) {
+                        activePlayer.volume = position
                     }
                 }
             }
@@ -154,35 +145,47 @@ Rectangle {
             width: parent.width
             height: scaledSpacing * 3
             
-            Rectangle {
+            StyledProgressBar {
                 anchors.centerIn: parent
                 width: parent.width * 0.8
-                height: 6
-                radius: 3
-                color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                value: root.ratio
+                lineHeight: root.screenBasedLineHeight
+                showIndicator: true
+                interactive: activePlayer?.canSeek ?? false
                 
-                Rectangle {
-                    width: parent.width * root.ratio
-                    height: parent.height
-                    radius: parent.radius
-                    color: Theme.primary
-                    
-                    Behavior on width {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutQuad
+                property real pendingSeekPosition: -1
+                
+                Timer {
+                    id: seekDebounceTimer
+                    interval: 150
+                    onTriggered: {
+                        if (parent.pendingSeekPosition >= 0 && activePlayer && activePlayer.canSeek && activePlayer.length > 0) {
+                            const clamped = Math.min(parent.pendingSeekPosition, activePlayer.length * 0.99)
+                            activePlayer.position = clamped
+                            parent.pendingSeekPosition = -1
+                            root.isSeeking = false
                         }
                     }
                 }
                 
-                MouseArea {
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: mouse => {
-                        if (activePlayer && activePlayer.canSeek) {
-                            const newPos = (mouse.x / width) * activePlayer.length
-                            activePlayer.position = newPos
+                onSeeking: position => {
+                    root.isSeeking = true
+                    if (activePlayer && activePlayer.length > 0 && activePlayer.canSeek) {
+                        pendingSeekPosition = position * activePlayer.length
+                        seekDebounceTimer.restart()
+                    }
+                }
+                
+                onClicked: position => {
+                    root.isSeeking = false
+                    seekDebounceTimer.stop()
+                    if (activePlayer && activePlayer.length > 0 && activePlayer.canSeek) {
+                        if (pendingSeekPosition >= 0) {
+                            const clamped = Math.min(pendingSeekPosition, activePlayer.length * 0.99)
+                            activePlayer.position = clamped
+                            pendingSeekPosition = -1
+                        } else {
+                            activePlayer.position = position * activePlayer.length
                         }
                     }
                 }

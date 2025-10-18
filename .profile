@@ -64,6 +64,7 @@ export BAT_THEME="TwoDark"
 export LULE_W="/env/set/.animegen"
 export LULE_S="/env/dot/.func/wm/lule_colors"
 export LULE_C="/home/bresilla/.config/lule/configs.json"
+export DSTASK_GIT_REPO=/doc/self/TASKS
 export GUM_CHOOSE_CURSOR_FOREGROUND="1"
 export GUM_CHOOSE_SELECTED_FOREGROUND="9"
 export GUM_CONFIRM_SELECTED_FOREGROUND="15"
