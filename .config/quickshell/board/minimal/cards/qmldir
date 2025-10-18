@@ -1,3 +1,0 @@
-module board.minimal.cards
-
-ClockCard 1.0 ClockCard.qml

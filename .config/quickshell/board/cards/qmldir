@@ -1,3 +1,5 @@
+module board.default.cards
+
 BaseCard 1.0 BaseCard.qml
 ClockCard 1.0 ClockCard.qml
 SystemCard 1.0 SystemCard.qml

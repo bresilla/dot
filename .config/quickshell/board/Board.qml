@@ -1,28 +1,19 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import "." as Board
+import "./panels/clock"
+import "./panels/calendar"
+import "./panels/media"
 import "./cards"
 
 Scope {
     id: root
-    
-    FileView {
-        id: wal
-        path: Quickshell.env("HOME") + "/.cache/wal/colors.json"
-        watchChanges: true
-        onFileChanged: reload()
-        JsonAdapter {
-            property JsonObject special: JsonObject {
-                property string background: "#000000"
-                property string foreground: "#ffffff"
-            }
-            property var colors: ({})
-        }
-    }
+    property var screen: null
+    property bool mouseInside: false
     
     PanelWindow {
         id: mainWindow
-        screen: Quickshell.screens[0]
+        screen: root.screen
         implicitWidth: Screen.width * 0.5
         implicitHeight: Screen.height * 0.5
         color: "transparent"
@@ -34,15 +25,28 @@ Scope {
             top: Screen.height * 0.25
         }
         
-        Rectangle {
-            id: container
+        MouseArea {
+            id: containerHoverArea
             anchors.fill: parent
-            color: WalColors.color238
-            opacity: 0.98
-            radius: 20
+            hoverEnabled: true
+            onContainsMouseChanged: root.mouseInside = containsMouse
             
-            Item {
-                id: grid
+            Rectangle {
+                id: container
+                anchors.fill: parent
+                color: WalColors.color238
+                opacity: 0.98
+                radius: 20
+                
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 200
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+                
+                Item {
+                    id: grid
                 anchors.fill: parent
                 anchors.margins: Theme.spacing
                 
@@ -66,7 +70,7 @@ Scope {
                 readonly property real calendarWidth: (rightColWidth - spacing) * 0.6
                 readonly property real mediaWidth: (rightColWidth - spacing) * 0.4
                 
-                ClockCard {
+                LogoCard {
                     x: grid.leftColX
                     y: 0
                     width: grid.leftColWidth
@@ -87,27 +91,28 @@ Scope {
                     height: grid.userHeight
                 }
                 
-                LogoCard {
+                ClockPanel {
                     x: grid.rightColX + grid.infoWidth + grid.spacing
                     y: 0
                     width: grid.logoWidth
                     height: grid.userHeight
                 }
                 
-                CalendarCard {
+                CalendarPanel {
                     x: grid.rightColX
                     y: grid.userHeight + grid.spacing
                     width: grid.calendarWidth
                     height: grid.bottomHeight
                 }
                 
-                MediaCard {
+                MediaPanel {
                     x: grid.rightColX + grid.calendarWidth + grid.spacing
                     y: grid.userHeight + grid.spacing
                     width: grid.mediaWidth
                     height: grid.bottomHeight
                 }
             }
+        }
         }
     }
 }

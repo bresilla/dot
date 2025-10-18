@@ -6,7 +6,6 @@ import Quickshell.Hyprland
 Scope {
     id: root
     required property var modelData
-    required property string currentBoard
     
     readonly property var currentMonitor: Hyprland.monitorFor(modelData)
     property var focusedWorkspace: Hyprland.focusedWorkspace
@@ -107,7 +106,7 @@ Scope {
     Loader {
         id: boardLoader
         active: shouldShowBoard
-        source: "./" + currentBoard + "/Board.qml"
+        source: "./Board.qml"
         
         onLoaded: {
             if (item) {
