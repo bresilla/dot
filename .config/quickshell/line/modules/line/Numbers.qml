@@ -30,6 +30,8 @@ Scope {
     property int previousWorkspace: currentWorkspace
     property bool shouldShowOSD: false
     property real morphProgress: 0.0
+    property bool inCircleMode: false
+    property var lastWorkspaceSwitchTime: new Date()
     
     readonly property int containerHeight: monitorHeight * 0.5
     readonly property int itemHeight: containerHeight / 10
@@ -51,18 +53,42 @@ Scope {
         const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor;
         
         if (isOnThisMonitor && previousWorkspace !== currentWorkspace) {
-            startYOffset = getWorkspaceYOffset(previousWorkspace);
-            endYOffset = getWorkspaceYOffset(currentWorkspace);
-            currentYOffset = startYOffset;
-            console.log("Switching from ws", previousWorkspace, "to", currentWorkspace);
-            console.log("startYOffset:", startYOffset, "endYOffset:", endYOffset);
-            shouldShowOSD = true;
-            morphProgress = 0.0;
-            morphInAnimation.start();
-            hideTimer.restart();
+            const now = new Date();
+            const timeSinceLastSwitch = now - lastWorkspaceSwitchTime;
+            const fullCycleDuration = 600 + 800 + 300;
+            
+            if (morphOutAnimation.running) {
+                console.log("Stopping morph out - staying in circle mode");
+                morphOutAnimation.stop();
+                morphProgress = 1.0;
+                inCircleMode = true;
+                startYOffset = currentYOffset;
+                endYOffset = getWorkspaceYOffset(currentWorkspace);
+                slideAnimation.start();
+                hideTimer.restart();
+            } else if (inCircleMode && timeSinceLastSwitch < fullCycleDuration) {
+                console.log("Fast switch - sliding circle from ws", previousWorkspace, "to", currentWorkspace);
+                startYOffset = currentYOffset;
+                endYOffset = getWorkspaceYOffset(currentWorkspace);
+                slideAnimation.start();
+                hideTimer.restart();
+            } else {
+                console.log("Full animation from ws", previousWorkspace, "to", currentWorkspace);
+                startYOffset = getWorkspaceYOffset(previousWorkspace);
+                endYOffset = getWorkspaceYOffset(currentWorkspace);
+                currentYOffset = startYOffset;
+                shouldShowOSD = true;
+                morphProgress = 0.0;
+                inCircleMode = true;
+                morphInAnimation.start();
+                hideTimer.restart();
+            }
+            
+            lastWorkspaceSwitchTime = now;
             previousWorkspace = currentWorkspace;
         } else if (!isOnThisMonitor) {
             shouldShowOSD = false;
+            inCircleMode = false;
         }
     }
     
@@ -75,7 +101,7 @@ Scope {
         duration: 600
         easing.type: Easing.OutCubic
         onRunningChanged: {
-            if (!running) {
+            if (!running && morphProgress === 1.0) {
                 currentYOffset = endYOffset;
             }
         }
@@ -88,6 +114,16 @@ Scope {
     }
     
     NumberAnimation {
+        id: slideAnimation
+        target: root
+        property: "currentYOffset"
+        from: root.startYOffset
+        to: root.endYOffset
+        duration: 200
+        easing.type: Easing.InOutQuad
+    }
+    
+    NumberAnimation {
         id: morphOutAnimation
         target: root
         property: "morphProgress"
@@ -95,12 +131,15 @@ Scope {
         to: 0.0
         duration: 300
         easing.type: Easing.InCubic
-        onFinished: shouldShowOSD = false
+        onFinished: {
+            shouldShowOSD = false
+            inCircleMode = false
+        }
     }
     
     Timer {
         id: hideTimer
-        interval: 800
+        interval: 960
         onTriggered: morphOutAnimation.start()
     }
     
