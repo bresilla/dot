@@ -212,10 +212,10 @@ Rectangle {
             width: parent.width
             height: parent.height - scaledFontSize * 2 - scaledFontSize * 1.5 - scaledSpacing * 4
             columns: 7
-            rows: 6
+            rows: 5
 
             Repeater {
-                model: 42
+                model: 35
 
                 Rectangle {
                     readonly property date dayDate: {
@@ -228,7 +228,7 @@ Rectangle {
                     readonly property bool isSelected: dayDate.toDateString() === calendarGrid.selectedDate.toDateString()
 
                     width: parent.width / 7
-                    height: parent.height / 6
+                    height: parent.height / 5
                     color: "transparent"
 
                     Rectangle {

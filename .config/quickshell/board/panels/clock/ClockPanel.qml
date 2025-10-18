@@ -10,7 +10,14 @@ Rectangle {
     
     SystemClock {
         id: systemClock
-        precision: SystemClock.Minutes
+        precision: SystemClock.Seconds
+    }
+    
+    Timer {
+        interval: 500
+        running: true
+        repeat: true
+        onTriggered: colonBlink.opacity = colonBlink.opacity === 1 ? 0 : 1
     }
     
     radius: Theme.cornerRadius
@@ -20,59 +27,65 @@ Rectangle {
     
     Column {
         anchors.centerIn: parent
-        spacing: root.height * 0.03
+        spacing: root.height * 0.05
         
-        Column {
-            spacing: -root.height * 0.04
+        Row {
+            spacing: root.digitWidth * 0.15
             anchors.horizontalCenter: parent.horizontalCenter
             
-            Row {
-                spacing: 0
-                anchors.horizontalCenter: parent.horizontalCenter
+            Text {
+                text: String(systemClock.date.getHours()).padStart(2, '0').charAt(0)
+                font.pixelSize: root.digitSize
+                color: WalColors.color1
+                font.weight: Font.Medium
+                width: root.digitWidth
+                horizontalAlignment: Text.AlignHCenter
+            }
+            
+            Text {
+                text: String(systemClock.date.getHours()).padStart(2, '0').charAt(1)
+                font.pixelSize: root.digitSize
+                color: WalColors.color1
+                font.weight: Font.Medium
+                width: root.digitWidth
+                horizontalAlignment: Text.AlignHCenter
+            }
+            
+            Text {
+                id: colonBlink
+                text: ":"
+                font.pixelSize: root.digitSize
+                color: WalColors.color1
+                font.weight: Font.Medium
+                width: root.digitWidth * 0.4
+                horizontalAlignment: Text.AlignHCenter
+                opacity: 1
                 
-                Text {
-                    text: String(systemClock.date.getHours()).padStart(2, '0').charAt(0)
-                    font.pixelSize: root.digitSize
-                    color: WalColors.color1
-                    font.weight: Font.Medium
-                    width: root.digitWidth
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                
-                Text {
-                    text: String(systemClock.date.getHours()).padStart(2, '0').charAt(1)
-                    font.pixelSize: root.digitSize
-                    color: WalColors.color1
-                    font.weight: Font.Medium
-                    width: root.digitWidth
-                    horizontalAlignment: Text.AlignHCenter
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 100
+                        easing.type: Easing.InOutQuad
+                    }
                 }
             }
             
-            Row {
-                spacing: 0
-                anchors.horizontalCenter: parent.horizontalCenter
-                
-                Text {
-                    text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(0)
-                    font.pixelSize: root.digitSize
-                    color: WalColors.color1
-                    font.weight: Font.Medium
-                    width: root.digitWidth
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                
-                Text {
-                    text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(1)
-                    font.pixelSize: root.digitSize
-                    color: WalColors.color1
-                    font.weight: Font.Medium
-                    width: root.digitWidth
-                    horizontalAlignment: Text.AlignHCenter
-                }
+            Text {
+                text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(0)
+                font.pixelSize: root.digitSize
+                color: WalColors.color1
+                font.weight: Font.Medium
+                width: root.digitWidth
+                horizontalAlignment: Text.AlignHCenter
             }
             
-
+            Text {
+                text: String(systemClock.date.getMinutes()).padStart(2, '0').charAt(1)
+                font.pixelSize: root.digitSize
+                color: WalColors.color1
+                font.weight: Font.Medium
+                width: root.digitWidth
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
         
         Text {

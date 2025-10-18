@@ -5,6 +5,8 @@ import Quickshell.Io
 BaseCard {
     id: root
     
+    signal pinToggled()
+    
     FileView {
         id: logoFile
         path: Quickshell.env("HOME") + "/.config/bresilla.svg"
@@ -24,5 +26,12 @@ BaseCard {
         fillMode: Image.PreserveAspectFit
         smooth: true
         cache: false
+    }
+    
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.pinToggled()
     }
 }

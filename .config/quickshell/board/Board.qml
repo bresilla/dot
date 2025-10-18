@@ -10,6 +10,7 @@ Scope {
     id: root
     property var screen: null
     property bool mouseInside: false
+    property bool isPinned: false
     
     PanelWindow {
         id: mainWindow
@@ -75,6 +76,8 @@ Scope {
                     y: 0
                     width: grid.leftColWidth
                     height: grid.clockHeight
+                    
+                    onPinToggled: root.isPinned = !root.isPinned
                 }
                 
                 SystemCard {

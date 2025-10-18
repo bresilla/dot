@@ -71,6 +71,44 @@ Rectangle {
         visible: activePlayer
 
         Item {
+            width: parent.width
+            height: scaledSpacing * 2
+            
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.width * 0.5
+                height: 4
+                radius: 2
+                color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                
+                Rectangle {
+                    width: parent.width * (activePlayer?.volume ?? 0)
+                    height: parent.height
+                    radius: parent.radius
+                    color: Theme.primary
+                    
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: mouse => {
+                        if (activePlayer) {
+                            activePlayer.volume = mouse.x / width
+                        }
+                    }
+                }
+            }
+        }
+
+        Item {
             width: root.width * 0.6
             height: root.height * 0.35
             anchors.horizontalCenter: parent.horizontalCenter
@@ -112,12 +150,43 @@ Rectangle {
             }
         }
 
-        DankSeekbar {
+        Item {
             width: parent.width
-            height: scaledSpacing * 2
-            activePlayer: root.activePlayer
-            isSeeking: root.isSeeking
-            onIsSeekingChanged: root.isSeeking = isSeeking
+            height: scaledSpacing * 3
+            
+            Rectangle {
+                anchors.centerIn: parent
+                width: parent.width * 0.8
+                height: 6
+                radius: 3
+                color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.2)
+                
+                Rectangle {
+                    width: parent.width * root.ratio
+                    height: parent.height
+                    radius: parent.radius
+                    color: Theme.primary
+                    
+                    Behavior on width {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.OutQuad
+                        }
+                    }
+                }
+                
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: mouse => {
+                        if (activePlayer && activePlayer.canSeek) {
+                            const newPos = (mouse.x / width) * activePlayer.length
+                            activePlayer.position = newPos
+                        }
+                    }
+                }
+            }
         }
 
         Item {
@@ -127,6 +196,32 @@ Rectangle {
             Row {
                 spacing: scaledSpacing
                 anchors.centerIn: parent
+
+                Rectangle {
+                    width: scaledButtonSize * 0.6
+                    height: scaledButtonSize * 0.6
+                    radius: width / 2
+                    anchors.verticalCenter: playPauseButton.verticalCenter
+                    color: activePlayer?.shuffle ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.2) : shuffleArea.containsMouse ? Theme.surfaceContainerHigh : "transparent"
+
+                    DankIcon {
+                        anchors.centerIn: parent
+                        name: "shuffle"
+                        size: scaledButtonSize * 0.35
+                        color: activePlayer?.shuffle ? Theme.primary : Theme.surfaceText
+                    }
+
+                    MouseArea {
+                        id: shuffleArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (!activePlayer) return
+                            activePlayer.shuffle = !activePlayer.shuffle
+                        }
+                    }
+                }
 
                 Rectangle {
                     width: scaledButtonSize * 0.8
@@ -200,6 +295,38 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: activePlayer?.next()
+                    }
+                }
+
+                Rectangle {
+                    width: scaledButtonSize * 0.6
+                    height: scaledButtonSize * 0.6
+                    radius: width / 2
+                    anchors.verticalCenter: playPauseButton.verticalCenter
+                    color: activePlayer?.loopState !== MprisLoopState.None ? Qt.rgba(Theme.primary.r, Theme.primary.g, Theme.primary.b, 0.2) : repeatArea.containsMouse ? Theme.surfaceContainerHigh : "transparent"
+
+                    DankIcon {
+                        anchors.centerIn: parent
+                        name: activePlayer?.loopState === MprisLoopState.Track ? "repeat_one" : "repeat"
+                        size: scaledButtonSize * 0.35
+                        color: activePlayer?.loopState !== MprisLoopState.None ? Theme.primary : Theme.surfaceText
+                    }
+
+                    MouseArea {
+                        id: repeatArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (!activePlayer) return
+                            if (activePlayer.loopState === MprisLoopState.None) {
+                                activePlayer.loopState = MprisLoopState.Playlist
+                            } else if (activePlayer.loopState === MprisLoopState.Playlist) {
+                                activePlayer.loopState = MprisLoopState.Track
+                            } else {
+                                activePlayer.loopState = MprisLoopState.None
+                            }
+                        }
                     }
                 }
             }

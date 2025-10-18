@@ -23,6 +23,19 @@ Scope {
                 root.mouseInsideBoard = boardLoader.item.mouseInside
             }
         }
+        function onIsPinnedChanged() {
+            if (boardLoader.item) {
+                if (boardLoader.item.isPinned) {
+                    hideTimer.stop()
+                    shouldShowBoard = true
+                } else {
+                    const isEmpty = focusedWorkspace?.lastIpcObject?.windows === 0
+                    if (!isEmpty) {
+                        shouldShowBoard = false
+                    }
+                }
+            }
+        }
     }
     
     Timer {
@@ -67,6 +80,10 @@ Scope {
             const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor
             const isEmpty = focusedWorkspace?.lastIpcObject?.windows === 0
             
+            if (boardLoader.item && boardLoader.item.isPinned) {
+                return
+            }
+            
             if (isOnThisMonitor && isEmpty) {
                 shouldShowBoard = true
                 mouseHasMoved = false
@@ -80,6 +97,8 @@ Scope {
     }
     
     onMouseInsideBoardChanged: {
+        if (boardLoader.item && boardLoader.item.isPinned) return
+        
         if (!mouseInsideBoard && shouldShowBoard && mouseHasMoved) {
             hideTimer.restart()
         } else if (mouseInsideBoard && mouseHasMoved) {
@@ -88,6 +107,8 @@ Scope {
     }
     
     onMouseHasMovedChanged: {
+        if (boardLoader.item && boardLoader.item.isPinned) return
+        
         if (mouseHasMoved && mouseInsideBoard && shouldShowBoard) {
             hideTimer.stop()
         }
@@ -97,6 +118,8 @@ Scope {
         id: hideTimer
         interval: 1000
         onTriggered: {
+            if (boardLoader.item && boardLoader.item.isPinned) return
+            
             if (!mouseInsideBoard || !mouseHasMoved) {
                 shouldShowBoard = false
             }

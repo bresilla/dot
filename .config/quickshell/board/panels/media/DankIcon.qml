@@ -7,22 +7,13 @@ Text {
     
     id: root
     
-    text: {
-        const icons = {
-            "music_note": "♪",
-            "skip_previous": "⏮",
-            "skip_next": "⏭",
-            "play_arrow": "▶",
-            "pause": "⏸",
-            "chevron_left": "‹",
-            "chevron_right": "›",
-            "arrow_back": "←",
-            "dashboard": "📊",
-            "settings": "⚙",
-            "notifications": "🔔"
-        }
-        return icons[name] || name
-    }
+    text: name
+    font.family: "Material Symbols Rounded"
     font.pixelSize: size
+    font.weight: 400
     color: Theme.surfaceText
+    verticalAlignment: Text.AlignVCenter
+    horizontalAlignment: Text.AlignHCenter
+    renderType: Text.NativeRendering
+    antialiasing: true
 }
