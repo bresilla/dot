@@ -10,11 +10,6 @@ ShellRoot {
 
     Variants {
         model: Quickshell.screens
-        Line {}
-    }
-
-    Variants {
-        model: Quickshell.screens
-        WorkspaceOSD {}
+        Workspace {}
     }
 }

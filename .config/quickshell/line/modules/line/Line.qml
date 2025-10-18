@@ -6,11 +6,10 @@ import QtQuick
 Scope {
     id: root
     required property var modelData
-    readonly property var currentMonitor: Hyprland.monitorFor(modelData)
-    readonly property int monitorHeight: modelData ? modelData.height : 1080
-    readonly property int monitorWidth: modelData ? modelData.width : 1920
-    
-    property string positionMode: "right"
+    required property var currentMonitor
+    required property int monitorHeight
+    required property int monitorWidth
+    required property bool barOnRight
 
     FileView {
         id: wal
@@ -35,48 +34,6 @@ Scope {
         }
     }
 
-    Process {
-        id: hyprctl
-        running: true
-        command: ["sh", "-c", "hyprctl monitors -j"]
-        stdout: SplitParser {
-            id: monitorJson
-        }
-    }
-
-    readonly property var monitorsData: {
-        try {
-            return JSON.parse(monitorJson.data || "[]");
-        } catch (e) {
-            return [];
-        }
-    }
-
-    readonly property var mainMonitor: {
-        for (let i = 0; i < monitorsData.length; i++) {
-            if (monitorsData[i].focused) return monitorsData[i];
-        }
-        return monitorsData.length > 0 ? monitorsData[0] : null;
-    }
-
-    readonly property int mainCenterX: mainMonitor ? mainMonitor.x + (mainMonitor.width / 2) : 0
-    readonly property int thisCenterX: modelData ? (modelData.x + (modelData.width / 2)) : 0
-    readonly property bool isMainMonitor: mainMonitor && modelData && mainMonitor.name === currentMonitor?.name
-    readonly property bool barOnRight: {
-        if (positionMode === "left") return false;
-        if (positionMode === "right") return true;
-        return isMainMonitor ? false : thisCenterX < mainCenterX;
-    }
-    
-    Component.onCompleted: {
-        console.log("Line.qml - Monitor:", currentMonitor?.name, 
-                    "| mainMonitor:", mainMonitor?.name,
-                    "| mainCenterX:", mainCenterX,
-                    "| thisCenterX:", thisCenterX,
-                    "| isMainMonitor:", isMainMonitor,
-                    "| barOnRight:", barOnRight);
-    }
-
     PanelWindow {
         id: lineWindow
         screen: modelData
@@ -98,8 +55,11 @@ Scope {
 
             Column {
                 id: wsContainer
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    left: barOnRight ? undefined : parent.left
+                    right: barOnRight ? parent.right : undefined
+                    verticalCenter: parent.verticalCenter
+                }
                 width: parent.width * 0.7
                 height: monitorHeight * 0.5
                 spacing: 10
