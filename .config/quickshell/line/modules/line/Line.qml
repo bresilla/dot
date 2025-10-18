@@ -9,6 +9,8 @@ Scope {
     readonly property var currentMonitor: Hyprland.monitorFor(modelData)
     readonly property int monitorHeight: modelData ? modelData.height : 1080
     readonly property int monitorWidth: modelData ? modelData.width : 1920
+    
+    property string positionMode: "right"
 
     FileView {
         id: wal
@@ -33,10 +35,57 @@ Scope {
         }
     }
 
+    Process {
+        id: hyprctl
+        running: true
+        command: ["sh", "-c", "hyprctl monitors -j"]
+        stdout: SplitParser {
+            id: monitorJson
+        }
+    }
+
+    readonly property var monitorsData: {
+        try {
+            return JSON.parse(monitorJson.data || "[]");
+        } catch (e) {
+            return [];
+        }
+    }
+
+    readonly property var mainMonitor: {
+        for (let i = 0; i < monitorsData.length; i++) {
+            if (monitorsData[i].focused) return monitorsData[i];
+        }
+        return monitorsData.length > 0 ? monitorsData[0] : null;
+    }
+
+    readonly property int mainCenterX: mainMonitor ? mainMonitor.x + (mainMonitor.width / 2) : 0
+    readonly property int thisCenterX: modelData ? (modelData.x + (modelData.width / 2)) : 0
+    readonly property bool isMainMonitor: mainMonitor && modelData && mainMonitor.name === currentMonitor?.name
+    readonly property bool barOnRight: {
+        if (positionMode === "left") return false;
+        if (positionMode === "right") return true;
+        return isMainMonitor ? false : thisCenterX < mainCenterX;
+    }
+    
+    Component.onCompleted: {
+        console.log("Line.qml - Monitor:", currentMonitor?.name, 
+                    "| mainMonitor:", mainMonitor?.name,
+                    "| mainCenterX:", mainCenterX,
+                    "| thisCenterX:", thisCenterX,
+                    "| isMainMonitor:", isMainMonitor,
+                    "| barOnRight:", barOnRight);
+    }
+
     PanelWindow {
         id: lineWindow
         screen: modelData
-        anchors { top: true; left: true; bottom: true }
+        anchors { 
+            top: true
+            left: !barOnRight
+            right: barOnRight
+            bottom: true
+        }
         implicitWidth: Screen.width * 0.005
         color: "transparent"
 
