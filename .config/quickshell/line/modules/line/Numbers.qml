@@ -72,7 +72,7 @@ Scope {
         property: "morphProgress"
         from: 0.0
         to: 1.0
-        duration: 300
+        duration: 600
         easing.type: Easing.OutCubic
         onRunningChanged: {
             if (!running) {
@@ -151,8 +151,11 @@ Scope {
             readonly property real startHeight: osdWindow.itemHeight
             readonly property real endSize: 110
             
-            width: startWidth + (endSize - startWidth) * morphProgress
-            height: startHeight + (endSize - startHeight) * morphProgress
+            readonly property real widthProgress: morphProgress * morphProgress
+            readonly property real heightProgress: morphProgress
+            
+            width: startWidth + (endSize - startWidth) * widthProgress
+            height: startHeight + (endSize - startHeight) * heightProgress
             radius: 4 + (51 * morphProgress)
             
             color: wal.adapter.colors["color1"] || "#CC000000"
