@@ -1,0 +1,12 @@
+{
+  "boards": [
+    {
+      "name": "default",
+      "path": "default"
+    },
+    {
+      "name": "minimal",
+      "path": "minimal"
+    }
+  ]
+}

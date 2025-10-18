@@ -1,0 +1,9 @@
+module board.default.cards
+
+BaseCard 1.0 BaseCard.qml
+ClockCard 1.0 ClockCard.qml
+SystemCard 1.0 SystemCard.qml
+UserInfoCard 1.0 UserInfoCard.qml
+LogoCard 1.0 LogoCard.qml
+CalendarCard 1.0 CalendarCard.qml
+MediaCard 1.0 MediaCard.qml

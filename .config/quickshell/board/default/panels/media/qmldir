@@ -1,0 +1,13 @@
+module board.default.panels.media
+
+MediaPanel 1.0 MediaPanel.qml
+DankIcon 1.0 DankIcon.qml
+DankAlbumArt 1.0 DankAlbumArt.qml
+DankSeekbar 1.0 DankSeekbar.qml
+StyledText 1.0 StyledText.qml
+I18n 1.0 I18n.qml
+singleton MprisController 1.0 MprisController.qml
+Ref 1.0 Ref.qml
+Anims 1.0 Anims.qml
+DankCircularImage 1.0 DankCircularImage.qml
+M3WaveProgress 1.0 M3WaveProgress.qml

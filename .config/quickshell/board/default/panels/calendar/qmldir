@@ -1,0 +1,8 @@
+module board.default.panels.calendar
+
+CalendarPanel 1.0 CalendarPanel.qml
+DankIcon 1.0 DankIcon.qml
+DankListView 1.0 DankListView.qml
+StyledText 1.0 StyledText.qml
+I18n 1.0 I18n.qml
+CalendarService 1.0 CalendarService.qml

@@ -1,0 +1,2 @@
+singleton WalColors 1.0 WalColors.qml
+singleton Theme 1.0 Theme.qml
