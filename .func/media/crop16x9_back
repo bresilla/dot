@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+  echo "usage: $0 <image> [fuzz%]" >&2
+  exit 1
+fi
+
+inpath="$1"
+fuzz_pct="${2:-8}"
+
+tw=2752
+th=1536
+
+tmp="$(mktemp --suffix=.${inpath##*.})"
+crop="$(mktemp --suffix=.${inpath##*.})"
+
+magick "$inpath" -fuzz "${fuzz_pct}%" -trim +repage "$tmp"
+
+dims=$(magick identify -format '%[fx:min(w,h*16/9)]x%[fx:min(h,w*9/16)]\n' "$tmp")
+magick "$tmp" -gravity center -crop "${dims}+0+0" +repage "$crop"
+
+magick "$crop" -resize "${tw}x${th}!" "$inpath"
+
+rm -f "$tmp" "$crop"
+echo "Overwritten: $inpath -> ${tw}x${th}"
+

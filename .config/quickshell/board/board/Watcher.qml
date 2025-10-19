@@ -15,6 +15,7 @@ Scope {
     property bool mouseInsideBoard: false
     property bool mouseHasMoved: false
     property point lastMousePos: Qt.point(0, 0)
+    property bool windowMoving: false
     
     Connections {
         target: boardLoader.item
@@ -70,6 +71,13 @@ Scope {
         target: Hyprland
         function onRawEvent(event) {
             if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
+                if (event.name === "movewindow" || event.name === "openwindow") {
+                    windowMoving = true
+                    windowMoveTimer.restart()
+                    if (shouldShowBoard && boardLoader.item && !boardLoader.item.isPinned) {
+                        shouldShowBoard = false
+                    }
+                }
                 Hyprland.refreshWorkspaces()
             }
         }
@@ -81,6 +89,10 @@ Scope {
             const isEmpty = focusedWorkspace?.lastIpcObject?.windows === 0
             
             if (boardLoader.item && boardLoader.item.isPinned) {
+                return
+            }
+            
+            if (windowMoving) {
                 return
             }
             
@@ -123,6 +135,14 @@ Scope {
             if (!mouseInsideBoard || !mouseHasMoved) {
                 shouldShowBoard = false
             }
+        }
+    }
+    
+    Timer {
+        id: windowMoveTimer
+        interval: 300
+        onTriggered: {
+            windowMoving = false
         }
     }
     
