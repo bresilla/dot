@@ -130,7 +130,7 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         f"Third-person perspective with a slightly low or dynamic angle to enhance scale and cinematic drama. "
         f"The composition must exude anime energy: crisp outlines, expressive shading, vivid color dominated by {color}, and cinematic intensity. "
         f"Strictly {t}-themed worldbuilding — no genre mixing. The image must be safe for work; the hero should not wear a bikini or revealing outfit. "
-        f"Inspired by animes such as {inspirations}. Not to many nuances bur rather flat surfaces"
+        f"Inspired by animes such as {inspirations}. Not to many nuances and surface reflecion, it shhould be with more flatter colors and anime like"
         f"Use {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements. Try to use only shades of {color}. "
         f"Lighting: {lighting_style}. "
         f"Render quality: {render_quality}."
