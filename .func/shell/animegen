@@ -5,16 +5,41 @@ import time
 import random
 import json
 import requests
+import sys
 from datetime import datetime
 from urllib.parse import urlparse, parse_qs
 
 colors = [
-    {"name": "vibrant green"}, {"name": "electric blue"}, {"name": "crimson red"},
-    {"name": "neon purple"}, {"name": "sunset orange"}, {"name": "magenta pink"},
-    {"name": "teal"}, {"name": "amber yellow"}, {"name": "turquoise"}, {"name": "violet"},
-    {"name": "chartreuse"}, {"name": "cobalt blue"}, {"name": "scarlet"}, {"name": "lime"},
-    {"name": "cerulean"}, {"name": "fuchsia"}, {"name": "emerald"}, {"name": "sapphire"},
-    {"name": "golden yellow"}, {"name": "neon cyan"}
+    {"name": "Crimson"},
+    {"name": "Magenta"},
+    {"name": "Electric Blue"},
+    {"name": "Lime Green"},
+    {"name": "Sunset Orange"},
+    {"name": "Fuchsia"},
+    {"name": "Chartreuse"},
+    {"name": "Vivid Violet"},
+    {"name": "Cyan"},
+    {"name": "Scarlet"},
+    {"name": "Hot Pink"},
+    {"name": "Neon Green"},
+    {"name": "Bright Yellow"},
+    {"name": "Royal Blue"},
+    {"name": "Deep Pink"},
+    {"name": "Aqua"},
+    {"name": "Coral"},
+    {"name": "Orange Red"},
+    {"name": "Emerald"},
+    {"name": "Turquoise"},
+    {"name": "Vivid Red"},
+    {"name": "Bright Lavender"},
+    {"name": "Lemon"},
+    {"name": "Ruby"},
+    {"name": "Sapphire"},
+    {"name": "Amethyst"},
+    {"name": "Flamingo Pink"},
+    {"name": "Peacock Blue"},
+    {"name": "Vermilion"},
+    {"name": "Electric Lime"}
 ]
 
 scifi_environments = [
@@ -44,45 +69,52 @@ fantasy_environments = [
 ]
 
 creatures_scifi = {
-    "Synthetic Android": "sleek synthetic musculature, polished plating, and luminous sensor eyes",
-    "Battle Cyborg": "reinforced exoskeleton, hydraulic augmentations, and modular hardpoints",
-    "Nano-Swarm Host": "shifting nanite skin, fractal patterns, and constantly reassembling armor",
-    "Exosuit Pilot": "human silhouette inside a biomechanical powered suit with glowing joints",
-    "AI Construct": "semi-material holographic contours fused with hard-light armor",
-    "Replicant-Type": "near-human dermal microtextures with unnaturally precise motion",
-    "Sentinel-Type": "multi-limbed articulated frame with clustered optics",
-    "Crystal Mechanoid": "angular crystalline body with refractive cores and glowing seams",
-    "Photonic Warden": "light-woven outline with prismatic semi-solid armor",
-    "Grav-Knight": "segmented plates levitating on micro-grav rings around a central frame",
-    "Void-Touched": "edge-blurred silhouette with starlit veins and phase-sheened armor",
-    "Stormforged": "ion filaments arcing across magnetized plates and a thunder-core reactor",
-    "Plantoid": "leaf-veined composite panels and photosynthetic filigree over alloy struts",
-    "Lithoid": "faceted mineral integument with geode-like lumens and crystalline ridges",
-    "Aquatic": "streamlined chassis with fin-like crests and iridescent dermal layers",
-    "Machine": "precision-machined plates, exposed servos, and softly pulsing arrays"
+    "Synthetic Android": "sleek synthetic musculature with flesh-like polymer skin, polished chromium plating on joints, luminous blue sensor eyes, and exposed circuitry at the temples",
+    "Battle Cyborg": "heavily reinforced titanium exoskeleton, hydraulic augmentation pistons on limbs, modular weapon hardpoints on shoulders, and red targeting sensors",
+    "Nano-Swarm Host": "shifting liquid-metal nanite skin with fractal surface patterns, constantly reassembling modular armor plates, and holographic data streams flowing across the body",
+    "Mecha Pilot": "towering bipedal combat mecha frame with cockpit chest-core, massive articulated limbs with glowing hydraulic joints, and shoulder-mounted weapon arrays",
+    "Neural-Linked Sentinel": "humanoid torso fused with quadrupedal mechanized base, multiple articulated sensor arms, neural interface cables from spine, and clustered optical arrays",
+    "Quantum Construct": "partially phased form flickering between solid and holographic states, hard-light armor plates with quantum entanglement patterns, and prismatic energy cores",
+    "Replicant Infiltrator": "nearly perfect synthetic human appearance with micro-textured artificial skin, impossibly precise robotic movements, and subtle seam lines at major joints",
+    "Warframe Juggernaut": "massive armored exoskeleton standing 12 feet tall, servo-assisted limb actuators, integrated plasma weapon systems, and fortress-grade ablative plating",
+    "Crystal Mechanoid": "faceted crystalline body structure with geometric precision, refractive light cores pulsing with energy, glowing circuit-seams, and prismatic sensory arrays",
+    "Photonic Warden": "body composed of solid light constructs, prismatic semi-transparent armor, energy blade projectors on arms, and a radiating halo corona",
+    "Grav-Knight": "segmented armor plates suspended on micro-gravity field rings, no visible joints or connection points, central anti-gravity core, and magnetically levitating weaponry",
+    "Void-Touched Automaton": "shadowy silhouette with star-like point sensors, reality-phased armor that blurs at edges, cosmic void energy conduits, and temporal distortion aura",
+    "Storm-Forged Colossus": "tesla coil spine with constant electrical arcs, magnetized beryllium-bronze plates, ionic filament muscles, and a thorium-core reactor heart",
+    "Cyber-Organic Hybrid": "bio-synthetic tissue grafted over mechanical endoskeleton, exposed cybernetic implants at joints, data-jack ports along spine, and augmented sensory organs",
+    "Drone Swarm Controller": "central mechanical humanoid directing thousands of micro-drones, holographic command interfaces, electromagnetic field generators, and distributed consciousness nodes",
+    "Plasma-Forged Titan": "superheated plasma containment body, magnetic field armor, fusion core chest, radiant energy bleeding from joints, and ionized atmospheric distortion",
+    "Techno-Organic Plantoid": "living metal with leaf-patterned composite panels, photovoltaic energy collection surfaces, root-like power cables, and bioluminescent circuit veins",
+    "Geo-Mechanoid Lithoid": "body of living stone and rare earth metals, faceted mineral integument, geode-like power cores with pulsing lumens, and crystalline data matrices",
+    "Aqua-Tech Submersible": "streamlined hydrodynamic chassis, retractable fin-arrays, bioluminescent running lights, sonar dome head, and pressurized deep-sea rated hull plating",
+    "Assembler Machina": "body of precision-machined modular components, exposed servo mechanisms and gear trains, micro-fabricator appendages, and softly pulsing logic core arrays",
+    "Neuro-Mechanoid": "exposed mechanical brain in transparent dome, neural pathway circuitry visible as glowing traces, multiple sensor stalks, and delicate precision manipulators",
+    "Chrono-Walker": "temporal displacement field generator core, phase-shifted armor appearing partially out of sync, causality engine backpack, and age-worn futuristic components",
+    "Hive-Mind Node": "central processing hub with multiple cybernetic tendrils, shared consciousness network transceivers, collective intelligence matrix, and synchronized movement protocols"
 }
 
 creatures_fantasy = {
-    "Elf": "elegant slender build, luminous eyes, and rune-etched armor filigree",
-    "Dwarf": "compact powerful frame, braided hair, and ornate plate with runic inlays",
-    "Orc": "broad muscled stature, tusked visage, and rugged layered armor",
-    "Dragonkin": "scaled limbs, horned crest, and ember-glowing accents along the spine",
-    "Fae": "otherworldly features, gossamer accents, and shimmering auric markings",
-    "Dryad": "bark-kissed skin, leaf-veined patterns, and living vine adornments",
-    "Treant": "towering wooden frame, mossy braids, and crystal-sapped joints",
-    "Merfolk": "streamlined form, fin crests, and pearl-lustre scales",
-    "Giant": "monolithic proportions, stone-braced greaves, and mountain-forged gear",
-    "Elemental": "body of roiling elemental matter bound by sigils and runic bands",
-    "Lich": "regal skeletal visage, arcane seals, and cold-burning soulflame",
-    "Wraith": "half-ethereal silhouette with trailing gloom and moonlit edges",
-    "Vampire": "aristocratic poise, pale luminance, and nocturnal regalia",
-    "Angel": "radiant countenance, feathered pinions, and celestial platework",
-    "Demon": "obsidian horns, ember cracks, and infernal sigils across armor",
-    "Centaur": "equine lower body with archer’s harness and ceremonial plates",
-    "Satyr": "sure-footed stance, curled horns, and vine-lashed leathers",
-    "Kitsune": "fox-eared grace, flowing tails, and charm sigils on silk armor",
-    "Oni": "imposing horned presence, lacquered plates, and storm-charm cords",
-    "Golem": "hewn-stone musculature bound by glowing glyphs and metal staples"
+    "Elf": "elegant willowy build standing 7 feet tall, almond-shaped luminous eyes with silver irises, pointed ears, flowing hair, and intricately rune-etched mithril armor with leaf-pattern filigree",
+    "Dwarf": "compact powerful 4-foot frame with broad shoulders, magnificently braided beard adorned with metal rings, battle-worn face, and master-crafted ornate plate armor with ancestral runic inlays",
+    "Orc": "massive 8-foot muscled warrior build, prominent tusks protruding from lower jaw, war-scarred green skin, tribal tattoos, and rugged layered leather-and-iron armor with bone trophies",
+    "Dragonkin": "draconic humanoid form covered in iridescent scales, curved horns forming majestic crest, clawed hands and feet, reptilian eyes, and ember-glowing veins along the spine",
+    "Fae": "impossibly beautiful otherworldly features, opalescent skin that shifts colors, delicate gossamer wing accents, pointed ears, and shimmering auric markings that pulse with ancient magic",
+    "Dryad": "living wood form with bark-textured skin in shades of green and brown, hair of leaves and blossoms, vine-veined patterns across limbs, and armor of living branches and moss",
+    "Treant": "towering 20-foot form of ancient living wood, thick trunk-like torso, branch-limbs with leafy canopy, mossy beard and brows, and amber-sapped joints that glow with life energy",
+    "Merfolk": "streamlined athletic form with human torso, powerful scaled fish tail, webbed fingers, fin crests along spine and arms, gill slits on neck, and pearl-lustre opalescent scales",
+    "Giant": "colossal 30-foot humanoid of monolithic proportions, weather-beaten face carved with age, boulder-like muscles, stone-braced iron greaves, and armor forged in mountain fires",
+    "Elemental": "humanoid form of pure elemental matter - churning flames, flowing water, swirling wind, or shifting earth - bound and contained by glowing arcane sigils and runic binding bands",
+    "Lich": "skeletal undead form draped in ancient tattered robes, hollow eye sockets burning with cold soulflame, crown of blackened metal, arcane seal tattoos on bone, and phylactery amulet",
+    "Wraith": "half-incorporeal shadowy silhouette constantly shifting between solid and ethereal, trailing tendrils of dark mist, pale spectral face, tattered phantom robes, and moonlit silver edges",
+    "Vampire": "aristocratic immortal beauty with porcelain pale skin, hypnotic red eyes, elegant fanged smile, refined gothic regalia in deep crimson and black, and an aura of predatory grace",
+    "Angel": "celestial being with radiant golden-white countenance, majestic feathered wings spanning 20 feet, glowing halo, divine light emanating from within, and gleaming celestial plate armor",
+    "Demon": "infernal entity with curved obsidian horns, crimson skin covered in glowing ember-cracks, clawed hands and hooves, bat-like wings, and black armor inscribed with infernal sigils",
+    "Centaur": "noble upper human torso merged with powerful horse body, tribal archer's leather harness, ceremonial war paint, flowing mane, and bronze-scaled barding on equine half",
+    "Satyr": "lithe humanoid with goat legs ending in cloven hooves, curved ram horns, mischievous features, shaggy fur on lower body, sure-footed mountain stance, and vine-wrapped leather vestments",
+    "Kitsune": "mystical fox-spirit in humanoid form, elegant fox ears atop head, multiple flowing tails (3-9), vulpine grace, kimono robes with charm sigils, and mischievous amber eyes",
+    "Oni": "massive 9-foot oni-demon with imposing horned head, tiger-striped skin in red or blue, fearsome tusked jaw, tremendous strength, lacquered samurai armor plates, and storm-binding ritual cords",
+    "Golem": "animated construct of hewn stone or clay, massive blocky musculature, glowing mystical glyphs carved across body, metal staple joints, and vacant glowing eyes housing magical animating force"
 }
 
 inspirations = "Evangelion, Gundam, Dragonball"
@@ -102,7 +134,7 @@ render_quality = "crisp linework, clean edges, expressive cel shading, high micr
 def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=True, safety_tolerance=3, explicit_color=None, explicit_creature=None, explicit_environment=None, raw=False, aspect_ratio="16:9"):
     if seed is not None:
         random.seed(seed)
-    t = theme if theme in ("sci-fi", "fantasy") else random.choice(["sci-fi", "fantasy"])
+    t = theme if theme in ("sci-fi", "fantasy") else random.choices(["sci-fi", "fantasy"], weights=[2, 1])[0]
     color = explicit_color if explicit_color else random.choice(colors)["name"]
     if t == "sci-fi":
         creatures = creatures_scifi
@@ -123,15 +155,15 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
     base = (
         f"Epic {theme_tag} scene — bold, vibrant, and borderless with pure anime-first aesthetics. "
         f"Set in a richly detailed {environment}, filled with volumetric lighting, soft shadows, and cinematic fog for mood and scale. "
-        f"A humanoid {creature_key} with {creature_desc}, accented by {color} highlights, stands prominently and faces both the hero and the camera. "
-        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with {color} tails, wearing {clothes}, embodying a confident and determined presence. "
+        f"A humanoid {creature_key} with {creature_desc}, accented by light {color} highlights, stands prominently and faces both the hero and the camera. "
+        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with light {color} tails, wearing {clothes}, embodying a confident and determined presence. "
         f"Full-body shot — head to toe visible, clean edges, uncropped, no borders. "
         f"She faces the {creature_key} with her back to the camera, standing in a grounded combat-ready pose using a {hero_weapon}."
         f"Third-person perspective with a slightly low or dynamic angle to enhance scale and cinematic drama. "
-        f"The composition must exude anime energy: crisp outlines, expressive shading, vivid color dominated by {color}, and cinematic intensity. "
+        f"The composition must exude anime energy: crisp outlines, expressive shading, vivid color dominated by light {color}, and cinematic intensity. "
         f"Strictly {t}-themed worldbuilding — no genre mixing. The image must be safe for work; the hero should not wear a bikini or revealing outfit. "
         f"Inspired by animes such as {inspirations}. Not to many nuances and surface reflecion, it shhould be with more flatter colors and anime like"
-        f"Use {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements. Try to use only shades of {color}. "
+        f"Use light {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements. Try to use only shades of light {color}. "
         f"Lighting: {lighting_style}. "
         f"Render quality: {render_quality}."
     )
@@ -223,7 +255,15 @@ if __name__ == "__main__":
         explicit_environment=explicit_environment,
         raw=False
     )
-    print(prompt)
+    print("="*80, file=sys.stderr)
+    print(f"THEME: {picks['theme']}", file=sys.stderr)
+    print(f"CREATURE: {picks['creature']}", file=sys.stderr)
+    print(f"COLOR: {picks['color']}", file=sys.stderr)
+    print(f"ENVIRONMENT: {picks['environment']}", file=sys.stderr)
+    print("="*80, file=sys.stderr)
+    print("\nGENERATED PROMPT:", file=sys.stderr)
+    print(prompt, file=sys.stderr)
+    print("="*80, file=sys.stderr)
     if os.getenv("BFL_API_KEY"):
         result = generate_image(os.getenv("BFL_API_KEY"), api_payload)
         print(json.dumps({"picks": picks, "request_id": result["request_id"], "result_url": result["result_url"]}, indent=2))

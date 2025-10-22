@@ -14,6 +14,7 @@ export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
 
 
 #USER BINARIES AND SCRIPTS
+export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
 [[ -d "/env/bin" ]] && PATH="$PATH:/env/bin"
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"

@@ -10,39 +10,33 @@ BaseCard {
     readonly property real screenBasedLineHeight: Screen.height * 0.005
     readonly property real iconSize: Theme.iconSize * 1.5
     
+    property real volume: -1
+    property real brightness: -1
+    
+    Component.onCompleted: {
+        volumeGetProc.running = true
+        brightnessGetProc.running = true
+    }
+    
     Process {
         id: volumeGetProc
         command: ["pamixer", "--get-volume"]
-        running: true
-        
-        property real volume: 0.5
-        
-        onStarted: {
-            const text = stdout.readAll()
-            if (text) volume = parseInt(text.trim()) / 100
+        running: false
+        stdout: SplitParser {
+            onRead: data => {
+                root.volume = parseInt(data.trim()) / 100
+            }
         }
     }
     
     Process {
         id: brightnessGetProc
         command: ["light", "-G"]
-        running: true
-        
-        property real brightness: 0.7
-        
-        onStarted: {
-            const text = stdout.readAll()
-            if (text) brightness = parseFloat(text.trim()) / 100
-        }
-    }
-    
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: {
-            volumeGetProc.running = true
-            brightnessGetProc.running = true
+        running: false
+        stdout: SplitParser {
+            onRead: data => {
+                root.brightness = parseFloat(data.trim()) / 100
+            }
         }
     }
     
@@ -160,22 +154,23 @@ BaseCard {
                     
                     StyledProgressBar {
                         width: parent.width - parent.children[0].width - parent.spacing
-                        value: volumeGetProc.volume
+                        value: root.volume
                         lineHeight: root.screenBasedLineHeight
                         showIndicator: true
                         interactive: true
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: root.volume >= 0
                         
                         onClicked: position => {
                             volumeSetProc.command = ["pamixer", "--set-volume", Math.round(position * 100).toString()]
                             volumeSetProc.running = true
-                            volumeGetProc.volume = position
+                            root.volume = position
                         }
                         
                         onSeeking: position => {
                             volumeSetProc.command = ["pamixer", "--set-volume", Math.round(position * 100).toString()]
                             volumeSetProc.running = true
-                            volumeGetProc.volume = position
+                            root.volume = position
                         }
                     }
                 }
@@ -201,22 +196,23 @@ BaseCard {
                     
                     StyledProgressBar {
                         width: parent.width - parent.children[0].width - parent.spacing
-                        value: brightnessGetProc.brightness
+                        value: root.brightness
                         lineHeight: root.screenBasedLineHeight
                         showIndicator: true
                         interactive: true
                         anchors.verticalCenter: parent.verticalCenter
+                        visible: root.brightness >= 0
                         
                         onClicked: position => {
                             brightnessSetProc.command = ["light", "-S", (position * 100).toString()]
                             brightnessSetProc.running = true
-                            brightnessGetProc.brightness = position
+                            root.brightness = position
                         }
                         
                         onSeeking: position => {
                             brightnessSetProc.command = ["light", "-S", (position * 100).toString()]
                             brightnessSetProc.running = true
-                            brightnessGetProc.brightness = position
+                            root.brightness = position
                         }
                     }
                 }

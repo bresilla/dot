@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Remote host details
+REMOTE_USER="bresilla" # Replace with your username on the remote host
+REMOTE_HOST="tron.netbird"
+REMOTE_SCRIPT="/pkg/mamba/envs/diffusers/bin/python /doc/other/animegen/animagen.py"
+REMOTE_FILE="/tmp/wall.png"
+
+# Get the loop count from the command-line argument
+LOOP_COUNT="$1"
+
+# Check if the argument is missing or not a number
+if [ -z "$LOOP_COUNT" ] || ! [[ "$LOOP_COUNT" =~ ^[0-9]+$ ]]; then
+    LOOP_COUNT=1  # Default to 1 if no argument or not a number
+    echo "No valid loop count provided. Running once."
+else
+    echo "Running $LOOP_COUNT times."
+fi
+
+
+# Loop the specified number of times
+for i in $(seq 1 "$LOOP_COUNT"); do
+    echo "Iteration $i:"
+
+    # Generate 5 names using the "names" tool - MOVED INSIDE THE LOOP
+    NAMES=$(names -n 5)
+
+    # Check if names were generated successfully
+    if [ -z "$NAMES" ]; then
+        echo "Error: Failed to generate names."
+        exit 1
+    fi
+
+    # Select the first name from the generated names for the local file name
+    SELECTED_NAME=$(echo "$NAMES" | head -n 1 | tr -cd '[:alnum:]._-') # Sanitize the name
+    LOCAL_DESTINATION="./${SELECTED_NAME}.png"
+
+
+    # SSH into the remote host and run the Python script
+    ssh "${REMOTE_USER}@${REMOTE_HOST}" "${REMOTE_SCRIPT}"
+
+    # Check if the remote file was created
+    if ssh "${REMOTE_USER}@${REMOTE_HOST}" "[ -f ${REMOTE_FILE} ]"; then
+        # Copy the file from the remote host to the local machine
+        scp "${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_FILE}" "${LOCAL_DESTINATION}"
+        echo "File copied successfully to ${LOCAL_DESTINATION}"
+    else
+        echo "Error: ${REMOTE_FILE} was not found on the remote host."
+        exit 1
+    fi
+
+done
