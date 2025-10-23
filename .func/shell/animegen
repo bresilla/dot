@@ -6,7 +6,7 @@ import random
 import json
 import requests
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from urllib.parse import urlparse, parse_qs
 
 colors = [
@@ -39,33 +39,90 @@ colors = [
     {"name": "Flamingo Pink"},
     {"name": "Peacock Blue"},
     {"name": "Vermilion"},
-    {"name": "Electric Lime"}
+    {"name": "Electric Lime"},
+    {"name": "Tangerine"},
+    {"name": "Mint Green"},
+    {"name": "Periwinkle"},
+    {"name": "Cerulean"},
+    {"name": "Marigold"},
+    {"name": "Rose Gold"},
+    {"name": "Teal"},
+    {"name": "Peach"},
+    {"name": "Lilac"},
+    {"name": "Gold"},
+    {"name": "Silver"},
+    {"name": "Bronze"},
+    {"name": "Sky Blue"},
+    {"name": "Seafoam"},
+    {"name": "Amber"},
+    {"name": "Jade"},
+    {"name": "Cobalt"},
+    {"name": "Raspberry"},
+    {"name": "Blush Pink"},
+    {"name": "Mint Blue"},
+    {"name": "Champagne"},
+    {"name": "Pearl White"},
+    {"name": "Ivory"},
+    {"name": "Salmon"},
+    {"name": "Canary Yellow"},
+    {"name": "Indigo"},
+    {"name": "Orchid"},
+    {"name": "Burgundy"},
+    {"name": "Plum"},
+    {"name": "Apricot"}
 ]
 
 scifi_environments = [
-    "a luminous futuristic city of glass towers",
-    "a colossal space station interior with parallax windows",
-    "an alien planet with ringed skies and twin moons",
-    "a neon-lit skybridge over a sprawling megacity",
-    "a storm-wracked orbital dock above a blue world",
-    "a canyon of hovering monoliths under auroras",
-    "an asteroid hangar bay with open starfields",
-    "a ringworld terrace with endless horizon",
-    "a desert colony with wind-carved domes",
-    "a bioluminescent jungle on an exoplanet"
+    "a luminous futuristic city of crystalline glass towers reaching into purple skies, with flying vehicles weaving between buildings, holographic advertisements, reflective surfaces creating light prismatic effects, and elevated transit tubes connecting the structures",
+    "a colossal rotating space station interior with massive curved parallax windows revealing starfields and nebulae, artificial gravity ring corridors with metallic grating floors, exposed conduit pipes, blinking console panels, and distant Earth visible through viewports",
+    "an alien planet surface with dramatic ringed gas giant filling half the sky, twin moons hanging at different phases, strange crystalline rock formations, exotic bioluminescent flora, and swirling atmospheric storms with alien colors",
+    "a neon-lit skybridge suspended hundreds of meters over a sprawling cyberpunk megacity at night, with holographic billboards in multiple languages, rain-slicked surfaces reflecting pink and cyan lights, fog banks between buildings, and endless urban sprawl below",
+    "a storm-wracked orbital docking station with lightning arcing between metal frameworks, massive capital ships tethered to loading gantries, a blue-green planet dominating the view below, debris floating in zero-gravity, and warning lights flashing through the electrical tempest",
+    "a massive canyon filled with enormous hovering monolithic structures suspended by unknown technology, with shimmering aurora borealis dancing across alien skies, anti-gravity streams of energy flowing between the obelisks, ancient alien architecture, and mysterious glowing glyphs",
+    "an asteroid mining hangar bay carved into solid rock with one side completely open to the infinite starfield, magnetic containment fields holding atmosphere, industrial drilling equipment, ore processing machinery, work lights casting dramatic shadows, and distant galaxies visible in the void",
+    "a ringworld terrace section with manufactured landscape extending to a perfectly straight horizon where it curves upward into the sky, artificial sun-strip running along the ring's center axis, megastructure support pillars kilometers tall, and exotic engineered biomes visible in the distance",
+    "a Martian desert colony compound with wind-carved geodesic habitat domes, red dust storms approaching on the horizon, solar panel arrays, antenna farms, pressurized transit tubes connecting modules, rocks scattered across rust-colored terrain, and a pale sun in the salmon sky",
+    "a dense bioluminescent alien jungle on an exoplanet with towering phosphorescent trees, glowing fungal networks, strange floating spore clouds emitting soft light, exotic plants with bio-electrical energy, mist hanging between massive trunks, and an alien sky with unfamiliar constellations",
+    "a dystopian cyberpunk street market in perpetual acid rain, with steam rising from grates, vendors selling cybernetic implants under tattered awnings, flickering holographic signs in kanji and English, crowds of augmented humans, neon reflections in puddles, and towering corporate arcologies looming overhead",
+    "an enormous generation starship's agricultural ring section with artificial sunlight strips, tiered hydroponic farms growing crops in geometric patterns, misty irrigation systems creating rainbows, transparent aluminum ceiling showing the cosmos beyond, and maintenance drones tending the fields",
+    "a derelict alien megastructure floating in deep space, with massive geometric halls of impossible architecture, non-Euclidean corridors, walls covered in indecipherable alien script, emergency lighting casting eerie shadows, frozen atmosphere crystals floating in zero-g, and the sense of ancient abandonment",
+    "a high-tech medical facility aboard a space station with sterile white corridors, holographic diagnostic displays, cryogenic suspension pods lining walls, surgical robots on articulated arms, quarantine chambers with force fields, and panoramic windows showing planetary sunrise",
+    "an underground bunker city built beneath Earth's irradiated surface, with concrete tunnels lit by harsh fluorescent strips, recycled air vents humming constantly, hydroponic gardens in converted subway stations, makeshift living quarters, rust-stained pipes dripping condensation, and distant rumbling from above",
+    "a virtual reality construct with impossible Escher-like geometry, floating platforms in infinite digital void, cascading streams of matrix code, glitch artifacts flickering at reality's edges, wireframe structures phasing between solid and transparent, and data streams flowing like rivers of light",
+    "an alien desert world with three setting suns casting triple shadows, towering rock spires carved by centuries of sandstorms, ancient crashed spacecraft half-buried in dunes, heat shimmer distorting the horizon, strange silicon-based lifeforms crawling across rocks, and distant mountains of blue crystal",
+    "a massive terraforming platform on a lifeless moon, with atmospheric processors belching clouds, lakes of liquid being synthesized, genetic seeders planting the first vegetation, construction mechs building habitation domes, orbital mirrors redirecting sunlight, and the slow transformation of barren rock into fertile ground",
+    "a quantum research facility existing in multiple dimensions simultaneously, with rooms overlapping in impossible ways, scientists in protective suits monitoring containment fields, probability engines generating alternate timelines, reality anchors preventing dimensional drift, and strange energy patterns defying physics",
+    "an abandoned mech hangar in a war-torn city, with massive 50-foot tall combat robots in various states of disrepair, broken weapons scattered across oil-stained floors, emergency lights creating dramatic shadows, exposed circuitry and hydraulics, shattered cockpit canopies, and battle damage scarring every surface",
+    "a bustling spaceport bazaar on a frontier colony world, with ships of every configuration docked at landing pads, alien merchants hawking exotic goods, translation devices creating babel of languages, customs drones scanning cargo, bounty hunters eyeing crowds, and the smell of alien cuisines mixing in the air",
+    "an ice planet research outpost during a perpetual blizzard, with pressurized habitation modules connected by enclosed tunnels, wind howling against reinforced windows, snow drifts piling against airlocks, thermal generators struggling against the cold, aurora australis dancing in the dark sky, and absolute isolation",
+    "a post-singularity upload server farm where human consciousnesses are stored, with rows of humming quantum processors extending to vanishing points, cooling systems maintaining near-absolute-zero temperatures, fiber optic cables like neural networks, holographic monitoring stations, and millions of uploaded minds existing as data",
+    "a vertical slum tower in a overpopulated mega-city, with levels of ramshackle housing stacked impossibly high, illegal power taps creating spider-webs of cables, laundry hanging between balconies, market stalls on every landing, smog obscuring the upper levels, and the wealthy penthouses barely visible in the clouds above"
 ]
 
 fantasy_environments = [
-    "an ancient forest of towering oaks and fireflies",
-    "a misty valley at dawn with stone ruins",
-    "a mountain citadel crowned by banners",
-    "a floating island archipelago above clouds",
-    "a crystalline cave with glowing veins",
-    "a coastal cliff fortress over stormy seas",
-    "a bioluminescent grove with standing stones",
-    "a basalt plain with rivers of lava",
-    "a moonlit swamp with will-o'-wisps",
-    "a thundering waterfall canyon with ivy-clad bridges"
+    "ancient forest with towering oaks and glowing fireflies",
+    "misty valley with stone ruins and ivy-covered pillars",
+    "mountain citadel fortress with heraldic banners and bridges",
+    "floating islands above clouds with waterfalls and rope bridges",
+    "crystalline cave with amethyst walls and glowing veins",
+    "coastal cliff fortress in storm with crashing waves",
+    "bioluminescent grove with standing stones and full moon",
+    "volcanic plain with lava rivers and obsidian cliffs",
+    "moonlit swamp with cypress trees and will-o'-wisps",
+    "waterfall canyon with rainbow mist and ancient bridges",
+    "enchanted castle courtyard in eternal winter",
+    "dragon's volcanic lair with treasure and molten pools",
+    "elven tree-city with spiral walkways and starlight lanterns",
+    "dark tower piercing storm clouds on blasted plain",
+    "dwarven forge-city with eternal flames and gemstone walls",
+    "wizard's tower with floating books and impossible stairs",
+    "fairy meadow with giant mushrooms and time distortions",
+    "haunted battlefield with ghostly figures and mist",
+    "desert oasis with golden fruit and silk pavilions",
+    "underwater coral palace with luminescent fish",
+    "necromancer's bone cathedral in cursed swamp",
+    "giant's dwelling with oversized furniture and murals",
+    "portal nexus with shimmering gates to other realms"
 ]
 
 creatures_scifi = {
@@ -125,7 +182,10 @@ negative_tokens = [
     "nsfw", "overly revealing outfit", "wardrobe malfunction",
     "text", "watermark", "signature", "logo", "ui elements",
     "oversaturated neon bleed", "posterized banding", "jpeg artifacts",
-    "poor perspective", "tilted horizon", "bad hands", "bad feet"
+    "poor perspective", "tilted horizon", "bad hands", "bad feet",
+    "multiple people", "extra people", "crowd", "bystanders", "spectators", "audience",
+    "multiple creatures", "extra creatures", "other characters", "background characters",
+    "third person", "additional figures", "group", "team", "army", "soldiers"
 ]
 
 lighting_style = "consistent key light with soft global illumination, volumetric light shafts, gentle bloom, and subtle rim lighting on silhouettes"
@@ -134,8 +194,9 @@ render_quality = "crisp linework, clean edges, expressive cel shading, high micr
 def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=True, safety_tolerance=3, explicit_color=None, explicit_creature=None, explicit_environment=None, raw=False, aspect_ratio="16:9"):
     if seed is not None:
         random.seed(seed)
-    t = theme if theme in ("sci-fi", "fantasy") else random.choices(["sci-fi", "fantasy"], weights=[2, 1])[0]
-    color = explicit_color if explicit_color else random.choice(colors)["name"]
+    t = theme if theme in ("sci-fi", "fantasy") else random.choice(["sci-fi", "fantasy"])
+    base_color = explicit_color if explicit_color else random.choice(colors)["name"]
+    color = f"vibrant {base_color}"
     if t == "sci-fi":
         creatures = creatures_scifi
         environments = scifi_environments
@@ -153,21 +214,57 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
     environment = explicit_environment if explicit_environment in environments else random.choice(environments)
 
     base = (
-        f"Epic {theme_tag} scene — bold, vibrant, and borderless with pure anime-first aesthetics. "
-        f"Set in a richly detailed {environment}, filled with volumetric lighting, soft shadows, and cinematic fog for mood and scale. "
-        f"A humanoid {creature_key} with {creature_desc}, accented by light {color} highlights, stands prominently and faces both the hero and the camera. "
-        f"The hero is an anime-style girl with long flowing hair tied in a ponytail with light {color} tails, wearing {clothes}, embodying a confident and determined presence. "
-        f"Full-body shot — head to toe visible, clean edges, uncropped, no borders. "
-        f"She faces the {creature_key} with her back to the camera, standing in a grounded combat-ready pose using a {hero_weapon}."
-        f"Third-person perspective with a slightly low or dynamic angle to enhance scale and cinematic drama. "
-        f"The composition must exude anime energy: crisp outlines, expressive shading, vivid color dominated by light {color}, and cinematic intensity. "
-        f"Strictly {t}-themed worldbuilding — no genre mixing. The image must be safe for work; the hero should not wear a bikini or revealing outfit. "
-        f"Inspired by animes such as {inspirations}. Not to many nuances and surface reflecion, it shhould be with more flatter colors and anime like"
-        f"Use light {color} as the dominant accent color throughout, subtly enhancing both the creature and environmental elements. Try to use only shades of light {color}. "
-        f"Lighting: {lighting_style}. "
-        f"Render quality: {render_quality}."
+        f"Epic cinematic {theme_tag} in premium anime art style with {color} as the dominant signature color. "
+        f"Setting: A deserted (no humans) {environment}, rendered with atmospheric depth through volumetric god rays in {color} tones, soft ambient shadows, cinematic haze tinted with {color}, and rich environmental detail creating epic scale and mood. "
+        f"The entire scene should be bathed in {color} atmospheric lighting and {color} ambient glow. CRITICAL, {color} color should be dominant in the entire image, touching every part of the environment, characters, and creatures. "
+        f"CAMERA PERSPECTIVE: Wide establishing shot from a distance, pulling back to show the entire scene. "
+        f"The camera is positioned far enough away to capture the full environment and both characters completely within the frame. "
+        f"Think of it as a movie establishing shot that sets the stage for an epic confrontation. "
+        f"CRITICAL: Main antagonist, a powerful {creature_key} with {creature_desc}. "
+        f"The creature stands in the background/far side, facing directly toward the hero with an imposing, threatening stance. "
+        f"Accent the creature with strategic {color} energy highlights, glowing {color} accents on armor/body, {color} ambient lighting, and {color} power emanations. "
+        f"The {creature_key} should have {color} glowing elements, {color} aura effects, and be backlit with {color} illumination. "
+        f"Hero character: An athletic anime-style warrior girl with long flowing hair in a high ponytail with vibrant {color} gradient highlights at the tips. "
+        f"She wears {clothes} with prominent {color} accent details, {color} trim, and functional armor pieces with {color} decorative elements. "
+        f"Her {hero_weapon} glows with {color} energy. "
+        f"Her expression shows fierce determination and battle focus as she faces her opponent, eyes reflecting {color} light. "
+        f"ABSOLUTELY CRITICAL - HERO VISIBILITY: The hero MUST be 100% completely visible from head to toe. "
+        f"Every single part of her body, face, hair, clothing, and weapon must be clearly visible in the frame. "
+        f"NO cropping, NO cutting off any body parts, NO obscuring - she is ENTIRELY and FULLY visible. "
+        f"Her full figure, front-facing or three-quarter view, must be completely shown. "
+        f"CRITICAL POSITIONING: The hero and {creature_key} are positioned face-to-face, directly opposing each other. "
+        f"They stand on opposite sides of the frame facing each other - NOT side-by-side, NOT next to each other. "
+        f"The hero faces the creature, the creature faces the hero, with clear open space between them. "
+        f"Imagine a line drawn between them - they are on opposite ends of this line, facing along it toward each other. "
+        f"Composition: Wide-angle full-body shot from a distant vantage point. "
+        f"Both the hero (foreground/mid-ground) and creature (mid-ground/background) are completely visible head-to-toe with zero cropping. "
+        f"The framing is pulled back enough to show both fighters in their entirety plus surrounding environment. "
+        f"Clear spatial separation between them with substantial visible distance showing the standoff. "
+        f"The hero holds {hero_weapon} crackling with {color} energy in a masterful combat-ready stance, weapon aimed toward the {creature_key}, full body clearly visible. "
+        f"Camera angle: Wide establishing shot from medium distance, slightly elevated or level angle showing the full confrontation scene. "
+        f"The framing captures both opponents in full, the space between them, and enough environment to establish epic scale. "
+        f"This is a cinematic wide shot showing the complete standoff between two warriors facing off across a battlefield. "
+        f"Art style: Pure high-quality anime aesthetic inspired by {inspirations}. "
+        f"Crisp character outlines, expressive cel-shading with flat color regions, bold edge definition, minimal photorealistic texture, strategic specular highlights only. "
+        f"COLOR IS CRITICAL: The entire image must be dominated by {color} as the signature accent color. "
+        f"Use {color} for: energy effects, environmental lighting, sky tones, atmospheric glow, costume accents, weapon energy, creature highlights, magical effects, rim lighting, and ambient illumination. "
+        f"{color} should appear throughout the composition - in the environment, on both characters, in the lighting, and in special effects. "
+        f"The color palette is built around {color} with complementary shadow tones and harmonious supporting colors. "
+        f"Make {color} the visual motif that ties the entire scene together. "
+        f"CRITICAL: ONLY TWO CHARACTERS - The image must contain EXACTLY TWO characters: the hero and the {creature_key}. "
+        f"NO other people, NO other creatures, NO background characters, NO crowds, NO bystanders, NO additional figures. "
+        f"The composition philosophy is: HERO + CREATURE + ENVIRONMENT + {color}. Nothing else. "
+        f"This is a solo duel between two opponents - keep the focus pure and undiluted. "
+        f"Strict {t} genre adherence - absolutely no mixing of fantasy and sci-fi elements. "
+        f"Professional, safe-for-work character design - functional combat attire, no revealing clothing or fanservice. "
+        f"Technical quality: {lighting_style} with {color} tinting and glow. "
+        f"{render_quality} "
+        f"Once more, the {color} color should be dominant in the entire image, touching every part of the environment, characters, and creatures. "
+        f"Perfect character anatomy, dynamic pose flow, weight distribution, and professional animation-grade composition. "
+        f"Borderless artwork filling entire frame with no letterboxing, vignette, or frame elements."
+        f"CONCLUSION: A {color} cinematic {theme_tag} in premium anime art, where the hero faces off against a powerful {creature_key}"
+        f"SUPER CRITICAL: Both HERO and {creature_key} should be present in the image, and no other characters, creatures, but {color} environment"
     )
-
     neg = ", ".join(negative_tokens)
 
     payload = {
@@ -224,7 +321,7 @@ def download_image(url, filename=None):
     base_dir = "/env/set/.animegen"
     os.makedirs(base_dir, exist_ok=True)
     if filename is None:
-        ts = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         filename = f"flux_ultra_{ts}.{ext}"
     if not os.path.isabs(filename):
         filepath = os.path.join(base_dir, filename)
@@ -238,6 +335,7 @@ def download_image(url, filename=None):
 
 
 if __name__ == "__main__":
+    random.seed()
     seed = None
     explicit_color = None
     explicit_creature = None
@@ -269,4 +367,6 @@ if __name__ == "__main__":
         print(json.dumps({"picks": picks, "request_id": result["request_id"], "result_url": result["result_url"]}, indent=2))
         saved = download_image(result["result_url"])
         print(json.dumps({"saved_file": saved}, indent=2))
+        print(f"\nSAVED IN: {saved}", file=sys.stderr)
+        print("="*80, file=sys.stderr)
 

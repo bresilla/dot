@@ -9,7 +9,7 @@ export TEMP=/tmp
 
 export PATH=/usr/local/cuda-12.9/bin:$PATH
 export PATH="/home/bresilla/.deno/bin:/home/bresilla/.bun/bin:/.npm-global/bin:$PATH"
-export PATH="/opt/TurboVNC/bin/:$PATH"
+export PATH="/opt/TurboVNC/bin/:/opt/fox:$PATH"
 export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
 
 
