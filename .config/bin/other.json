@@ -1,6 +1,16 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/aichat": {
+            "path": "/env/bin/aichat",
+            "remote_name": "aichat",
+            "version": "v0.30.0",
+            "hash": "8378dfc295093efadc3ddddd17f2b49223f120a14ef3503159f375d68f287346",
+            "url": "https://github.com/sigoden/aichat",
+            "provider": "github",
+            "package_path": "aichat",
+            "pinned": false
+        },
         "/env/bin/buf": {
             "path": "/env/bin/buf",
             "remote_name": "buf-Linux-x86_64",
@@ -29,6 +39,16 @@
             "url": "https://github.com/savedra1/clipse",
             "provider": "github",
             "package_path": "clipse",
+            "pinned": false
+        },
+        "/env/bin/crush": {
+            "path": "/env/bin/crush",
+            "remote_name": "crush",
+            "version": "v0.12.3",
+            "hash": "bed929c91fea4ffb8c42bc1adccb27ef68179c27cafc854fa5de94a6c35e95dd",
+            "url": "https://github.com/charmbracelet/crush",
+            "provider": "github",
+            "package_path": "crush_0.12.3_Linux_x86_64/crush",
             "pinned": false
         },
         "/env/bin/fabric": {

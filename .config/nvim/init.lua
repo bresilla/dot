@@ -102,7 +102,6 @@ require("config.lazy")
 require("utils.termcolors")
 require("utils.diags")
 require("utils.navigation")
-require("utils.lspconfig")
 
 ---------------------------------------------- === ATUOCMDS === ----------------------------------------------
 -- === DEFAULT FILETYPE === "
@@ -145,6 +144,28 @@ vim.keymap.set('n', '~', [[g~aw]])
 
 -- === OTHERS === "
 vim.keymap.set('n', '<C-a>', 'ggVG')
+
+-- === MOVE LINES === "
+vim.keymap.set('n', '<C-A-Up>', ':m .-2<CR>==', { remap = true, silent = true, desc = "Move line up" })
+vim.keymap.set('n', '<C-A-Down>', ':m .+1<CR>==', { remap = true, silent = true, desc = "Move line down" })
+vim.keymap.set('v', '<C-A-Up>', ":m '<-2<CR>gv=gv", { remap = true, silent = true, desc = "Move selection up" })
+vim.keymap.set('v', '<C-A-Down>', ":m '>+1<CR>gv=gv", { remap = true, silent = true, desc = "Move selection down" })
+vim.keymap.set('i', '<C-A-Up>', '<Esc>:m .-2<CR>==gi', { remap = true, silent = true, desc = "Move line up in insert mode" })
+vim.keymap.set('i', '<C-A-Down>', '<Esc>:m .+1<CR>==gi', { remap = true, silent = true, desc = "Move line down in insert mode" })
+
+-- === COMMENTING === "
+vim.keymap.set('n', '#', 'gcc', { remap = true, desc = "Comment line" })
+vim.keymap.set('v', '#', 'gc', { remap = true, desc = "Comment selection" })
+
+-- === HOME/END KEYS === "
+vim.keymap.set({'n', 'v'}, '<Home>', '^', { remap = true, silent = true, desc = "Go to beginning of line" })
+vim.keymap.set({'n', 'v'}, '<Find>', '^', { remap = true, silent = true, desc = "Go to beginning of line" })
+vim.keymap.set({'n', 'v'}, '<End>', '$', { remap = true, silent = true, desc = "Go to end of line" })
+vim.keymap.set({'n', 'v'}, '<Select>', '$', { remap = true, silent = true, desc = "Go to end of line" })
+vim.keymap.set('i', '<Home>', '<C-o>^', { remap = true, silent = true, desc = "Go to beginning of line in insert mode" })
+vim.keymap.set('i', '<Find>', '<C-o>^', { remap = true, silent = true, desc = "Go to beginning of line in insert mode" })
+vim.keymap.set('i', '<End>', '<C-o>$', { remap = true, silent = true, desc = "Go to end of line in insert mode" })
+vim.keymap.set('i', '<Select>', '<C-o>$', { remap = true, silent = true, desc = "Go to end of line in insert mode" })
 
 
 -------------------------------------------- === SMART_CLISE === ---------------------------------------------
