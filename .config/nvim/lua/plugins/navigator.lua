@@ -26,7 +26,7 @@ return {
 
                     -- TMUX >= 3.2: all yanks (and deletes) will get redirected to system
                     -- clipboard by tmux
-                    redirect_to_clipboard = false,
+                    redirect_to_clipboard = true,
 
                     -- offset controls where register sync starts
                     -- e.g. offset 2 lets registers 0 and 1 untouched

@@ -2,6 +2,6 @@
 
 export LULE_S=/env/dot/.func/wm/lule_colors
 export LULE_C=/home/bresilla/.config/lule/configs.json
-export LULE_W=/env/set/.wallpaper
+export LULE_W=/env/set/.animegen
 
 /env/bin/lule create -- set

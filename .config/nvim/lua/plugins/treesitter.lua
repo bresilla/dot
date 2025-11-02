@@ -8,7 +8,7 @@ return {
                 -- A list of parser names, or "all" (the listed parsers MUST always be installed)
                 ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
                 sync_install = false,
-                auto_install = true,
+                auto_install = false,
                 ignore_install = { "javascript" },              
                 -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
                 highlight = {

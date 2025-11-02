@@ -121,6 +121,16 @@
             "package_path": "hyprdynamicmonitors",
             "pinned": false
         },
+        "/env/bin/lazygit": {
+            "path": "/env/bin/lazygit",
+            "remote_name": "lazygit",
+            "version": "v0.55.1",
+            "hash": "a2233d66dedfcecf8de689cbd8d7cfbf2f84003401a3d037daa91e529dd6aec4",
+            "url": "https://github.com/jesseduffield/lazygit",
+            "provider": "github",
+            "package_path": "lazygit",
+            "pinned": false
+        },
         "/env/bin/lule": {
             "path": "/env/bin/lule",
             "remote_name": "lule",
@@ -139,6 +149,26 @@
             "url": "https://github.com/charmbracelet/mods",
             "provider": "github",
             "package_path": "mods_1.7.0_Linux_x86_64/mods",
+            "pinned": false
+        },
+        "/env/bin/netvisor": {
+            "path": "/env/bin/netvisor",
+            "remote_name": "netvisor-daemon-linux-amd64",
+            "version": "v0.6.0",
+            "hash": "abd947394e9c49d3dd3412db77ef4a13c5f97ea575a3453548c4bb1b49e3db66",
+            "url": "https://github.com/mayanayza/netvisor",
+            "provider": "github",
+            "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/netvisor-daemon": {
+            "path": "/env/bin/netvisor-daemon",
+            "remote_name": "netvisor-daemon-linux-amd64",
+            "version": "v0.6.0",
+            "hash": "abd947394e9c49d3dd3412db77ef4a13c5f97ea575a3453548c4bb1b49e3db66",
+            "url": "https://github.com/mayanayza/netvisor",
+            "provider": "github",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/nom": {
