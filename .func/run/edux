@@ -19,7 +19,6 @@ case "$view" in
     ;;
 esac
 
-
 # @cmd pick file with exp
 # @arg val!
 inter() {

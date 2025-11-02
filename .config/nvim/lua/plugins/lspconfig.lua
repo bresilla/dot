@@ -46,43 +46,45 @@ return {
       desc = 'Dump all DAP breakpoints to /tmp/gdb_breakpoints.gdb',
     })
 
-    -- Setup lspconfig
-    local lspconfig = require('lspconfig')
-
-    -- Configure servers
-    local servers = {}
-
+    -- Configure servers using the new vim.lsp.config API
     if vim.env.ENV == "pio" then
-      servers.ccls = {
+      vim.lsp.config('ccls', {
+        cmd = { 'ccls' },
         init_options = {
           compilationDatabaseDirectory = "build",
           index = { threads = 0 },
           clang = { excludeArgs = { "-frounding-math" } },
         },
-        root_dir = lspconfig.util.root_pattern('compile_commands.json', 'compile_flags.txt'),
+        root_markers = { 'compile_commands.json', 'compile_flags.txt' },
         filetypes = { 'c', 'cpp' },
-      }
+      })
+      vim.lsp.enable('ccls')
     else
-      servers.clangd = {
+      vim.lsp.config('clangd', {
         cmd = { "clangd", "--header-insertion=never" },
-        root_dir = lspconfig.util.root_pattern('compile_commands.json', 'compile_flags.txt'),
+        root_markers = { 'compile_commands.json', 'compile_flags.txt' },
         filetypes = { 'c', 'cpp' },
-      }
+      })
+      vim.lsp.enable('clangd')
     end
 
-    servers.rust_analyzer = {
+    vim.lsp.config('rust_analyzer', {
+      cmd = { 'rust-analyzer' },
       settings = {
         ["rust-analyzer"] = {
           diagnostics = { enable = false },
         },
       },
-    }
+    })
+    vim.lsp.enable('rust_analyzer')
 
-    servers.qmlls = {
+    vim.lsp.config('qmlls', {
       cmd = { "qmlls6" },
-    }
+    })
+    vim.lsp.enable('qmlls')
 
-    servers.pylsp = {
+    vim.lsp.config('pylsp', {
+      cmd = { 'pylsp' },
       settings = {
         pylsp = {
           plugins = {
@@ -93,9 +95,11 @@ return {
           },
         },
       },
-    }
+    })
+    vim.lsp.enable('pylsp')
 
-    servers.lua_ls = {
+    vim.lsp.config('lua_ls', {
+      cmd = { 'lua-language-server' },
       settings = {
         Lua = {
           diagnostics = {
@@ -103,11 +107,7 @@ return {
           }
         }
       }
-    }
-
-    -- Setup each server
-    for server, config in pairs(servers) do
-      lspconfig[server].setup(config)
-    end
+    })
+    vim.lsp.enable('lua_ls')
   end
 }

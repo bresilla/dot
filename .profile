@@ -137,3 +137,5 @@ if [ "$HOSTNAME" = core ]; then
     export GPG_TTY=$(tty)
 fi
 [[ -f "$HOME/.external" ]] && source /home/bresilla/.external
+
+if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

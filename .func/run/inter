@@ -113,7 +113,7 @@ buffers() {
 # @arg context!
 # @arg pane_id!
 # @arg view!
-quickfixe() {
+quickfix() {
     local context=$argc_context
     local current_path=$argc_current_path
     local pane_id=$argc_pane_id
@@ -124,9 +124,11 @@ quickfixe() {
     file=$(echo $pick | cut -d: -f1)
     line=$(echo $pick | cut -d: -f2)
     col=$(echo $pick | cut -d: -f3)
-    if [[ "$context" != "editor" ]]; then
-        exit 0
-    fi
+    # if [[ "$context" != "editor" ]]; then
+        # echo $context $argc_view
+        # read
+        # exit 0
+    # fi
     [[ -z "$file" ]] && exit 0
     tmux send-keys -t "$pane_id" ":e $file" C-m
     tmux send-keys -t "$pane_id" ":cal cursor($line, $col)" C-m

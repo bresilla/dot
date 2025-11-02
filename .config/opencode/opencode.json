@@ -1,7 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "bresilla",
-  "model": "anthropic/claude-sonnet-4.5",
   "autoupdate": true,
   "permission": {
     "bash": "ask",

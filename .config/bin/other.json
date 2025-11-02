@@ -203,10 +203,10 @@
         },
         "/env/bin/rerun": {
             "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.24.0-x86_64-unknown-linux-gnu",
-            "version": "0.24.0",
-            "hash": "27ced74ffe4301b4ebd4f956b49e8b56b312913e64584762c4fbbcbf6724dc5c",
-            "url": "https://github.com/rerun-io/rerun/releases/tag/0.24.0",
+            "remote_name": "rerun-cli-0.26.2-x86_64-unknown-linux-gnu",
+            "version": "0.26.2",
+            "hash": "acbd0cf4f5ed6bfb40b9445f4ace8be38ab91fba7fef142737395c82a5c8120d",
+            "url": "https://github.com/rerun-io/rerun/releases/tag/0.26.2",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -259,6 +259,16 @@
             "url": "https://github.com/sheepla/srss",
             "provider": "github",
             "package_path": "srss",
+            "pinned": false
+        },
+        "/env/bin/step": {
+            "path": "/env/bin/step",
+            "remote_name": "step",
+            "version": "v0.28.7",
+            "hash": "a7a63af0f985335208e854eff6a49fd56ce05d09285f1315f4932beefcf786b9",
+            "url": "https://github.com/smallstep/cli",
+            "provider": "github",
+            "package_path": "step_linux_amd64/bin/step",
             "pinned": false
         },
         "/env/bin/systemd-manager-tui": {
