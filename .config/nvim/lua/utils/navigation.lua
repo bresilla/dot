@@ -192,6 +192,13 @@ vim.keymap.set('n', '-', "<cmd>:b#<CR>", {
     silent = true
 })
 
+-- Global + mapping for jump to definition (for non-C++ files)
+vim.keymap.set('n', '+', vim.lsp.buf.definition, {
+    noremap = true,
+    silent = true,
+    desc = 'Jump to definition (LSP)'
+})
+
 
 
 ------------ BUFER SAVE ------------
