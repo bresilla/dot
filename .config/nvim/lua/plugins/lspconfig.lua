@@ -7,7 +7,10 @@ return {
       callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         if client and client.server_capabilities.inlayHintProvider then
-          vim.lsp.inlay_hint.enable(true, {bufnr = args.buf})
+          -- Disable inlay hints for clangd
+          if client.name ~= "clangd" then
+            vim.lsp.inlay_hint.enable(true, {bufnr = args.buf})
+          end
         end
       end
     })
@@ -64,6 +67,13 @@ return {
         cmd = { "clangd", "--header-insertion=never" },
         root_markers = { 'compile_commands.json', 'compile_flags.txt' },
         filetypes = { 'c', 'cpp' },
+        capabilities = {
+          textDocument = {
+            inlayHint = {
+              dynamicRegistration = false,
+            },
+          },
+        },
       })
       vim.lsp.enable('clangd')
     end

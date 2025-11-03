@@ -18,7 +18,7 @@
             "hash": "ac5fb1c4e8b7a32356dde68e85d2d34e736e9cb325d72b21b1314b35ba8336a3",
             "url": "https://github.com/atuinsh/atuin/releases/tag/v18.10.0",
             "provider": "",
-            "package_path": "atuin-x86_64-unknown-linux-musl/atuin",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/bat": {
@@ -33,10 +33,10 @@
         },
         "/env/bin/bin": {
             "path": "/env/bin/bin",
-            "remote_name": "bin_0.24.0_linux_amd64",
-            "version": "v0.24.0",
-            "hash": "901b2ad65e660ccd88cacf78e0c6ff1f73c2f2aaf6f56e8fa114932895f6d34c",
-            "url": "https://github.com/marcosnils/bin/releases/tag/v0.24.0",
+            "remote_name": "bin_0.24.1_linux_amd64",
+            "version": "v0.24.1",
+            "hash": "79da3c1530f533e430e852814adbbc8a21bf1c393ed4a32842c883d9a08ecc6f",
+            "url": "https://github.com/marcosnils/bin/releases/tag/v0.24.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -54,9 +54,9 @@
         "/env/bin/cloudflared": {
             "path": "/env/bin/cloudflared",
             "remote_name": "cloudflared-linux-amd64",
-            "version": "2025.10.0",
-            "hash": "d334c30ab628d4698455acadae5bdb3e33705a5f8dade510ce5ac7fc75d327fe",
-            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.10.0",
+            "version": "2025.10.1",
+            "hash": "bf5382fa25766c532a23788491ccef4e3ac9ed488318124e7f58ee0865277c4f",
+            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.10.1",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -74,9 +74,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.49.0",
-            "hash": "5622d88ac62093f5bc062a6b436dcfcf9024743f78b1a9b8d64d33ef510a5be8",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.49.0",
+            "version": "rust-v0.53.0",
+            "hash": "83ca241e18155590bc958f13ab21be48c3df1a632a82114203da909895540c81",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.53.0",
             "provider": "",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -134,9 +134,9 @@
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric",
-            "version": "v1.4.319",
-            "hash": "9b678d6011a2ab448b0a0b5734487e004dc92e10e6ca4c62369a54dcf84d25e4",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.319",
+            "version": "v1.4.321",
+            "hash": "0acc914f5ad8885fdc0219a80d7fc20e8a98d116abb3d2a631ef628d09b7e338",
+            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.321",
             "provider": "",
             "package_path": "fabric",
             "pinned": false
@@ -174,10 +174,10 @@
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.41.0",
-            "hash": "8410521ca79384bab9f6b6b7c0f733760c47aad310e1f88d9e9fdaa674062108",
-            "url": "https://github.com/home-assistant/cli",
-            "provider": "github",
+            "version": "4.42.0",
+            "hash": "02077b6255f47ce3dfeff38d6d46383a25e11f3bfde67df260cff2b6edb53f56",
+            "url": "https://github.com/home-assistant/cli/releases/tag/4.42.0",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
@@ -224,11 +224,11 @@
         "/env/bin/lazygit": {
             "path": "/env/bin/lazygit",
             "remote_name": "lazygit",
-            "version": "v0.55.1",
-            "hash": "a2233d66dedfcecf8de689cbd8d7cfbf2f84003401a3d037daa91e529dd6aec4",
-            "url": "https://github.com/jesseduffield/lazygit",
+            "version": "v0.56.0",
+            "hash": "8acf6edd89fc2566f379679753044cebba3d8a4e8fbd1de69c08152b2f7bf42b",
+            "url": "https://github.com/jesseduffield/lazygit/releases/tag/v0.56.0",
             "provider": "",
-            "package_path": "",
+            "package_path": "lazygit",
             "pinned": false
         },
         "/env/bin/lemonade": {
@@ -244,11 +244,11 @@
         "/env/bin/mdbook": {
             "path": "/env/bin/mdbook",
             "remote_name": "mdbook",
-            "version": "v0.4.52",
-            "hash": "38297e24146b02310b259bdbce658ebf205150afc60a1ae91a0331c9d27b8a53",
-            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.4.52",
+            "version": "v0.5.0-beta.1",
+            "hash": "28dd6dfd9434b7d9ccf593252e723d7e31a8d5dc7e4ae453f7f99b6288330fd5",
+            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.0-beta.1",
             "provider": "",
-            "package_path": "",
+            "package_path": "mdbook",
             "pinned": false
         },
         "/env/bin/micromamba": {
@@ -274,9 +274,9 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.59.8",
-            "hash": "adc3ba947b280e7a00cf4cdd6545a1e4e54991e4d356c58ffb6cca24f2508b6d",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.8",
+            "version": "v0.59.11",
+            "hash": "07fc52f16dd154ef02059d54dab18f1f6f39a53d6c9382385a5522a138f816fc",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.11",
             "provider": "",
             "package_path": "netbird",
             "pinned": false
@@ -284,9 +284,9 @@
         "/env/bin/newt": {
             "path": "/env/bin/newt",
             "remote_name": "newt_linux_amd64",
-            "version": "1.5.2",
-            "hash": "c726f39d06446798206ac2c2f5f6380cce2fc62704a1c6260c1b9049978967d6",
-            "url": "https://github.com/fosrl/newt/releases/tag/1.5.2",
+            "version": "1.6.0",
+            "hash": "89478679a3c0cdc469e485817604af9e341e2cb8283fadb1724aeba78aee7b3c",
+            "url": "https://github.com/fosrl/newt/releases/tag/1.6.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -304,9 +304,9 @@
         "/env/bin/olm": {
             "path": "/env/bin/olm",
             "remote_name": "olm_linux_amd64",
-            "version": "1.1.4",
-            "hash": "71b1ea757e0d6e66ac70d4578008d0eecaf9af5047256755aa4716f4ee4366a5",
-            "url": "https://github.com/fosrl/olm/releases/tag/1.1.4",
+            "version": "1.1.5",
+            "hash": "625403365b001c67a8e3eca6cd2efa8f4b034c123946264eb5321bf2dc316b66",
+            "url": "https://github.com/fosrl/olm/releases/tag/1.1.5",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -314,9 +314,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v0.15.17",
-            "hash": "15965d71d56d09fbc212227561a3cdaae951bca7fb793206b56ea1c66dce2b49",
-            "url": "https://github.com/sst/opencode/releases/tag/v0.15.17",
+            "version": "v1.0.15",
+            "hash": "c674651a0b0a3960347e94e368f62e5bd999e0177c779a365f7e0e0246288db8",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.15",
             "provider": "",
             "package_path": "opencode",
             "pinned": false
@@ -334,9 +334,9 @@
         "/env/bin/pixi": {
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
-            "version": "v0.58.0",
-            "hash": "1e0b522fb770f170fab78ecabee7d0480e8025bfd951359c442bf47ef7ace09f",
-            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.58.0",
+            "version": "v0.59.0",
+            "hash": "8d9e4a9a0520e2ae9cc6fb80fbecf16438e1c76a69f5e6242b23762053d85c06",
+            "url": "https://github.com/prefix-dev/pixi/releases/tag/v0.59.0",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -388,7 +388,7 @@
             "hash": "798c9f130836a656811866d0940947cd2ba7410dfcd0b865fbaea4d27e9d075f",
             "url": "https://github.com/starship/starship/releases/tag/v1.24.0",
             "provider": "",
-            "package_path": "starship",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/tab": {
@@ -427,8 +427,8 @@
             "version": "1.6.2",
             "hash": "051018197d82635ca81a9368159d2f131afea38a550d8af49534353438b4c986",
             "url": "https://github.com/eclipse-zenoh/zenoh",
-            "provider": "github",
-            "package_path": "zenohd",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/zoxide": {
