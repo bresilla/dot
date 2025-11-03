@@ -80,10 +80,9 @@ alias mcon="mconnectctl"
 alias code="com.visualstudio.code"
 alias hyp="hyprctl"
 alias xfreerdp=xfreerdp3
-
+alias lg='lazygit --use-config-file="~/.config/lazygit/config.yml"'
 alias ari='aria2c'
 alias inxi='prime inxi -Fxxxz'
-alias note='dnote'
 alias font='fc-query'
 alias pomo='pomo -p /home/bresilla/.config/pomo'
 alias git='hub'
