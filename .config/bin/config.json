@@ -221,6 +221,16 @@
             "package_path": "just",
             "pinned": false
         },
+        "/env/bin/lazygit": {
+            "path": "/env/bin/lazygit",
+            "remote_name": "lazygit",
+            "version": "v0.55.1",
+            "hash": "a2233d66dedfcecf8de689cbd8d7cfbf2f84003401a3d037daa91e529dd6aec4",
+            "url": "https://github.com/jesseduffield/lazygit",
+            "provider": "",
+            "package_path": "",
+            "pinned": false
+        },
         "/env/bin/lemonade": {
             "path": "/env/bin/lemonade",
             "remote_name": "lemonade",
