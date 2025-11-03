@@ -1,3 +1,44 @@
+-- jump to implementation (smarter version)
+local function jump_to_implementation()
+  local params = vim.lsp.util.make_position_params()
+  local ext = string.lower(vim.fn.expand('%:e'))
+  local header_exts = { 'h', 'hh', 'hpp', 'hxx' }
+  
+  local function contains(list, value)
+    for _, v in ipairs(list) do if v == value then return true end end
+    return false
+  end
+  
+  -- First, try LSP's definition (works for most cases)
+  vim.lsp.buf_request(0, 'textDocument/definition', params, function(err, result, ctx, config)
+    if err or not result or vim.tbl_isempty(result) then
+      -- If we're in a header file, try to find implementation in source file
+      if contains(header_exts, ext) then
+        -- Try implementation request as fallback
+        vim.lsp.buf_request(0, 'textDocument/implementation', params, function(err2, result2, ctx2, config2)
+          if err2 or not result2 or vim.tbl_isempty(result2) then
+            vim.notify('No implementation found', vim.log.levels.INFO)
+          else
+            vim.lsp.util.jump_to_location(result2[1], 'utf-8')
+          end
+        end)
+      else
+        vim.notify('No definition found', vim.log.levels.INFO)
+      end
+      return
+    end
+    
+    -- Handle the result (could be single location or array)
+    local location = result
+    if vim.islist(result) then
+      location = result[1]
+    end
+    
+    -- Jump to the location
+    vim.lsp.util.jump_to_location(location, 'utf-8')
+  end)
+end
+
 -- your env var toggle function (unchanged)
 local function toggle_header_source()
   local fname    = vim.fn.expand('%:t')
@@ -128,6 +169,13 @@ vim.api.nvim_create_autocmd("BufReadPost", {
       noremap = true,
       silent = true,
       desc = 'Toggle between header and source in $TOP_HEAD',
+    })
+    -- buffer-local jump to implementation using LSP
+    vim.keymap.set('n', '+', jump_to_implementation, {
+      buffer = true,
+      noremap = true,
+      silent = true,
+      desc = 'Jump to implementation (LSP)',
     })
     -- buffer-local jump-last, skipping header/source partner
     vim.keymap.set('n', '-', jump_last_non_header_source, {
