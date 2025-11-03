@@ -121,6 +121,16 @@
             "package_path": "hyprdynamicmonitors",
             "pinned": false
         },
+        "/env/bin/lazycommit": {
+            "path": "/env/bin/lazycommit",
+            "remote_name": "lazycommit",
+            "version": "v1.3.29",
+            "hash": "3f6e31311b05506f559b44dab1fe835d6d6114574e2d8801217c1ed5a17f1cd5",
+            "url": "https://github.com/m7medVision/lazycommit",
+            "provider": "github",
+            "package_path": "lazycommit",
+            "pinned": false
+        },
         "/env/bin/lazygit": {
             "path": "/env/bin/lazygit",
             "remote_name": "lazygit",

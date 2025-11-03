@@ -1,40 +1,7 @@
-gui:
-  nerdFontsVersion: "3"
-  theme:
-    activeBorderColor:
-      - "#c94c16"
-      - "bold"
-    inactiveBorderColor:
-      - "#664c00"
-    searchingActiveBorderColor:
-      - "#c94c16"
-      - "bold"
-    optionsTextColor:
-      - "#268bd3"
-    selectedLineBgColor:
-      - "#1a6397"
-    cherryPickedCommitFgColor:
-      - "#268bd3"
-    cherryPickedCommitBgColor:
-      - "#d23681"
-    markedBaseCommitFgColor:
-      - "#268bd3"
-    markedBaseCommitBgColor:
-      - "#b28500"
-    unstagedChangesColor:
-      - "#f55350"
-    defaultFgColor:
-      - "#839395"
 customCommands:
-  - key: <c-a>
-    description: Create commit with template
-    context: global
-    command: "git commit"
-    output: terminal
-
-  - key: "<c-v>"
-    context: "global"
-    description: "Create new conventional commit"
+  - key: "<c-a>"
+    description: "AI commit with type selection and editor"
+    context: "files"
     prompts:
       - type: "menu"
         key: "Type"
@@ -73,25 +40,22 @@ customCommands:
           - name: "test"
             description: "Adding missing tests or correcting existing tests"
             value: "test"
-      - type: "input"
-        title: "Scope"
-        key: "Scope"
-        initialValue: ""
-      - type: "menu"
-        key: "Breaking"
-        title: "Breaking change"
-        options:
-          - name: "no"
-            value: ""
-          - name: "yes"
-            value: "!"
-      - type: "input"
-        title: "message"
-        key: "Message"
-        initialValue: ""
-      - type: "confirm"
-        key: "Confirm"
-        title: "Commit"
-        body: "Are you sure you want to commit?"
-    command: "git commit --message '{{.Form.Type}}{{ if .Form.Scope }}({{ .Form.Scope }}){{ end }}{{.Form.Breaking}}: {{.Form.Message}}'"
-    loadingText: "Creating conventional commit..."
+    command: |
+      bash -c '
+      SELECTED_TYPE="{{.Form.Type}}";
+      diff=$(git diff --cached | head -n 10);
+      if [ -z "$diff" ]; then
+        echo "No changes in staging. Add changes first.";
+        exit 1;
+      fi;
+      msg=$(aichat "You are an expert at writing Git commits following Conventional Commits format. The user selected type: $SELECTED_TYPE. Generate ONE commit message with this EXACT format: $SELECTED_TYPE: <concise summary under 50 chars>, then empty line, then detailed body with each change on new line starting with dash. Guidelines: Use imperative mood (add, fix, update), be specific about what changed and why. Example: chore: update ESLint configuration (empty line) - Add new rule for unused variables - Remove deprecated parser options. Changes to analyze: $(git diff --cached --stat) $(git diff --cached)");
+      echo "$msg" > .git/COMMIT_EDITMSG;
+      ${EDITOR:-nvim} .git/COMMIT_EDITMSG;
+      if [ -s .git/COMMIT_EDITMSG ]; then
+        git commit -F .git/COMMIT_EDITMSG;
+      else
+        echo "Commit message is empty, commit aborted.";
+      fi
+      '
+    output: terminal
+
