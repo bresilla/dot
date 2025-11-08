@@ -94,6 +94,7 @@ alias dims="hyprctl activewindow | grep size | head -2 | tail -1 | choose 1 | tr
 alias step=step-cli
 
 alias rerun='WAYLAND_DISPLAY= rerun'
+alias rer='WAYLAND_DISPLAY= rerun --connect rerun+http://100.68.79.253:9876/proxy'
 
 ##BIN
 # alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"

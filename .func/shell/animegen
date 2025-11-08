@@ -130,7 +130,27 @@ scifi_environments = [
     "spaceport bazaar on frontier colony world with cargo shuttles and alien merchant districts",
     "ice planet outpost during perpetual blizzard with thermal shields and subterranean mining tunnels",
     "quantum server farm storing uploaded consciousnesses in crystalline matrices and neural data banks",
-    "vertical slum tower in overpopulated mega-city with floating traffic lanes and atmospheric processors"
+    "vertical slum tower in overpopulated mega-city with floating traffic lanes and atmospheric processors",
+    "pristine white star destroyer hangar bay with rows of TIE fighters and imperial officers",
+    "gleaming federation starship bridge with viewscreen showing nebula and sleek control panels",
+    "sun-drenched desert planet with twin suns and moisture farm homesteads on endless sand dunes",
+    "towering corporate arcology in bright daylight with glass facades and flying shuttle traffic",
+    "orbital resort station with transparent dome viewing Earth below and luxury gardens",
+    "clean white laboratory with time machine prototype and chalkboard equations in natural light",
+    "bright alien marketplace with colorful stalls and diverse species trading exotic goods",
+    "ivory tower research institute with floating holo-displays and scholars in white coats",
+    "chrome-plated robot factory assembly line with sunlight streaming through skylights",
+    "pastoral space colony with artificial blue sky and green parks under protective dome",
+    "gleaming medical bay with healing pods and soft white lighting on advanced hospital ship",
+    "luminous crystal cavern on alien world with prismatic light refractions and mineral formations",
+    "white sand beach on ocean planet with gentle waves and two moons in daylit sky",
+    "golden wheat fields on agricultural world with automated harvesters under orange sky",
+    "bright ice palace on frozen moon with crystalline architecture and aurora overhead",
+    "sunlit biodome conservatory with exotic alien plants and butterfly-like creatures",
+    "marble plaza on advanced utopian world with fountains and citizens in flowing garments",
+    "cloud city floating platform with elegant white buildings and repulsor-lift traffic",
+    "pristine medical research vessel interior with large windows showing gas giant",
+    "glowing energy barrier gateway between dimensions with shimmering portal effects"
 ]
 
 fantasy_environments = [
@@ -156,7 +176,32 @@ fantasy_environments = [
     "underwater coral palace with luminescent fish and pearl chambers where merfolk courts hold ancient council",
     "necromancer's bone cathedral in cursed swamp with undead sentries and unholy altars wreathed in soul-fire",
     "giant's dwelling with oversized furniture and wall murals depicting legendary battles across mythic ages",
-    "portal nexus with shimmering dimensional gates and reality tears leading to infinite parallel realms"
+    "portal nexus with shimmering dimensional gates and reality tears leading to infinite parallel realms",
+    "sunlit shire meadow with rolling green hills and charming hobbit holes with round doors",
+    "grand elven hall with soaring white pillars and natural light through leaf-carved windows",
+    "majestic mountain pass with snow-capped peaks and ancient stone road in clear weather",
+    "peaceful wizard's garden with colorful flowers and stone pathways under bright sky",
+    "golden throne room with high ceilings and tapestries illuminated by grand chandeliers",
+    "pristine unicorn glade with crystal-clear spring and rainbow mist in dappled sunlight",
+    "white marble temple with sacred pools and columns open to azure heavens",
+    "enchanted library with towering bookshelves and sunbeams highlighting floating dust motes",
+    "bright fairy ring in meadow with wildflowers and gossamer-winged sprites dancing",
+    "royal tournament grounds with colorful pavilions and pennants fluttering in breeze",
+    "silver birch forest in autumn with golden leaves and gentle streams",
+    "cloud palace with pearl gates and celestial gardens floating in endless blue sky",
+    "coastal fortress with lighthouse and seabirds circling white stone walls",
+    "alpine valley with emerald grass and wooden bridges over rushing mountain streams",
+    "grand wizard's tower observatory with telescope pointing at daytime stars",
+    "sacred grove with ancient oak tree and stone altar bathed in holy light",
+    "floating academy for magic with glass walkways and students in bright robes",
+    "crystal palace ballroom with prismatic reflections and elegant archways",
+    "peaceful monastery courtyard with cherry blossoms and meditation gardens",
+    "rainbow bridge connecting realms with shimmering translucent surface and gold railings",
+    "sunlit dragon roost on mountain peak with vast sky views and gentle winds",
+    "ivory citadel with graceful spires and gardens of exotic magical plants",
+    "pristine lake shore with elven boats and willows reflecting in still waters",
+    "heavenly battlefield aftermath with golden light breaking through clouds",
+    "enchanted waterfall with rainbow spray and healing pools in lush paradise"
 ]
 
 creatures_scifi = {

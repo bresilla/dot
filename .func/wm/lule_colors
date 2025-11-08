@@ -113,9 +113,3 @@ c238="rgb(${color238:1})"
 # feh --no-fehbg --bg-scale $(cat $TEMP/lule_wallpaper) &
 
 zedtheme &
-
-# swaykill(){
-#     killall swaybg
-#     swaybg -i $(cat $TEMP/lule_wallpaper) &
-# }
-# swaykill &

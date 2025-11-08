@@ -33,10 +33,10 @@
         },
         "/env/bin/bin": {
             "path": "/env/bin/bin",
-            "remote_name": "bin_0.24.1_linux_amd64",
-            "version": "v0.24.1",
-            "hash": "79da3c1530f533e430e852814adbbc8a21bf1c393ed4a32842c883d9a08ecc6f",
-            "url": "https://github.com/marcosnils/bin/releases/tag/v0.24.1",
+            "remote_name": "bin_0.24.2_linux_amd64",
+            "version": "v0.24.2",
+            "hash": "55471bae467cdd775a0ea73b71d37061fdf24185b15dadeb68a61638c43101b5",
+            "url": "https://github.com/marcosnils/bin/releases/tag/v0.24.2",
             "provider": "",
             "package_path": "",
             "pinned": false
@@ -54,10 +54,10 @@
         "/env/bin/cloudflared": {
             "path": "/env/bin/cloudflared",
             "remote_name": "cloudflared-linux-amd64",
-            "version": "2025.10.1",
-            "hash": "bf5382fa25766c532a23788491ccef4e3ac9ed488318124e7f58ee0865277c4f",
-            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.10.1",
-            "provider": "",
+            "version": "2025.11.1",
+            "hash": "991dffd8889ee9f0147b6b48933da9e4407e68ea8c6d984f55fa2d3db4bb431d",
+            "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.11.1",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },
@@ -74,10 +74,10 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.53.0",
-            "hash": "83ca241e18155590bc958f13ab21be48c3df1a632a82114203da909895540c81",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.53.0",
-            "provider": "",
+            "version": "rust-v0.56.0",
+            "hash": "a69c4114f6cdd94ae07fc7a9bcd67ae1358ef33ae99ef53d7601888e0ef95f71",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.56.0",
+            "provider": "github",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
         },
@@ -134,9 +134,9 @@
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric",
-            "version": "v1.4.321",
-            "hash": "0acc914f5ad8885fdc0219a80d7fc20e8a98d116abb3d2a631ef628d09b7e338",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.321",
+            "version": "v1.4.322",
+            "hash": "d117918f09e90aecc31d88c582d8d419ad05ef128a041da77a6d8f52f3296a4b",
+            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.322",
             "provider": "",
             "package_path": "fabric",
             "pinned": false
@@ -159,6 +159,16 @@
             "url": "https://github.com/babarot/gomi/releases/tag/v1.6.1",
             "provider": "",
             "package_path": "",
+            "pinned": false
+        },
+        "/env/bin/goose": {
+            "path": "/env/bin/goose",
+            "remote_name": "goose",
+            "version": "v1.13.1",
+            "hash": "58275f5e303eb80fc160b6e3b62e780a05ead90e1ff952231d260b6079af9290",
+            "url": "https://github.com/block/goose/releases/tag/v1.13.1",
+            "provider": "github",
+            "package_path": "./goose",
             "pinned": false
         },
         "/env/bin/gum": {
@@ -204,9 +214,9 @@
         "/env/bin/jj": {
             "path": "/env/bin/jj",
             "remote_name": "jj",
-            "version": "v0.34.0",
-            "hash": "e2c9f06b02dba2953f0db7c09877df266a4f427fac14d76c06a49b14fd46f471",
-            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.34.0",
+            "version": "v0.35.0",
+            "hash": "1f2626bc89f497255ab035fe444ee7b1bb0070799876007559378a62d3a6e9dd",
+            "url": "https://github.com/jj-vcs/jj/releases/tag/v0.35.0",
             "provider": "",
             "package_path": "./jj",
             "pinned": false
@@ -244,10 +254,10 @@
         "/env/bin/mdbook": {
             "path": "/env/bin/mdbook",
             "remote_name": "mdbook",
-            "version": "v0.5.0-beta.1",
-            "hash": "28dd6dfd9434b7d9ccf593252e723d7e31a8d5dc7e4ae453f7f99b6288330fd5",
-            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.0-beta.1",
-            "provider": "",
+            "version": "v0.5.0-beta.2",
+            "hash": "c210e9f3b5dc059e98dc244a589ed784d7b053b70b2ed66fb3ab33a110bcbb30",
+            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.0-beta.2",
+            "provider": "github",
             "package_path": "mdbook",
             "pinned": false
         },
@@ -274,9 +284,9 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.59.11",
-            "hash": "07fc52f16dd154ef02059d54dab18f1f6f39a53d6c9382385a5522a138f816fc",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.11",
+            "version": "v0.59.12",
+            "hash": "00a010eac5d18c3fb34a60997d00c0560120cc0bf500a8b9621c2ee55408ed9c",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.12",
             "provider": "",
             "package_path": "netbird",
             "pinned": false
@@ -314,10 +324,10 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.15",
-            "hash": "c674651a0b0a3960347e94e368f62e5bd999e0177c779a365f7e0e0246288db8",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.15",
-            "provider": "",
+            "version": "v1.0.45",
+            "hash": "c88a708a0abaf584a96c270a46cfb3ffd32ccf1a90a7499d3afb8084d71449da",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.45",
+            "provider": "github",
             "package_path": "opencode",
             "pinned": false
         },
@@ -374,11 +384,11 @@
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",
-            "version": "v0.10.0",
-            "hash": "ca4c6b722b60759e104ed1142978b584abec679886d6cfbf54f9232dc30d4385",
-            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.10.0",
+            "version": "v0.11.0",
+            "hash": "049e2a6304836e0034c8edf1b5189f212e1e5404dd15246bbceff1eccb2248d3",
+            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.11.0",
             "provider": "",
-            "package_path": "soft-serve_0.10.0_Linux_x86_64/soft",
+            "package_path": "soft-serve_0.11.0_Linux_x86_64/soft",
             "pinned": false
         },
         "/env/bin/starship": {
