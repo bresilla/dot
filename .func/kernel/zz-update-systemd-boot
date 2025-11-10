@@ -1,6 +1,26 @@
 #!/bin/bash
 #
 # This is a simple kernel hook to populate the systemd-boot entries whenever kernels are added or removed.
+#
+#
+# copyt this file to: /usr/bin/bootcp
+#
+# create this: /usr/share/libalpm/hooks/91-bootcp.hook
+#
+# with this content:
+# 
+# [Trigger]
+# Type = Path
+# Operation = Install
+# Operation = Upgrade
+# Target = usr/lib/modules/*/vmlinuz
+# Target = usr/lib/initcpio/*
+# [Action]
+# Description = Copying vmlinuz to EFI dir
+# When = PostTransaction
+# Exec = /usr/bin/bootcp
+# NeedsTargets
+#  
 
 ID=$(source /etc/os-release; echo $ID)
 

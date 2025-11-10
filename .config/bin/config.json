@@ -324,9 +324,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.45",
-            "hash": "c88a708a0abaf584a96c270a46cfb3ffd32ccf1a90a7499d3afb8084d71449da",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.45",
+            "version": "v1.0.51",
+            "hash": "108ef77e0b3066c25a35199dc29dc88567385989d380dcec9a9a06b9e99f4172",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.51",
             "provider": "github",
             "package_path": "opencode",
             "pinned": false

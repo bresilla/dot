@@ -296,10 +296,13 @@ negative_tokens = [
     "poor perspective", "tilted horizon", "bad hands", "bad feet",
     "multiple people", "extra people", "crowd", "bystanders", "spectators", "audience",
     "multiple creatures", "extra creatures", "other characters", "background characters",
-    "third person", "additional figures", "group", "team", "army", "soldiers"
+    "third person", "additional figures", "group", "team", "army", "soldiers",
+    "dark", "darkness", "dim lighting", "shadows", "night", "nighttime", "gloomy", "murky",
+    "multicolored", "rainbow", "colorful", "many colors", "color variety", "chromatic", "polychrome",
+    "multiple colors", "other colors", "contrasting colors", "complementary colors"
 ]
 
-lighting_style = "consistent key light with soft global illumination, volumetric light shafts, gentle bloom, and subtle rim lighting on silhouettes"
+lighting_style = "bright even illumination with soft ambient light, gentle bloom, luminous atmosphere, and subtle form-defining shading"
 render_quality = "crisp linework, clean edges, expressive cel shading, high micro-contrast, filmic tonality, production-grade clarity"
 
 def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=True, safety_tolerance=3, explicit_color=None, explicit_creature=None, explicit_environment=None, raw=False, aspect_ratio="16:9"):
@@ -307,7 +310,7 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         random.seed(seed)
     t = theme if theme in ("sci-fi", "fantasy") else random.choice(["sci-fi", "fantasy"])
     base_color = explicit_color if explicit_color else random.choice(colors)["name"]
-    color = f"vibrant {base_color}"
+    color = f"light pastel {base_color}"
     if t == "sci-fi":
         creatures = creatures_scifi
         environments = scifi_environments
@@ -372,7 +375,6 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         f"{render_quality} "
         f"Once more, the {color} color should be dominant in the entire image, touching every part of the environment, characters, and creatures. "
         f"Perfect character anatomy, dynamic pose flow, weight distribution, and professional animation-grade composition. "
-        f"Borderless artwork filling entire frame with no letterboxing, vignette, or frame elements."
         f"CONCLUSION: A {color} cinematic {theme_tag} in premium anime art, where the hero faces off against a powerful {creature_key}"
         f"SUPER CRITICAL: Both HERO and {creature_key} should be present in the image, and no other characters, creatures, but {color} environment"
     )

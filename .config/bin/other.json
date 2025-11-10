@@ -131,16 +131,6 @@
             "package_path": "lazycommit",
             "pinned": false
         },
-        "/env/bin/lule": {
-            "path": "/env/bin/lule",
-            "remote_name": "lule",
-            "version": "0.3.3",
-            "hash": "0017322e57dd8a6094c444929eae848086a16c33ba1124e7d40d30eeb87f046f",
-            "url": "https://github.com/warpwm/lule/releases/tag/0.3.3",
-            "provider": "",
-            "package_path": "lule",
-            "pinned": false
-        },
         "/env/bin/mods": {
             "path": "/env/bin/mods",
             "remote_name": "mods",
