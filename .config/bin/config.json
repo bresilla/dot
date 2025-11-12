@@ -174,15 +174,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-<<<<<<< Updated upstream
-            "version": "v1.13.2",
-            "hash": "018fa0ec2d7967f210f88a9e9eec57574c82d9d862519f2e588b4c3581fe0f50",
-            "url": "https://github.com/block/goose/releases/tag/v1.13.2",
-=======
             "version": "v1.14.0",
             "hash": "0749c8a2e1bab8d9728b3e19c68737cb6049a8af874f5e1b063a66dd77bd2457",
             "url": "https://github.com/block/goose/releases/tag/v1.14.0",
->>>>>>> Stashed changes
             "provider": "github",
             "package_path": "./goose",
             "pinned": false
@@ -340,15 +334,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-<<<<<<< Updated upstream
-            "version": "v1.0.58",
-            "hash": "096b48c4ac597abfbbcdb7b2dca99cede1e68a13db4f3dc12099080666b1f9ce",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.58",
-=======
             "version": "v1.0.61",
             "hash": "e7664d614fe16b4d82cdf1f696be5d203dfbc6794287ca5cf1f0e0309313fec2",
             "url": "https://github.com/sst/opencode/releases/tag/v1.0.61",
->>>>>>> Stashed changes
             "provider": "github",
             "package_path": "opencode",
             "pinned": false
