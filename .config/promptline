@@ -209,8 +209,8 @@ function __promptline_cwd {
     while [[ "$cwd" == */* && "$cwd" != "/" ]]; do
         part="${cwd##*/}"
         cwd="${cwd%/*}"
-	[[ ${#part} -gt 8 ]] && part="${part:0:6}.."
-	formatted_cwd="$dir_sep$part$formatted_cwd"
+    [[ ${#part} -gt 8 ]] && part="${part:0:6}.."
+    formatted_cwd="$dir_sep$part$formatted_cwd"
         part_count=$((part_count+1))
         [[ $part_count -ge $dir_limit ]] && first_char="$truncation" && break
     done
@@ -308,9 +308,11 @@ function __promptline_right_prompt {
 }
 
 function __tmuxline_right_prompt {
-    #WORKING DIR
+    #SESSION AND WINDOW
     prefix="${conTX}${arrER}${space}${defaultFG}" suffix="${space}${greyTX}"; 
-    printf "%s" "$prefix" "$(__promptline_cwd 2 right $1)" "$suffix"
+    tmux_session=$(tmux display-message -p '#S')
+    tmux_window=$(tmux display-message -p '#W')
+    printf "%s" "$prefix" "$tmux_session" "$suffix"
     #CMD TIME
     prefix="${accentTX}${arrFR}${dark_TX}${accentBG}${space}" suffix="${space}${blackTX}${arrER}"; printf "%s" "$prefix" "$(__cpustats)" "$suffix"
     #LOAD AVERAGE

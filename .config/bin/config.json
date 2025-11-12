@@ -57,7 +57,7 @@
             "version": "2025.11.1",
             "hash": "991dffd8889ee9f0147b6b48933da9e4407e68ea8c6d984f55fa2d3db4bb431d",
             "url": "https://github.com/cloudflare/cloudflared/releases/tag/2025.11.1",
-            "provider": "github",
+            "provider": "",
             "package_path": "",
             "pinned": false
         },
@@ -134,10 +134,10 @@
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric",
-            "version": "v1.4.322",
-            "hash": "d117918f09e90aecc31d88c582d8d419ad05ef128a041da77a6d8f52f3296a4b",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.322",
-            "provider": "",
+            "version": "v1.4.323",
+            "hash": "bb20276b7b599253a39e4c9f0c49b14535b4e1c45dd92892ccf7b40d9051b0d4",
+            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.323",
+            "provider": "github",
             "package_path": "fabric",
             "pinned": false
         },
@@ -174,9 +174,15 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
+<<<<<<< Updated upstream
             "version": "v1.13.2",
             "hash": "018fa0ec2d7967f210f88a9e9eec57574c82d9d862519f2e588b4c3581fe0f50",
             "url": "https://github.com/block/goose/releases/tag/v1.13.2",
+=======
+            "version": "v1.14.0",
+            "hash": "0749c8a2e1bab8d9728b3e19c68737cb6049a8af874f5e1b063a66dd77bd2457",
+            "url": "https://github.com/block/goose/releases/tag/v1.14.0",
+>>>>>>> Stashed changes
             "provider": "github",
             "package_path": "./goose",
             "pinned": false
@@ -228,7 +234,7 @@
             "hash": "1f2626bc89f497255ab035fe444ee7b1bb0070799876007559378a62d3a6e9dd",
             "url": "https://github.com/jj-vcs/jj/releases/tag/v0.35.0",
             "provider": "",
-            "package_path": "./jj",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/just": {
@@ -267,8 +273,8 @@
             "version": "v0.5.0-beta.2",
             "hash": "c210e9f3b5dc059e98dc244a589ed784d7b053b70b2ed66fb3ab33a110bcbb30",
             "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.0-beta.2",
-            "provider": "github",
-            "package_path": "mdbook",
+            "provider": "",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/micromamba": {
@@ -298,7 +304,7 @@
             "hash": "00a010eac5d18c3fb34a60997d00c0560120cc0bf500a8b9621c2ee55408ed9c",
             "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.12",
             "provider": "",
-            "package_path": "netbird",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/newt": {
@@ -334,9 +340,15 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
+<<<<<<< Updated upstream
             "version": "v1.0.58",
             "hash": "096b48c4ac597abfbbcdb7b2dca99cede1e68a13db4f3dc12099080666b1f9ce",
             "url": "https://github.com/sst/opencode/releases/tag/v1.0.58",
+=======
+            "version": "v1.0.61",
+            "hash": "e7664d614fe16b4d82cdf1f696be5d203dfbc6794287ca5cf1f0e0309313fec2",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.61",
+>>>>>>> Stashed changes
             "provider": "github",
             "package_path": "opencode",
             "pinned": false
@@ -344,11 +356,11 @@
         "/env/bin/pik": {
             "path": "/env/bin/pik",
             "remote_name": "pik",
-            "version": "0.26.1",
-            "hash": "2dc45bc02d63f5d919be7b96e6d3e7c8f15571fbc4bd562d339d61ed88294a7a",
-            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.26.1",
-            "provider": "",
-            "package_path": "pik-0.26.1-x86_64-unknown-linux-gnu/pik",
+            "version": "0.27.0",
+            "hash": "8b614f671edec0aa739a08de6c58764c9e6fadfcfb388c8df1c21a1914076a73",
+            "url": "https://github.com/jacek-kurlit/pik/releases/tag/0.27.0",
+            "provider": "github",
+            "package_path": "pik-0.27.0-x86_64-unknown-linux-gnu/pik",
             "pinned": false
         },
         "/env/bin/pixi": {
@@ -424,10 +436,10 @@
         "/env/bin/tldr": {
             "path": "/env/bin/tldr",
             "remote_name": "tealdeer-linux-x86_64-musl",
-            "version": "v1.8.0",
-            "hash": "9b8b049467a9c7b7f0e9277a27db1f4887649b2f81b5c703c5cfb11bae7be0da",
-            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.8.0",
-            "provider": "",
+            "version": "v1.8.1",
+            "hash": "6f2fad4435e0110484d3f25cdc4bf20129dae03238f32d06ebdd00bdc50ae2ed",
+            "url": "https://github.com/tealdeer-rs/tealdeer/releases/tag/v1.8.1",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },

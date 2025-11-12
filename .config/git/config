@@ -54,8 +54,7 @@
     pubone = "!f(){ git push ${1:-origin} --follow-tags; }; f"
     #pub = "!f(){ for line in $(git remote -v | cut -f1 | sort -u); do git push $line --all --follow-tags; done; }; f"
     fuse = "!f(){ current=$(git branch --show-current); git checkout $1 && git merge $current && git checkout $current; }; f"
-    sshify = "!f(){ [[ $(git remote -v | awk 'NR==1{print $2}' | awk -F'/' '/com/ {print $1}') == "https:" ]] && gitname=$(git remote -v | awk 'NR==1{print $2}' | awk -F'/' '{print $4,$5}' | sed 's! !/!g') && git remote set-url origin git@github.com:$gitname.git; }; f"
-    get = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE; }; f"
+    ; get = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE; }; f"
     down = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE -- /home/$USER/down/$(echo $NAMEEE | cut -d/ -f5); }; f"
     fuck = "!f(){ git reset --hard origin/`git rev-parse --abbrev-ref HEAD`; rm -fv `git status | grep ^? | cut -d' '  -f2-`; }; f"
     tree = log --graph --all --format=format:'%w(80,0,0)%C(bold magenta)%h%C(reset) %C(white)%ad%C(reset) %C(dim white)(%ar)%C(reset) %C(bold dim white)%aN%C(auto)%+D%C(reset)%n%C(bold white)%s%C(reset)%+b%n'
@@ -73,6 +72,19 @@
     aihook = "!f(){ cp ~/.config/git/prepare-commit-msg .git/hooks/prepare-commit-msg; }; f"
     finish = "!f(){ git flow feature finish; }; f"
     rmtag = "!f() { git tag -d \"$1\" && git push origin \":refs/tags/$1\"; }; f"
+    sshify = "!f(){ \
+        url=$(git remote get-url origin 2>/dev/null) || exit; \
+        case \"$url\" in \
+          https://github.com/*) \
+            path=${url#https://github.com/}; \
+            path=${path%.git}; \
+            git remote set-url origin git@github.com:${path}.git ;; \
+          git@github.com:*) \
+            echo 'origin already uses SSH: '$url ;; \
+          *) \
+            echo 'not a GitHub https remote: '$url ;; \
+        esac; \
+    }; f"
 [gc]
     writeCommitGraph = true
 ; [commit]

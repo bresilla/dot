@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "theme": "bresilla",
+  "theme": "system",
   "autoupdate": true,
   "permission": {
     "bash": "ask",
