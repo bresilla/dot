@@ -75,6 +75,7 @@ alias a='atool -D -x'
 alias x='xplr'
 alias e=$EDITOR
 
+alias ze='zellij'
 alias nums="dtool"
 alias mcon="mconnectctl"
 alias code="com.visualstudio.code"

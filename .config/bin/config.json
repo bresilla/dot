@@ -441,6 +441,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/zellij": {
+            "path": "/env/bin/zellij",
+            "remote_name": "zellij",
+            "version": "v0.43.1",
+            "hash": "292dda0e542dd7fba9e91da986f4bf346ad278144830426c6bc2a042c96ca1b5",
+            "url": "https://github.com/zellij-org/zellij",
+            "provider": "github",
+            "package_path": "zellij",
+            "pinned": false
+        },
         "/env/bin/zenohd": {
             "path": "/env/bin/zenohd",
             "remote_name": "zenohd",
