@@ -74,9 +74,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.56.0",
-            "hash": "a69c4114f6cdd94ae07fc7a9bcd67ae1358ef33ae99ef53d7601888e0ef95f71",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.56.0",
+            "version": "rust-v0.57.0",
+            "hash": "40667467871fe440485c514404b930f98f5dc2733d9cc4400ec268aa9a4af5c3",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.57.0",
             "provider": "github",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -151,6 +151,16 @@
             "package_path": "git-cliff-2.10.1/git-cliff",
             "pinned": false
         },
+        "/env/bin/git-flow": {
+            "path": "/env/bin/git-flow",
+            "remote_name": "git-flow-v0.1.1-linux-amd64",
+            "version": "v0.1.1",
+            "hash": "98818e42e88cecf6fd96089366f82c11726610fbded8303d5e6ceb959ff78ac3",
+            "url": "https://github.com/gittower/git-flow-next",
+            "provider": "github",
+            "package_path": "git-flow-v0.1.1-linux-amd64",
+            "pinned": false
+        },
         "/env/bin/gomi": {
             "path": "/env/bin/gomi",
             "remote_name": "gomi",
@@ -164,9 +174,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.13.1",
-            "hash": "58275f5e303eb80fc160b6e3b62e780a05ead90e1ff952231d260b6079af9290",
-            "url": "https://github.com/block/goose/releases/tag/v1.13.1",
+            "version": "v1.13.2",
+            "hash": "018fa0ec2d7967f210f88a9e9eec57574c82d9d862519f2e588b4c3581fe0f50",
+            "url": "https://github.com/block/goose/releases/tag/v1.13.2",
             "provider": "github",
             "package_path": "./goose",
             "pinned": false
@@ -324,9 +334,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.51",
-            "hash": "108ef77e0b3066c25a35199dc29dc88567385989d380dcec9a9a06b9e99f4172",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.51",
+            "version": "v1.0.58",
+            "hash": "096b48c4ac597abfbbcdb7b2dca99cede1e68a13db4f3dc12099080666b1f9ce",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.58",
             "provider": "github",
             "package_path": "opencode",
             "pinned": false
@@ -384,11 +394,11 @@
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",
-            "version": "v0.11.0",
-            "hash": "049e2a6304836e0034c8edf1b5189f212e1e5404dd15246bbceff1eccb2248d3",
-            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.11.0",
-            "provider": "",
-            "package_path": "soft-serve_0.11.0_Linux_x86_64/soft",
+            "version": "v0.11.1",
+            "hash": "a5f4ba940f3ed5d9e539f05b914ed7b515db0861b4f3b0fa5597144df43cb374",
+            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.11.1",
+            "provider": "github",
+            "package_path": "soft-serve_0.11.1_Linux_x86_64/soft",
             "pinned": false
         },
         "/env/bin/starship": {

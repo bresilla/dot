@@ -34,7 +34,7 @@ alias dev='devenv'
 
 
 ##PACKAGE_MANAGER
-alias pack='yay'
+alias pack='paru'
 alias aly='nostromo'
 
 

@@ -1,10 +1,9 @@
 #!/bin/bash
 
-export LULE_S=/env/dot/.func/wm/lule_colors
-export LULE_C=/home/bresilla/.config/lule/configs.json
-export LULE_W=/env/set/.animegen
 
-/env/bin/lule create --theme=$(cat /home/bresilla/.cache/lule/theme) -- set
+[ "$(cat /home/bresilla/.cache/lule/theme)" = "light" ] && lule config --theme=dark > /tmp/lule_pipe || lule config --theme=light > /tmp/lule_pipe
+
+# /env/bin/lule create --theme=$(cat /home/bresilla/.cache/lule/theme) -- set
 
 # hyprctl hyprpaper preload $(cat /home/bresilla/.cache/wal/wallpaper)
 # hyprctl hyprpaper wallpaper ",$(cat /home/bresilla/.cache/wal/wallpaper)"

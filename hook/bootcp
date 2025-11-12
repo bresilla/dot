@@ -1,0 +1,132 @@
+#!/bin/bash
+set -euo pipefail
+
+# Configuration for multiple installations
+declare -A CONFIGS
+
+# Arch Installation 1 (primary)
+CONFIGS["arch1_uuid"]="2a2545bf-ee68-40a2-9afe-a54de40f61c8"
+CONFIGS["arch1_subvol"]="@roll"
+CONFIGS["arch1_label"]="Arch-Primary"
+CONFIGS["arch1_dir"]="/boot/efi/arch1"
+
+# Arch Installation 2 (secondary)
+CONFIGS["arch2_uuid"]="a2cda679-585e-4989-a5fb-2855867beef0"
+CONFIGS["arch2_subvol"]="@roll"
+CONFIGS["arch2_label"]="Arch-Secondary"
+CONFIGS["arch2_dir"]="/boot/efi/arch2"
+
+# Ubuntu (if needed)
+CONFIGS["ubuntu_uuid"]="05e5c9f8-d102-47a6-a742-847179e1d442"
+CONFIGS["ubuntu_subvol"]="@roll"
+CONFIGS["ubuntu_label"]="Ubuntu"
+CONFIGS["ubuntu_dir"]="/boot/efi/ubuntu"
+
+# Common settings
+EFI="/boot/efi"
+# SUSPEND_UUID="resume=UUID=1bd0d0d0-4f77-43e6-824e-01066db30b1b"
+SUSPEND_UUID=""
+OPTION_QUIET="$SUSPEND_UUID rw quiet loglevel=0 udev.log_level=0 i915.fastboot=1 splash ibt=off"
+OPTION_LOGS="$SUSPEND_UUID rw lsm=landlock,lockdown,yama,apparmor,bpf splash ibt=off"
+IOMMU="intel_iommu=on iommu=pt"
+
+# Detect which Arch installation we're running from
+CURRENT_ROOT_UUID=$(findmnt -n -o UUID /)
+ID=$(source /etc/os-release; echo $ID)
+
+echo "Current OS: $ID"
+echo "Current Root UUID: $CURRENT_ROOT_UUID"
+echo "-----------------------------------"
+
+# Determine which configuration to use based on current UUID
+if [[ "$ID" == "arch" ]]; then
+    echo $CURRENT_ROOT_UUID
+    echo ${CONFIGS[arch2_uuid]}
+    if [[ "$CURRENT_ROOT_UUID" == "${CONFIGS[arch1_uuid]}" ]]; then
+        INSTALL_ID="arch1"
+        ROOT="root=UUID=${CONFIGS[arch1_uuid]}"
+        SUB="rootflags=subvol=${CONFIGS[arch1_subvol]}"
+        DIS="${CONFIGS[arch1_dir]}"
+        LABEL="${CONFIGS[arch1_label]}"
+    elif [[ "$CURRENT_ROOT_UUID" == "${CONFIGS[arch2_uuid]}" ]]; then
+        INSTALL_ID="arch2"
+        ROOT="root=UUID=${CONFIGS[arch2_uuid]}"
+        SUB="rootflags=subvol=${CONFIGS[arch2_subvol]}"
+        DIS="${CONFIGS[arch2_dir]}"
+        LABEL="${CONFIGS[arch2_label]}"
+    else
+        echo "ERROR: Unknown Arch installation UUID: $CURRENT_ROOT_UUID"
+        exit 1
+    fi
+    OPTION_ADD="lsm=landlock,lockdown,yama,apparmor,bpf"
+elif [[ "$ID" == "ubuntu" ]]; then
+    INSTALL_ID="ubuntu"
+    ROOT="root=UUID=${CONFIGS[ubuntu_uuid]}"
+    SUB="rootflags=subvol=${CONFIGS[ubuntu_subvol]}"
+    DIS="${CONFIGS[ubuntu_dir]}"
+    LABEL="${CONFIGS[ubuntu_label]}"
+    OPTION_ADD=""
+else
+    echo "ERROR: Unknown distribution: $ID"
+    exit 1
+fi
+
+echo "Installation: $INSTALL_ID"
+echo "Target Dir: $DIS"
+echo "Label: $LABEL"
+echo "-----------------------------------"
+
+# Backup existing configuration
+if [[ -d "$DIS" ]]; then
+    BACKUP_DIR="/var/backups/boot-${INSTALL_ID}-$(date +%Y%m%d-%H%M%S)"
+    mkdir -p "$BACKUP_DIR"
+    cp -r "$DIS" "$BACKUP_DIR/" 2>/dev/null || true
+    echo "Backed up to: $BACKUP_DIR"
+fi
+
+# Clean and recreate directory
+rm -rf "$DIS" && mkdir -p "$DIS"
+
+# Copy kernel files
+for file in $(find /boot -maxdepth 1 -type f -print); do
+    cp "$file" "$DIS/"
+    echo "Copying $(basename $file) to $DIS"
+done
+
+echo "-----------------------------------"
+
+# Generate boot entries
+for ver in $(find "$DIS" -maxdepth 1 -name 'vmlinuz*' -type f -print); do
+    ver=$(basename "${ver}")
+    ver=${ver:8}
+    echo "Creating entry for kernel: $ver"
+    
+    if [[ "$ID" == "arch" ]]; then
+        INIT="initramfs-${ver}.img"
+        LINUZ="vmlinuz-${ver}"
+    elif [[ "$ID" == "ubuntu" ]]; then
+        INIT="initrd.img-${ver}"
+        LINUZ="vmlinuz-${ver}"
+    fi
+    
+    # Use unique naming for config files
+    confile="$EFI/loader/entries/${INSTALL_ID}-${ver}.conf"
+    
+    # Remove existing and create new
+    [[ -f "$confile" ]] && rm "$confile"
+    touch "$confile"
+    chmod 644 "$confile"
+    
+    # Write configuration with descriptive label
+    {
+        echo "title   ${LABEL} (${ver})"
+        echo "linux   /${INSTALL_ID}/${LINUZ}"
+        echo "initrd  /${INSTALL_ID}/${INIT}"
+        echo "options ${ROOT} ${SUB} ${OPTION_LOGS} ${OPTION_ADD} ${IOMMU}"
+    } > "$confile"
+    
+    echo "Created: $confile"
+done
+
+echo "-----------------------------------"
+echo "Boot entries updated for $LABEL"

@@ -90,8 +90,7 @@ colors_to_tty &
 
 source $HOME/.cache/wal/colors.sh
 
-hyprctl hyprpaper preload $(cat /home/bresilla/.cache/wal/wallpaper)
-hyprctl hyprpaper wallpaper ",$(cat /home/bresilla/.cache/wal/wallpaper)"
+hyprctl hyprpaper reload ,$(cat /home/bresilla/.cache/wal/wallpaper)
 
 # stupid hyprland things
 c1="rgb(${color240:1})"

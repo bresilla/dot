@@ -24,7 +24,17 @@ if [ -z "$applaunch" ]; then
 fi
 
 if [[ $applaunch == *.AppImage ]]; then
-    setsid -f bash -c "/env/app/$applaunch"
+    systemd-run --user --quiet --collect \
+  --property=Type=exec \
+  --property=KillMode=process \
+  --property=StandardOutput=null \
+  --property=StandardError=null \
+  /env/app/"$applaunch"
 else
-    setsid -f flatpak run "$applaunch"
+    systemd-run --user --quiet --collect \
+  --property=Type=exec \
+  --property=KillMode=process \
+  --property=StandardOutput=null \
+  --property=StandardError=null \
+  flatpak run "$applaunch"
 fi

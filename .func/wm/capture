@@ -11,7 +11,7 @@ image() {
     if [[ -n $argc_ocr ]]; then
         grim -g "$(slurp)" $screenshot_file
         wl-copy < $screenshot_file
-        sxiv $screenshot_file &
+        imv $screenshot_file &
         TEXT_FILE="/tmp/ocr.txt"
         tesseract "$screenshot_file" "${TEXT_FILE//\.txt/}" 2> /dev/null
         sed -i 's/\x0c//' "$TEXT_FILE"

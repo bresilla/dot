@@ -1,26 +1,6 @@
 #!/bin/bash
 #
 # This is a simple kernel hook to populate the systemd-boot entries whenever kernels are added or removed.
-#
-#
-# copyt this file to: /usr/bin/bootcp
-#
-# create this: /usr/share/libalpm/hooks/91-bootcp.hook
-#
-# with this content:
-# 
-# [Trigger]
-# Type = Path
-# Operation = Install
-# Operation = Upgrade
-# Target = usr/lib/modules/*/vmlinuz
-# Target = usr/lib/initcpio/*
-# [Action]
-# Description = Copying vmlinuz to EFI dir
-# When = PostTransaction
-# Exec = /usr/bin/bootcp
-# NeedsTargets
-#  
 
 ID=$(source /etc/os-release; echo $ID)
 
@@ -33,8 +13,7 @@ elif [ $ID == "ubuntu" ]; then
     SUB="rootflags=subvol=@roll"
 fi
 echo "DISTRO:" $ID
-echo "-----------"
-echo "-----++++++++++------"
+echo "------+++++++++-----"
 
 #BOOTDIRS
 # EFI=/boot/efi
@@ -42,8 +21,8 @@ EFI=/boot/efi
 DIS=$EFI/$ID
 
 # Any rootflags you wish to set.
-OPTION_QUIET="resume=UUID=3086af27-e903-4e4b-90d7-7b7da6aee321 rw quiet loglevel=0 udev.log_level=0 i915.fastboot=1 splash ibt=off"
-OPTION_LOGS="resume=UUID=3086af27-e903-4e4b-90d7-7b7da6aee321 rw lsm=landlock,lockdown,yama,apparmor,bpf splash ibt=off"
+OPTION_QUIET="resume=UUID=1bd0d0d0-4f77-43e6-824e-01066db30b1b rw quiet loglevel=0 udev.log_level=0 i915.fastboot=1 splash ibt=off"
+OPTION_LOGS="resume=UUID=1bd0d0d0-4f77-43e6-824e-01066db30b1b rw lsm=landlock,lockdown,yama,apparmor,bpf splash ibt=off"
 IOMMU="intel_iommu=on iommu=pt"
 
 # Perform a nuclear clean to ensure everything is always in perfect sync.
@@ -75,6 +54,6 @@ for ver in $(find $DIS -maxdepth 1 -name 'vmlinuz*' -type f -print); do
 
     echo "title   ${ID}-${ver}" >> $confile
     echo "linux   /${ID}/${LINUZ}" >> $confile
-    echo "initrd  /${ID}/${INIT} ${IOMMU}" >> $confile
-    echo "options ${ROOT} ${SUB} ${OPTION_QUIET} ${OPTION_ADD}" >> $confile
+    echo "initrd  /${ID}/${INIT}" >> $confile
+    echo "options ${ROOT} ${SUB} ${OPTION_QUIET} ${OPTION_ADD} ${IOMMU}" >> $confile
 done

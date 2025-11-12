@@ -24,3 +24,4 @@ OSS/
 .config/zathura/zathurarc
 .config/zed/themes/wal-theme.json
 .config/zed/themes/wal-theme.json
+.config/systemd/user/default.target.wants
