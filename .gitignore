@@ -25,3 +25,6 @@ OSS/
 .config/zed/themes/wal-theme.json
 .config/zed/themes/wal-theme.json
 .config/systemd/user/default.target.wants
+.config/systemd/user/sockets.target.wants/
+.config/systemd/user/pipewire.service.wants/
+.config/systemd/user/pipewire-session-manager.service
