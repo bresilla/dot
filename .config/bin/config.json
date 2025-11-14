@@ -74,9 +74,9 @@
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.57.0",
-            "hash": "40667467871fe440485c514404b930f98f5dc2733d9cc4400ec268aa9a4af5c3",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.57.0",
+            "version": "rust-v0.58.0",
+            "hash": "cbe36a5e9d2018619500519d2e2bce929d75499fbd0a06aa7f75a1b68ac4fed0",
+            "url": "https://github.com/openai/codex/releases/tag/rust-v0.58.0",
             "provider": "github",
             "package_path": "codex-x86_64-unknown-linux-musl",
             "pinned": false
@@ -234,10 +234,10 @@
         "/env/bin/just": {
             "path": "/env/bin/just",
             "remote_name": "just",
-            "version": "1.43.0",
-            "hash": "67ac1a1c905d4de14293bed368dd1f272423375d5f7132f522c0e8385061fd8c",
-            "url": "https://github.com/casey/just/releases/tag/1.43.0",
-            "provider": "",
+            "version": "1.43.1",
+            "hash": "4f6fcc925dfb1d552d60aefa3b499140de45540860a99baa00fbe379ee7fbce0",
+            "url": "https://github.com/casey/just/releases/tag/1.43.1",
+            "provider": "github",
             "package_path": "just",
             "pinned": false
         },
@@ -334,9 +334,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.61",
-            "hash": "e7664d614fe16b4d82cdf1f696be5d203dfbc6794287ca5cf1f0e0309313fec2",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.61",
+            "version": "v1.0.63",
+            "hash": "9b14690624bb3b9eeabd39c75ee88a1a4c40e78eec2224773a51273353bc4080",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.63",
             "provider": "github",
             "package_path": "opencode",
             "pinned": false

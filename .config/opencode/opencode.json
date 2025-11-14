@@ -5,7 +5,27 @@
   "permission": {
     "bash": "ask",
     "write": "ask",
-    "edit": "ask"
+    "edit": "ask",
+    "git": "allow",
+    "fd": "allow",
+    "find": "allow",
+    "grep": "allow",
+    "tree": "allow",
+    "list": "allow",
+    "ls": "allow",
+    "rg": "allow",
+    "sed": "allow",
+    "glob": "allow",
+    "ls": "allow",
+    "ls": "allow",
+    "rg": "allow",
+    "sed": "allow",
+    "head": "allow",
+    "tail": "allow",
+    "cat": "allow",
+    "read": "allow",
+    "make": "allow",
+    "cmake": "allow",
   },
   "mode": {
     "build": {
@@ -24,7 +44,7 @@
         "bash": false
       }
     },
-    "god": {}
+    "god": {},
   },
   "agent": {
     "code-reviewer": {
