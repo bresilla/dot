@@ -61,15 +61,39 @@ bindkey -M vicmd '^Y' vi-yank-x-selection
 #--------------------------------------------------------------------------------------------------------------------
 ###MODULES
 # autoload -U colors && colors
-autoload compinit && compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
+
+# Load completion modules
+zmodload zsh/complist
+
+# Add completion paths BEFORE compinit
+fpath=(~/.config/zsh/completions/src $fpath)
+
+autoload -Uz compinit && compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
+
+# Enable completion display
+setopt autolist automenu
+
+# Use git completions for hub (git is aliased to hub)
+compdef hub=git
+
+# Completion styles
+zstyle ':completion:*' completer _extensions _complete _approximate
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.cache/zsh/zcompcache
 
 # TMOUT=1
-TRAPALRM() { [[ "$WIDGET" != "complete-word" ]] && zle reset-prompt }
+# Disable TRAPALRM during completion to prevent interference
+TRAPALRM() {
+  if [[ "$WIDGET" != "complete-word" ]] && [[ "$WIDGET" != "expand-or-complete" ]] && [[ -z "$_comp_setup" ]]; then
+    zle reset-prompt
+  fi
+}
 
 [ -d ~/.config/zsh/autosuggestions ] && source ~/.config/zsh/autosuggestions/zsh-autosuggestions.zsh
 [ -d ~/.config/zsh/syntax ] && source ~/.config/zsh/syntax/zsh-syntax-highlighting.zsh
-
-fpath+="/home/bresilla/.config/zsh/completions/src"
 
 #--------------------------------------------------------------------------------------------------------------------
 ###KILLER
@@ -235,7 +259,6 @@ bindkey -s '^A' ' scrr\n'
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 # nostromo [section begin]
-autoload -U compinit; compinit
+# compinit already called above
 source <(nostromo completion zsh)
 # nostromo [section end]
-fpath=(~/.zfunc $fpath)
