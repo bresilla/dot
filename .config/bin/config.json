@@ -161,6 +161,16 @@
             "package_path": "git-flow-v0.1.1-linux-amd64",
             "pinned": false
         },
+        "/env/bin/git-town": {
+            "path": "/env/bin/git-town",
+            "remote_name": "git-town",
+            "version": "v22.2.0",
+            "hash": "944346ce0f011c4fa914bc3f8ea2156166428d630a9ed53682dddb22b83cde7a",
+            "url": "https://github.com/git-town/git-town",
+            "provider": "github",
+            "package_path": "git-town",
+            "pinned": false
+        },
         "/env/bin/gomi": {
             "path": "/env/bin/gomi",
             "remote_name": "gomi",
@@ -174,9 +184,9 @@
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.14.0",
-            "hash": "0749c8a2e1bab8d9728b3e19c68737cb6049a8af874f5e1b063a66dd77bd2457",
-            "url": "https://github.com/block/goose/releases/tag/v1.14.0",
+            "version": "v1.15.0",
+            "hash": "dcd7be396d8923dbd55a9bc95a536345cc18b32963c66a6aaff84b8d03e4d476",
+            "url": "https://github.com/block/goose/releases/tag/v1.15.0",
             "provider": "github",
             "package_path": "./goose",
             "pinned": false
@@ -264,20 +274,20 @@
         "/env/bin/mdbook": {
             "path": "/env/bin/mdbook",
             "remote_name": "mdbook",
-            "version": "v0.5.0-beta.2",
-            "hash": "c210e9f3b5dc059e98dc244a589ed784d7b053b70b2ed66fb3ab33a110bcbb30",
-            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.0-beta.2",
-            "provider": "",
-            "package_path": "",
+            "version": "v0.5.1",
+            "hash": "84250331b415ff19151d9ec8b198ed98ad43420cba0bf0886317cd6fa1c6a7e7",
+            "url": "https://github.com/rust-lang/mdBook/releases/tag/v0.5.1",
+            "provider": "github",
+            "package_path": "mdbook",
             "pinned": false
         },
         "/env/bin/micromamba": {
             "path": "/env/bin/micromamba",
             "remote_name": "micromamba-linux-64",
-            "version": "2.3.3-0",
-            "hash": "9496f94a8b78c536573c93d946ec9bba74bd9ff79ee55aaa4b546e30db8f511b",
-            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.3.3-0",
-            "provider": "",
+            "version": "2.4.0-0",
+            "hash": "47501108624fa857ffb7c57e9eaf7cec641ec075e4b44b23a00b2f162e251cc0",
+            "url": "https://github.com/mamba-org/micromamba-releases/releases/tag/2.4.0-0",
+            "provider": "github",
             "package_path": "",
             "pinned": false
         },
@@ -294,11 +304,11 @@
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
-            "version": "v0.59.12",
-            "hash": "00a010eac5d18c3fb34a60997d00c0560120cc0bf500a8b9621c2ee55408ed9c",
-            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.59.12",
-            "provider": "",
-            "package_path": "",
+            "version": "v0.60.2",
+            "hash": "8cb23c7ff0d2e680c0fbd22fd9c4430aae24534d81e212dfff4917a0126b8ab5",
+            "url": "https://github.com/netbirdio/netbird/releases/tag/v0.60.2",
+            "provider": "github",
+            "package_path": "netbird",
             "pinned": false
         },
         "/env/bin/newt": {
@@ -334,9 +344,9 @@
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.63",
-            "hash": "9b14690624bb3b9eeabd39c75ee88a1a4c40e78eec2224773a51273353bc4080",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.63",
+            "version": "v1.0.106",
+            "hash": "f3a8f39fb4424e1e4d2322c85767b163fbed097c4442fb499aa915737470bd9e",
+            "url": "https://github.com/sst/opencode/releases/tag/v1.0.106",
             "provider": "github",
             "package_path": "opencode",
             "pinned": false
@@ -404,11 +414,11 @@
         "/env/bin/starship": {
             "path": "/env/bin/starship",
             "remote_name": "starship",
-            "version": "v1.24.0",
-            "hash": "798c9f130836a656811866d0940947cd2ba7410dfcd0b865fbaea4d27e9d075f",
-            "url": "https://github.com/starship/starship/releases/tag/v1.24.0",
-            "provider": "",
-            "package_path": "",
+            "version": "v1.24.1",
+            "hash": "13ce429c99628c6fd046352c2942848d4937c10256b39fdf89327fec535e42c3",
+            "url": "https://github.com/starship/starship/releases/tag/v1.24.1",
+            "provider": "github",
+            "package_path": "starship",
             "pinned": false
         },
         "/env/bin/tab": {

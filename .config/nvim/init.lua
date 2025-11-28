@@ -195,6 +195,15 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
 })
 
 
+-------------------------------------------- === WHITE SPACE === -------------------------------------------
+vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*",
+    callback = function()
+        vim.cmd([[%s/^\s\+$//e]])
+    end,
+})
+
+
 -------------------------------------------- === LAST MAP === ---------------------------------------------
 vim.keymap.set('n', '<ESC>', function()
     vim.cmd(':noh') -- Clear search highlighting

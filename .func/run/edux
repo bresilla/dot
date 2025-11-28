@@ -54,6 +54,24 @@ runn() {
     fi
 }
 
+
+# @cmd bun bunn
+# @arg cmd!
+# @option --name
+bunn() {
+    local session=$(echo "popup_runn_$current_path$argc_cmd$argc_name" | tr '/.' '_')
+    local current=$(tmux display-message -p -F "#{session_name}" 2>/dev/null)
+    if [[ "$current" == "$session" || "$current" == *"popup"* ]]; then
+        tmux detach-client
+    else
+        if ! tmux has-session -t "$session" 2>/dev/null; then
+            tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" /env/bin/bun x --package "$argc_cmd" "$argc_name"; 
+            tmux set-option -t "$session" status off
+        fi
+        tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
+    fi
+}
+
 # @cmd run term
 # @arg vb!
 term() {

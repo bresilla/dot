@@ -1,8 +1,6 @@
 #compdef git-flow
 compdef _git-flow git-flow
 
-# zsh completion for git-flow                             -*- shell-script -*-
-
 __git-flow_debug()
 {
     local file="$BASH_COMP_DEBUG_FILE"

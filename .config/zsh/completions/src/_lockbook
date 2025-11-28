@@ -1,0 +1,6 @@
+#compdef lockbook
+function _lockbook {
+    comp_output=$( lockbook complete zsh "$(($CURRENT - 1))" "${words[*]}" )
+    eval ${comp_output}
+}
+

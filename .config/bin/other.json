@@ -21,6 +21,16 @@
             "package_path": "",
             "pinned": false
         },
+        "/env/bin/bun": {
+            "path": "/env/bin/bun",
+            "remote_name": "bun",
+            "version": "bun-v1.3.3",
+            "hash": "d83e27167fe3dddfc1203183eba920015b0ba1406c735ea0da93ae8f377c4981",
+            "url": "https://github.com/oven-sh/bun",
+            "provider": "github",
+            "package_path": "bun-linux-x64/bun",
+            "pinned": false
+        },
         "/env/bin/chatgpt": {
             "path": "/env/bin/chatgpt",
             "remote_name": "chatgpt-linux-amd64",
@@ -49,6 +59,26 @@
             "url": "https://github.com/charmbracelet/crush",
             "provider": "github",
             "package_path": "crush_0.12.3_Linux_x86_64/crush",
+            "pinned": false
+        },
+        "/env/bin/deno": {
+            "path": "/env/bin/deno",
+            "remote_name": "deno",
+            "version": "v2.5.6",
+            "hash": "af311da844fc9898be927f0ebc271057bebce4b4ea53287b45fd44b795bc37e5",
+            "url": "https://github.com/denoland/deno",
+            "provider": "github",
+            "package_path": "deno",
+            "pinned": false
+        },
+        "/env/bin/denort": {
+            "path": "/env/bin/denort",
+            "remote_name": "denort",
+            "version": "v2.5.6",
+            "hash": "b9853abf703180d7b1b744690c7a87cf1ea293c512b823172c1bdb93baea15d0",
+            "url": "https://github.com/denoland/deno",
+            "provider": "github",
+            "package_path": "denort",
             "pinned": false
         },
         "/env/bin/fabric": {
@@ -119,6 +149,16 @@
             "url": "https://github.com/fiffeek/hyprdynamicmonitors",
             "provider": "github",
             "package_path": "hyprdynamicmonitors",
+            "pinned": false
+        },
+        "/env/bin/lockbook": {
+            "path": "/env/bin/lockbook",
+            "remote_name": "lockbook-cli-linux",
+            "version": "25.11.11",
+            "hash": "ee8a50bcccfd8a05432f5e1b4247fac567e8b15255a6d50c30e7cddb06bc0447",
+            "url": "https://github.com/lockbook/lockbook",
+            "provider": "github",
+            "package_path": "",
             "pinned": false
         },
         "/env/bin/mods": {
