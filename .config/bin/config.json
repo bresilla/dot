@@ -61,26 +61,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/codegpt": {
-            "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-1.2.1-linux-amd64",
-            "version": "v1.2.1",
-            "hash": "d9a654090cd9bde51dde773c100d450feb335f6d8ae4844d81d3f488862fc9ea",
-            "url": "https://github.com/appleboy/CodeGPT/releases/tag/v1.2.1",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/codex": {
-            "path": "/env/bin/codex",
-            "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.58.0",
-            "hash": "cbe36a5e9d2018619500519d2e2bce929d75499fbd0a06aa7f75a1b68ac4fed0",
-            "url": "https://github.com/openai/codex/releases/tag/rust-v0.58.0",
-            "provider": "github",
-            "package_path": "codex-x86_64-unknown-linux-musl",
-            "pinned": false
-        },
         "/env/bin/delta": {
             "path": "/env/bin/delta",
             "remote_name": "delta",
@@ -111,16 +91,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/dufs": {
-            "path": "/env/bin/dufs",
-            "remote_name": "dufs",
-            "version": "v0.45.0",
-            "hash": "15c44dcc5c8c1bcb72e0337af99233991e557b0b789f57113552d8501f38f98c",
-            "url": "https://github.com/sigoden/dufs/releases/tag/v0.45.0",
-            "provider": "",
-            "package_path": "dufs",
-            "pinned": false
-        },
         "/env/bin/eza": {
             "path": "/env/bin/eza",
             "remote_name": "eza",
@@ -129,16 +99,6 @@
             "url": "https://github.com/eza-community/eza/releases/tag/v0.23.4",
             "provider": "",
             "package_path": "eza",
-            "pinned": false
-        },
-        "/env/bin/fabric": {
-            "path": "/env/bin/fabric",
-            "remote_name": "fabric",
-            "version": "v1.4.323",
-            "hash": "bb20276b7b599253a39e4c9f0c49b14535b4e1c45dd92892ccf7b40d9051b0d4",
-            "url": "https://github.com/danielmiessler/Fabric/releases/tag/v1.4.323",
-            "provider": "github",
-            "package_path": "fabric",
             "pinned": false
         },
         "/env/bin/git-cliff": {
@@ -181,16 +141,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/goose": {
-            "path": "/env/bin/goose",
-            "remote_name": "goose",
-            "version": "v1.15.0",
-            "hash": "dcd7be396d8923dbd55a9bc95a536345cc18b32963c66a6aaff84b8d03e4d476",
-            "url": "https://github.com/block/goose/releases/tag/v1.15.0",
-            "provider": "github",
-            "package_path": "./goose",
-            "pinned": false
-        },
         "/env/bin/gum": {
             "path": "/env/bin/gum",
             "remote_name": "gum",
@@ -199,16 +149,6 @@
             "url": "https://github.com/charmbracelet/gum/releases/tag/v0.17.0",
             "provider": "",
             "package_path": "gum_0.17.0_Linux_x86_64/gum",
-            "pinned": false
-        },
-        "/env/bin/ha": {
-            "path": "/env/bin/ha",
-            "remote_name": "ha_amd64",
-            "version": "4.42.0",
-            "hash": "02077b6255f47ce3dfeff38d6d46383a25e11f3bfde67df260cff2b6edb53f56",
-            "url": "https://github.com/home-assistant/cli/releases/tag/4.42.0",
-            "provider": "",
-            "package_path": "",
             "pinned": false
         },
         "/env/bin/hub": {
@@ -291,16 +231,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/names": {
-            "path": "/env/bin/names",
-            "remote_name": "names-x86_64-unknown-linux-musl",
-            "version": "v0.14.0",
-            "hash": "073057b7ffdb4fe500591532873b3e42d1a66d8575e494fbb4103e09da4ad1ed",
-            "url": "https://github.com/fnichol/names",
-            "provider": "github",
-            "package_path": "names-x86_64-unknown-linux-musl",
-            "pinned": false
-        },
         "/env/bin/netbird": {
             "path": "/env/bin/netbird",
             "remote_name": "netbird",
@@ -321,16 +251,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/nostromo": {
-            "path": "/env/bin/nostromo",
-            "remote_name": "nostromo",
-            "version": "v0.12.0",
-            "hash": "49a731e4693396d88ac0b0a07aeaa738157b11b0de66083745cc1da674266d1c",
-            "url": "https://github.com/pokanop/nostromo",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
         "/env/bin/olm": {
             "path": "/env/bin/olm",
             "remote_name": "olm_linux_amd64",
@@ -339,16 +259,6 @@
             "url": "https://github.com/fosrl/olm/releases/tag/1.1.5",
             "provider": "",
             "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/opencode": {
-            "path": "/env/bin/opencode",
-            "remote_name": "opencode",
-            "version": "v1.0.106",
-            "hash": "f3a8f39fb4424e1e4d2322c85767b163fbed097c4442fb499aa915737470bd9e",
-            "url": "https://github.com/sst/opencode/releases/tag/v1.0.106",
-            "provider": "github",
-            "package_path": "opencode",
             "pinned": false
         },
         "/env/bin/pik": {
@@ -371,16 +281,6 @@
             "package_path": "",
             "pinned": false
         },
-        "/env/bin/rargs": {
-            "path": "/env/bin/rargs",
-            "remote_name": "rargs",
-            "version": "v0.3.0",
-            "hash": "0d8cf36979cc2cc82df6d72a7c3573274853617b3f1777f3b732f8f2c89c5d40",
-            "url": "https://github.com/lotabout/rargs",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
         "/env/bin/ser": {
             "path": "/env/bin/ser",
             "remote_name": "servicer-x86_64-unknown-linux-gnu",
@@ -389,26 +289,6 @@
             "url": "https://github.com/servicer-labs/servicer",
             "provider": "github",
             "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/serpl": {
-            "path": "/env/bin/serpl",
-            "remote_name": "serpl",
-            "version": "0.3.4",
-            "hash": "f5fbabf25456c23eef70cb1fa6f6628c1fcc4b95a1720e16eb46b28bede69a7a",
-            "url": "https://github.com/yassinebridi/serpl/releases/tag/0.3.4",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
-        },
-        "/env/bin/soft": {
-            "path": "/env/bin/soft",
-            "remote_name": "soft",
-            "version": "v0.11.1",
-            "hash": "a5f4ba940f3ed5d9e539f05b914ed7b515db0861b4f3b0fa5597144df43cb374",
-            "url": "https://github.com/charmbracelet/soft-serve/releases/tag/v0.11.1",
-            "provider": "github",
-            "package_path": "soft-serve_0.11.1_Linux_x86_64/soft",
             "pinned": false
         },
         "/env/bin/starship": {
