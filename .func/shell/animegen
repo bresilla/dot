@@ -387,7 +387,9 @@ def build_prompt(seed=None, theme=None, output_format="png", prompt_upsampling=T
         "prompt_upsampling": bool(prompt_upsampling),
         "safety_tolerance": int(safety_tolerance),
         "output_format": output_format,
-        "raw": bool(raw)
+        "raw": bool(raw),
+        "width": 2752,
+        "height": 1536
     }
     picks = {"theme": t, "color": color, "creature": creature_key, "environment": environment}
     return base, payload, picks

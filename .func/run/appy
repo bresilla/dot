@@ -23,18 +23,8 @@ if [ -z "$applaunch" ]; then
     exit 1
 fi
 
-if [[ $applaunch == *.AppImage ]]; then
-    systemd-run --user --quiet --collect \
-  --property=Type=exec \
-  --property=KillMode=process \
-  --property=StandardOutput=null \
-  --property=StandardError=null \
-  /env/app/"$applaunch"
+if [[ "$applaunch" == *.AppImage ]]; then
+    setsid -f "/env/app/$applaunch" >/dev/null 2>&1 < /dev/null
 else
-    systemd-run --user --quiet --collect \
-  --property=Type=exec \
-  --property=KillMode=process \
-  --property=StandardOutput=null \
-  --property=StandardError=null \
-  flatpak run "$applaunch"
+    setsid -f flatpak run "$applaunch" >/dev/null 2>&1 < /dev/null
 fi

@@ -98,6 +98,8 @@ alias spawn=systemd-nspawn
 alias rerun='WGPU_BACKEND=vulkan WAYLAND_DISPLAY= rerun'
 alias rer='WGPU_BACKEND=vulkan WAYLAND_DISPLAY= rerun --connect rerun+http://100.68.79.253:9876/proxy'
 
+alias nixenv="nix shell --experimental-features 'nix-command flakes' github:NixOS/nixpkgs/nixos-unstable#nixos-install-tools"
+
 ##BIN
 # alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"
 alias bino="BIN_CONFIG=/home/bresilla/.config/bin/other.json /env/bin/bin"

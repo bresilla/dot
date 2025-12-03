@@ -6,7 +6,7 @@
 current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
-view=$(ps -t "$current_tty" -o comm= | awk 'NF' | head -n2 | tail -n1 | tr -d '[:space:]')
+view=$(tmux display-message -p "#{pane_current_command}")
 case "$view" in
   nvim|vim|view)
     context="editor"
@@ -31,6 +31,7 @@ inter() {
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E bash -c "/env/dot/.func/run/inter $argc_val $current_path $context $pane_id $view"
             tmux set-option -t "$session" status off
+            # sleep 0.5
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi

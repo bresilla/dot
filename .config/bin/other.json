@@ -4,392 +4,242 @@
         "/env/bin/aichat": {
             "path": "/env/bin/aichat",
             "remote_name": "aichat",
-            "version": "v0.30.0",
-            "hash": "8378dfc295093efadc3ddddd17f2b49223f120a14ef3503159f375d68f287346",
             "url": "https://github.com/sigoden/aichat",
-            "provider": "github",
-            "package_path": "aichat",
-            "pinned": false
+            "provider": "github"
+        },
+        "/env/bin/bibiman-musl": {
+            "path": "/env/bin/bibiman-musl",
+            "remote_name": "bibiman-x86_64-musl",
+            "url": "https://codeberg.org/lukeflo/bibiman",
+            "provider": "codeberg"
         },
         "/env/bin/buf": {
             "path": "/env/bin/buf",
             "remote_name": "buf-Linux-x86_64",
-            "version": "v1.53.0",
-            "hash": "fbc18ea896bbea2418b945eda85443a5f144b5ba71193473128a1f417cc5d798",
-            "url": "https://github.com/bufbuild/buf/releases/tag/v1.53.0",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
+            "url": "https://github.com/bufbuild/buf",
+            "provider": "github"
         },
         "/env/bin/bun": {
             "path": "/env/bin/bun",
             "remote_name": "bun",
-            "version": "bun-v1.3.3",
-            "hash": "d83e27167fe3dddfc1203183eba920015b0ba1406c735ea0da93ae8f377c4981",
             "url": "https://github.com/oven-sh/bun",
-            "provider": "github",
-            "package_path": "bun-linux-x64/bun",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/chatgpt": {
             "path": "/env/bin/chatgpt",
             "remote_name": "chatgpt-linux-amd64",
-            "version": "v1.8.5",
-            "hash": "21f1912e1de5bdd515493c02faf9d3ea8c14bb78614713d761e37a617e9217c8",
-            "url": "https://github.com/kardolus/chatgpt-cli/releases/tag/v1.8.5",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
+            "url": "https://github.com/kardolus/chatgpt-cli",
+            "provider": "github"
         },
         "/env/bin/clipse": {
             "path": "/env/bin/clipse",
             "remote_name": "clipse",
-            "version": "v1.1.0",
-            "hash": "d1313377d43591a58140187992b279d497d7fb7069e07268bf64c1dade30c362",
             "url": "https://github.com/savedra1/clipse",
-            "provider": "github",
-            "package_path": "clipse",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/codegpt": {
             "path": "/env/bin/codegpt",
             "remote_name": "CodeGPT-1.3.0-linux-amd64",
-            "version": "v1.3.0",
-            "hash": "5f3ff968b71debbde669a80b52af7e72e11f5c1f5315c986ec79581cc4578341",
             "url": "https://github.com/appleboy/CodeGPT",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/codex": {
             "path": "/env/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
-            "version": "rust-v0.63.0",
-            "hash": "a594cb5957551c1662d8155639e668cbf9ed331fd501f1ed4efb59bec39ab880",
             "url": "https://github.com/openai/codex",
-            "provider": "github",
-            "package_path": "codex-x86_64-unknown-linux-musl",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/crush": {
             "path": "/env/bin/crush",
             "remote_name": "crush",
-            "version": "v0.12.3",
-            "hash": "bed929c91fea4ffb8c42bc1adccb27ef68179c27cafc854fa5de94a6c35e95dd",
             "url": "https://github.com/charmbracelet/crush",
-            "provider": "github",
-            "package_path": "crush_0.12.3_Linux_x86_64/crush",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/deno": {
             "path": "/env/bin/deno",
             "remote_name": "deno",
-            "version": "v2.5.6",
-            "hash": "af311da844fc9898be927f0ebc271057bebce4b4ea53287b45fd44b795bc37e5",
             "url": "https://github.com/denoland/deno",
-            "provider": "github",
-            "package_path": "deno",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/denort": {
             "path": "/env/bin/denort",
             "remote_name": "denort",
-            "version": "v2.5.6",
-            "hash": "b9853abf703180d7b1b744690c7a87cf1ea293c512b823172c1bdb93baea15d0",
             "url": "https://github.com/denoland/deno",
-            "provider": "github",
-            "package_path": "denort",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/dufs": {
             "path": "/env/bin/dufs",
             "remote_name": "dufs",
-            "version": "v0.45.0",
-            "hash": "15c44dcc5c8c1bcb72e0337af99233991e557b0b789f57113552d8501f38f98c",
             "url": "https://github.com/sigoden/dufs",
-            "provider": "github",
-            "package_path": "dufs",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric",
-            "version": "v1.4.335",
-            "hash": "45a4c739749880abb1d910d047588fee78a921aca38a31ab95c6ef9bf0dfe500",
             "url": "https://github.com/danielmiessler/Fabric",
-            "provider": "github",
-            "package_path": "fabric",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/gh": {
             "path": "/env/bin/gh",
             "remote_name": "gh",
-            "version": "v2.71.2",
-            "hash": "424a337d54ce9dfe537c8631fdaccce26a522544dca58d5f1f7558e2dd20a4e6",
-            "url": "https://github.com/cli/cli/releases/tag/v2.71.2",
-            "provider": "",
-            "package_path": "gh_2.71.2_linux_amd64/bin/gh",
-            "pinned": false
+            "url": "https://github.com/cli/cli",
+            "provider": "github"
         },
         "/env/bin/gh-dash": {
             "path": "/env/bin/gh-dash",
-            "remote_name": "gh-dash_v4.14.0_linux-amd64",
-            "version": "v4.14.0",
-            "hash": "66f28648475453adec907bd4a6eda873322ccf7bb1d2904b8c1651550f1f3db8",
+            "remote_name": "gh-dash_v4.19.1_linux-amd64",
             "url": "https://github.com/dlvhdr/gh-dash",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/git-who": {
             "path": "/env/bin/git-who",
             "remote_name": "git-who",
-            "version": "v1.2",
-            "hash": "4b48777412903d316f3475c4a5baa3e7535aabb985a8806327659f6dd32f0869",
-            "url": "https://github.com/sinclairtarget/git-who/releases/tag/v1.2",
-            "provider": "",
-            "package_path": "linux_amd64/git-who",
-            "pinned": false
+            "url": "https://github.com/sinclairtarget/git-who",
+            "provider": ""
         },
         "/env/bin/goose": {
             "path": "/env/bin/goose",
             "remote_name": "goose",
-            "version": "v1.15.0",
-            "hash": "dcd7be396d8923dbd55a9bc95a536345cc18b32963c66a6aaff84b8d03e4d476",
             "url": "https://github.com/block/goose",
-            "provider": "github",
-            "package_path": "./goose",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/ha": {
             "path": "/env/bin/ha",
             "remote_name": "ha_amd64",
-            "version": "4.43.0",
-            "hash": "23ee08ad25174e8db6b936b5ad2795293866aedb881b5973ce529ef6ec865cb9",
             "url": "https://github.com/home-assistant/cli",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/hugo": {
             "path": "/env/bin/hugo",
             "remote_name": "hugo",
-            "version": "v0.147.8",
-            "hash": "069a943978b2f58d18b3a8b30155bd8a675c8e694003d1822a54d82e16adb1dd",
-            "url": "https://github.com/gohugoio/hugo/releases/tag/v0.147.8",
-            "provider": "",
-            "package_path": "hugo",
-            "pinned": false
+            "url": "https://github.com/gohugoio/hugo",
+            "provider": "github"
         },
         "/env/bin/hyprdynamicmonitors": {
             "path": "/env/bin/hyprdynamicmonitors",
             "remote_name": "hyprdynamicmonitors",
-            "version": "v1.1.2",
-            "hash": "226f33364e12127bd0344f9e6d0b130af5a8d4ef503d13269e0c6a41d038e8c7",
             "url": "https://github.com/fiffeek/hyprdynamicmonitors",
-            "provider": "github",
-            "package_path": "hyprdynamicmonitors",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/lockbook": {
             "path": "/env/bin/lockbook",
             "remote_name": "lockbook-cli-linux",
-            "version": "25.11.11",
-            "hash": "ee8a50bcccfd8a05432f5e1b4247fac567e8b15255a6d50c30e7cddb06bc0447",
             "url": "https://github.com/lockbook/lockbook",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/mods": {
             "path": "/env/bin/mods",
             "remote_name": "mods",
-            "version": "v1.7.0",
-            "hash": "6ffca7a62755eca7b4d8ba277c8c16ece140c3ff1df73138879cb31e2aab1a86",
             "url": "https://github.com/charmbracelet/mods",
-            "provider": "github",
-            "package_path": "mods_1.7.0_Linux_x86_64/mods",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/names": {
             "path": "/env/bin/names",
             "remote_name": "names-x86_64-unknown-linux-musl",
-            "version": "v0.14.0",
-            "hash": "073057b7ffdb4fe500591532873b3e42d1a66d8575e494fbb4103e09da4ad1ed",
             "url": "https://github.com/fnichol/names",
-            "provider": "github",
-            "package_path": "names-x86_64-unknown-linux-musl",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/nom": {
             "path": "/env/bin/nom",
             "remote_name": "nom",
-            "version": "v2.8.0",
-            "hash": "d4bbeebd6133bb6da48d2e0012f3b83f336d39eb1e06b0246a84860033dcf4dd",
             "url": "https://github.com/guyfedwards/nom",
-            "provider": "github",
-            "package_path": "nom",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/nostromo": {
             "path": "/env/bin/nostromo",
             "remote_name": "nostromo",
-            "version": "v0.12.0",
-            "hash": "49a731e4693396d88ac0b0a07aeaa738157b11b0de66083745cc1da674266d1c",
             "url": "https://github.com/pokanop/nostromo",
-            "provider": "github",
-            "package_path": "nostromo",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/oc": {
             "path": "/env/bin/oc",
-            "remote_name": "opencloud-2.2.0-linux-amd64",
-            "version": "v2.2.0",
-            "hash": "ac2e682481a05179a3593f011cb88648ea9c77ec8acf908e420fd4143f10b20f",
+            "remote_name": "opencloud-4.0.0-linux-amd64",
             "url": "https://github.com/opencloud-eu/opencloud",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/ollama": {
             "path": "/env/bin/ollama",
             "remote_name": "libggml-cpu-x64.so",
-            "version": "v0.10.1",
-            "hash": "c2626942f1948815dd09610b2516baf032f27f6811f73c3b16da8a9022500e8e",
-            "url": "https://github.com/ollama/ollama/releases/tag/v0.10.1",
-            "provider": "",
-            "package_path": "./lib/ollama/libggml-cpu-x64.so",
-            "pinned": false
+            "url": "https://github.com/ollama/ollama",
+            "provider": "github"
         },
         "/env/bin/opencode": {
             "path": "/env/bin/opencode",
             "remote_name": "opencode",
-            "version": "v1.0.119",
-            "hash": "a299a503e588c8654b3f2af56511a216a751f68de63ab7bb4c4ab2536f188fd9",
             "url": "https://github.com/sst/opencode",
-            "provider": "github",
-            "package_path": "opencode",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/rargs": {
             "path": "/env/bin/rargs",
             "remote_name": "rargs",
-            "version": "v0.3.0",
-            "hash": "0d8cf36979cc2cc82df6d72a7c3573274853617b3f1777f3b732f8f2c89c5d40",
             "url": "https://github.com/lotabout/rargs",
-            "provider": "github",
-            "package_path": "rargs",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/rerun": {
             "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.26.2-x86_64-unknown-linux-gnu",
-            "version": "0.26.2",
-            "hash": "acbd0cf4f5ed6bfb40b9445f4ace8be38ab91fba7fef142737395c82a5c8120d",
-            "url": "https://github.com/rerun-io/rerun/releases/tag/0.26.2",
-            "provider": "",
-            "package_path": "",
-            "pinned": false
+            "remote_name": "rerun-cli-0.27.2-x86_64-unknown-linux-gnu",
+            "url": "https://github.com/rerun-io/rerun",
+            "provider": "github"
         },
         "/env/bin/rustscan": {
             "path": "/env/bin/rustscan",
             "remote_name": "rustscan",
-            "version": "2.4.1",
-            "hash": "8a507fbd1821746ce747dcce6c2c4cfa0c6aff9c4d1095967a4c2707db6d1b41",
             "url": "https://github.com/bee-san/RustScan",
-            "provider": "github",
-            "package_path": "rustscan",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/sdt": {
             "path": "/env/bin/sdt",
             "remote_name": "systemd-manager-tui",
-            "version": "v1.0.1",
-            "hash": "fc3b11212dc5108073714fc47eff9453fa16d6a53a5436b813f42e4c82695c33",
             "url": "https://github.com/matheus-git/systemd-manager-tui",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/serpl": {
             "path": "/env/bin/serpl",
             "remote_name": "serpl",
-            "version": "0.3.4",
-            "hash": "f5fbabf25456c23eef70cb1fa6f6628c1fcc4b95a1720e16eb46b28bede69a7a",
             "url": "https://github.com/yassinebridi/serpl",
-            "provider": "github",
-            "package_path": "serpl",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",
-            "version": "v0.11.1",
-            "hash": "a5f4ba940f3ed5d9e539f05b914ed7b515db0861b4f3b0fa5597144df43cb374",
             "url": "https://github.com/charmbracelet/soft-serve",
-            "provider": "github",
-            "package_path": "soft-serve_0.11.1_Linux_x86_64/soft",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/spotifyd": {
             "path": "/env/bin/spotifyd",
             "remote_name": "spotifyd",
-            "version": "v0.4.1",
-            "hash": "7cbdb2a6f2a45828fbc060a66684f67b3fd9b9a101c6b0a2f1b40200676b5956",
-            "url": "https://github.com/Spotifyd/spotifyd/releases/tag/v0.4.1",
-            "provider": "",
-            "package_path": "spotifyd",
-            "pinned": false
+            "url": "https://github.com/Spotifyd/spotifyd",
+            "provider": "github"
         },
         "/env/bin/srss": {
             "path": "/env/bin/srss",
             "remote_name": "srss",
-            "version": "v0.1.0",
-            "hash": "afd1aee390d83e64f2326956c2b82acdb0bbfa4842d983916826de77bf75de3c",
             "url": "https://github.com/sheepla/srss",
-            "provider": "github",
-            "package_path": "srss",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/step": {
             "path": "/env/bin/step",
             "remote_name": "step",
-            "version": "v0.28.7",
-            "hash": "a7a63af0f985335208e854eff6a49fd56ce05d09285f1315f4932beefcf786b9",
             "url": "https://github.com/smallstep/cli",
-            "provider": "github",
-            "package_path": "step_linux_amd64/bin/step",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/systemd-manager-tui": {
             "path": "/env/bin/systemd-manager-tui",
             "remote_name": "systemd-manager-tui",
-            "version": "v1.0.1",
-            "hash": "fc3b11212dc5108073714fc47eff9453fa16d6a53a5436b813f42e4c82695c33",
             "url": "https://github.com/matheus-git/systemd-manager-tui",
-            "provider": "github",
-            "package_path": "",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/trunk": {
             "path": "/env/bin/trunk",
             "remote_name": "trunk",
-            "version": "v0.21.14",
-            "hash": "22be59a5067bb43a390462d9a8db159fca1eac10085b815b2562114d935ba02a",
             "url": "https://github.com/trunk-rs/trunk",
-            "provider": "github",
-            "package_path": "trunk",
-            "pinned": false
+            "provider": "github"
         },
         "/env/bin/wasm-pack": {
             "path": "/env/bin/wasm-pack",
             "remote_name": "wasm-pack",
-            "version": "v0.13.1",
-            "hash": "0eb85a72632d6f6563d51c91af5ac8f394eab5183d0815f7d534f9d82ce6f3c2",
             "url": "https://github.com/rustwasm/wasm-pack",
-            "provider": "github",
-            "package_path": "wasm-pack-v0.13.1-x86_64-unknown-linux-musl/wasm-pack",
-            "pinned": false
+            "provider": "github"
         }
     }
 }
