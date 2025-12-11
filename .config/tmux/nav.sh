@@ -1,12 +1,12 @@
 #!/bin/bash
 # Navigate windows while preserving popup state
 
-DIRECTION=$1
+ACTION=$1
 CURRENT_SESSION=$(tmux display -p '#{session_name}')
 
 # Debug logging
 echo "=== NAV DEBUG $(date) ===" >> /tmp/nav_debug.log
-echo "Direction: $DIRECTION" >> /tmp/nav_debug.log
+echo "Action: $ACTION" >> /tmp/nav_debug.log
 echo "Current session: $CURRENT_SESSION" >> /tmp/nav_debug.log
 
 # Check if we're in a popup
@@ -28,11 +28,18 @@ if [[ "$CURRENT_SESSION" == *"popup"* ]]; then
     echo "$CURRENT_SESSION" > "/tmp/tmux_popup_${PARENT_WINDOW}"
     echo "Saved popup to /tmp/tmux_popup_${PARENT_WINDOW}" >> /tmp/nav_debug.log
     
-    # Navigate parent window FIRST
-    if [ "$DIRECTION" = "next" ]; then
+    # Perform action on parent
+    if [ "$ACTION" = "next" ]; then
         tmux next-window -t "$PARENT_SESSION"
-    else
+    elif [ "$ACTION" = "previous" ]; then
         tmux previous-window -t "$PARENT_SESSION"
+    elif [ "$ACTION" = "newwindow" ]; then
+        CURRENT_PATH=$(tmux display -p '#{pane_current_path}')
+        echo "Creating new window with path: $CURRENT_PATH in session $PARENT_SESSION" >> /tmp/nav_debug.log
+        tmux new-window -t "${PARENT_SESSION}:" -c "$CURRENT_PATH"
+    elif [ "$ACTION" = "newwindow-home" ]; then
+        echo "Creating new window at home in session $PARENT_SESSION" >> /tmp/nav_debug.log
+        tmux new-window -t "${PARENT_SESSION}:"
     fi
     
     # Detach from popup - restoration will happen via hook
@@ -41,16 +48,20 @@ if [[ "$CURRENT_SESSION" == *"popup"* ]]; then
     
 else
     # === NOT IN POPUP ===
-    echo "Not in popup, current window before nav: $(tmux display -p '#{window_id}')" >> /tmp/nav_debug.log
+    echo "Not in popup, current window before action: $(tmux display -p '#{window_id}')" >> /tmp/nav_debug.log
     
-    # Navigate
-    if [ "$DIRECTION" = "next" ]; then
+    # Perform action
+    if [ "$ACTION" = "next" ]; then
         tmux next-window
-    else
+    elif [ "$ACTION" = "previous" ]; then
         tmux previous-window
+    elif [ "$ACTION" = "newwindow" ]; then
+        tmux new-window -c "#{pane_current_path}"
+    elif [ "$ACTION" = "newwindow-home" ]; then
+        tmux new-window
     fi
     
-    echo "After navigation: $(tmux display -p '#{window_id}')" >> /tmp/nav_debug.log
+    echo "After action: $(tmux display -p '#{window_id}')" >> /tmp/nav_debug.log
 fi
 
 echo "=== END NAV DEBUG ===" >> /tmp/nav_debug.log
