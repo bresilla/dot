@@ -7,6 +7,8 @@ current_tty=$(tmux display-message -p "#{pane_tty}")
 pane_id=$(tmux display-message -p "#{pane_id}")
 current_path=$(tmux display-message -p "#{pane_current_path}")
 view=$(tmux display-message -p "#{pane_current_command}")
+parent_session=$(tmux display-message -p "#{session_name}")
+parent_window=$(tmux display-message -p "#{window_id}")
 case "$view" in
   nvim|vim|view)
     context="editor"
@@ -31,6 +33,8 @@ inter() {
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E bash -c "/env/dot/.func/run/inter $argc_val $current_path $context $pane_id $view"
             tmux set-option -t "$session" status off
+            tmux set-option -t "$session" @popup_parent_session "$parent_session"
+            tmux set-option -t "$session" @popup_parent_window "$parent_window"
             # sleep 0.5
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
@@ -50,6 +54,8 @@ runn() {
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$argc_cmd; read -p ''"
             tmux set-option -t "$session" status off
+            tmux set-option -t "$session" @popup_parent_session "$parent_session"
+            tmux set-option -t "$session" @popup_parent_window "$parent_window"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
@@ -68,6 +74,8 @@ bunn() {
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" /env/bin/bun x --package "$argc_cmd" "$argc_name"; 
             tmux set-option -t "$session" status off
+            tmux set-option -t "$session" @popup_parent_session "$parent_session"
+            tmux set-option -t "$session" @popup_parent_window "$parent_window"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
@@ -84,6 +92,8 @@ term() {
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" zsh -i
             tmux set-option -t "$session" status off
+            tmux set-option -t "$session" @popup_parent_session "$parent_session"
+            tmux set-option -t "$session" @popup_parent_window "$parent_window"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi

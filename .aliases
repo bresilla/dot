@@ -132,6 +132,7 @@ alias todo='taskwarrior-tui'
 alias forge='conda'
 alias hosty="sudo locdev"
 alias tec="tectonic -X"
+alias anytype='anytype-cli'
 alias bm=bibiman
 alias zik='zk --notebook-dir /doc/data/notes/zk'
 alias ask=aichat
