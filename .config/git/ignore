@@ -29,3 +29,13 @@ build
 .agent
 AGENT.md
 AGENTS.md
+xtra/
+build/
+target/
+compile_commands.json
+.xmake/
+.devbox/
+.devenv/
+.direnv/
+PLAN.md
+PLAN/
