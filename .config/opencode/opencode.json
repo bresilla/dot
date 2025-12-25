@@ -7,51 +7,42 @@
     "bash": "ask",
     "write": "ask",
     "edit": "ask",
-    "git": "allow",
-    "fd": "allow",
-    "find": "allow",
-    "grep": "allow",
-    "tree": "allow",
-    "list": "allow",
-    "ls": "allow",
-    "rg": "allow",
-    "sed": "allow",
-    "glob": "allow",
-    "ls": "allow",
-    "ls": "allow",
-    "rg": "allow",
-    "sed": "allow",
-    "head": "allow",
-    "tail": "allow",
-    "cat": "allow",
-    "read": "allow",
-    "make": "allow",
-    "cmake": "allow",
   },
-  "mode": {
+  "agent": {
     "build": {
-      "model": "anthropic/claude-sonnet-4-5-20250929",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
+      "mode": "primary",
+      "permissions": {
+        "write": "ask",
+        "edit": "ask",
+        "bash": "ask"
       }
     },
     "plan": {
-      "model": "anthropic/claude-haiku-4-20250514",
-      "tools": {
+      "mode": "primary",
+      "permissions": {
         "write": false,
         "edit": false,
         "bash": false
       }
     },
-    "god": {},
-  },
-  "agent": {
+    "god": {
+      "mode": "primary",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      },
+      "permissions": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      },
+    },
     "code-reviewer": {
+      "mode": "subagent",
       "description": "Reviews code for best practices and potential issues",
-      "model": "anthropic/claude-sonnet-4-5-20250929",
-      "prompt": "You are a code reviewer. Focus on security, performance, and maintainability.",
+      "prompt": "You are a code reviewer. Be a critick and check if code is half baked, only stub, todo's and if taets are only mande to pass, You need to flag those and let me know",
+      "model": "z.ai/GLM-4.7",
       "tools": {
         "write": false,
         "edit": false
