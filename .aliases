@@ -77,6 +77,7 @@ alias x='xplr'
 alias e=$EDITOR
 
 alias ze='zellij'
+alias pl="perles"
 alias nums="dtool"
 alias mcon="mconnectctl"
 alias code="com.visualstudio.code"

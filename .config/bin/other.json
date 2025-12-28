@@ -211,6 +211,12 @@
             "url": "https://github.com/yassinebridi/serpl",
             "provider": "github"
         },
+        "/env/bin/sg": {
+            "path": "/env/bin/sg",
+            "remote_name": "sg_linux_amd64_static",
+            "url": "https://github.com/sourcegraph/sg",
+            "provider": "github"
+        },
         "/env/bin/soft": {
             "path": "/env/bin/soft",
             "remote_name": "soft",

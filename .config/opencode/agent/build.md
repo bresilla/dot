@@ -2,16 +2,36 @@
 description: Code builder and forger
 mode: primary
 # model: anthropic/claude-opus-4.5
-temperature: 0.1
+temperature: 0.3
 tools:
   write: true
   edit: true
   bash: true
-permissions:
-  edit: "ask"
-  read: true
-  webfetch: true
-  bash: "ask"
+permission:
+  edit: ask
+  read: allow
+  bash:
+    "make": allow
+    "bd": allow
+    "jq": allow
+    "grep": allow
+    "rg": allow
+    "fd": allow
+    "cat": allow
+    "find": allow
+    "ls": allow
+    "mkdir": allow
+    "head": allow
+    "tail": allow
+    "wc": allow
+    "cut": allow
+    "tr": allow
+    "git diff": allow
+    "git log*": allow
+    "git status": allow
+    "git tree": allow
+    "*": ask
+  webfetch: allow
 ---
 
 You are in code read+write mode.

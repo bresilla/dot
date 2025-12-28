@@ -2,16 +2,16 @@
 description: Code builder in god mode
 mode: primary
 # model: anthropic/claude-opus-4.5
-temperature: 0.1
+temperature: 0.2
 tools:
   write: true
   edit: true
   bash: true
-permissions:
-  edit: true
-  read: true
-  webfetch: true
-  bash: true
+permission:
+  edit: "allow"
+  read: "allow"
+  webfetch: "allow"
+  bash: "allow"
 ---
 
 You are in edit/write without restrictions mode.
