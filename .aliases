@@ -55,8 +55,9 @@ alias moonlight="QT_QPA_PLATFORM=xcb moonlight"
 alias hibernate="systemctl hibernate"
 alias cp="rsync -uahP --inplace --no-whole-file --info=progress2"
 alias cat='bat --paging=never'
-alias ll='eza -liSHF --header --git --group-directories-first'
-alias la='eza -laiSHF --header --git --group-directories-first'
+alias ll='eza -liSHF --header --git --group-directories-first --git-ignore'
+alias la='eza -laiSHF --header --git --group-directories-first --git-ignore'
+alias lg='eza -laiSHF --header --git --group-directories-first'
 alias lt='eza -liSHF --header --git --git-ignore --group-directories-first --tree -L3'
 alias lu='dutree -d1 --usage -x .git -x .direnv'
 alias df='dfc -dTmw -p -/dev/loop,tmp,dev,run,one,efivarfs'
@@ -81,7 +82,6 @@ alias mcon="mconnectctl"
 alias code="com.visualstudio.code"
 alias hyp="hyprctl"
 alias xfreerdp=xfreerdp3
-alias lg=lazygit
 alias ari='aria2c'
 alias inxi='prime inxi -Fxxxz'
 alias font='fc-query'
@@ -141,6 +141,7 @@ alias cop="gh copilot suggest"
 alias claude='bun x --package @anthropic-ai/claude-code claude'
 alias copilot='bun x --package @github/copilot copilot'
 alias gemini='bun x --package @google/gemini-cli gemini'
+alias openspec='bun x --package @fission-ai/openspec@latest openspec'
 
 ##MEDIA
 alias color='pastel format hex' 

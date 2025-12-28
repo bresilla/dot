@@ -161,7 +161,7 @@
             "path": "/env/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
             "url": "https://github.com/prefix-dev/pixi",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/ser": {
             "path": "/env/bin/ser",

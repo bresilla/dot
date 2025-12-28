@@ -1,52 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "opencode-openai-codex-auth@4.2.0",
+    "opencode-gemini-auth@latest",
+    "opencode-beads"
+  ],
   "theme": "system",
-  "autoupdate": true,
   "instructions": ["Makefile"],
-  "permission": {
-    "bash": "ask",
-    "write": "ask",
-    "edit": "ask",
-  },
-  "agent": {
-    "build": {
-      "mode": "primary",
-      "permissions": {
-        "write": "ask",
-        "edit": "ask",
-        "bash": "ask"
-      }
-    },
-    "plan": {
-      "mode": "primary",
-      "permissions": {
-        "write": false,
-        "edit": false,
-        "bash": false
-      }
-    },
-    "god": {
-      "mode": "primary",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
-      },
-      "permissions": {
-        "write": true,
-        "edit": true,
-        "bash": true
-      },
-    },
-    "code-reviewer": {
-      "mode": "subagent",
-      "description": "Reviews code for best practices and potential issues",
-      "prompt": "You are a code reviewer. Be a critick and check if code is half baked, only stub, todo's and if taets are only mande to pass, You need to flag those and let me know",
-      "model": "z.ai/GLM-4.7",
-      "tools": {
-        "write": false,
-        "edit": false
-      }
-    }
-  }
 }

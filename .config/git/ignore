@@ -28,6 +28,7 @@ build
 .agents
 .agent
 AGENT.md
+AGENTS.MD
 AGENTS.md
 xtra/
 build/
@@ -39,3 +40,6 @@ compile_commands.json
 .direnv/
 PLAN.md
 PLAN/
+.gitattributes
+.beads/
+.perles/
