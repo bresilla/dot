@@ -33,13 +33,13 @@ $directory\
 
 [custom.ssh]
 shell = "bash"
-style = "bg:237 bold italic fg:15"
+style = "bg:237 italic fg:15"
 command = "echo //"
 when = """ [[ -n $SSH_CONNECTION ]] """
 format = "[ $output]($style)"
 
 [hostname]
-style = "bg:237 bold italic fg:15"
+style = "bg:237 italic fg:15"
 ssh_only = false
 # format = "($style)[ $hostname ]($style)"
 format = "[ $hostname ]($style)"
@@ -80,7 +80,7 @@ format = "[|](bg:0 fg:7)[ $output ]($style)[|](bg:0 fg:7)"
 
 [custom.tab]
 shell = "bash"
-style="bg:6 bold italic fg:0"
+style="bg:6 italic fg:0"
 command = "echo $TAB | tr -d '/'"
 when = """ [[ -n $TAB ]] """
 format = "[|](bg:0 fg:7)[ t: $output ]($style)"
@@ -115,14 +115,14 @@ format = "[ $output ]($style)"
 
 [custom.container]
 shell = "bash"
-style = "bg:5 bold fg:0"
+style = "bg:5 fg:0"
 command = "echo $(/env/dot/.func/shell/incontainer2)"
 when = """ [[ $(systemd-detect-virt) != "none" ]] """
 format = "[|](bg:0 fg:7)[ $output ]($style)[||](bg:0 fg:7)"
 
 [custom.container2]
 shell = "bash"
-style = "bg:5 bold fg:0"
+style = "bg:5 fg:0"
 command = "echo $(/env/dot/.func/shell/incontainer)"
 when = """ [[ $(systemd-detect-virt) != "none" ]] """
 format = " [ $output ]($style)"
@@ -134,7 +134,7 @@ map_symbol = true
 disabled = false
 
 [sudo]
-style = "bg:6 bold fg:0"
+style = "bold bg:240 fg:171"
 format = "[ ROOT ]($style)"
 disabled = false
 

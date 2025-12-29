@@ -20,6 +20,7 @@ permission:
     "cat": allow
     "find": allow
     "ls": allow
+    "echo": allow
     "mkdir": allow
     "head": allow
     "tail": allow
@@ -32,6 +33,8 @@ permission:
     "git tree": allow
     "*": ask
   webfetch: allow
+  skill:
+    "beads": "allow"
 ---
 
 You are in code read+write mode.

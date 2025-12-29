@@ -81,7 +81,8 @@ Full diff:
 $(git diff --cached)
 "
 
-MSG="$(aichat "$PROMPT")"
+# MSG="$(aichat "$PROMPT")"
+MSG="$(printf "%s\n" "$PROMPT" | aichat)"
 
 # ---- EDIT + COMMIT --------------------------------------------------
 

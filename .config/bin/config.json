@@ -59,7 +59,7 @@
             "path": "/env/bin/git-cliff",
             "remote_name": "git-cliff",
             "url": "https://github.com/orhun/git-cliff",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/git-flow": {
             "path": "/env/bin/git-flow",
@@ -101,7 +101,7 @@
             "path": "/env/bin/jj",
             "remote_name": "jj",
             "url": "https://github.com/jj-vcs/jj",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/just": {
             "path": "/env/bin/just",
@@ -113,7 +113,7 @@
             "path": "/env/bin/lazygit",
             "remote_name": "lazygit",
             "url": "https://github.com/jesseduffield/lazygit",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/lemonade": {
             "path": "/env/bin/lemonade",
@@ -143,13 +143,13 @@
             "path": "/env/bin/newt",
             "remote_name": "newt_linux_amd64",
             "url": "https://github.com/fosrl/newt",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/olm": {
             "path": "/env/bin/olm",
             "remote_name": "olm_linux_amd64",
             "url": "https://github.com/fosrl/olm",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/pik": {
             "path": "/env/bin/pik",
@@ -209,7 +209,7 @@
             "path": "/env/bin/zenohd",
             "remote_name": "zenohd",
             "url": "https://github.com/eclipse-zenoh/zenoh",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/zoxide": {
             "path": "/env/bin/zoxide",
