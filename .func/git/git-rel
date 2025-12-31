@@ -33,8 +33,8 @@ if [[ "$type" == "minor" || "$type" == "major" ]]; then
 fi
 
 # Commit, tag, push, release
-# git add -A && git commit -m "chore(release): prepare for $version"
+git add -A && git commit -m "chore(release): prepare for $version"
 echo "$changelog"
-# git tag -a "$version" -m "$version" -m "$changelog"
-# git push --follow-tags --force --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
-# gh release create "$version" --notes "$changelog"
+git tag -a "$version" -m "$version" -m "$changelog"
+git push --follow-tags --force --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+gh release create "$version" --notes "$changelog"
