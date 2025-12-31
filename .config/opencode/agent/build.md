@@ -35,6 +35,7 @@ permission:
   webfetch: allow
   skill:
     "beads": "allow"
+    "make": "allow"
 ---
 
 You are in code read+write mode.

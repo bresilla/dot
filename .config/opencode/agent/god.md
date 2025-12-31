@@ -12,6 +12,9 @@ permission:
   read: "allow"
   webfetch: "allow"
   bash: "allow"
+  skill:
+    "beads": "allow"
+    "make": "allow"
 ---
 
 You are in edit/write without restrictions mode.

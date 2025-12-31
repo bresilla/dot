@@ -44,3 +44,5 @@ PLAN/
 .beads/
 .perles/
 .complog
+.zig-cache
+zig-out/

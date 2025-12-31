@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE_BOLD='\033[1;34m'
+NC='\033[0m' # No Color
+
+# Update functions for each build system
+
+update_zig() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/build.zig.zon"
+    [[ -f "$file" ]] || return
+    sed -i "s/\.version = \"[0-9]*\.[0-9]*\.[0-9]*\"/.version = \"$version\"/" "$file"
+    echo "  Updated build.zig.zon"
+}
+
+update_cmake() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/CMakeLists.txt"
+    [[ -f "$file" ]] || return
+    sed -i "s/set(PROJECT_VERSION \"[0-9]*\.[0-9]*\.[0-9]*\")/set(PROJECT_VERSION \"$version\")/" "$file"
+    echo "  Updated CMakeLists.txt"
+}
+
+update_xmake() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/xmake.lua"
+    [[ -f "$file" ]] || return
+    sed -i "s/local PROJECT_VERSION = \"[0-9]*\.[0-9]*\.[0-9]*\"/local PROJECT_VERSION = \"$version\"/" "$file"
+    echo "  Updated xmake.lua"
+}
+
+update_cargo() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/Cargo.toml"
+    [[ -f "$file" ]] || return
+    sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$version\"/" "$file"
+    echo "  Updated Cargo.toml"
+}
+
+# Check required files exist and have content
+check_required_files() {
+    local project_dir="$1"
+    if [[ ! -f "$project_dir/NAME" ]]; then
+        echo -e "Updating version: ${RED}[ FAILED: NAME file not found ]${NC}"
+        return 1
+    fi
+    local name=$(cat "$project_dir/NAME" | tr -d '[:space:]')
+    if [[ -z "$name" ]]; then
+        echo -e "Updating version: ${RED}[ FAILED: NAME file is empty ]${NC}"
+        return 1
+    fi
+    if [[ ! -f "$project_dir/VERSION" ]]; then
+        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: VERSION file not found ]${NC}"
+        return 1
+    fi
+    local version=$(cat "$project_dir/VERSION" | tr -d '[:space:]')
+    if [[ -z "$version" ]]; then
+        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: VERSION file is empty ]${NC}"
+        return 1
+    fi
+    return 0
+}
+
+main() {
+    local project_dir="${PWD}"
+
+    check_required_files "$project_dir" || return 1
+
+    local name=$(cat "$project_dir/NAME" | tr -d '[:space:]')
+    local current_version=$(cat "$project_dir/VERSION" | tr -d '[:space:]')
+
+    # No arguments - just show version
+    if [[ $# -eq 0 ]]; then
+        echo "$current_version"
+        return 0
+    fi
+
+    local arg="$1"
+    local version
+
+    # Check if arg is patch/minor/major or a direct version
+    case "$arg" in
+        patch|minor|major)
+            IFS='.' read -r major minor patch <<< "$current_version"
+            case "$arg" in
+                major) major=$((major+1)); minor=0; patch=0 ;;
+                minor) minor=$((minor+1)); patch=0 ;;
+                patch) patch=$((patch+1)) ;;
+            esac
+            version="$major.$minor.$patch"
+            ;;
+        *)
+            if [[ ! "$arg" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: invalid version format ]${NC}"
+                return 1
+            fi
+            version="$arg"
+            ;;
+    esac
+
+    # Update VERSION file
+    echo "$version" > "$project_dir/VERSION"
+
+    # Update build system files if they exist
+    update_zig "$project_dir" "$version"
+    update_cmake "$project_dir" "$version"
+    update_xmake "$project_dir" "$version"
+    update_cargo "$project_dir" "$version"
+
+    echo -e "Updating ${BLUE_BOLD}$name${NC} version: $current_version -> $version ${GREEN}[ SUCCESS ]${NC}"
+}
+
+main "$@"

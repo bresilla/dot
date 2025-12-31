@@ -1,7 +1,7 @@
 ---
-description: Code planner for high level tasks
-mode: primary
-# model: anthropic/claude-opus-4.5
+description: Code critiquer and reviewer
+mode: subagent
+model: anthropic/claude-sonnet-4.5
 temperature: 0.1
 tools:
   write: false
@@ -11,13 +11,7 @@ permission:
   read: "allow"
   webfetch: "allow"
   edit: "deny"
-  bash: 
-    "make": allow
-    "bd": allow
-    "*": deny
-  skill:
-    "beads": "allow"
-    "make": "allow"
+  bash: "deny"
 ---
 
 You are in code planning mode.
