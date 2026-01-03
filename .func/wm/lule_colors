@@ -35,7 +35,7 @@ create_files(){
     # COLORS.INI (used by POLYBAR)
     printf "[colors]\n\tforeground=$fore\n\tbackground=$back\n\tcursor=$col1\n" > $HOME/.cache/wal/colors.ini
     awk '{print "\tcolor" NR-1 "=" $0 }' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.ini
- 
+
     # COLORS.SCSS (used for STYLING)
     printf "\$foreground: $fore;\n\$background: $back;\n\n" > $HOME/.cache/wal/colors.scss
     awk '{print "$color" NR-1 ": " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.scss
@@ -46,7 +46,7 @@ create_files(){
     printf ":root {\n\t--foreground: $fore;\n\t--background: $back;\n" > $HOME/.cache/wal/colors_def.css
     awk '{print "\t--color" NR-1 ": " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_def.css
     printf "}\n" >> $HOME/.cache/wal/colors_def.css
- 
+
     # COLORS.RASI (used for STYLING)
     printf "* {\n\tforeground: $fore;\n\tbackground: $back;\n" > $HOME/.cache/wal/colors.rasi
     awk '{print "\tcolor" NR-1 ": " $0 ";"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.rasi
@@ -60,7 +60,7 @@ create_files(){
     printf "\$foreground=rgb(${fore//#})\n\$background=rgb(${back//#})\n\n" > $HOME/.cache/wal/colors_hypr_2.conf
     awk '{print "$color" NR-1 "=rgb("substr($0, 2)")"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_hypr_2.conf
     cp $HOME/.cache/wal/colors_hypr_2.conf $HOME/.cache/wal/colors_hypr.conf
-    
+
     # COLORS.VIM
     printf "let foreground= \"$fore\"\nlet background= \"$back\"\n" > $HOME/.cache/wal/colors.vim
     awk '{print "let color" NR-1 "= \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.vim
@@ -90,7 +90,7 @@ colors_to_tty &
 
 source $HOME/.cache/wal/colors.sh
 
-hyprctl hyprpaper reload ,$(cat /home/bresilla/.cache/wal/wallpaper)
+hyprctl hyprpaper wallpaper ",$(cat /home/bresilla/.cache/wal/wallpaper),"
 
 # stupid hyprland things
 c1="rgb(${color240:1})"

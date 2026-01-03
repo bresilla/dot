@@ -1,21 +1,17 @@
 #!/bin/bash
+set -e
+
+[ "$(git rev-parse --abbrev-ref HEAD)" = "main" ] && { echo "Refusing to run on main"; exit 1; }
 
 VERI="$HOME/.func/code/veri"
-
 type="$1"
-
-# Get current version before bumping
-current_version=$("$VERI") || exit 1
-
-# Bump version (veri handles all validation)
 "$VERI" "$type" || exit 1
 
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+current_version=$("$VERI") || exit 1
 version=$("$VERI")
-
-# Get latest tag
 latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
-# Generate changelog
 if [[ -n "$latest_tag" ]]; then
     changelog=$(git cliff "$latest_tag"..HEAD --strip all)
     git cliff --tag "$version" "$latest_tag"..HEAD --prepend CHANGELOG.md
@@ -24,7 +20,6 @@ else
     git cliff --tag "$version" --unreleased --prepend CHANGELOG.md
 fi
 
-# Codename for minor/major
 if [[ "$type" == "minor" || "$type" == "major" ]]; then
     if command -v git-codename &>/dev/null; then
         release_name=$(git-codename "$changelog")
@@ -32,9 +27,22 @@ if [[ "$type" == "minor" || "$type" == "major" ]]; then
     fi
 fi
 
-# Commit, tag, push, release
-git add -A && git commit -m "chore(release): prepare for $version"
+git add -A
+git commit -m "chore(release): prepare for $version"
+
+echo "------------------------------------------------------------"
 echo "$changelog"
+echo "------------------------------------------------------------"
+
 git tag -a "$version" -m "$version" -m "$changelog"
-git push --follow-tags --force --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+
+git push --follow-tags --force --set-upstream origin "$current_branch"
+
+git checkout main
+git pull origin main
+git merge develop
+git push origin main
+
+git checkout "$current_branch"
+
 gh release create "$version" --notes "$changelog"
