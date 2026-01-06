@@ -119,5 +119,8 @@ return {
       }
     })
     vim.lsp.enable('lua_ls')
+
+    -- Stig - Documentation checker for C/C++
+    -- vim.lsp.enable('stig')
   end
 }

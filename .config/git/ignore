@@ -46,3 +46,5 @@ PLAN/
 .complog
 .zig-cache
 zig-out/
+.devenv
+devenv.lock

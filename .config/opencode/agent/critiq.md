@@ -3,11 +3,8 @@ description: Code critiquer and reviewer
 mode: subagent
 model: anthropic/claude-sonnet-4.5
 temperature: 0.1
-tools:
-  write: false
-  edit: false
-  bash: false
 permission:
+  write: "deny"
   read: "allow"
   webfetch: "allow"
   edit: "deny"

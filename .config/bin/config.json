@@ -1,6 +1,12 @@
 {
     "default_path": "/env/bin",
     "bins": {
+        "/env/bin/act": {
+            "path": "/env/bin/act",
+            "remote_name": "act",
+            "url": "https://github.com/nektos/act",
+            "provider": "github"
+        },
         "/env/bin/argc": {
             "path": "/env/bin/argc",
             "remote_name": "argc",

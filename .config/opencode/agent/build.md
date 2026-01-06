@@ -3,11 +3,8 @@ description: Code builder and forger
 mode: primary
 # model: anthropic/claude-opus-4.5
 temperature: 0.3
-tools:
-  write: true
-  edit: true
-  bash: true
 permission:
+  write: ask
   edit: ask
   read: allow
   bash:

@@ -3,11 +3,8 @@ description: Code builder in god mode
 mode: primary
 # model: anthropic/claude-opus-4.5
 temperature: 0.2
-tools:
-  write: true
-  edit: true
-  bash: true
 permission:
+  write: "allow"
   edit: "allow"
   read: "allow"
   webfetch: "allow"
