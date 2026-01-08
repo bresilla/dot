@@ -13,7 +13,7 @@ This document defines the standard structure for README.md files across all ROBO
 
 **Note:** These libraries are primarily designed for robotics applications, but this doesn't need to be heavily emphasized in every section.
 
-**IMPORTANT: README.md must be between 250-300 lines of text (empty lines don't count)**
+**IMPORTANT: README.md must be between 350-400 lines of text (empty lines don't count)**
 
 ## Standard README Structure
 
@@ -189,7 +189,7 @@ Made possible thanks to [these amazing projects](./ACKNOWLEDGMENTS.md).
 
 Every library repository must have:
 
-1. **README.md** - Following above structure (250-300 lines of text)
+1. **README.md** - Following above structure (350-400 lines of text)
 2. **TODO.md** - Development roadmap and status
 3. **LICENSE** - MIT license file with "Copyright (c) 2025 ROBOLIBS Contributors"
 4. **ACKNOWLEDGMENTS.md** - Credit to dependencies and inspirations
@@ -223,7 +223,7 @@ SOFTWARE.
 
 ## Style Guidelines
 
-- **Target length** - Between 250-300 lines of text (empty lines excluded)
+- **Target length** - Between 350-400 lines of text (empty lines excluded)
 - **ASCII diagrams required** - Show component architecture after overview section
 - Use clear, concise language
 - Link to TODO.md at the top for development status

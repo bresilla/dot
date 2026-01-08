@@ -48,3 +48,4 @@ PLAN/
 zig-out/
 .devenv
 devenv.lock
+devbox.lock

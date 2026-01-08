@@ -32,6 +32,12 @@ create_files(){
     printf "[special]\nbackground = \"$back\"\nforeground = \"$fore\"\ncursor = \"$col1\"\n\n[colors]\n" > $HOME/.cache/wal/colors.toml
     awk '{print "color" NR-1 " = \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.toml
 
+    # ALACRITTY.TOML (used by ALACRITTY terminal)
+    printf "[colors.primary]\nbackground = \"$back\"\nforeground = \"$fore\"\n\n[colors.cursor]\ntext = \"$back\"\ncursor = \"$fore\"\n\n[colors.normal]\n" > $HOME/.cache/wal/alacritty.toml
+    awk 'NR<=8 {print "color" NR-1 " = \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/alacritty.toml
+    printf "\n[colors.bright]\n" >> $HOME/.cache/wal/alacritty.toml
+    awk 'NR>8 && NR<=16 {print "color" NR-8 " = \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/alacritty.toml
+
     # COLORS.INI (used by POLYBAR)
     printf "[colors]\n\tforeground=$fore\n\tbackground=$back\n\tcursor=$col1\n" > $HOME/.cache/wal/colors.ini
     awk '{print "\tcolor" NR-1 "=" $0 }' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.ini

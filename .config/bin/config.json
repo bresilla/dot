@@ -201,9 +201,9 @@
         },
         "/env/bin/yazi": {
             "path": "/env/bin/yazi",
-            "remote_name": "yazi",
+            "remote_name": "ya",
             "url": "https://github.com/sxyazi/yazi",
-            "provider": ""
+            "provider": "github"
         },
         "/env/bin/zellij": {
             "path": "/env/bin/zellij",
