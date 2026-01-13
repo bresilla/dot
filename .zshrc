@@ -59,6 +59,19 @@ bindkey -M vicmd '^Y' vi-yank-x-selection
 
 
 #--------------------------------------------------------------------------------------------------------------------
+###SEPARATOR
+# Add full-width separator before each prompt (except first)
+FIRST_PROMPT=true
+add_separator() {
+    if ! $FIRST_PROMPT; then
+        echo
+        printf "\033[38;5;238m%s\033[0m\n" ${(l:$COLUMNS::═:)}
+    fi
+    FIRST_PROMPT=false
+}
+precmd_functions+=(add_separator)
+
+#--------------------------------------------------------------------------------------------------------------------
 ###MODULES
 # autoload -U colors && colors
 
@@ -248,6 +261,13 @@ bindkey -s '^A' ' scrr\n'
 # [[ -n $TMUX ]] && tab $(names)
 [[ -n $TAB ]] && export DISPLAY=:0
 [[ ! -n $TAB ]] && bresilla
+
+#--------------------------------------------------------------------------------------------------------------------
+###CLEAR (preserves scrollback)
+clear() {
+    # Clear screen but preserve scrollback for viewing history
+    printf '\033[2J\033[H'
+}
 
 #---------------------------            EXTERNAL       --------------------------
 [[ -s "$HOME/.external" ]] && source "$HOME/.external"
