@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Zellij version of edux - floating pane launcher
+
+current_path=$(pwd)
+view=$(ps -o comm= -p $(ps -o ppid= -p $$) | tail -1)
+
+case "$view" in
+  nvim|vim|view|hx)
+    context="editor"
+    ;;
+  zsh|fish|bash|sh)
+    context="shell"
+    ;;
+  *)
+    context="shell"
+    ;;
+esac
+
+# @cmd pick file with exp
+# @arg val!
+inter() {
+    zellij run --floating --close-on-exit -- /env/dot/.func/run/inter-zj "$argc_val" "$current_path" "$context" "$view"
+}
+
+# @cmd run runn
+# @arg cmd!
+# @option --name
+runn() {
+    zellij run --floating --close-on-exit -- bash -c "direnv exec '$current_path' bash -c '$argc_cmd; read -p \"Press enter to close...\"'"
+}
+
+# @cmd bun bunn
+# @arg cmd!
+# @option --name
+bunn() {
+    zellij run --floating --close-on-exit -- direnv exec "$current_path" /env/bin/bun x --package "$argc_cmd" "$argc_name"
+}
+
+# @cmd run term
+# @arg vb!
+term() {
+    zellij run --floating -- direnv exec "$current_path" zsh -i
+}
+
+eval "$(argc --argc-eval "$0" "$@")"

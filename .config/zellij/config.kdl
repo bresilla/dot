@@ -226,13 +226,44 @@ keybinds clear-defaults=true {
         bind "F4" { Run "_c" { floating true; }; }
         bind "F5" { Run "_b" { floating true; }; }
 
-        // Edux inter commands (matching tmux C-e, C-o, C-p, C-f, C-b, C-q)
-        bind "Ctrl e" { Run "edux" "inter" "explorer" { floating true; close_on_exit true; }; }
-        bind "Ctrl o" { Run "edux" "inter" "replace" { floating true; close_on_exit true; }; }
-        bind "Ctrl p" { Run "edux" "inter" "picker" { floating true; close_on_exit true; }; }
-        bind "Ctrl f" { Run "edux" "inter" "finder" { floating true; close_on_exit true; }; }
-        bind "Ctrl b" { Run "edux" "inter" "buffers" { floating true; close_on_exit true; }; }
-        bind "Ctrl q" { Run "edux" "inter" "quickfix" { floating true; close_on_exit true; }; }
+        // Edux inter commands (using zellij versions)
+        // These run floating panes with interactive tools
+        bind "Ctrl e" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "explorer" { 
+                floating true
+                close_on_exit true
+            }
+        }
+        bind "Ctrl o" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "replace" { 
+                floating true
+                close_on_exit true
+            }
+        }
+        bind "Ctrl p" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "picker" { 
+                floating true
+                close_on_exit true
+            }
+        }
+        bind "Ctrl f" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "finder" { 
+                floating true
+                close_on_exit true
+            }
+        }
+        bind "Ctrl b" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "buffers" { 
+                floating true
+                close_on_exit true
+            }
+        }
+        bind "Ctrl q" { 
+            Run "/env/dot/.func/run/edux-zj" "inter" "quickfix" { 
+                floating true
+                close_on_exit true
+            }
+        }
 
         // Close pane
         bind "Ctrl x" { CloseFocus; }
