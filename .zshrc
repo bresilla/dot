@@ -62,10 +62,15 @@ bindkey -M vicmd '^Y' vi-yank-x-selection
 ###SEPARATOR
 # Add full-width separator before each prompt (except first)
 FIRST_PROMPT=true
+PROMPT_NUM=0
 add_separator() {
     if ! $FIRST_PROMPT; then
         echo
-        printf "\033[38;5;238m%s\033[0m\n" ${(l:$COLUMNS::═:)}
+        (( PROMPT_NUM++ ))
+        local prompt_text="[ $PROMPT_NUM ]"
+        local prompt_len=${#prompt_text}
+        local separator_len=$(( COLUMNS - prompt_len - 2 ))
+        printf "\033[38;5;238m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
     fi
     FIRST_PROMPT=false
 }
@@ -266,7 +271,9 @@ bindkey -s '^A' ' scrr\n'
 ###CLEAR (preserves scrollback)
 clear() {
     # Clear screen but preserve scrollback for viewing history
+    # tmux has its own separate scrollback buffer, so we can use normal clear
     printf '\033[2J\033[H'
+    FIRST_PROMPT=true
 }
 
 #---------------------------            EXTERNAL       --------------------------
