@@ -3,6 +3,7 @@
   "theme": "system",
   "instructions": ["Makefile"],
   "plugin": [
-    "opencode-anthropic-auth@0.0.7",
+    "opencode-anthropic-auth@0.0.8",
+    "opencode-copilot-auth@0.0.12",
   ],
 }

@@ -226,40 +226,40 @@ keybinds clear-defaults=true {
         bind "F4" { Run "_c" { floating true; }; }
         bind "F5" { Run "_b" { floating true; }; }
 
-        // Edux inter commands (using zellij versions)
-        // These run floating panes with interactive tools
-        bind "Ctrl e" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "explorer" { 
+        // Edux inter commands - floating tools
+        // Workaround for lack of toggle: hide all floats first, then open new one
+        // This gives toggle-like behavior: press once = open, press again = hide all
+        bind "Alt e" { 
+            ToggleFloatingPanes;
+            Run "/env/dot/.func/run/edux-zj" "explorer" { 
                 floating true
                 close_on_exit true
             }
         }
-        bind "Ctrl o" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "replace" { 
+        bind "Alt o" { 
+            ToggleFloatingPanes;
+            Run "/env/dot/.func/run/edux-zj" "replace" { 
                 floating true
                 close_on_exit true
             }
         }
-        bind "Ctrl p" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "picker" { 
+        bind "Alt f" { 
+            ToggleFloatingPanes;
+            Run "/env/dot/.func/run/edux-zj" "finder" { 
                 floating true
                 close_on_exit true
             }
         }
-        bind "Ctrl f" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "finder" { 
+        bind "Alt b" { 
+            ToggleFloatingPanes;
+            Run "/env/dot/.func/run/edux-zj" "buffers" { 
                 floating true
                 close_on_exit true
             }
         }
-        bind "Ctrl b" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "buffers" { 
-                floating true
-                close_on_exit true
-            }
-        }
-        bind "Ctrl q" { 
-            Run "/env/dot/.func/run/edux-zj" "inter" "quickfix" { 
+        bind "Alt q" { 
+            ToggleFloatingPanes;
+            Run "/env/dot/.func/run/edux-zj" "quickfix" { 
                 floating true
                 close_on_exit true
             }

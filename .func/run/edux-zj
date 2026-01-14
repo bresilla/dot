@@ -1,46 +1,42 @@
 #!/bin/bash
 
-# Zellij version of edux - floating pane launcher
+# Zellij version of edux - simple floating pane launcher
+
+TOOL="$1"
 
 current_path=$(pwd)
-view=$(ps -o comm= -p $(ps -o ppid= -p $$) | tail -1)
+view=$(ps -o comm= -p $(ps -o ppid= -p $$) 2>/dev/null | tail -1)
 
 case "$view" in
   nvim|vim|view|hx)
     context="editor"
-    ;;
-  zsh|fish|bash|sh)
-    context="shell"
     ;;
   *)
     context="shell"
     ;;
 esac
 
-# @cmd pick file with exp
-# @arg val!
-inter() {
-    zellij run --floating --close-on-exit -- /env/dot/.func/run/inter-zj "$argc_val" "$current_path" "$context" "$view"
-}
-
-# @cmd run runn
-# @arg cmd!
-# @option --name
-runn() {
-    zellij run --floating --close-on-exit -- bash -c "direnv exec '$current_path' bash -c '$argc_cmd; read -p \"Press enter to close...\"'"
-}
-
-# @cmd bun bunn
-# @arg cmd!
-# @option --name
-bunn() {
-    zellij run --floating --close-on-exit -- direnv exec "$current_path" /env/bin/bun x --package "$argc_cmd" "$argc_name"
-}
-
-# @cmd run term
-# @arg vb!
-term() {
-    zellij run --floating -- direnv exec "$current_path" zsh -i
-}
-
-eval "$(argc --argc-eval "$0" "$@")"
+case "$TOOL" in
+  explorer)
+    /env/dot/.func/run/inter-zj explorer "$current_path" "$context" "$view"
+    ;;
+  replace)
+    /env/dot/.func/run/inter-zj replace "$current_path" "$context" "$view"
+    ;;
+  picker)
+    /env/dot/.func/run/inter-zj picker "$current_path" "$context" "$view"
+    ;;
+  finder)
+    /env/dot/.func/run/inter-zj finder "$current_path" "$context" "$view"
+    ;;
+  buffers)
+    /env/dot/.func/run/inter-zj buffers "$current_path" "$context" "$view"
+    ;;
+  quickfix)
+    /env/dot/.func/run/inter-zj quickfix "$current_path" "$context" "$view"
+    ;;
+  *)
+    echo "Unknown tool: $TOOL"
+    exit 1
+    ;;
+esac
