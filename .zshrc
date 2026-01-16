@@ -70,7 +70,7 @@ add_separator() {
         local prompt_text="[ $PROMPT_NUM ]"
         local prompt_len=${#prompt_text}
         local separator_len=$(( COLUMNS - prompt_len - 2 ))
-        printf "\033[38;5;238m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
+        printf "\033[38;5;240m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
     fi
     FIRST_PROMPT=false
 }
