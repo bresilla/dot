@@ -61,20 +61,20 @@ bindkey -M vicmd '^Y' vi-yank-x-selection
 #--------------------------------------------------------------------------------------------------------------------
 ###SEPARATOR
 # Add full-width separator before each prompt (except first)
-FIRST_PROMPT=true
-PROMPT_NUM=0
-add_separator() {
-    if ! $FIRST_PROMPT; then
-        echo
-        (( PROMPT_NUM++ ))
-        local prompt_text="[ $PROMPT_NUM ]"
-        local prompt_len=${#prompt_text}
-        local separator_len=$(( COLUMNS - prompt_len - 2 ))
-        printf "\033[38;5;240m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
-    fi
-    FIRST_PROMPT=false
-}
-precmd_functions+=(add_separator)
+# FIRST_PROMPT=true
+# PROMPT_NUM=0
+# add_separator() {
+#     if ! $FIRST_PROMPT; then
+#         echo
+#         (( PROMPT_NUM++ ))
+#         local prompt_text="[ $PROMPT_NUM ]"
+#         local prompt_len=${#prompt_text}
+#         local separator_len=$(( COLUMNS - prompt_len - 2 ))
+#         printf "\033[38;5;240m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
+#     fi
+#     FIRST_PROMPT=false
+# }
+# precmd_functions+=(add_separator)
 
 #--------------------------------------------------------------------------------------------------------------------
 ###MODULES
@@ -179,7 +179,11 @@ alias \$=''
 
 ###STARSHIP
 #source ~/.config/promptline
-[[ -x "$(command -v starship)" ]] && eval "$(starship init zsh)" || source ~/.config/promptline
+# [[ -x "$(command -v starship)" ]] && eval "$(starship init zsh)" || source ~/.config/promptline
+print -n "\n"
+eval "$(hexe shp init zsh)"
+
+bindkey -M viins -s '^E' 'cd $(hexe mux float --title="explorer" -c '\''yazi --cwd-file="$HEXE_FLOAT_RESULT_FILE"'\'' )\n'
 
 ###MICROMAMBA
 [[ -x "$(command -v micromamba)" ]] && eval "$(micromamba shell hook --shell=zsh)"
@@ -264,8 +268,6 @@ zle -N cf
 bindkey -s '^X' ' tab\n'
 bindkey -s '^A' ' scrr\n'
 # [[ -n $TMUX ]] && tab $(names)
-[[ -n $TAB ]] && export DISPLAY=:0
-[[ ! -n $TAB ]] && bresilla
 
 #--------------------------------------------------------------------------------------------------------------------
 ###CLEAR (preserves scrollback)

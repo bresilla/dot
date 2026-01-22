@@ -1,14 +1,16 @@
 ---
 description: Code critiquer and reviewer
 mode: subagent
-model: anthropic/claude-sonnet-4.5
 temperature: 0.1
 permission:
-  write: "deny"
-  read: "allow"
-  webfetch: "allow"
-  edit: "deny"
-  bash: "deny"
+  "write": "deny"
+  "read": "allow"
+  "glob": allow
+  "list": "allow"
+  "lsp": "allow"
+  "webfetch": "allow"
+  "edit": "deny"
+  "bash": "deny"
 ---
 
 You are in code planning mode.

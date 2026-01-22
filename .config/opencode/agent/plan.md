@@ -4,11 +4,15 @@ mode: primary
 # model: anthropic/claude-opus-4.5
 temperature: 0.1
 permission:
-  write: "deny"
-  read: "allow"
-  webfetch: "allow"
-  edit: "deny"
-  bash: 
+  "write": "deny"
+  "read": "allow"
+  "webfetch": "allow"
+  "edit": "deny"
+  "glob": allow
+  "list": "allow"
+  "lsp": "allow"
+  "skill": "allow"
+  "bash":
     "make": allow
     "bd": allow
     "*": deny

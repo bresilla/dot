@@ -49,3 +49,6 @@ zig-out/
 .devenv
 devenv.lock
 devbox.lock
+PLANv2.md
+TODO.md
+compile_commands.json

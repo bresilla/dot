@@ -4,10 +4,14 @@ mode: primary
 # model: anthropic/claude-opus-4.5
 temperature: 0.3
 permission:
-  write: ask
-  edit: ask
-  read: allow
-  bash:
+  "write": ask
+  "edit": ask
+  "glob": allow
+  "list": "allow"
+  "read": allow
+  "lsp": "allow"
+  "skill": "allow"
+  "bash":
     "make": allow
     "bd": allow
     "jq": allow
@@ -29,10 +33,7 @@ permission:
     "git status": allow
     "git tree": allow
     "*": ask
-  webfetch: allow
-  skill:
-    "beads": "allow"
-    "make": "allow"
+  "webfetch": allow
 ---
 
 You are in code read+write mode.

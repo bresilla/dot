@@ -6,8 +6,30 @@ RED='\033[0;31m'
 BLUE_BOLD='\033[1;34m'
 NC='\033[0m' # No Color
 
-# Update functions for each build system
+# Parse PROJECT file - extracts name (line 1) and version (line 2) from non-comment, non-section lines
+parse_project() {
+    local project_dir="$1"
+    local file="$project_dir/PROJECT"
+    [[ -f "$file" ]] || return 1
+    sed -n '/^[[:space:]]*[^#\[[:space:]]/p' "$file" | head -2
+}
 
+# Update PROJECT file version (second non-comment, non-section line)
+update_project() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/PROJECT"
+    [[ -f "$file" ]] || return
+
+    # Find line number of second data line and replace it
+    local line_num=$(grep -n '^[[:space:]]*[^#\[[:space:]]' "$file" | sed -n '2p' | cut -d: -f1)
+    if [[ -n "$line_num" ]]; then
+        sed -i "${line_num}s/.*/$version/" "$file"
+        echo "  Updated PROJECT"
+    fi
+}
+
+# Update functions for each build system
 update_zig() {
     local project_dir="$1"
     local version="$2"
@@ -15,15 +37,6 @@ update_zig() {
     [[ -f "$file" ]] || return
     sed -i "s/\.version = \"[0-9]*\.[0-9]*\.[0-9]*\"/.version = \"$version\"/" "$file"
     echo "  Updated build.zig.zon"
-}
-
-update_cmake() {
-    local project_dir="$1"
-    local version="$2"
-    local file="$project_dir/CMakeLists.txt"
-    [[ -f "$file" ]] || return
-    sed -i "s/set(PROJECT_VERSION \"[0-9]*\.[0-9]*\.[0-9]*\")/set(PROJECT_VERSION \"$version\")/" "$file"
-    echo "  Updated CMakeLists.txt"
 }
 
 update_xmake() {
@@ -47,22 +60,23 @@ update_cargo() {
 # Check required files exist and have content
 check_required_files() {
     local project_dir="$1"
-    if [[ ! -f "$project_dir/NAME" ]]; then
-        echo -e "Updating version: ${RED}[ FAILED: NAME file not found ]${NC}"
+    local file="$project_dir/PROJECT"
+
+    if [[ ! -f "$file" ]]; then
+        echo -e "Updating version: ${RED}[ FAILED: PROJECT file not found ]${NC}"
         return 1
     fi
-    local name=$(cat "$project_dir/NAME" | tr -d '[:space:]')
+
+    local data=$(parse_project "$project_dir")
+    local name=$(echo "$data" | head -1 | tr -d '[:space:]')
+    local version=$(echo "$data" | tail -1 | tr -d '[:space:]')
+
     if [[ -z "$name" ]]; then
-        echo -e "Updating version: ${RED}[ FAILED: NAME file is empty ]${NC}"
+        echo -e "Updating version: ${RED}[ FAILED: PROJECT file missing name ]${NC}"
         return 1
     fi
-    if [[ ! -f "$project_dir/VERSION" ]]; then
-        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: VERSION file not found ]${NC}"
-        return 1
-    fi
-    local version=$(cat "$project_dir/VERSION" | tr -d '[:space:]')
     if [[ -z "$version" ]]; then
-        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: VERSION file is empty ]${NC}"
+        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: PROJECT file missing version ]${NC}"
         return 1
     fi
     return 0
@@ -73,8 +87,9 @@ main() {
 
     check_required_files "$project_dir" || return 1
 
-    local name=$(cat "$project_dir/NAME" | tr -d '[:space:]')
-    local current_version=$(cat "$project_dir/VERSION" | tr -d '[:space:]')
+    local data=$(parse_project "$project_dir")
+    local name=$(echo "$data" | head -1 | tr -d '[:space:]')
+    local current_version=$(echo "$data" | tail -1 | tr -d '[:space:]')
 
     # No arguments - just show version
     if [[ $# -eq 0 ]]; then
@@ -105,12 +120,11 @@ main() {
             ;;
     esac
 
-    # Update VERSION file
-    echo "$version" > "$project_dir/VERSION"
+    # Update PROJECT file
+    update_project "$project_dir" "$version"
 
-    # Update build system files if they exist
+    # Update other build system files if they exist
     update_zig "$project_dir" "$version"
-    update_cmake "$project_dir" "$version"
     update_xmake "$project_dir" "$version"
     update_cargo "$project_dir" "$version"
 

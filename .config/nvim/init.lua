@@ -133,6 +133,71 @@ vim.keymap.set('n', '~', [[g~aw]])
 
 -- === OTHERS === "
 vim.keymap.set('n', '<C-a>', 'ggVG')
+vim.keymap.set('n', '<C-e>', function()
+    local file = vim.fn.expand('%:p')
+    local path = (file ~= '' and vim.fn.filereadable(file) == 1) and file or vim.fn.getcwd()
+    local result = vim.fn.system('hexe mux float --title="explorer" --command \'yazi "' .. path .. '" --chooser-file="$HEXE_FLOAT_RESULT_FILE"\'')
+    result = vim.trim(result)
+    if result ~= '' and vim.fn.filereadable(result) == 1 then
+        vim.cmd('edit ' .. vim.fn.fnameescape(result))
+    end
+end, { silent = true, desc = "Open yazi explorer" })
+
+vim.keymap.set('n', '<C-p>', function()
+    local result = vim.fn.system('hexe mux float --title="picker" --command \'tv find > "$HEXE_FLOAT_RESULT_FILE"\'')
+    result = vim.trim(result)
+    if result ~= '' and vim.fn.filereadable(result) == 1 then
+        vim.cmd('edit ' .. vim.fn.fnameescape(result))
+    end
+end, { silent = true, desc = "Pick file with tv find" })
+
+vim.keymap.set('n', '<C-f>', function()
+    local result = vim.fn.system('hexe mux float --title="finder" --command \'tv text > "$HEXE_FLOAT_RESULT_FILE"\'')
+    result = vim.trim(result)
+    if result ~= '' then
+        local file, line, col = result:match('([^:]+):(%d+):(%d+)')
+        if file and vim.fn.filereadable(file) == 1 then
+            vim.cmd('edit ' .. vim.fn.fnameescape(file))
+            vim.api.nvim_win_set_cursor(0, { tonumber(line), tonumber(col) - 1 })
+        end
+    end
+end, { silent = true, desc = "Find text with tv text" })
+
+vim.keymap.set('n', '<C-o>', function()
+    local dir = vim.fn.getcwd()
+    vim.fn.system('hexe mux float --title="replace" --command \'serpl -p "' .. dir .. '"\'')
+end, { silent = true, desc = "Search and replace with serpl" })
+
+vim.keymap.set('n', '<C-b>', function()
+    local bufs = {}
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buflisted then
+            local name = vim.api.nvim_buf_get_name(buf)
+            if name ~= '' then table.insert(bufs, name) end
+        end
+    end
+    if #bufs == 0 then return end
+    local buflist = table.concat(bufs, '\n')
+    local result = vim.fn.system('hexe mux float --title="buffers" --command \'echo "' .. buflist:gsub('"', '\\"') .. '" | tv --preview "bat -n --color=always {0}" > "$HEXE_FLOAT_RESULT_FILE"\'')
+    result = vim.trim(result)
+    if result ~= '' and vim.fn.filereadable(result) == 1 then
+        vim.cmd('edit ' .. vim.fn.fnameescape(result))
+    end
+end, { silent = true, desc = "Pick buffer" })
+
+vim.keymap.set('n', '<C-q>', function()
+    local qffile = vim.fn.getcwd() .. '/.quickfix'
+    if vim.fn.filereadable(qffile) ~= 1 then return end
+    local result = vim.fn.system('hexe mux float --title="quickfix" --command \'cat "' .. qffile .. '" | tv > "$HEXE_FLOAT_RESULT_FILE"\'')
+    result = vim.trim(result)
+    if result ~= '' then
+        local file, line, col = result:match('([^:]+):(%d+):(%d+)')
+        if file and vim.fn.filereadable(file) == 1 then
+            vim.cmd('edit ' .. vim.fn.fnameescape(file))
+            vim.api.nvim_win_set_cursor(0, { tonumber(line), tonumber(col) - 1 })
+        end
+    end
+end, { silent = true, desc = "Pick from quickfix" })
 
 -- === MOVE LINES === "
 vim.keymap.set('n', '<C-A-Up>', ':m .-2<CR>==', { remap = true, silent = true, desc = "Move line up" })

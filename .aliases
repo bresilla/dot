@@ -22,6 +22,7 @@ alias bolt="boltctl"
 alias dot='/usr/bin/git --git-dir=$HOME/.dot/ --work-tree=$HOME'
 alias run.sh="./run.sh"
 alias run="./run.sh"
+alias pk="sudo /env/bin/pik -o false"
 
 ##WM
 alias sx="startx"
@@ -91,7 +92,7 @@ alias git='hub'
 alias lines='tokei'
 alias search='rg --hidden'
 alias vol=ncpamixer
-alias rm="gomi -rf"
+# alias rm="gomi -rf"
 alias dims="hyprctl activewindow | grep size | head -2 | tail -1 | choose 1 | tr ',' 'x'"
 alias step=step-cli
 alias spawn=systemd-nspawn
