@@ -36,6 +36,14 @@ C-pagedown = ["goto_next_buffer"]
 C-pageup = ["goto_previous_buffer"]
 "*" = [ "move_prev_word_start", "move_next_word_end", "search_selection", "global_search" ]
 "#" = [ "toggle_comments" ]
+C-a = "select_all"
+C-w = ":buffer-close"
+C-b = "buffer_picker"
+C-e = ":open %sh{hexe mux float --command 'yazi %{buffer_name} --chooser-file=$HEXE_FLOAT_RESULT_FILE'}"
+C-p = ":open %sh{hexe mux float --command 'tv find > $HEXE_FLOAT_RESULT_FILE'}"
+C-f = ":open %sh{hexe mux float --command 'tv text > $HEXE_FLOAT_RESULT_FILE'}"
+C-o = ":sh hexe mux float --command 'serpl -p $PWD'"
+C-q = ":open %sh{hexe mux float --command 'cat .quickfix | tv > $HEXE_FLOAT_RESULT_FILE'}"
 # create a new minor mode bound to `+`
 [keys.normal."+"]
 m = ":run-shell-command make"

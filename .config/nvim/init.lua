@@ -19,8 +19,19 @@ vim.o.shiftround = true
 vim.o.hlsearch = true
 vim.o.cmdheight = 0
 
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
 vim.o.clipboard = "unnamedplus"
--- vim.g.termfeatures = termfeatures
+vim.g.termfeatures = termfeatures
 
 
 vim.o.autoread = true
@@ -111,13 +122,6 @@ vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
 
 -- === AUTOSAVE === "
 vim.cmd([[au WinLeave,BufLeave,TabLeave,FocusLost * silent wall]])
-
---- === HIGHLGHT ON YANK
-vim.cmd([[au TextYankPost * silent! lua vim.hl.on_yank()]])
-vim.hl.on_yank {
-    on_visual = true
-}
-
 ---------------------------------------------- === BINDINGS === ----------------------------------------------
 vim.g.mapleader = " "
 
@@ -136,15 +140,25 @@ vim.keymap.set('n', '<C-a>', 'ggVG')
 vim.keymap.set('n', '<C-e>', function()
     local file = vim.fn.expand('%:p')
     local path = (file ~= '' and vim.fn.filereadable(file) == 1) and file or vim.fn.getcwd()
-    local result = vim.fn.system('hexe mux float --title="explorer" --command \'yazi "' .. path .. '" --chooser-file="$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --focus --title="explorer" --command \'yazi "' .. path .. '" --chooser-file="$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' and vim.fn.filereadable(result) == 1 then
         vim.cmd('edit ' .. vim.fn.fnameescape(result))
     end
 end, { silent = true, desc = "Open yazi explorer" })
 
+vim.keymap.set('n', '<C-t>', function()
+    local file = vim.fn.expand('%:p')
+    local path = (file ~= '' and vim.fn.filereadable(file) == 1) and file or vim.fn.getcwd()
+    local result = vim.fn.system('hexe mux float --focus --title="explorer" --size "20,98,-50,4" --command \'lis -Ac --selection-background=236 --cwd "${TOP_HEAD:-.}" -o "$HEXE_FLOAT_RESULT_FILE" "' .. path .. '"\'')
+    result = vim.trim(result)
+    if result ~= '' and vim.fn.filereadable(result) == 1 then
+        vim.cmd('edit ' .. vim.fn.fnameescape(result))
+    end
+end, { silent = true, desc = "Open lis explorer" })
+
 vim.keymap.set('n', '<C-p>', function()
-    local result = vim.fn.system('hexe mux float --title="picker" --command \'tv find > "$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --focus --title="picker" --command \'tv find > "$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' and vim.fn.filereadable(result) == 1 then
         vim.cmd('edit ' .. vim.fn.fnameescape(result))
@@ -152,20 +166,23 @@ vim.keymap.set('n', '<C-p>', function()
 end, { silent = true, desc = "Pick file with tv find" })
 
 vim.keymap.set('n', '<C-f>', function()
-    local result = vim.fn.system('hexe mux float --title="finder" --command \'tv text > "$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --focus --title="finder" --command \'tv text > "$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' then
         local file, line, col = result:match('([^:]+):(%d+):(%d+)')
+        if not file then
+            file, line = result:match('([^:]+):(%d+)')
+        end
         if file and vim.fn.filereadable(file) == 1 then
             vim.cmd('edit ' .. vim.fn.fnameescape(file))
-            vim.api.nvim_win_set_cursor(0, { tonumber(line), tonumber(col) - 1 })
+            vim.api.nvim_win_set_cursor(0, { tonumber(line), tonumber(col or 1) - 1 })
         end
     end
 end, { silent = true, desc = "Find text with tv text" })
 
 vim.keymap.set('n', '<C-o>', function()
     local dir = vim.fn.getcwd()
-    vim.fn.system('hexe mux float --title="replace" --command \'serpl -p "' .. dir .. '"\'')
+    vim.fn.system('hexe mux float --focus --title="replace" --command \'serpl -p "' .. dir .. '"\'')
 end, { silent = true, desc = "Search and replace with serpl" })
 
 vim.keymap.set('n', '<C-b>', function()
@@ -199,13 +216,51 @@ vim.keymap.set('n', '<C-q>', function()
     end
 end, { silent = true, desc = "Pick from quickfix" })
 
--- === MOVE LINES === "
-vim.keymap.set('n', '<C-A-Up>', ':m .-2<CR>==', { remap = true, silent = true, desc = "Move line up" })
-vim.keymap.set('n', '<C-A-Down>', ':m .+1<CR>==', { remap = true, silent = true, desc = "Move line down" })
-vim.keymap.set('v', '<C-A-Up>', ":m '<-2<CR>gv=gv", { remap = true, silent = true, desc = "Move selection up" })
-vim.keymap.set('v', '<C-A-Down>', ":m '>+1<CR>gv=gv", { remap = true, silent = true, desc = "Move selection down" })
-vim.keymap.set('i', '<C-A-Up>', '<Esc>:m .-2<CR>==gi', { remap = true, silent = true, desc = "Move line up in insert mode" })
-vim.keymap.set('i', '<C-A-Down>', '<Esc>:m .+1<CR>==gi', { remap = true, silent = true, desc = "Move line down in insert mode" })
+vim.keymap.set('n', '<A-b>', function()
+    vim.fn.system('hexe mux float --title="make build" --pass-env --command "bash -c \'_b; read -n1 -s\'"')
+end, { silent = true, desc = "make build" })
+
+vim.keymap.set('n', '<A-c>', function()
+    vim.fn.system('hexe mux float --title="make config" --pass-env --command "bash -c \'_c; read -n1 -s\'"')
+end, { silent = true, desc = "make config" })
+
+vim.keymap.set('n', '<A-x>', function()
+    vim.fn.system('hexe mux float --title="make reconfigure" --pass-env --command "bash -c \'_x; read -n1 -s\'"')
+end, { silent = true, desc = "make reconfigure" })
+
+vim.keymap.set('n', '<A-t>', function()
+    vim.fn.system('hexe mux float --title="make test" --pass-env --command "bash -c \'_t; read -n1 -s\'"')
+end, { silent = true, desc = "make test" })
+
+-- === SPLIT NAVIGATION === "
+local function smart_split_nav(direction, wincmd)
+    local cur_win = vim.api.nvim_get_current_win()
+    vim.cmd('wincmd ' .. wincmd)
+    if vim.api.nvim_get_current_win() == cur_win then
+        vim.fn.jobstart({'hexe', 'mux', 'focus', direction}, {detach = true})
+    end
+end
+
+-- Map both <A-arrow> and raw escape sequences for terminal compatibility
+for _, mapping in ipairs({
+    {'<C-A-Up>', '<Esc>[1;3A', 'up', 'k'},
+    {'<C-A-Down>', '<Esc>[1;3B', 'down', 'j'},
+    {'<C-A-Left>', '<Esc>[1;3D', 'left', 'h'},
+    {'<C-A-Right>', '<Esc>[1;3C', 'right', 'l'},
+}) do
+    local alt_key, esc_seq, direction, wincmd = mapping[1], mapping[2], mapping[3], mapping[4]
+    local fn = function() smart_split_nav(direction, wincmd) end
+    vim.keymap.set({'n', 'i', 't'}, alt_key, fn, { silent = true, desc = "Navigate " .. direction .. " split or mux" })
+    vim.keymap.set({'n', 'i', 't'}, esc_seq, fn, { silent = true, desc = "Navigate " .. direction .. " split or mux" })
+end
+
+-- -- === MOVE LINES === "
+-- vim.keymap.set('n', '<C-A-Up>', ':m .-2<CR>==', { remap = true, silent = true, desc = "Move line up" })
+-- vim.keymap.set('n', '<C-A-Down>', ':m .+1<CR>==', { remap = true, silent = true, desc = "Move line down" })
+-- vim.keymap.set('v', '<C-A-Up>', ":m '<-2<CR>gv=gv", { remap = true, silent = true, desc = "Move selection up" })
+-- vim.keymap.set('v', '<C-A-Down>', ":m '>+1<CR>gv=gv", { remap = true, silent = true, desc = "Move selection down" })
+-- vim.keymap.set('i', '<C-A-Up>', '<Esc>:m .-2<CR>==gi', { remap = true, silent = true, desc = "Move line up in insert mode" })
+-- vim.keymap.set('i', '<C-A-Down>', '<Esc>:m .+1<CR>==gi', { remap = true, silent = true, desc = "Move line down in insert mode" })
 
 -- === COMMENTING === "
 vim.keymap.set('n', '#', 'gcc', { remap = true, desc = "Comment line" })

@@ -73,6 +73,12 @@
             "url": "https://github.com/denoland/deno",
             "provider": "github"
         },
+        "/env/bin/difi": {
+            "path": "/env/bin/difi",
+            "remote_name": "difi",
+            "url": "https://github.com/oug-t/difi",
+            "provider": "github"
+        },
         "/env/bin/dufs": {
             "path": "/env/bin/dufs",
             "remote_name": "dufs",
@@ -239,6 +245,12 @@
             "path": "/env/bin/step",
             "remote_name": "step",
             "url": "https://github.com/smallstep/cli",
+            "provider": "github"
+        },
+        "/env/bin/subcog": {
+            "path": "/env/bin/subcog",
+            "remote_name": "subcog",
+            "url": "https://github.com/zircote/subcog",
             "provider": "github"
         },
         "/env/bin/systemd-manager-tui": {

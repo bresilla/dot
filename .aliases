@@ -72,6 +72,8 @@ alias suspend='systemctl suspend'
 alias eject='udisksctl power-off -b'
 alias nvmecheck="diff -y <(sudo nvme smart-log /dev/nvme0n1) <(sudo nvme smart-log /dev/nvme1n1)"
 
+alias rossource='source /env/dot/.func/dev/rossource'
+
 ##APPS
 alias a='atool -D -x'
 alias x='xplr'

@@ -180,10 +180,12 @@ alias \$=''
 ###STARSHIP
 #source ~/.config/promptline
 # [[ -x "$(command -v starship)" ]] && eval "$(starship init zsh)" || source ~/.config/promptline
-print -n "\n"
 eval "$(hexe shp init zsh)"
 
-bindkey -M viins -s '^E' 'cd $(hexe mux float --title="explorer" -c '\''yazi --cwd-file="$HEXE_FLOAT_RESULT_FILE"'\'' )\n'
+bindkey -M viins -s '^E' 'dir=$(hexe mux float --title="explorer" -c '\''yazi --cwd-file="$HEXE_FLOAT_RESULT_FILE"'\'') && cd "$dir"\n'
+bindkey -M viins -s '^P' 'file=$(hexe mux float --title="picker" -c '\''tv find > "$HEXE_FLOAT_RESULT_FILE"'\'') && $EDITOR "$file"\n'
+bindkey -M viins -s '^F' 'file=$(hexe mux float --title="finder" -c '\''tv text > "$HEXE_FLOAT_RESULT_FILE"'\'') && $EDITOR "$file"\n'
+bindkey -M viins -s '^O' 'hexe mux float --title="replace" -c '\''serpl -p .'\'' \n'
 
 ###MICROMAMBA
 [[ -x "$(command -v micromamba)" ]] && eval "$(micromamba shell hook --shell=zsh)"
@@ -291,3 +293,5 @@ if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresill
 # compinit already called above
 source <(nostromo completion zsh)
 # nostromo [section end]
+
+source /home/bresilla/.config/broot/launcher/bash/br

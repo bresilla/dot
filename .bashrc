@@ -20,3 +20,5 @@ eval "$(direnv hook bash)"
 #
 
 alias claude='deno run --allow-env --allow-read --allow-sys --allow-write --allow-net npm:@anthropic-ai/claude-code'
+
+source /home/bresilla/.config/broot/launcher/bash/br

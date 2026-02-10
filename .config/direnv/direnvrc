@@ -83,20 +83,13 @@ layout_localmamba() {
     fi
 }
 
-layout_ros2() {
+use_ros() {
     source /etc/lsb-release
     export TOP_HEAD=$PWD
-    if [[ $DISTRIB_CODENAME == "jammy" ]]; then
-        source "/opt/ros/humble/setup.sh"
-        eval "$(register-python-argcomplete3 ros2)"
-        eval "$(register-python-argcomplete3 colcon)"
-        echo "UBUNTU 22.04"
-    elif [[ $DISTRIB_CODENAME == "noble" ]]; then
-        source "/opt/ros/jazzy/setup.sh"
-        eval "$(register-python-argcomplete ros2)"
-        eval "$(register-python-argcomplete colcon)"
-        echo "UBUNTU 24.04"
-    fi
+    export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+    source "/opt/ros/jazzy/setup.sh"
+    eval "$(register-python-argcomplete ros2)"
+    eval "$(register-python-argcomplete colcon)"
     source $TOP_HEAD/install/setup.sh
     export_alias build 'cd $TOP_HEAD && colcon build'
 }
