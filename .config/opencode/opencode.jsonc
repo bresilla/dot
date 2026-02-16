@@ -5,6 +5,14 @@
   "plugin": [
     "opencode-anthropic-auth@0.0.8",
     "opencode-copilot-auth@0.0.12",
-    "opencode-mem"
+    "opencode-mem",
+    "@simonwjackson/opencode-direnv"
   ],
+  "mcp": {
+    "subcog": {
+      "type": "local",
+      "enabled": true,
+      "command": ["/env/bin/subcog", "serve"]
+    }
+  }
 }
