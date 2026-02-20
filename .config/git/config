@@ -59,7 +59,7 @@
     ; get = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE; }; f"
     down = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE -- /home/$USER/down/$(echo $NAMEEE | cut -d/ -f5); }; f"
     fuck = "!f(){ git reset --hard origin/`git rev-parse --abbrev-ref HEAD`; rm -fv `git status | grep ^? | cut -d' '  -f2-`; }; f"
-    tree = log --graph --all --format=format:'%w(80,0,0)%C(bold magenta)%h%C(reset) %C(white)%ad%C(reset) %C(dim white)(%ar)%C(reset) %C(bold dim white)%aN%C(auto)%+D%C(reset)%n%C(bold white)%s%C(reset)%+b%n'
+    tree = log --graph --all --format=format:'%w(80,0,0)%C(bold magenta)%h%C(reset) %C(white)%ad%C(reset) %C(dim white)(%ar)%C(reset) %C(bold dim white)%aN%C(auto)%+D%C(reset)%n%C(bold white)%s%C(reset)%n'
     open = "!f(){ hub browse; }; f"
     remotes = remote -v
     branches = branch -a
