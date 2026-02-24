@@ -25,12 +25,6 @@
             "url": "https://github.com/sharkdp/bat",
             "provider": "github"
         },
-        "/env/bin/broot": {
-            "path": "/env/bin/broot",
-            "remote_name": "broot",
-            "url": "https://github.com/Canop/broot",
-            "provider": "github"
-        },
         "/env/bin/choose": {
             "path": "/env/bin/choose",
             "remote_name": "choose-x86_64-unknown-linux-musl",

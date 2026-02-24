@@ -85,6 +85,12 @@
             "url": "https://github.com/sigoden/dufs",
             "provider": "github"
         },
+        "/env/bin/engram": {
+            "path": "/env/bin/engram",
+            "remote_name": "engram",
+            "url": "https://github.com/Gentleman-Programming/engram",
+            "provider": "github"
+        },
         "/env/bin/fabric": {
             "path": "/env/bin/fabric",
             "remote_name": "fabric",
@@ -125,6 +131,12 @@
             "path": "/env/bin/hugo",
             "remote_name": "hugo",
             "url": "https://github.com/gohugoio/hugo",
+            "provider": "github"
+        },
+        "/env/bin/hyperfine": {
+            "path": "/env/bin/hyperfine",
+            "remote_name": "hyperfine",
+            "url": "https://github.com/sharkdp/hyperfine",
             "provider": "github"
         },
         "/env/bin/hyprdynamicmonitors": {

@@ -24,6 +24,11 @@ if section == nil or section == "mux" then
 
     { key = { hx.key.ctrl, hx.key.alt, hx.key.z }, action = { type = hx.action.pane_disown } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.a }, action = { type = hx.action.pane_adopt } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.c }, action = { type = hx.action.clipboard_copy } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.v }, action = { type = hx.action.clipboard_request } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.n }, action = { type = hx.action.system_notify } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.k }, action = { type = hx.action.keycast_toggle } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.o }, action = { type = hx.action.pane_select_mode } },
 
     { key = { hx.key.ctrl, hx.key.alt, hx.key.h }, when = "focus_split", action = { type = hx.action.split_h } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.v }, when = "focus_split", action = { type = hx.action.split_v } },
