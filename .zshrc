@@ -288,18 +288,3 @@ clear() {
 #--------------------------------------------------------------------------------------------------------------------
 
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-
-# nostromo [section begin]
-# compinit already called above
-source <(nostromo completion zsh)
-# nostromo [section end]
-
-source /home/bresilla/.config/broot/launcher/bash/br
-
-# pnpm
-export PNPM_HOME="/home/bresilla/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end

@@ -9,6 +9,7 @@ Scope {
     required property var currentMonitor
     required property int monitorHeight
     required property int monitorWidth
+    required property real lineBarWidth
     required property bool barOnRight
 
     FileView {
@@ -26,7 +27,7 @@ Scope {
     }
 
     property var focusedWorkspace: Hyprland.focusedWorkspace
-    property int currentWorkspace: focusedWorkspace?.id ?? 1
+    property int currentWorkspace: 1
     property bool shouldShowOSD: false
     property real morphProgress: 0.0
     property real displayY: 0
@@ -57,6 +58,13 @@ Scope {
         slideAnim.from = displayY;
         slideAnim.to = targetY;
         slideAnim.start();
+    }
+
+    function hideThisMonitorOSD() {
+        hideTimer.stop();
+        morphOutAnim.stop();
+        shouldShowOSD = false;
+        morphProgress = 0;
     }
 
     NumberAnimation {
@@ -91,7 +99,12 @@ Scope {
         const monName = focusedWorkspace.monitor?.name ?? "";
         const isThisMonitor = monName === currentMonitor?.name;
 
-        if (!isThisMonitor) return;
+        if (!isThisMonitor) {
+            if (shouldShowOSD) hideThisMonitorOSD();
+            return;
+        }
+
+        currentWorkspace = wsId;
 
         const targetOffset = getWorkspaceYOffset(wsId);
 
@@ -139,7 +152,7 @@ Scope {
         color: "#00000000"
         mask: Region {}
 
-        readonly property int lineWidth: Screen.width * 0.005
+        readonly property real lineWidth: lineBarWidth
         readonly property int containerStartY: (monitorHeight - containerHeight) / 2
 
         margins {
@@ -162,11 +175,11 @@ Scope {
 
             readonly property real startWidth: osdWindow.lineWidth * 0.7
             readonly property real startHeight: root.itemHeight
-            readonly property real endSize: 110
+            readonly property real endSize: root.itemHeight
 
             width: startWidth + (endSize - startWidth) * (morphProgress * morphProgress)
             height: startHeight + (endSize - startHeight) * morphProgress
-            radius: 4 + (51 * morphProgress)
+            radius: 4 + ((endSize * 0.5 - 4) * morphProgress)
 
             color: wal.adapter.colors["color1"] || "#CC000000"
             border.color: wal.adapter.colors["color0"] || "#000000"
@@ -174,8 +187,13 @@ Scope {
 
             Text {
                 anchors.centerIn: parent
+                width: parent.width
+                height: parent.height
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
                 text: currentWorkspace
-                font.pixelSize: 20 + (30 * morphProgress)
+                font.family: "IosevkaTerm Nerd Font Mono"
+                font.pixelSize: Math.max(12, Math.round(Math.min(width, height) * 0.495))
                 font.bold: true
                 font.weight: Font.Black
                 color: wal.adapter.colors["color0"] || "#ffffff"

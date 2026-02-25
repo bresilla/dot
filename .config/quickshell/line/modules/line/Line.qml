@@ -9,6 +9,7 @@ Scope {
     required property var currentMonitor
     required property int monitorHeight
     required property int monitorWidth
+    required property real lineBarWidth
     required property bool barOnRight
 
     FileView {
@@ -48,7 +49,7 @@ Scope {
             right: barOnRight
             bottom: true
         }
-        implicitWidth: Screen.width * 0.005
+        implicitWidth: lineBarWidth
         color: "transparent"
 
         Rectangle {
