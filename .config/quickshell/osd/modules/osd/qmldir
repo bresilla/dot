@@ -3,4 +3,5 @@ singleton Proc Proc.qml
 OSDManager OSDManager.qml
 VolumeOSD VolumeOSD.qml
 BrightnessOSD BrightnessOSD.qml
+BatteryOSD BatteryOSD.qml
 StyledProgressBar StyledProgressBar.qml

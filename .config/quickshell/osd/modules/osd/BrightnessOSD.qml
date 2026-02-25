@@ -9,17 +9,20 @@ Scope {
     required property var currentMonitor
     required property int monitorHeight
     required property int monitorWidth
-    required property bool osdOnLeft
+    property bool enabled: true
 
     property bool shouldShowOSD: false
     property real brightness: 0.7
     property real lastBrightness: -1
-    
+    property bool isInteracting: false
+
     Timer {
         interval: 300
-        running: true
+        running: enabled
         repeat: true
         onTriggered: {
+            if (isInteracting) return;
+
             OSD.Proc.runCommand("brightness-check", ["light", "-G"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const newBrightness = parseFloat(output.trim()) / 100;
@@ -33,97 +36,109 @@ Scope {
             }, 0);
         }
     }
-    
+
     Timer {
         id: hideTimer
         interval: 1500
-        onTriggered: shouldShowOSD = false
+        onTriggered: {
+            if (!isInteracting) shouldShowOSD = false;
+        }
     }
-    
+
+    readonly property string brightnessIcon: {
+        if (brightness < 0.33) return "󰃞";
+        if (brightness < 0.66) return "󰃟";
+        return "󰃠";
+    }
+
     PanelWindow {
         id: osdWindow
         screen: modelData
-        visible: true
-        
+        visible: shouldShowOSD || fadeAnim.running
+
         anchors {
-            left: osdOnLeft
-            right: !osdOnLeft
+            left: false
+            right: false
             top: false
-            bottom: false
+            bottom: true
         }
-        
-        implicitWidth: monitorWidth * 0.05
-        implicitHeight: monitorHeight * 0.4
-        
+
+        implicitWidth: monitorHeight * 0.4
+        implicitHeight: monitorWidth * 0.05
+
         exclusiveZone: 0
         color: "#00000000"
-        mask: Region {}
-        
-        margins {
-            left: osdOnLeft ? 20 : 0
-            right: osdOnLeft ? 0 : 20
-            top: (monitorHeight - implicitHeight) / 2
-            bottom: 40
-        }
-        
-        Rectangle {
-            width: parent.width * 0.6
-            height: width
-            radius: width / 2
-            color: OSD.Theme.color1
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: 40
+
+        margins.bottom: 40
+
+        Item {
+            id: osdContent
+            anchors.fill: parent
             opacity: shouldShowOSD ? 1.0 : 0.0
-            border.color: OSD.Theme.color0
-            border.width: 2
-            
+
             Behavior on opacity {
                 NumberAnimation {
+                    id: fadeAnim
                     duration: 200
                     easing.type: Easing.OutCubic
                 }
             }
-            
-            Text {
-                anchors.centerIn: parent
-                text: "󰃠"
-                font.family: "IosevkaTerm Nerd Font Mono"
-                font.pixelSize: parent.width * 0.5
-                color: OSD.Theme.color0
-            }
-        }
-        
-        Rectangle {
-            id: progressRect
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            anchors.topMargin: parent.width * 0.9
-            width: parent.width * 0.4
-            height: parent.height - parent.width * 0.9
-            color: OSD.Theme.color1
-            radius: 8
-            opacity: shouldShowOSD ? 1.0 : 0.0
-            border.color: OSD.Theme.color0
-            border.width: 2
-            
-            Behavior on opacity {
-                NumberAnimation {
-                    duration: 200
-                    easing.type: Easing.OutCubic
+
+            Rectangle {
+                width: parent.height * 0.6
+                height: width
+                radius: width / 2
+                color: OSD.Theme.color1
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 40
+                border.color: OSD.Theme.color0
+                border.width: 2
+
+                Text {
+                    anchors.centerIn: parent
+                    text: brightnessIcon
+                    font.family: "IosevkaTerm Nerd Font Mono"
+                    font.pixelSize: parent.width * 0.5
+                    color: OSD.Theme.color0
                 }
             }
-            
-            StyledProgressBar {
-                anchors.centerIn: parent
-                width: parent.height * 0.95
-                height: parent.width * 0.8
-                rotation: -90
-                transformOrigin: Item.Center
-                value: brightness
-                lineHeight: parent.width * 0.8
-                showIndicator: true
-                interactive: false
+
+            Rectangle {
+                id: progressRect
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: parent.height * 0.9
+                height: parent.height * 0.4
+                width: parent.width - parent.height * 0.9
+                color: OSD.Theme.color1
+                radius: 8
+                border.color: OSD.Theme.color0
+                border.width: 2
+
+                StyledProgressBar {
+                    anchors.centerIn: parent
+                    width: parent.width * 0.95
+                    height: parent.height * 0.8
+                    value: brightness
+                    lineHeight: parent.height * 0.8
+                    showIndicator: true
+                    interactive: true
+
+                    onSeeking: pos => {
+                        isInteracting = true;
+                        brightness = pos;
+                        OSD.Proc.runCommand("brightness-set", ["light", "-S", String(Math.round(pos * 100))], () => {}, 50);
+                    }
+
+                    onClicked: pos => {
+                        brightness = pos;
+                        lastBrightness = pos;
+                        OSD.Proc.runCommand("brightness-set", ["light", "-S", String(Math.round(pos * 100))], () => {}, 0);
+                        isInteracting = false;
+                        hideTimer.restart();
+                    }
+                }
             }
         }
     }

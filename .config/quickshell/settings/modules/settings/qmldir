@@ -1,0 +1,5 @@
+singleton Theme Theme.qml
+singleton Proc Proc.qml
+SettingsManager SettingsManager.qml
+Settings Settings.qml
+ProgressBar ProgressBar.qml

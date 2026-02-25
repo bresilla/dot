@@ -34,10 +34,15 @@ Scope {
         }
     }
 
+    Process {
+        id: wsSwitchProc
+        running: false
+    }
+
     PanelWindow {
         id: lineWindow
         screen: modelData
-        anchors { 
+        anchors {
             top: true
             left: !barOnRight
             right: barOnRight
@@ -74,18 +79,33 @@ Scope {
                         width: wsContainer.width
                         height: visible ? wsContainer.height / 10 : 0
                         radius: 4
-                        color: modelData.active ? wal.adapter.colors["color1"] : 
-                               hasWindows ? wal.adapter.colors["color244"] : 
+                        color: modelData.active ? wal.adapter.colors["color1"] :
+                               hasWindows ? wal.adapter.colors["color244"] :
                                wal.adapter.colors["color240"]
-                        opacity: modelData.active ? 1.0 : 0.6
+                        opacity: modelData.active ? 1.0 :
+                                 wsMouseArea.containsMouse ? 0.9 : 0.6
                         Behavior on color { ColorAnimation { duration: 200 } }
                         Behavior on opacity { NumberAnimation { duration: 200 } }
 
                         MouseArea {
+                            id: wsMouseArea
                             anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
                             onClicked: modelData.activate()
                         }
                     }
+                }
+            }
+
+            // Scroll overlay: accepts wheel events without blocking clicks
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                onWheel: wheel => {
+                    const direction = wheel.angleDelta.y > 0 ? "r-1" : "r+1";
+                    wsSwitchProc.command = ["hyprctl", "dispatch", "workspace", direction];
+                    wsSwitchProc.running = true;
                 }
             }
         }
@@ -95,4 +115,3 @@ Scope {
         }
     }
 }
-

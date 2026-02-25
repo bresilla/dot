@@ -10,7 +10,7 @@ Scope {
     required property int monitorHeight
     required property int monitorWidth
     required property bool barOnRight
-    
+
     FileView {
         id: wal
         path: Quickshell.env("HOME") + "/.cache/wal/colors.json"
@@ -27,180 +27,151 @@ Scope {
 
     property var focusedWorkspace: Hyprland.focusedWorkspace
     property int currentWorkspace: focusedWorkspace?.id ?? 1
-    property int previousWorkspace: currentWorkspace
     property bool shouldShowOSD: false
     property real morphProgress: 0.0
-    property bool inCircleMode: false
-    property var lastWorkspaceSwitchTime: new Date()
-    
+    property real displayY: 0
+    property int lastShownWorkspace: -1
+
     readonly property int containerHeight: monitorHeight * 0.5
     readonly property int itemHeight: containerHeight / 10
-    readonly property int spacing: 10
-    readonly property int containerStartY: (monitorHeight - containerHeight) / 2
-    
+    readonly property int wsSpacing: 10
+
     function getWorkspaceYOffset(workspaceId) {
-        var index = workspaceId - 1;
-        var offset = (itemHeight * index) + (spacing * index);
-        console.log("getWorkspaceYOffset for ws", workspaceId, "index:", index, "offset:", offset);
-        return offset;
+        var index = (workspaceId - 1) % 10;
+        if (index < 0) index = 0;
+        return (itemHeight + wsSpacing) * index;
     }
-    
-    property real startYOffset: 0
-    property real endYOffset: 0
-    property real currentYOffset: 0
-    
-    onCurrentWorkspaceChanged: {
-        const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor;
-        
-        if (isOnThisMonitor && previousWorkspace !== currentWorkspace) {
-            const now = new Date();
-            const timeSinceLastSwitch = now - lastWorkspaceSwitchTime;
-            const fullCycleDuration = 600 + 800 + 300;
-            
-            if (morphOutAnimation.running) {
-                console.log("Stopping morph out - staying in circle mode");
-                morphOutAnimation.stop();
-                morphProgress = 1.0;
-                inCircleMode = true;
-                startYOffset = currentYOffset;
-                endYOffset = getWorkspaceYOffset(currentWorkspace);
-                slideAnimation.start();
-                hideTimer.restart();
-            } else if (inCircleMode && timeSinceLastSwitch < fullCycleDuration) {
-                console.log("Fast switch - sliding circle from ws", previousWorkspace, "to", currentWorkspace);
-                startYOffset = currentYOffset;
-                endYOffset = getWorkspaceYOffset(currentWorkspace);
-                slideAnimation.start();
-                hideTimer.restart();
-            } else {
-                console.log("Full animation from ws", previousWorkspace, "to", currentWorkspace);
-                startYOffset = getWorkspaceYOffset(previousWorkspace);
-                endYOffset = getWorkspaceYOffset(currentWorkspace);
-                currentYOffset = startYOffset;
-                shouldShowOSD = true;
-                morphProgress = 0.0;
-                inCircleMode = true;
-                morphInAnimation.start();
-                hideTimer.restart();
-            }
-            
-            lastWorkspaceSwitchTime = now;
-            previousWorkspace = currentWorkspace;
-        } else if (!isOnThisMonitor) {
-            shouldShowOSD = false;
-            inCircleMode = false;
-        }
-    }
-    
+
+    // --- Animations: morph (shape) and slide (position) are independent ---
+
     NumberAnimation {
-        id: morphInAnimation
+        id: slideAnim
         target: root
-        property: "morphProgress"
-        from: 0.0
-        to: 1.0
-        duration: 600
-        easing.type: Easing.OutCubic
-        onRunningChanged: {
-            if (!running && morphProgress === 1.0) {
-                currentYOffset = endYOffset;
-            }
-        }
-    }
-    
-    onMorphProgressChanged: {
-        if (morphInAnimation.running) {
-            currentYOffset = startYOffset + (endYOffset - startYOffset) * morphProgress;
-        }
-    }
-    
-    NumberAnimation {
-        id: slideAnimation
-        target: root
-        property: "currentYOffset"
-        from: root.startYOffset
-        to: root.endYOffset
-        duration: 200
+        property: "displayY"
+        duration: 250
         easing.type: Easing.InOutQuad
     }
-    
+
+    function slideTo(targetY) {
+        slideAnim.stop();
+        slideAnim.from = displayY;
+        slideAnim.to = targetY;
+        slideAnim.start();
+    }
+
     NumberAnimation {
-        id: morphOutAnimation
+        id: morphInAnim
         target: root
         property: "morphProgress"
-        from: 1.0
-        to: 0.0
+        from: 0; to: 1
+        duration: 400
+        easing.type: Easing.OutCubic
+    }
+
+    NumberAnimation {
+        id: morphOutAnim
+        target: root
+        property: "morphProgress"
+        from: 1; to: 0
         duration: 300
         easing.type: Easing.InCubic
-        onFinished: {
-            shouldShowOSD = false
-            inCircleMode = false
-        }
+        onFinished: shouldShowOSD = false
     }
-    
+
     Timer {
         id: hideTimer
-        interval: 960
-        onTriggered: morphOutAnimation.start()
+        interval: 800
+        onTriggered: morphOutAnim.start()
     }
-    
+
+    onFocusedWorkspaceChanged: {
+        if (!focusedWorkspace) return;
+
+        const wsId = focusedWorkspace.id;
+        const monName = focusedWorkspace.monitor?.name ?? "";
+        const isThisMonitor = monName === currentMonitor?.name;
+
+        if (!isThisMonitor) return;
+
+        const targetOffset = getWorkspaceYOffset(wsId);
+
+        if (!shouldShowOSD) {
+            // Fresh show: slide from previous position if different workspace
+            if (lastShownWorkspace >= 0 && lastShownWorkspace !== wsId) {
+                displayY = getWorkspaceYOffset(lastShownWorkspace);
+                slideTo(targetOffset);
+            } else {
+                displayY = targetOffset;
+            }
+            shouldShowOSD = true;
+            morphOutAnim.stop();
+            morphProgress = 0;
+            morphInAnim.start();
+        } else if (morphOutAnim.running) {
+            // Was fading out: cancel and stay
+            morphOutAnim.stop();
+            morphProgress = 1.0;
+            if (lastShownWorkspace !== wsId) slideTo(targetOffset);
+        } else {
+            // Already visible: slide if workspace changed
+            if (lastShownWorkspace !== wsId) slideTo(targetOffset);
+        }
+
+        hideTimer.restart();
+        lastShownWorkspace = wsId;
+    }
+
     PanelWindow {
         id: osdWindow
         screen: modelData
         visible: shouldShowOSD
-        
+
         anchors {
             left: !barOnRight
             right: barOnRight
             top: true
         }
-        
+
         implicitWidth: 140
-        implicitHeight: containerHeight + (spacing * 9)
-        
+        implicitHeight: containerHeight + (wsSpacing * 9)
+
         exclusiveZone: 0
         color: "#00000000"
         mask: Region {}
-        
-        readonly property int containerHeight: monitorHeight * 0.5
-        readonly property int itemHeight: containerHeight / 10
-        readonly property int spacing: 10
-        readonly property int containerStartY: (monitorHeight - containerHeight) / 2
+
         readonly property int lineWidth: Screen.width * 0.005
-        
+        readonly property int containerStartY: (monitorHeight - containerHeight) / 2
+
         margins {
             left: barOnRight ? 0 : -lineWidth
             right: barOnRight ? -lineWidth : 0
             top: containerStartY
         }
-        
+
         Rectangle {
             id: morphingOSD
-            visible: shouldShowOSD
-            
+
             anchors {
                 left: barOnRight ? undefined : parent.left
                 right: barOnRight ? parent.right : undefined
                 leftMargin: barOnRight ? 0 : 30 * morphProgress
                 rightMargin: barOnRight ? 30 * morphProgress : 0
             }
-            
-            y: currentYOffset
-            
+
+            y: displayY
+
             readonly property real startWidth: osdWindow.lineWidth * 0.7
-            readonly property real startHeight: osdWindow.itemHeight
+            readonly property real startHeight: root.itemHeight
             readonly property real endSize: 110
-            
-            readonly property real widthProgress: morphProgress * morphProgress
-            readonly property real heightProgress: morphProgress
-            
-            width: startWidth + (endSize - startWidth) * widthProgress
-            height: startHeight + (endSize - startHeight) * heightProgress
+
+            width: startWidth + (endSize - startWidth) * (morphProgress * morphProgress)
+            height: startHeight + (endSize - startHeight) * morphProgress
             radius: 4 + (51 * morphProgress)
-            
+
             color: wal.adapter.colors["color1"] || "#CC000000"
             border.color: wal.adapter.colors["color0"] || "#000000"
             border.width: 2 + (4 * morphProgress)
-            
+
             Text {
                 anchors.centerIn: parent
                 text: currentWorkspace
@@ -208,7 +179,7 @@ Scope {
                 font.bold: true
                 font.weight: Font.Black
                 color: wal.adapter.colors["color0"] || "#ffffff"
-                opacity: morphProgress > 0.3 ? 1.0 : 0.0
+                opacity: morphProgress
             }
         }
     }

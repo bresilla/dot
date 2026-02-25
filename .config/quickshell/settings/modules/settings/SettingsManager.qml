@@ -1,5 +1,4 @@
 import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 import QtQuick
 
@@ -37,19 +36,13 @@ Scope {
         return thisCenterX < mainCenterX;
     }
 
-    Line {
-        modelData: root.modelData
-        currentMonitor: root.currentMonitor
-        monitorHeight: root.monitorHeight
-        monitorWidth: root.monitorWidth
-        barOnRight: root.barOnRight
-    }
+    readonly property bool settingsOnRight: !barOnRight
 
-    Numbers {
+    Settings {
         modelData: root.modelData
         currentMonitor: root.currentMonitor
         monitorHeight: root.monitorHeight
         monitorWidth: root.monitorWidth
-        barOnRight: root.barOnRight
+        settingsOnRight: root.settingsOnRight
     }
 }
