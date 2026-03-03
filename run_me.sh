@@ -18,7 +18,7 @@ for item in "$ENVY"/.{profile,xinitrc,winitrc}; do
     ln -sf "$item" "$HOME/"
 done
 
-BINDIR="$(dirname "$ENVY")/bin"
+BINDIR="$HOME/.local/bin"
 
 echo "export PATH=$BINDIR:\$PATH" | sudo tee /etc/profile.d/envy.sh
 echo 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done' | sudo tee -a /etc/zsh/zshrc
