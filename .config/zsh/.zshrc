@@ -86,7 +86,9 @@ zmodload zsh/complist
 # Add completion paths BEFORE compinit
 fpath=(~/.config/zsh/completions/src $fpath)
 
-# autoload -Uz compinit && compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
+[[ -d ~/.cache/zsh ]] || mkdir -p ~/.cache/zsh
+autoload -Uz compinit
+compinit -d ~/.cache/zsh/zcompdump-$ZSH_VERSION
 
 # Enable completion display
 setopt autolist automenu
