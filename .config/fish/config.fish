@@ -5,8 +5,8 @@ end
 
 fish_vi_key_bindings
 
-replay "source /home/bresilla/.profile"
-replay "source /home/bresilla/.aliases"
+replay "source ~/.profile"
+replay "source ~/.config/profile/aliases.sh"
 # ─────────────────────────────────────────────────────────────────────────────
 if test -f ~/.cache/wal/colors.sh
     replay 'source ~/.cache/wal/colors.sh'

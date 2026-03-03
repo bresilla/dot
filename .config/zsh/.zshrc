@@ -148,11 +148,27 @@ bindkey '^Z' fancy-ctrl-z
 export FPATH=~/.config/zsh:$FPATH
 
 ###ALIASES
-[[ -f ~/.aliases ]] && source ~/.aliases
+[[ -f ~/.config/profile/aliases.sh ]] && source ~/.config/profile/aliases.sh
 alias \$=''
+
+
+###FUNCTIONS
+if [ -d ~/.config/profile/functions ]; then
+    for file in ~/.config/profile/functions/*; do
+        if [ -d "$file" ]; then
+            PATH="$file:$PATH"
+        fi
+    done
+fi
+
+alias sw=$HOME/.config/profile/functions/wm/startw
 
 ###PROFILE
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+
+
+###SECRETS
+[[ -e "/env/set/variables" ]] && source /env/set/variables
 
 ##NAME
 # [[ -x "$(command -v tmux)" ]] && tmux setenv -g TMUX_FANCY_$(tmux display -p "#D" | tr -d %) $FANCY

@@ -4,27 +4,15 @@ export DOTS=$HOME/dots
 export SETS=$HOME/sets
 export DATA=$HOME/data
 export DOWN=$HOME/down
-export SYNC=$HOME/sync
 export TEMP=/tmp
 
-export PATH=/usr/local/cuda-12.9/bin:$PATH
-export PATH="/home/bresilla/.deno/bin:/home/bresilla/.bun/bin:/.npm-global/bin:$PATH"
 export PATH="/opt/TurboVNC/bin/:/opt/fox:$PATH"
-export LD_LIBRARY_PATH=/usr/local/cuda-12.9/lib64:$LD_LIBRARY_PATH
-
 
 #USER BINARIES AND SCRIPTS
 export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
 [[ -d "/env/bin" ]] && PATH="$PATH:/env/bin"
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"
-[[ -d /env/dot/.func ]] && for file in /env/dot/.func/*; do [[ -d "$file" ]] && PATH="$file:$PATH"; done
-
-#SECRETS
-[[ -e "/env/set/variables" ]] && source /env/set/variables
-
-#ALT
-export PATH="$HOME/.local/alt/shims:$PATH"
 
 #PKGCONFIGS
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig
@@ -33,9 +21,9 @@ export PKG_CONFIG_PATH=/usr/lib/pkgconfig
 export COLORTERM=truecolor
 export BROWSER=app.zen_browser.zen
 export EDITOR=hx
-export TERMINAL=kitty
-export CONSOLE=kitty
-export TERM=xterm-256color
+# export TERMINAL=kitty
+# export CONSOLE=kitty
+# export TERM=xterm-256color
 export DISTRO=$(cat /etc/os-release | grep -m 1 ID)
 
 #---------------------------         LANGUAGES          --------------------------
@@ -91,10 +79,10 @@ export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 
 
 #---------------------------              XDG           --------------------------
-export XDG_CONFIG_HOME=/home/$USER/.config
-export XDG_CONFIG_PATH=/home/$USER/.config
-export XDG_DATA_HOME=/home/$USER/.local/share
-export XDG_DATA_PATH=/home/$USER/.local/share
+# export XDG_CONFIG_HOME=/home/$USER/.config
+# export XDG_CONFIG_PATH=/home/$USER/.config
+# export XDG_DATA_HOME=/home/$USER/.local/share
+# export XDG_DATA_PATH=/home/$USER/.local/share
 export XDG_CACHE_HOME=/home/$USER/.cache
 export XDG_CACHE_PATH=/home/$USER/.cache
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
@@ -107,27 +95,6 @@ export CCACHE_DIR="$XDG_CACHE_HOME"/ccache
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 
 
-#---------------------------            ROS             --------------------------
-#export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-#export CYCLONEDDS_URI='<CycloneDDS><Domain><General><NetworkInterfaceAddress>stargate</></></></>'
-#export CYCLONEDDS_URI='<CycloneDDS><Domain><General><Interfaces><NetworkInterface name="stargate"/></></></></>'
-export ROS_DOMAIN_ID=226
-export WEBOTS_HOME=/usr/local/webots
-export LD_LIBRARY_PATH=/usr/local/webots/lib/controller:$LD_LIBRARY_PATH
-export PYTHONPATH=/usr/local/webots/lib/controller/python:$PYTHONPATH
-
-#---------------------------         PLATFORMIO         --------------------------
-export PLATFORMIO_CORE_DIR=/pkg/pio/core
-
-
-#----------------------------        HIVE-SERVER        ---------------------------
-export OLLAMA_HOST=borg.skynet:11434
-#export DOCKER_HOST=tcp://borg.zerotier:2375
-
-
-#----------------------------            OTHER          ---------------------------
-export LOCAL_NOTEBOOK_DEV=1
-
 #---------------------------            CORE            --------------------------
 if [ "$HOSTNAME" = core ]; then
     # eval $(gnome-keyring-daemon --start)
@@ -136,6 +103,3 @@ if [ "$HOSTNAME" = core ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)
 fi
-[[ -f "$HOME/.external" ]] && source /home/bresilla/.external
-
-if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

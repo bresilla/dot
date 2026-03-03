@@ -1,0 +1,18 @@
+#!/bin/bash
+
+printf "HOME:"
+echo
+printf "ADDRES:\t\tTrim Bresilla, Plevierenweide 70, Wageningen, Gelderland, 6708BX, NL"
+echo
+printf "PHONE:\t\t(+31) 6 214 36744"
+echo
+printf "PHONE:\t\t(+31) 6 280 22776"
+echo
+echo
+echo
+printf "WORK:"
+echo
+printf "ADDRES:\t\tWageningen Plant Research, BU Agro - Trim Bresilla, Bornsesteeg 48 A, 6708PE Wageningen"
+echo
+printf "PHONE:\t\t(+31) 3 174 80381"
+echo

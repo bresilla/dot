@@ -1,0 +1,14 @@
+[Unit]
+Description=Wireguard SOCKS5 Proxy (%I)
+Documentation=https://github.com/octeep/wireproxy
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/env/bin/wireproxy -c %h/.local/share/%I.conf
+ExecReload=/usr/bin/kill -SIGUSR1 $MAINPID
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

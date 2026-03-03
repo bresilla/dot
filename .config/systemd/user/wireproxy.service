@@ -1,7 +1,7 @@
 [Unit]
 Description="Wireguard SOCS5 Proxy"
 Documentation="https://github.com/octeep/wireproxy"
-After=graphical.target
+After=network.target
 
 [Service]
 Type=simple

@@ -11,7 +11,9 @@ for item in "$ENVY"/.config/*; do
     ln -sf "$item" "$HOME/.config/"
 done
 
-for item in "$ENVY"/.{aliases,bashrc,func,profile,startup,xinitrc,winitrc,zshrc}; do
+echo 'export ZDOTDIR="$HOME/.config/zsh"' > ~/.zshenv
+
+for item in "$ENVY"/.{profile,xinitrc,winitrc}; do
     rm -rf "$HOME/$(basename "$item")"
     ln -sf "$item" "$HOME/"
 done
