@@ -1,6 +1,0 @@
-ls
-starship init nu | save -f ~/.cache/starship/init.nu
-$nu.config-path
-hx /env/dot/.config/nushell/config.nu
-ll
-ls

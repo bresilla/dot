@@ -1,5 +1,40 @@
-local hx = require("hexe")
+hx = require("hexe")
 local section = HEXE_SECTION
+
+-- events API is provided by runtime: hx.events.on/off/once/debounce/throttle
+
+local function load_layout_config()
+  local getenv = os and os.getenv
+  if type(getenv) ~= "function" then
+    return { keybingings = {}, default_layout = nil }
+  end
+
+  local xdg = getenv("XDG_CONFIG_HOME")
+  local home = getenv("HOME")
+  local cfg_dir = nil
+  if xdg and xdg ~= "" then
+    cfg_dir = xdg .. "/hexe"
+  elseif home and home ~= "" then
+    cfg_dir = home .. "/.config/hexe"
+  end
+
+  if not cfg_dir then
+    return { keybingings = {}, layout = nil }
+  end
+
+  local ok, cfg = pcall(dofile, cfg_dir .. "/layout.lua")
+  if not ok or type(cfg) ~= "table" then
+    return { keybingings = {}, layout = nil }
+  end
+
+  if type(cfg.keybingings) ~= "table" then
+    cfg.keybingings = {}
+  end
+
+  return cfg
+end
+
+local layout_cfg = load_layout_config()
 
 -- ============================================================================
 -- MUX Configuration (Terminal UI)
@@ -18,7 +53,7 @@ if section == nil or section == "mux" then
   })
 
   -- Keybindings
-  hx.mux.keymap.set({
+  local keymaps = {
     { key = { hx.key.ctrl, hx.key.alt, hx.key.q }, action = { type = hx.action.mux_quit } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.d }, action = { type = hx.action.mux_detach } },
 
@@ -30,8 +65,8 @@ if section == nil or section == "mux" then
     { key = { hx.key.ctrl, hx.key.alt, hx.key.k }, action = { type = hx.action.keycast_toggle } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.o }, action = { type = hx.action.pane_select_mode } },
 
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.h }, when = "focus_split", action = { type = hx.action.split_h } },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.v }, when = "focus_split", action = { type = hx.action.split_v } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.h }, when = function(ctx) local p = ctx.pane(0); return p and p.focus_split end, action = { type = hx.action.split_h } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.v }, when = function(ctx) local p = ctx.pane(0); return p and p.focus_split end, action = { type = hx.action.split_v } },
 
     { key = { hx.key.ctrl, hx.key.alt, hx.key.t }, action = { type = hx.action.tab_new } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.x }, action = { type = hx.action.tab_close } },
@@ -39,25 +74,27 @@ if section == nil or section == "mux" then
     { key = { hx.key.ctrl, hx.key.alt, hx.key.comma }, action = { type = hx.action.tab_prev } },
 
     -- Focus movement: passthrough to nvim/vim, otherwise do focus_move
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.right }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, when = function(ctx) local p = ctx.pane(0); return p and (p.process_name == "nvim" or p.process_name == "vim") end, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, when = function(ctx) local p = ctx.pane(0); return p and (p.process_name == "nvim" or p.process_name == "vim") end, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, when = function(ctx) local p = ctx.pane(0); return p and (p.process_name == "nvim" or p.process_name == "vim") end, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.right }, when = function(ctx) local p = ctx.pane(0); return p and (p.process_name == "nvim" or p.process_name == "vim") end, mode = hx.mode.passthrough_only },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, action = { type = hx.action.focus_move, dir = "up" } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, action = { type = hx.action.focus_move, dir = "down" } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, action = { type = hx.action.focus_move, dir = "left" } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.right }, action = { type = hx.action.focus_move, dir = "right" } },
-
-    { key = { hx.key.ctrl, hx.key.alt, hx.key["1"] }, action = { type = hx.action.float_toggle, float = "1" } },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key["2"] }, action = { type = hx.action.float_toggle, float = "2" } },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key["3"] }, action = { type = hx.action.float_toggle, float = "3" } },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key["4"] }, action = { type = hx.action.float_toggle, float = "4" } },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key["0"] }, action = { type = hx.action.float_toggle, float = "p" } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.s }, action = { type = hx.action.layout_save } },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.l }, action = { type = hx.action.layout_load } },
 
     -- Pokemon sprite overlay
     { key = { hx.key.ctrl, hx.key.alt, hx.key.p }, action = { type = hx.action.sprite_toggle }, mode = hx.mode.act_and_consume },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.shift, hx.key.p }, action = { type = hx.action.sprite_toggle }, mode = hx.mode.act_and_consume },
-  })
+  }
+
+  for _, km in ipairs(layout_cfg.keybingings) do
+    table.insert(keymaps, km)
+  end
+
+  hx.mux.keymap.set(keymaps)
 
   -- Default float settings
   hx.mux.float.set_defaults({
@@ -73,7 +110,7 @@ if section == nil or section == "mux" then
       title = {
         name = "title",
         value = function(ctx)
-          local t = hexe.segment.title(ctx)
+          local t = hx.segment.title(ctx)
           return {
             { text = " ", style = "bg:0 fg:1" },
             { text = t, style = "bg:1 fg:0" },
@@ -112,7 +149,11 @@ if section == nil or section == "mux" then
     name = "session",
     priority = 30,
     builtin = function(_)
-      return hexe.segment.builtin.session({ style = "bg:1 fg:0", prefix = " ", suffix = " " })
+      return hx.segment.builtin.session({
+        style = "bg:1 fg:0",
+        prefix = { output = "| " },
+        suffix = { output = " |" },
+      })
     end,
   })
 
@@ -120,8 +161,9 @@ if section == nil or section == "mux" then
     name = "spinner",
     priority = 20,
     builtin = function(ctx)
-      if (ctx.shell_running and not ctx.alt_screen) or ctx.adhoc_float then
-        return hexe.segment.builtin.spinner({
+      local p = ctx.pane(0)
+      if p and ((p.shell_running and not p.alt_screen) or p.adhoc_float) then
+        return hx.segment.builtin.spinner({
           kind = "knight_rider",
           width = 10,
           step = 40,
@@ -140,8 +182,9 @@ if section == nil or section == "mux" then
     name = "randomdo",
     priority = 200000,
     builtin = function(ctx)
-      if (ctx.shell_running and not ctx.alt_screen) or ctx.adhoc_float then
-        return hexe.segment.builtin.randomdo({ style = "bg:0 fg:1", suffix = " " })
+      local p = ctx.pane(0)
+      if p and ((p.shell_running and not p.alt_screen) or p.adhoc_float) then
+        return hx.segment.builtin.randomdo({ style = "bg:0 fg:1", suffix = " " })
       end
       return nil
     end,
@@ -152,7 +195,7 @@ if section == nil or section == "mux" then
     name = "tabs",
     priority = 1,
     value = function(ctx)
-      return hexe.segment.tabs(ctx)
+      return hx.segment.tabs(ctx)
     end,
     tab_title = "basename",
     active_style = "bg:1 fg:0",
@@ -172,16 +215,25 @@ if section == nil or section == "mux" then
     name = "rec",
     priority = 11,
     value = function(_)
-      local st = hexe.record.status({ scope = "pod" })
+      local st = hx.status.recording(rec_opts.scope)
       if st and st.active then
         return { { text = " REC ", style = "bg:1 fg:15 bold" } }
       end
       return { { text = " rec ", style = "bg:1 fg:15 bold" } }
     end,
     button = {
-      on_left_click = hx.record.toggle(rec_opts),
-      on_right_click = hx.record.stop(rec_opts),
-      active_when = "test \"$(hexe record status --scope pod 2>/dev/null)\" = 1",
+      on_left_click = function(ctx)
+        local rec = hx.record.active(ctx, rec_opts)
+        if not rec then return nil end
+        return rec.switch()
+      end,
+      on_right_click = function(_)
+        return hx.record.stop({ scope = rec_opts.scope })
+      end,
+      active_when = function(_)
+        local st = hx.status.recording(rec_opts.scope)
+        return st and st.active == true
+      end,
       left_style = "bg:2 fg:0 bold",
       middle_style = "bg:3 fg:0 bold",
       right_style = "bg:1 fg:15 bold",
@@ -247,91 +299,9 @@ end
 -- SES Configuration (Session Manager)
 -- ============================================================================
 if section == nil or section == "ses" then
-  -- Define default layout
-  hx.ses.layout.define({
-    name = "default",
-    enabled = true,
-    tabs = {
-      {
-        name = "main",
-        enabled = true,
-        root = { cwd = "." },
-      },
-    },
-    floats = {
-      {
-        key = "1",
-        enabled = true,
-        title = "opencode",
-        attributes = { per_cwd = true, inherit_env = true },
-        command = "/env/bin/opencode",
-      },
-      {
-        key = "2",
-        enabled = true,
-        attributes = { per_cwd = true, inherit_env = true },
-        title = "opencode",
-        command = "/env/bin/opencode",
-      },
-      {
-        key = "3",
-        enabled = true,
-        attributes = { per_cwd = true, inherit_env = true },
-        title = "claude",
-        command = "/env/bin/bun x --package @anthropic-ai/claude-code claude",
-      },
-      {
-        key = "p",
-        enabled = true,
-        title = "scratchpad",
-        position = { x = 100, y = 50 },
-        size = { width = 40, height = 80 },
-        padding = { x = 2, y = 1 },
-        attributes = { global = false, navigatable = true, inherit_env = true },
-        style = {
-          shadow = { color = 236 },
-          border = {
-            chars = {
-              top_left = "╔",
-              top_right = "╗",
-              bottom_left = "╚",
-              bottom_right = "╝",
-              horizontal = "═",
-              vertical = "║",
-              left_t = "╠",
-              right_t = "╣",
-              top_t = "╦",
-              bottom_t = "╩",
-              cross = "╬",
-            },
-          },
-          title = {
-            name = "title",
-            value = function(ctx)
-              local t = hexe.segment.title(ctx)
-              return {
-                { text = " ", style = "bg:0 fg:1" },
-                { text = t, style = "bg:1 fg:0" },
-                { text = " ", style = "bg:0 fg:1" },
-              }
-            end,
-            position = "topright",
-          },
-        },
-      },
-      {
-        key = "0",
-        enabled = true,
-        title = "sandbox",
-        isolation = {
-          profile = "sandbox",  -- Full isolation + network allowed
-          memory = "512M",
-          pids = 100,
-          cpu = "50000 100000",  -- 0.5 cores max
-        },
-      },
-    },
-  })
+  if layout_cfg.layout then
+    hx.ses.layout.define(layout_cfg.layout)
+  end
 end
 
 -- ============================================================================
@@ -342,101 +312,126 @@ if section == nil or section == "shp" then
     {
       name = "ssh",
       priority = 60,
-      value = "return ctx.env.SSH_CONNECTION and { { text = ' //', style = 'bg:237 italic fg:15' } } or nil",
+      value = function(ctx)
+        if not ctx.env.SSH_CONNECTION then
+          return nil
+        end
+        return { { text = " //", style = "bg:237 italic fg:15" } }
+      end,
     },
     {
       name = "hostname",
       priority = 15,
       builtin = function(_)
-        return hexe.segment.builtin.hostname({ style = "bg:237 italic fg:15", suffix = " " })
+        return hx.segment.builtin.hostname({ style = "bg:237 italic fg:15", suffix = " " })
       end,
     },
     {
       name = "distro",
       priority = 10,
-      value = [[
-        local p = io.popen('/env/dot/.func/shell/distrologo')
-        if not p then return nil end
-        local raw = p:read('*a') or ''
+      value = function(_)
+        local p = io.popen("~/.config/profile/functions/shell/distrologo")
+        if not p then
+          return nil
+        end
+        local raw = p:read("*a") or ""
         p:close()
-        local t = raw:match('^%s*(.-)%s*$')
-        if not t or t == '' then return nil end
-        return { { text = ' ' .. t, style = 'bg:1 fg:0' } }
-      ]],
+        local t = raw:match("^%s*(.-)%s*$")
+        if not t or t == "" then
+          return nil
+        end
+        return { { text = " " .. t, style = "bg:1 fg:0" } }
+      end,
     },
     {
       name = "username",
       priority = 1,
       builtin = function(_)
-        return hexe.segment.builtin.username({ style = "bg:1 fg:0", suffix = " " })
+        return hx.segment.builtin.username({ style = "bg:1 fg:0", suffix = " " })
       end,
     },
     {
       name = "direnv",
       priority = 25,
-      value = "return ctx.env.DIRENV_DIR and { { text = '▓', style = 'bg:1 fg:0' } } or nil",
+      value = function(ctx)
+        if not ctx.env.DIRENV_DIR then
+          return nil
+        end
+        return { { text = "▓", style = "bg:1 fg:0" } }
+      end,
     },
     {
       name = "sudo",
       priority = 6,
       builtin = function(_)
-        return hexe.segment.builtin.sudo({ style = "bold bg:240 fg:171" })
+        return hx.segment.builtin.sudo({ style = "bold bg:240 fg:171" })
       end,
     },
     {
       name = "tab",
       priority = 35,
-      value = [[
-        local tab = ((ctx and ctx.env and ctx.env.TAB) or ''):match('^%s*(.-)%s*$')
-        if tab ~= '' and tab ~= '.reset-prompt' and tab ~= 'reset-prompt' then
+      value = function(ctx)
+        local tab = ((ctx and ctx.env and ctx.env.TAB) or ""):match("^%s*(.-)%s*$")
+        if tab ~= "" and tab ~= ".reset-prompt" and tab ~= "reset-prompt" then
           return nil
         end
-        local p = io.popen('tab -l 2> /dev/null | wc -l')
-        if not p then return nil end
-        local raw = p:read('*a') or ''
+
+        local p = io.popen("tab -l 2> /dev/null | wc -l")
+        if not p then
+          return nil
+        end
+        local raw = p:read("*a") or ""
         p:close()
-        local total = tonumber((raw:match('^%s*(.-)%s*$')) or '0') or 0
+        local total = tonumber((raw:match("^%s*(.-)%s*$")) or "0") or 0
         local n = total - 1
-        if n <= 0 then return nil end
+        if n <= 0 then
+          return nil
+        end
         return {
-          { text = '|', style = 'fg:7' },
-          { text = ' ' .. tostring(n) .. ' ', style = 'bg:237 italic fg:15' },
+          { text = "|", style = "fg:7" },
+          { text = " " .. tostring(n) .. " ", style = "bg:237 italic fg:15" },
         }
-      ]],
+      end,
     },
     {
       name = "status",
       priority = 3,
       builtin = function(_)
-        return hexe.segment.builtin.status({ style = "bg:0 fg:9", prefix = " ", suffix = " " })
+        return hx.segment.builtin.status({ style = "bg:0 fg:9", prefix = " ", suffix = " " })
       end,
     },
     {
       name = "container",
       priority = 50,
-      value = [[
-        local p = io.popen('systemd-detect-virt 2>/dev/null')
-        if not p then return nil end
-        local out = p:read('*a') or ''
+      value = function(_)
+        local p = io.popen("systemd-detect-virt 2>/dev/null")
+        if not p then
+          return nil
+        end
+        local out = p:read("*a") or ""
         p:close()
-        local virt = out:match('^%s*(.-)%s*$')
-        if virt == '' or virt == 'none' then return nil end
-        if virt == 'lxc' then
+        local virt = out:match("^%s*(.-)%s*$")
+        if virt == "" or virt == "none" then
+          return nil
+        end
+        if virt == "lxc" then
           return {
-            { text = ' ', style = 'bg:0 fg:0' },
-            { text = ' >> ', style = 'bg:5 fg:0' },
+            { text = " ", style = "bg:0 fg:0" },
+            { text = " >> ", style = "bg:5 fg:0" },
           }
         end
         return {
-          { text = ' ', style = 'bg:0 fg:0' },
-          { text = ' :: ', style = 'bg:5 fg:0' },
+          { text = " ", style = "bg:0 fg:0" },
+          { text = " :: ", style = "bg:5 fg:0" },
         }
-      ]],
+      end,
     },
     {
       name = "separator",
       priority = 20,
-      value = "return { { text = '|', style = 'fg:7' } }",
+      value = function(_)
+        return { { text = "|", style = "fg:7" } }
+      end,
     },
   })
 
@@ -445,28 +440,28 @@ if section == nil or section == "shp" then
       name = "pod_name",
       priority = 1,
       builtin = function(_)
-        return hexe.segment.builtin.pod_name({ style = "bg:5 fg:0", prefix = "| ", suffix = " ||" })
+        return hx.segment.builtin.pod_name({ style = "bg:5 fg:0", prefix = "| ", suffix = " |" })
       end,
     },
     {
       name = "git_branch",
       priority = 4,
       builtin = function(_)
-        return hexe.segment.builtin.git_branch({ style = "bg:1 fg:0", prefix = "  ", suffix = " " })
+        return hx.segment.builtin.git_branch({ style = "bg:1 fg:0", prefix = " ", suffix = " " })
       end,
     },
     {
       name = "git_status",
       priority = 5,
       builtin = function(_)
-        return hexe.segment.builtin.git_status({ style = "bg:1 fg:0", suffix = " " })
+        return hx.segment.builtin.git_status({ style = "bg:1 fg:0", prefix = " ", suffix = " " })
       end,
     },
     {
       name = "directory",
       priority = 2,
       builtin = function(_)
-        return hexe.segment.builtin.directory({ style = "bg:237 fg:15", suffix = " " })
+        return hx.segment.builtin.directory({ style = "bg:237 fg:15", suffix = " " })
       end,
     },
   })

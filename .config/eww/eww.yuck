@@ -1,3 +1,0 @@
-(include "yucks/workspaces.yuck")
-(include "yucks/progressbar.yuck")
-(include "yucks/mainboard.yuck")

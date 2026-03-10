@@ -6,13 +6,21 @@ export DATA=$HOME/data
 export DOWN=$HOME/down
 export TEMP=/tmp
 
-export PATH="/opt/TurboVNC/bin/:/opt/fox:$PATH"
+export PATH="/opt/TurboVNC/bin/:$PATH"
 
 #USER BINARIES AND SCRIPTS
 export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
-[[ -d "/env/bin" ]] && PATH="$PATH:/env/bin"
+[[ -d "/env/bin" ]] && PATH="/env/bin:/opt/TurboVNC/bin/:$PATH"
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"
+
+if [ -d ~/.config/profile/functions ]; then
+    for file in ~/.config/profile/functions/*; do
+        if [ -d "$file" ]; then
+            PATH="$file:$PATH"
+        fi
+    done
+fi
 
 #PKGCONFIGS
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig

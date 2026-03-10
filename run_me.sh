@@ -25,7 +25,7 @@ echo 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done' | sudo 
 echo 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done' | sudo tee -a /etc/bash.bashrc
 echo "set -gx PATH $BINDIR \$PATH" | sudo tee /etc/fish/conf.d/envy.fish
 
-wget -q https://github.com/marcosnils/bin/releases/download/v0.24.0/bin_0.24.0_linux_amd64 -O bin
-chmod +x bin
+# wget -q https://github.com/marcosnils/bin/releases/download/v0.24.0/bin_0.24.0_linux_amd64 -O bin
+# chmod +x bin
 
 mkdir -p "$BINDIR" && ./bin ensure
