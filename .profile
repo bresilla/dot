@@ -6,8 +6,6 @@ export DATA=$HOME/data
 export DOWN=$HOME/down
 export TEMP=/tmp
 
-export PATH="/opt/TurboVNC/bin/:$PATH"
-
 #USER BINARIES AND SCRIPTS
 export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
 [[ -d "/env/bin" ]] && PATH="/env/bin:/opt/TurboVNC/bin/:$PATH"
