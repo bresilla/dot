@@ -55,7 +55,7 @@
     clone = clone --recursive
     pubone = "!f(){ git push ${1:-origin} --follow-tags; }; f"
     #pub = "!f(){ for line in $(git remote -v | cut -f1 | sort -u); do git push $line --all --follow-tags; done; }; f"
-    fuse = "!f(){ current=$(git branch --show-current); git checkout $1 && {git merge $current || git merge --abort 2>/dev/null}; git push --all -u; git checkout $current; }; f"
+    fuse = "!f(){ target=\"$1\"; [ -n \"$target\" ] || { echo 'usage: git fuse <target-branch>'; return 2; }; source_branch=$(git symbolic-ref --quiet --short HEAD) || { echo 'error: detached HEAD'; return 2; }; [ \"$source_branch\" != \"$target\" ] || { echo \"error: source and target are the same: $target\"; return 2; }; git rev-parse --verify --quiet \"refs/heads/$target\" >/dev/null || { echo \"error: local branch not found: $target\"; return 2; }; if ! git diff --quiet || ! git diff --cached --quiet; then echo 'error: working tree not clean'; return 2; fi; git switch \"$target\" || return $?; git merge -m \"chore: merge $source_branch to $target\" \"$source_branch\"; merge_rc=$?; if [ $merge_rc -eq 0 ]; then git up; up_rc=$?; git switch \"$source_branch\" >/dev/null || true; return $up_rc; fi; return $merge_rc; }; f"
     ; get = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE; }; f"
     down = "!f(){ INPUT=${1:-$(xsel --clipboard)}; NAMEEE=$(echo $INPUT | cut -d/ -f1-5); git clone --recursive $NAMEEE -- /home/$USER/down/$(echo $NAMEEE | cut -d/ -f5); }; f"
     fuck = "!f(){ git reset --hard origin/`git rev-parse --abbrev-ref HEAD`; rm -fv `git status | grep ^? | cut -d' '  -f2-`; }; f"

@@ -39,10 +39,10 @@ if section == nil or section == "mux" then
     { key = { hx.key.ctrl, hx.key.alt, hx.key.comma }, action = { type = hx.action.tab_prev } },
 
     -- Focus movement: passthrough to nvim/vim, otherwise do focus_move
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, when = { any = {"fg:nvim", "fg:vim"} }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, when = { any = {"fg:nvim", "fg:vim"} }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, when = { any = {"fg:nvim", "fg:vim"} }, mode = hx.mode.passthrough_only },
-    { key = { hx.key.ctrl, hx.key.alt, hx.key.right }, when = { any = {"fg:nvim", "fg:vim"} }, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
+    { key = { hx.key.ctrl, hx.key.alt, hx.key.right }, when = { lua = function(ctx) return ctx.fg_process == "nvim" or ctx.fg_process == "vim" end }, mode = hx.mode.passthrough_only },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.up }, action = { type = hx.action.focus_move, dir = "up" } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.down }, action = { type = hx.action.focus_move, dir = "down" } },
     { key = { hx.key.ctrl, hx.key.alt, hx.key.left }, action = { type = hx.action.focus_move, dir = "left" } },
@@ -72,12 +72,15 @@ if section == nil or section == "mux" then
     style = {
       title = {
         name = "title",
+        value = function(ctx)
+          local t = hexe.segment.title(ctx)
+          return {
+            { text = " ", style = "bg:0 fg:1" },
+            { text = t, style = "bg:1 fg:0" },
+            { text = " ", style = "bg:0 fg:1" },
+          }
+        end,
         position = "bottomright",
-        outputs = {
-          { style = "bg:0 fg:1", format = "" },
-          { style = "bg:1 fg:0", format = " $output " },
-          { style = "bg:0 fg:1", format = "" },
-        },
       },
     },
   })
@@ -94,65 +97,63 @@ if section == nil or section == "mux" then
 
   -- Tab status segments - Left
   hx.mux.tabs.add_segment("left", {
-    name = "time",
+    name = "time_lua",
     priority = 10,
-    outputs = {
-      { style = "bg:237 fg:250", format = " " },
-      { style = "bold bg:237 fg:250", format = "$output" },
-      { style = "bg:237 fg:250", format = " " },
-      { style = "fg:237 bg:1", format = "" },
-    },
+    value = function(_)
+      return {
+        { text = " ", style = "bg:237 fg:250" },
+        { text = os.date("%H:%M:%S"), style = "bold bg:237 fg:250" },
+        { text = " ", style = "bg:237 fg:250" },
+      }
+    end,
   })
 
   hx.mux.tabs.add_segment("left", {
     name = "session",
     priority = 30,
-    outputs = {
-      { style = "bg:1 fg:0", format = " $output " },
-      { style = "fg:1", format = "" },
-    },
+    builtin = function(_)
+      return hexe.segment.builtin.session({ style = "bg:1 fg:0", prefix = " ", suffix = " " })
+    end,
   })
 
   hx.mux.tabs.add_segment("left", {
     name = "spinner",
     priority = 20,
-    when = {
-      any = {
-        { all = { "process_running", "not_alt_screen" } },
-        "adhoc_float",
-      },
-    },
-    spinner = {
-      kind = "knight_rider",
-      width = 10,
-      step = 40,
-      hold = 20,
-      colors = { 243, 242, 241, 240, 239, 238, 237, 236 },
-      bg = 0,
-    },
-    outputs = {
-      { format = " $output " },
-    },
+    builtin = function(ctx)
+      if (ctx.shell_running and not ctx.alt_screen) or ctx.adhoc_float then
+        return hexe.segment.builtin.spinner({
+          kind = "knight_rider",
+          width = 10,
+          step = 40,
+          hold = 20,
+          colors = { 243, 242, 241, 240, 239, 238, 237, 236 },
+          bg = 0,
+          prefix = " ",
+          suffix = " ",
+        })
+      end
+      return nil
+    end,
   })
 
   hx.mux.tabs.add_segment("left", {
     name = "randomdo",
     priority = 200000,
-    when = {
-      any = {
-        { all = { "process_running", "not_alt_screen" } },
-        "adhoc_float",
-      },
-    },
-    outputs = {
-      { style = "bg:0 fg:1", format = "$output " },
-    },
+    builtin = function(ctx)
+      if (ctx.shell_running and not ctx.alt_screen) or ctx.adhoc_float then
+        return hexe.segment.builtin.randomdo({ style = "bg:0 fg:1", suffix = " " })
+      end
+      return nil
+    end,
   })
 
   -- Tab status segments - Center
   hx.mux.tabs.add_segment("center", {
     name = "tabs",
     priority = 1,
+    value = function(ctx)
+      return hexe.segment.tabs(ctx)
+    end,
     tab_title = "basename",
     active_style = "bg:1 fg:0",
     inactive_style = "bg:237 fg:250",
@@ -161,37 +162,84 @@ if section == nil or section == "mux" then
   })
 
   -- Tab status segments - Right
+  local rec_opts = {
+    scope = "pod",
+    out = "/tmp/hexe-active-pod.cast",
+    capture_input = false,
+  }
+
+  hx.mux.tabs.add_segment("right", {
+    name = "rec",
+    priority = 11,
+    value = function(_)
+      local st = hexe.record.status({ scope = "pod" })
+      if st and st.active then
+        return { { text = " REC ", style = "bg:1 fg:15 bold" } }
+      end
+      return { { text = " rec ", style = "bg:1 fg:15 bold" } }
+    end,
+    button = {
+      on_left_click = hx.record.toggle(rec_opts),
+      on_right_click = hx.record.stop(rec_opts),
+      active_when = "test \"$(hexe record status --scope pod 2>/dev/null)\" = 1",
+      left_style = "bg:2 fg:0 bold",
+      middle_style = "bg:3 fg:0 bold",
+      right_style = "bg:1 fg:15 bold",
+      inverse_on_hover = true,
+    },
+  })
+
+  hx.mux.tabs.add_segment("right", {
+    name = "virt",
+    priority = 12,
+    value = function(_)
+      local p = io.popen("systemd-detect-virt 2>/dev/null")
+      if not p then
+        return nil
+      end
+      local out = p:read("*a") or ""
+      p:close()
+      local virt = out:match("^%s*(.-)%s*$")
+      if virt == "" or virt == "none" then
+        return nil
+      end
+      if virt == "lxc" then
+        return { { text = " >> ", style = "bg:5 fg:0" } }
+      end
+      return { { text = " :: ", style = "bg:5 fg:0" } }
+    end,
+  })
+
   hx.mux.tabs.add_segment("right", {
     name = "cpu",
     priority = 15,
-    outputs = {
-      { style = "bg:1 fg:0", format = " $output " },
-      { style = "fg:1 bg:237", format = "" },
-    },
+    builtin = function(_)
+      return hx.segment.builtin.cpu({ style = "bg:1 fg:0", prefix = " ", suffix = " " })
+    end,
   })
 
   hx.mux.tabs.add_segment("right", {
     name = "mem",
     priority = 20,
-    outputs = {
-      { style = "bg:237 fg:250", format = " $output " },
-    },
+    builtin = function(_)
+      return hx.segment.builtin.mem({ style = "bg:237 fg:250", prefix = " ", suffix = " " })
+    end,
   })
 
   hx.mux.tabs.add_segment("right", {
     name = "battery",
     priority = 40,
-    outputs = {
-      { style = "bg:237 fg:250", format = "$output " },
-    },
+    builtin = function(_)
+      return hx.segment.builtin.battery({ style = "bg:237 fg:250", suffix = " " })
+    end,
   })
 
   hx.mux.tabs.add_segment("right", {
-    name = "jobs",
+    name = "jobs_lua",
     priority = 200,
-    outputs = {
-      { style = "fg:7", format = " $output" },
-    },
+    builtin = function(_)
+      return hx.segment.builtin.jobs({ style = "fg:7", prefix = " " })
+    end,
   })
 end
 
@@ -215,20 +263,20 @@ if section == nil or section == "ses" then
         key = "1",
         enabled = true,
         title = "opencode",
-        attributes = { per_cwd = true },
+        attributes = { per_cwd = true, inherit_env = true },
         command = "/env/bin/opencode",
       },
       {
         key = "2",
         enabled = true,
-        attributes = { per_cwd = true },
+        attributes = { per_cwd = true, inherit_env = true },
         title = "opencode",
         command = "/env/bin/opencode",
       },
       {
         key = "3",
         enabled = true,
-        attributes = { per_cwd = true },
+        attributes = { per_cwd = true, inherit_env = true },
         title = "claude",
         command = "/env/bin/bun x --package @anthropic-ai/claude-code claude",
       },
@@ -239,7 +287,7 @@ if section == nil or section == "ses" then
         position = { x = 100, y = 50 },
         size = { width = 40, height = 80 },
         padding = { x = 2, y = 1 },
-        attributes = { global = false, navigatable = true },
+        attributes = { global = false, navigatable = true, inherit_env = true },
         style = {
           shadow = { color = 236 },
           border = {
@@ -259,12 +307,15 @@ if section == nil or section == "ses" then
           },
           title = {
             name = "title",
+            value = function(ctx)
+              local t = hexe.segment.title(ctx)
+              return {
+                { text = " ", style = "bg:0 fg:1" },
+                { text = t, style = "bg:1 fg:0" },
+                { text = " ", style = "bg:0 fg:1" },
+              }
+            end,
             position = "topright",
-            outputs = {
-              { style = "bg:0 fg:1", format = "" },
-              { style = "bg:1 fg:0", format = " $output " },
-              { style = "bg:0 fg:1", format = "" },
-            },
           },
         },
       },
@@ -291,94 +342,101 @@ if section == nil or section == "shp" then
     {
       name = "ssh",
       priority = 60,
-      command = "echo //",
-      when = { bash = "[[ -n $SSH_CONNECTION ]]" },
-      outputs = {
-        { style = "bg:237 italic fg:15", format = " $output" },
-      },
+      value = "return ctx.env.SSH_CONNECTION and { { text = ' //', style = 'bg:237 italic fg:15' } } or nil",
     },
     {
       name = "hostname",
       priority = 15,
-      outputs = {
-        { style = "bg:237 italic fg:15", format = "$output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.hostname({ style = "bg:237 italic fg:15", suffix = " " })
+      end,
     },
     {
       name = "distro",
       priority = 10,
-      command = "/env/dot/.func/shell/distrologo",
-      when = { bash = "true" },
-      outputs = {
-        { style = "bg:1 fg:0", format = " $output" },
-      },
+      value = [[
+        local p = io.popen('/env/dot/.func/shell/distrologo')
+        if not p then return nil end
+        local raw = p:read('*a') or ''
+        p:close()
+        local t = raw:match('^%s*(.-)%s*$')
+        if not t or t == '' then return nil end
+        return { { text = ' ' .. t, style = 'bg:1 fg:0' } }
+      ]],
     },
     {
       name = "username",
       priority = 1,
-      outputs = {
-        { style = "bg:1 fg:0", format = "$output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.username({ style = "bg:1 fg:0", suffix = " " })
+      end,
     },
     {
       name = "direnv",
       priority = 25,
-      command = "echo ▓",
-      when = { bash = "[[ -n $DIRENV_DIR ]]" },
-      outputs = {
-        { style = "bg:1 fg:0", format = "$output" },
-      },
+      value = "return ctx.env.DIRENV_DIR and { { text = '▓', style = 'bg:1 fg:0' } } or nil",
     },
     {
       name = "sudo",
       priority = 6,
-      outputs = {
-        { style = "bold bg:240 fg:171", format = " ROOT " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.sudo({ style = "bold bg:240 fg:171" })
+      end,
     },
     {
       name = "tab",
-      priority = 30,
-      command = "echo $TAB | tr -d '/'",
-      when = { bash = "[[ -n $TAB && $TAB != '.reset-prompt' && $TAB != 'reset-prompt' ]]" },
-      outputs = {
-        { style = "fg:7", format = "|" },
-        { style = "bg:6 italic fg:0", format = " t: $output " },
-      },
-    },
-    {
-      name = "tab2",
       priority = 35,
-      command = "echo $(( $(tab -l 2> /dev/null | wc -l) - 1 ))",
-      when = { bash = "[[ ! -n $TAB ]] && [[ $(( $(tab -l 2> /dev/null | wc -l) - 1 )) -gt 0 ]]" },
-      outputs = {
-        { style = "fg:7", format = "|" },
-        { style = "bg:237 italic fg:15", format = " $output " },
-      },
+      value = [[
+        local tab = ((ctx and ctx.env and ctx.env.TAB) or ''):match('^%s*(.-)%s*$')
+        if tab ~= '' and tab ~= '.reset-prompt' and tab ~= 'reset-prompt' then
+          return nil
+        end
+        local p = io.popen('tab -l 2> /dev/null | wc -l')
+        if not p then return nil end
+        local raw = p:read('*a') or ''
+        p:close()
+        local total = tonumber((raw:match('^%s*(.-)%s*$')) or '0') or 0
+        local n = total - 1
+        if n <= 0 then return nil end
+        return {
+          { text = '|', style = 'fg:7' },
+          { text = ' ' .. tostring(n) .. ' ', style = 'bg:237 italic fg:15' },
+        }
+      ]],
     },
     {
       name = "status",
       priority = 3,
-      outputs = {
-        { style = "bg:0 fg:9", format = " $output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.status({ style = "bg:0 fg:9", prefix = " ", suffix = " " })
+      end,
     },
     {
       name = "container",
       priority = 50,
-      command = "/env/dot/.func/shell/incontainer",
-      when = { bash = "[[ $(systemd-detect-virt) != 'none' ]]" },
-      outputs = {
-        { style = "bg:0 fg:0", format = " " },
-        { style = "bg:5 fg:0", format = "$output" },
-      },
+      value = [[
+        local p = io.popen('systemd-detect-virt 2>/dev/null')
+        if not p then return nil end
+        local out = p:read('*a') or ''
+        p:close()
+        local virt = out:match('^%s*(.-)%s*$')
+        if virt == '' or virt == 'none' then return nil end
+        if virt == 'lxc' then
+          return {
+            { text = ' ', style = 'bg:0 fg:0' },
+            { text = ' >> ', style = 'bg:5 fg:0' },
+          }
+        end
+        return {
+          { text = ' ', style = 'bg:0 fg:0' },
+          { text = ' :: ', style = 'bg:5 fg:0' },
+        }
+      ]],
     },
     {
       name = "separator",
       priority = 20,
-      outputs = {
-        { style = "fg:7", format = "|" },
-      },
+      value = "return { { text = '|', style = 'fg:7' } }",
     },
   })
 
@@ -386,42 +444,30 @@ if section == nil or section == "shp" then
     {
       name = "pod_name",
       priority = 1,
-      when = { bash = "[[ -n $HEXE_POD_NAME ]]" },
-      outputs = {
-        { style = "fg:7", format = "|" },
-        { style = "bg:5 fg:0", format = " $output " },
-        { style = "fg:7", format = "||" },
-      },
-    },
-    {
-      name = "separator",
-      priority = 2,
-      when = { bash = "[[ -n $HEXE_POD_NAME ]]" },
-      outputs = {
-        { style = "fg:7", format = "|" },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.pod_name({ style = "bg:5 fg:0", prefix = "| ", suffix = " ||" })
+      end,
     },
     {
       name = "git_branch",
       priority = 4,
-      outputs = {
-        { style = "bg:1 fg:0", format = "  " },
-        { style = "bg:1 fg:0", format = "$output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.git_branch({ style = "bg:1 fg:0", prefix = "  ", suffix = " " })
+      end,
     },
     {
       name = "git_status",
       priority = 5,
-      outputs = {
-        { style = "bg:1 fg:0", format = "$output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.git_status({ style = "bg:1 fg:0", suffix = " " })
+      end,
     },
     {
       name = "directory",
       priority = 2,
-      outputs = {
-        { style = "bg:237 fg:15", format = "$output " },
-      },
+      builtin = function(_)
+        return hexe.segment.builtin.directory({ style = "bg:237 fg:15", suffix = " " })
+      end,
     },
   })
 end

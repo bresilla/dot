@@ -198,6 +198,7 @@ alias sw=$HOME/.config/profile/functions/wm/startw
 ###STARSHIP
 #source ~/.config/promptline
 # [[ -x "$(command -v starship)" ]] && eval "$(starship init zsh)" || source ~/.config/promptline
+export HEXE_UNRESTRICTED_CONFIG=1
 eval "$(hexe shp init zsh)"
 
 bindkey -M viins -s '^E' 'dir=$(hexe mux float --title="explorer" -c '\''yazi --cwd-file="$HEXE_FLOAT_RESULT_FILE"'\'') && cd "$dir"\n'

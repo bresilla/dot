@@ -7,6 +7,12 @@
             "url": "https://github.com/sigoden/aichat",
             "provider": "github"
         },
+        "/env/bin/asciinema": {
+            "path": "/env/bin/asciinema",
+            "remote_name": "asciinema-x86_64-unknown-linux-musl",
+            "url": "https://github.com/asciinema/asciinema",
+            "provider": "github"
+        },
         "/env/bin/bd": {
             "path": "/env/bin/bd",
             "remote_name": "bd",
@@ -31,22 +37,10 @@
             "url": "https://github.com/oven-sh/bun",
             "provider": "github"
         },
-        "/env/bin/chatgpt": {
-            "path": "/env/bin/chatgpt",
-            "remote_name": "chatgpt-linux-amd64",
-            "url": "https://github.com/kardolus/chatgpt-cli",
-            "provider": "github"
-        },
         "/env/bin/clipse": {
             "path": "/env/bin/clipse",
-            "remote_name": "clipse",
+            "remote_name": "clipse-linux-wayland-amd64",
             "url": "https://github.com/savedra1/clipse",
-            "provider": "github"
-        },
-        "/env/bin/codegpt": {
-            "path": "/env/bin/codegpt",
-            "remote_name": "CodeGPT-1.3.0-linux-amd64",
-            "url": "https://github.com/appleboy/CodeGPT",
             "provider": "github"
         },
         "/env/bin/codex": {
@@ -61,18 +55,6 @@
             "url": "https://github.com/charmbracelet/crush",
             "provider": "github"
         },
-        "/env/bin/deno": {
-            "path": "/env/bin/deno",
-            "remote_name": "denort",
-            "url": "https://github.com/denoland/deno",
-            "provider": "github"
-        },
-        "/env/bin/denort": {
-            "path": "/env/bin/denort",
-            "remote_name": "deno",
-            "url": "https://github.com/denoland/deno",
-            "provider": "github"
-        },
         "/env/bin/difi": {
             "path": "/env/bin/difi",
             "remote_name": "difi",
@@ -85,16 +67,16 @@
             "url": "https://github.com/sigoden/dufs",
             "provider": "github"
         },
+        "/env/bin/ec": {
+            "path": "/env/bin/ec",
+            "remote_name": "ec-linux-amd64",
+            "url": "https://github.com/chojs23/ec",
+            "provider": "github"
+        },
         "/env/bin/engram": {
             "path": "/env/bin/engram",
             "remote_name": "engram",
             "url": "https://github.com/Gentleman-Programming/engram",
-            "provider": "github"
-        },
-        "/env/bin/fabric": {
-            "path": "/env/bin/fabric",
-            "remote_name": "fabric",
-            "url": "https://github.com/danielmiessler/Fabric",
             "provider": "github"
         },
         "/env/bin/gh": {
@@ -105,7 +87,7 @@
         },
         "/env/bin/gh-dash": {
             "path": "/env/bin/gh-dash",
-            "remote_name": "gh-dash_v4.20.0_linux-amd64",
+            "remote_name": "gh-dash_v4.23.2_linux-amd64",
             "url": "https://github.com/dlvhdr/gh-dash",
             "provider": "github"
         },
@@ -113,12 +95,6 @@
             "path": "/env/bin/git-who",
             "remote_name": "git-who",
             "url": "https://github.com/sinclairtarget/git-who",
-            "provider": "github"
-        },
-        "/env/bin/goose": {
-            "path": "/env/bin/goose",
-            "remote_name": "goose",
-            "url": "https://github.com/block/goose",
             "provider": "github"
         },
         "/env/bin/ha": {
@@ -177,20 +153,8 @@
         },
         "/env/bin/oc": {
             "path": "/env/bin/oc",
-            "remote_name": "opencloud-4.0.0-linux-amd64",
+            "remote_name": "opencloud-5.2.0-linux-amd64",
             "url": "https://github.com/opencloud-eu/opencloud",
-            "provider": "github"
-        },
-        "/env/bin/ollama": {
-            "path": "/env/bin/ollama",
-            "remote_name": "libggml-cpu-x64.so",
-            "url": "https://github.com/ollama/ollama",
-            "provider": "github"
-        },
-        "/env/bin/opencode": {
-            "path": "/env/bin/opencode",
-            "remote_name": "opencode",
-            "url": "https://github.com/sst/opencode",
             "provider": "github"
         },
         "/env/bin/perles": {
@@ -207,7 +171,7 @@
         },
         "/env/bin/rerun": {
             "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.28.1-x86_64-unknown-linux-gnu",
+            "remote_name": "rerun-cli-0.30.1-x86_64-unknown-linux-gnu",
             "url": "https://github.com/rerun-io/rerun",
             "provider": "github"
         },

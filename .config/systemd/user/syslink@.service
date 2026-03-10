@@ -1,0 +1,21 @@
+[Unit]
+Description=Syslink Server (%i)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/bresilla
+
+ExecStart=/bin/sh -c '\
+HOST="$${1%-*}"; \
+PORT="$${1#*-}"; \
+exec /env/bin/sl server start \
+  -k %h/.ssh/sl_host_key \
+  --host "$$HOST" \
+  --port "$$PORT"' sh "%i"
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
