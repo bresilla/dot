@@ -1,5 +1,5 @@
 {
-    "default_path": "/env/bin",
+    "default_path": "$HOME/.local/bin",
     "bins": {
         "/env/bin/aichat": {
             "path": "/env/bin/aichat",
@@ -245,6 +245,18 @@
             "path": "/env/bin/wasm-pack",
             "remote_name": "wasm-pack",
             "url": "https://github.com/rustwasm/wasm-pack",
+            "provider": "github"
+        },
+        "/home/bresilla/$HOME/.local/bin/sentrux": {
+            "path": "/home/bresilla/$HOME/.local/bin/sentrux",
+            "remote_name": "sentrux-linux-x86_64",
+            "url": "https://github.com/sentrux/sentrux",
+            "provider": "github"
+        },
+        "/home/bresilla/data/code/bresilla/fol/$HOME/.local/bin/tree-sitter": {
+            "path": "/home/bresilla/data/code/bresilla/fol/$HOME/.local/bin/tree-sitter",
+            "remote_name": "tree-sitter",
+            "url": "https://github.com/tree-sitter/tree-sitter",
             "provider": "github"
         }
     }

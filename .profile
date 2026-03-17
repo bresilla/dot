@@ -8,7 +8,7 @@ export TEMP=/tmp
 
 #USER BINARIES AND SCRIPTS
 export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
-[[ -d "/env/bin" ]] && PATH="/env/bin:/opt/TurboVNC/bin/:$PATH"
+[[ -d "/env/bin" ]] && PATH="/env/bin:/opt/TurboVNC/bin:$PATH"
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"
 
@@ -22,6 +22,9 @@ fi
 
 #PKGCONFIGS
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+
+#HELIX
+export HELIX_RUNTIME=$HOME/.local/share/helix
 
 #---------------------------         LOC & TERM          --------------------------
 export COLORTERM=truecolor
@@ -109,3 +112,5 @@ if [ "$HOSTNAME" = core ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)
 fi
+
+if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

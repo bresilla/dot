@@ -116,6 +116,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.cmd([[au BufNewFile,BufRead *.envrc   set syntax=sh]])
+vim.cmd([[au BufNewFile,BufRead *.fol     set filetype=fol]])
 -- === FOCUS === "
 -- vim.cmd([[au WinLeave * set nocursorline nocursorcolumn norelativenumber]])
 -- vim.cmd([[au WinEnter * set cursorline cursorcolumn relativenumber]])
@@ -140,7 +141,7 @@ vim.keymap.set('n', '<C-a>', 'ggVG')
 vim.keymap.set('n', '<C-e>', function()
     local file = vim.fn.expand('%:p')
     local path = (file ~= '' and vim.fn.filereadable(file) == 1) and file or vim.fn.getcwd()
-    local result = vim.fn.system('hexe mux float --focus --title="explorer" --command \'yazi "' .. path .. '" --chooser-file="$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --title="explorer" --command \'yazi "' .. path .. '" --chooser-file="$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' and vim.fn.filereadable(result) == 1 then
         vim.cmd('edit ' .. vim.fn.fnameescape(result))
@@ -148,17 +149,30 @@ vim.keymap.set('n', '<C-e>', function()
 end, { silent = true, desc = "Open yazi explorer" })
 
 vim.keymap.set('n', '<C-t>', function()
-    local file = vim.fn.expand('%:p')
-    local path = (file ~= '' and vim.fn.filereadable(file) == 1) and file or vim.fn.getcwd()
-    local result = vim.fn.system('hexe mux float --focus --title="explorer" --size "20,98,-50,4" --command \'lis -Ac --selection-background=236 --cwd "${TOP_HEAD:-.}" -o "$HEXE_FLOAT_RESULT_FILE" "' .. path .. '"\'')
-    result = vim.trim(result)
-    if result ~= '' and vim.fn.filereadable(result) == 1 then
-        vim.cmd('edit ' .. vim.fn.fnameescape(result))
+    local result = vim.trim(vim.fn.system([[hexe mux float --title="explorer" --size "20,98,-50,4" --command 'lis -Ac --selection-background=236 --cwd=${TOP_HEAD:-.} -o "$HEXE_FLOAT_RESULT_FILE"']]))
+    if result == '' then
+        return
+    end
+
+    local lines = vim.split(result, '\n', { trimempty = true })
+    local selected = vim.trim(lines[#lines] or result):gsub('\r', '')
+    if selected:sub(1, 1) ~= '/' then
+        local base = vim.env.TOP_HEAD
+        if not base or base == '' then
+            base = vim.fn.getcwd()
+        end
+        selected = vim.fn.fnamemodify(base .. '/' .. selected, ':p')
+    end
+
+    if vim.fn.filereadable(selected) == 1 or vim.fn.isdirectory(selected) == 1 then
+        vim.cmd('edit ' .. vim.fn.fnameescape(selected))
+    else
+        vim.notify('Could not open lis selection: ' .. selected, vim.log.levels.WARN)
     end
 end, { silent = true, desc = "Open lis explorer" })
 
 vim.keymap.set('n', '<C-p>', function()
-    local result = vim.fn.system('hexe mux float --focus --title="picker" --command \'tv find > "$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --title="picker" --command \'tv find > "$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' and vim.fn.filereadable(result) == 1 then
         vim.cmd('edit ' .. vim.fn.fnameescape(result))
@@ -166,7 +180,7 @@ vim.keymap.set('n', '<C-p>', function()
 end, { silent = true, desc = "Pick file with tv find" })
 
 vim.keymap.set('n', '<C-f>', function()
-    local result = vim.fn.system('hexe mux float --focus --title="finder" --command \'tv text > "$HEXE_FLOAT_RESULT_FILE"\'')
+    local result = vim.fn.system('hexe mux float --title="finder" --command \'tv text > "$HEXE_FLOAT_RESULT_FILE"\'')
     result = vim.trim(result)
     if result ~= '' then
         local file, line, col = result:match('([^:]+):(%d+):(%d+)')
@@ -182,7 +196,7 @@ end, { silent = true, desc = "Find text with tv text" })
 
 vim.keymap.set('n', '<C-o>', function()
     local dir = vim.fn.getcwd()
-    vim.fn.system('hexe mux float --focus --title="replace" --command \'serpl -p "' .. dir .. '"\'')
+    vim.fn.system('hexe mux float --title="replace" --command \'serpl -p "' .. dir .. '"\'')
 end, { silent = true, desc = "Search and replace with serpl" })
 
 vim.keymap.set('n', '<C-b>', function()

@@ -1,4 +1,4 @@
-#files: 1176	version: 5.9
+#files: 1166	version: 5.9
 
 _comps=(
 '-' '_precommand'
@@ -192,7 +192,6 @@ _comps=(
 'chdir' '_cd'
 'chflags' '_chflags'
 'chfn' '_users'
-'chg' '_mercurial'
 'chgrp' '_chown'
 'chimera' '_webbrowser'
 'chkconfig' '_chkconfig'
@@ -352,7 +351,6 @@ _comps=(
 'dnf-2' '_dnf'
 'dnf-3' '_dnf'
 'doas' '_doas'
-'docker' '_docker'
 'docpad' '_docpad'
 'domainname' '_yp'
 'do-release-upgrade' '_do-release-upgrade'
@@ -364,7 +362,6 @@ _comps=(
 'dpkg-buildpackage' '_dpkg-buildpackage'
 'dpkg-cross' '_dpkg-cross'
 'dpkg-deb' '_dpkg'
-'dpkg-parsechangelog' '_dpkg-parsechangelog'
 'dpkg-query' '_dpkg'
 'dpkg-reconfigure' '_dpkg'
 'dpkg-repack' '_dpkg-repack'
@@ -732,7 +729,6 @@ _comps=(
 'hello' '_hello'
 'help' '_sccs'
 'hexdump' '_hexdump'
-'hg' '_mercurial'
 'hilite' '_precommand'
 'histed' '_zed'
 'history' '_fc'
@@ -746,8 +742,6 @@ _comps=(
 'http' '_httpie'
 'https' '_httpie'
 'hwinfo' '_hwinfo'
-'_hx' '_hx'
-'hx' '_hx'
 'ibus' '_ibus'
 'iceweasel' '_mozilla'
 'icombine' '_ispell'
@@ -1021,7 +1015,6 @@ _comps=(
 'mpc' '_mpc'
 'mplayer' '_mplayer'
 'mpstat' '_sysstat'
-'mpv' '_mpv'
 'mr' '_myrepos'
 'mrd' '_mtools'
 'mread' '_mtools'
@@ -1897,7 +1890,6 @@ _comps=(
 'ypwhich' '_yp'
 'ypxfr' '_yp'
 'ytalk' '_other_accounts'
-'yt-dlp' '_yt-dlp'
 'yum' '_yum'
 'yumdb' '_yum'
 'zargs' '_zargs'
@@ -2009,7 +2001,6 @@ _patcomps=(
 )
 
 _postpatcomps=(
-'*' '_python-argcomplete'
 '_*' '_compadd'
 'c++-*' '_gcc'
 'g++-*' '_gcc'
@@ -2110,13 +2101,11 @@ autoload -Uz _afew _age _android _anytype-cli _archlinux-java \
             _udisksctl _ufw _uuidd _uuidgen _uuidparse \
             _virtualbox _vnstat _wemux _wg-quick _xsel \
             _yarn _zcash-cli _bootctl _busctl _bwrap \
-            _code _curl _dkms _docker _dpkg-parsechangelog \
-            _fd _git-flow _hostnamectl _hx _journalctl \
-            _kernel-install _localectl _loginctl _mercurial _mpv \
-            _networkctl _oomctl _powerprofilesctl _python-argcomplete _resolvectl \
-            _sd_hosts_or_user_at_host _sd_outputmodes _sd_unit_files _systemctl _systemd \
-            _systemd-analyze _systemd-delta _systemd-inhibit _systemd-path _systemd-run \
-            _systemd-tmpfiles _timedatectl _ubuntu-report _udevadm _yt-dlp \
+            _curl _fd _hostnamectl _journalctl _kernel-install \
+            _localectl _loginctl _networkctl _oomctl _powerprofilesctl \
+            _resolvectl _sd_hosts_or_user_at_host _sd_outputmodes _sd_unit_files _systemctl \
+            _systemd _systemd-analyze _systemd-delta _systemd-inhibit _systemd-path \
+            _systemd-run _systemd-tmpfiles _timedatectl _ubuntu-report _udevadm \
             _cdr _floppy _logical_volumes _lscfg _lsdev \
             _lslv _lspv _lsvg _object_classes _physical_volumes \
             _smit _volume_groups _bsdconfig _bsd_disks _bsdinstall \

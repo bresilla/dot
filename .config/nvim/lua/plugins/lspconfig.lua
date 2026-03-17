@@ -120,6 +120,13 @@ return {
     })
     vim.lsp.enable('lua_ls')
 
+    vim.lsp.config('fol', {
+      cmd = { 'fol', 'tool', 'lsp' },
+      filetypes = { 'fol' },
+      root_markers = { 'fol.work.yaml', 'package.yaml', '.git' },
+    })
+    vim.lsp.enable('fol')
+
     -- Stig - Documentation checker for C/C++
     -- vim.lsp.enable('stig')
   end

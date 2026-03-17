@@ -31,7 +31,7 @@ inter() {
         tmux detach-client
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
-            tmux new-session -d -s "$session" -c "$current_path" -E bash -c "/env/dot/.func/run/inter $argc_val $current_path $context $pane_id $view"
+            tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$HOME/.config/profile/functions/run/inter $argc_val $current_path $context $pane_id $view"
             tmux set-option -t "$session" status off
             tmux set-option -t "$session" @popup_parent_session "$parent_session"
             tmux set-option -t "$session" @popup_parent_window "$parent_window"

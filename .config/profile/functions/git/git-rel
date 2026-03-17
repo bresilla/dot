@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 [ "$(git rev-parse --abbrev-ref HEAD)" != "develop" ] && { echo "Must be on develop branch"; exit 1; }
-VERI="$HOME/.func/code/veri"
+VERI="$HOME/.config/profile/functions/code/veri"
 type="$1"
 original_branch=$(git rev-parse --abbrev-ref HEAD)
 trap 'git checkout "$original_branch" >/dev/null 2>&1 || true' EXIT

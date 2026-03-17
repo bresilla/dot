@@ -106,7 +106,7 @@ alias nixenv="nix shell --experimental-features 'nix-command flakes' github:NixO
 
 ##BIN
 # alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"
-alias bino="BIN_CONFIG=/home/bresilla/.config/bin/other.json /env/bin/bin"
+alias bino="BIN_CONFIG=/home/bresilla/.config/bin/other.json bin"
 
 ##ROBO
 alias ros="ros2"

@@ -307,3 +307,6 @@ clear() {
 #--------------------------------------------------------------------------------------------------------------------
 
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+# opencode
+export PATH=/home/bresilla/.opencode/bin:$PATH
