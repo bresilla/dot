@@ -62,11 +62,6 @@ create_files(){
     printf "foreground\t$fore\nbackground\t$back\ncursor\t$col1\n\n" > $HOME/.cache/wal/colors.conf
     awk '{print "color" NR-1 "\t " $0}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.conf
 
-    # COLORS_W.CONF (used by HYPR)
-    printf "\$foreground=rgb(${fore//#})\n\$background=rgb(${back//#})\n\n" > $HOME/.cache/wal/colors_hypr_2.conf
-    awk '{print "$color" NR-1 "=rgb("substr($0, 2)")"}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors_hypr_2.conf
-    cp $HOME/.cache/wal/colors_hypr_2.conf $HOME/.cache/wal/colors_hypr.conf
-
     # COLORS.VIM
     printf "let foreground= \"$fore\"\nlet background= \"$back\"\n" > $HOME/.cache/wal/colors.vim
     awk '{print "let color" NR-1 "= \"" $0 "\""}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.vim
@@ -74,6 +69,22 @@ create_files(){
     # SEQUENCES (escape codes sent to all '/dev/pts/*')
     printf "]10;$fore\\]11;$back\\]12;$col1\\]13;$back\\]17;$col1\\]19;$back\\" > $HOME/.cache/wal/sequences
     awk '{print "]4;" NR-1 ";" $0"\\"}' ORS='' $HOME/.cache/wal/colors >> $HOME/.cache/wal/sequences
+
+    # COLORS.LUA (used by Lua-based configs: Neovim, AwesomeWM, etc.)
+    printf "return {\n" > $HOME/.cache/wal/colors.lua
+    printf "  wallpaper = \"$wallpaper\",\n" >> $HOME/.cache/wal/colors.lua
+    printf "  theme = \"$theme\",\n\n" >> $HOME/.cache/wal/colors.lua
+
+    printf "  special = {\n" >> $HOME/.cache/wal/colors.lua
+    printf "    background = \"$back\",\n" >> $HOME/.cache/wal/colors.lua
+    printf "    foreground = \"$fore\",\n" >> $HOME/.cache/wal/colors.lua
+    printf "    cursor = \"$col1\",\n" >> $HOME/.cache/wal/colors.lua
+    printf "  },\n\n" >> $HOME/.cache/wal/colors.lua
+
+    printf "  colors = {\n" >> $HOME/.cache/wal/colors.lua
+    awk '{print "    color" NR-1 " = \"" $0 "\","}' $HOME/.cache/wal/colors >> $HOME/.cache/wal/colors.lua
+    printf "  },\n" >> $HOME/.cache/wal/colors.lua
+    printf "}\n" >> $HOME/.cache/wal/colors.lua
 
     #update logo colors
     sed -i "s/fill=\"#\([^\"]*\)\"/fill=\"$col1\"/" /home/bresilla/.config/bresilla.svg

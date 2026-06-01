@@ -26,7 +26,7 @@ Scope {
         }
     }
 
-    property var focusedWorkspace: Hyprland.focusedWorkspace
+    property var activeWorkspace: currentMonitor?.activeWorkspace
     property int currentWorkspace: 1
     property bool shouldShowOSD: false
     property real morphProgress: 0.0
@@ -92,15 +92,17 @@ Scope {
         onTriggered: morphOutAnim.start()
     }
 
-    onFocusedWorkspaceChanged: {
-        if (!focusedWorkspace) return;
+    function showWorkspace(workspace) {
+        if (!workspace) return;
 
-        const wsId = focusedWorkspace.id;
-        const monName = focusedWorkspace.monitor?.name ?? "";
-        const isThisMonitor = monName === currentMonitor?.name;
+        const wsId = workspace.id;
+        showWorkspaceId(wsId);
+    }
 
-        if (!isThisMonitor) {
-            if (shouldShowOSD) hideThisMonitorOSD();
+    function showWorkspaceId(wsId, force) {
+        if (!wsId || wsId <= 0) return;
+
+        if (!force && !shouldShowOSD && lastShownWorkspace === wsId) {
             return;
         }
 
@@ -132,6 +134,36 @@ Scope {
 
         hideTimer.restart();
         lastShownWorkspace = wsId;
+    }
+
+    onActiveWorkspaceChanged: showWorkspace(activeWorkspace)
+
+    function showFocusedMonitorEvent(event) {
+        const data = event.data ?? "";
+        const parts = data.split(",");
+
+        if (parts.length < 2 || parts[0] !== currentMonitor?.name) {
+            return;
+        }
+
+        const wsId = parseInt(parts[1], 10);
+
+        if (!Number.isNaN(wsId)) {
+            showWorkspaceId(wsId, true);
+        }
+    }
+
+    Connections {
+        target: Hyprland
+        function onRawEvent(event) {
+            if (event.name === "workspace" || event.name === "workspacev2"
+                    || event.name === "moveworkspace") {
+                Hyprland.refreshMonitors();
+                Hyprland.refreshWorkspaces();
+            } else if (event.name === "focusedmonv2") {
+                showFocusedMonitorEvent(event);
+            }
+        }
     }
 
     PanelWindow {

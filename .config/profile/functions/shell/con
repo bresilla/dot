@@ -43,8 +43,9 @@ rdp() {
         "/sound:sys:alsa" \
         "/mouse:relative:on" \
         "+mouse-relative" \
+        "-grab-keyboard" \
         "/gfx:AVC444" \
-        "/udp:disable" \
+        "/rfx" \
         "/network:lan" \
         "/cert:tofu" \
         "/sec:tls" \

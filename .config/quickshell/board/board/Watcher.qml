@@ -16,6 +16,58 @@ Scope {
     property bool mouseHasMoved: false
     property point lastMousePos: Qt.point(0, 0)
     property bool windowMoving: false
+    property int activeWorkspaceId: focusedWorkspace?.id ?? 1
+    property string activeWorkspaceMonitor: focusedWorkspace?.monitor?.name ?? ""
+    property int activeWorkspaceWindows: -1
+
+    function isActiveWorkspaceOnThisMonitor() {
+        return currentMonitor && activeWorkspaceMonitor === currentMonitor.name
+    }
+
+    function isActiveWorkspaceEmpty() {
+        return activeWorkspaceWindows === 0
+    }
+
+    function refreshActiveWorkspaceState(callback) {
+        Proc.runCommand("boardActiveWorkspace", ["hyprctl", "activeworkspace", "-j"], function(stdout, exitCode) {
+            if (exitCode !== 0) {
+                if (typeof callback === "function") callback(false)
+                return
+            }
+
+            try {
+                const workspace = JSON.parse(stdout)
+                activeWorkspaceId = workspace.id ?? focusedWorkspace?.id ?? 1
+                activeWorkspaceMonitor = workspace.monitor ?? focusedWorkspace?.monitor?.name ?? ""
+                activeWorkspaceWindows = workspace.windows ?? -1
+                if (typeof callback === "function") callback(true)
+            } catch(e) {
+                if (typeof callback === "function") callback(false)
+            }
+        }, 0)
+    }
+
+    function updateBoardForFocusedWorkspace() {
+        if (boardLoader.item && boardLoader.item.isPinned) {
+            return
+        }
+
+        const isOnThisMonitor = isActiveWorkspaceOnThisMonitor()
+        const isEmpty = isActiveWorkspaceEmpty()
+
+        if (windowMoving) {
+            return
+        }
+
+        if (isOnThisMonitor && isEmpty) {
+            shouldShowBoard = true
+            mouseHasMoved = false
+            lastMousePos = Qt.point(0, 0)
+            hideTimer.restart()
+        } else {
+            shouldShowBoard = false
+        }
+    }
     
     Connections {
         target: boardLoader.item
@@ -30,10 +82,11 @@ Scope {
                     hideTimer.stop()
                     shouldShowBoard = true
                 } else {
-                    const isEmpty = focusedWorkspace?.lastIpcObject?.windows === 0
-                    if (!isEmpty) {
-                        shouldShowBoard = false
-                    }
+                    refreshActiveWorkspaceState(function() {
+                        if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor()) {
+                            shouldShowBoard = false
+                        }
+                    })
                 }
             }
         }
@@ -79,31 +132,20 @@ Scope {
                     }
                 }
                 Hyprland.refreshWorkspaces()
+                refreshActiveWorkspaceState(function() {
+                    if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor()) {
+                        shouldShowBoard = false
+                    }
+                })
             }
         }
     }
     
     onFocusedWorkspaceChanged: {
         if (previousWorkspace !== currentWorkspace && previousWorkspace !== 0) {
-            const isOnThisMonitor = focusedWorkspace && focusedWorkspace.monitor === currentMonitor
-            const isEmpty = focusedWorkspace?.lastIpcObject?.windows === 0
-            
-            if (boardLoader.item && boardLoader.item.isPinned) {
-                return
-            }
-            
-            if (windowMoving) {
-                return
-            }
-            
-            if (isOnThisMonitor && isEmpty) {
-                shouldShowBoard = true
-                mouseHasMoved = false
-                lastMousePos = Qt.point(0, 0)
-                hideTimer.restart()
-            } else {
-                shouldShowBoard = false
-            }
+            refreshActiveWorkspaceState(function() {
+                updateBoardForFocusedWorkspace()
+            })
         }
         previousWorkspace = currentWorkspace
     }
@@ -160,5 +202,6 @@ Scope {
     
     Component.onCompleted: {
         Hyprland.refreshWorkspaces()
+        refreshActiveWorkspaceState()
     }
 }

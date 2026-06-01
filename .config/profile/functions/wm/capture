@@ -24,8 +24,10 @@ image() {
         rm "$TEXT_FILE"
         rm "$screenshot_file"
     else
-        grim -g "$(slurp)" -t ppm - | satty --filename - --output-filename $screenshot_file
-        wl-copy < $screenshot_file
+        # grim -g "$(slurp)" -t ppm - | satty --filename - --output-filename $screenshot_file
+        grim -g "$(slurp)" $screenshot_file && wl-copy < $screenshot_file
+        satty --filename $screenshot_file --output-filename $screenshot_file
+        # wl-copy < $screenshot_file
     fi
 }
 

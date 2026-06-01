@@ -11,6 +11,9 @@ Scope {
     required property int monitorWidth
     required property real lineBarWidth
     required property bool barOnRight
+    property var workspaceRows: []
+    property string monitorsJson: ""
+    property string workspacesJson: ""
 
     FileView {
         id: wal
@@ -29,15 +32,96 @@ Scope {
     Connections {
         target: Hyprland
         function onRawEvent(event) {
-            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
-                Hyprland.refreshWorkspaces();
+            if (event.name === "workspace" || event.name === "workspacev2"
+                    || event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow"
+                    || event.name === "moveworkspace" || event.name === "createworkspace" || event.name === "destroyworkspace") {
+                refreshDebounce.restart();
+            }
+        }
+    }
+
+    Timer {
+        id: refreshDebounce
+        interval: 50
+        onTriggered: refreshWorkspaceRows()
+    }
+
+    Process {
+        id: monitorsProc
+        command: ["hyprctl", "monitors", "-j"]
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root.monitorsJson = text || "";
+                root.buildWorkspaceRows();
             }
         }
     }
 
     Process {
-        id: wsSwitchProc
+        id: workspacesProc
+        command: ["hyprctl", "workspaces", "-j"]
         running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                root.workspacesJson = text || "";
+                root.buildWorkspaceRows();
+            }
+        }
+    }
+
+    Process {
+        id: dispatchProc
+        running: false
+    }
+
+    function refreshWorkspaceRows() {
+        if (!monitorsProc.running) monitorsProc.running = true;
+        if (!workspacesProc.running) workspacesProc.running = true;
+    }
+
+    function workspaceBase(workspaceId) {
+        if (!workspaceId || workspaceId <= 0) return 1;
+        return workspaceId - ((workspaceId - 1) % 10);
+    }
+
+    function dispatchWorkspace(target) {
+        dispatchProc.command = ["hyprctl", "dispatch", "workspace", String(target)];
+        dispatchProc.running = true;
+    }
+
+    function buildWorkspaceRows() {
+        if (!monitorsJson || !workspacesJson) return;
+
+        try {
+            const monitors = JSON.parse(monitorsJson);
+            const workspaces = JSON.parse(workspacesJson);
+            const monitorName = currentMonitor?.name ?? "";
+            const monitor = monitors.find(mon => mon.name === monitorName);
+            const activeId = monitor?.activeWorkspace?.id ?? currentMonitor?.activeWorkspace?.id ?? 1;
+            const base = workspaceBase(activeId);
+            const rows = [];
+
+            for (let offset = 0; offset < 10; offset++) {
+                const id = base + offset;
+                const matches = workspaces.filter(ws => ws.id === id && ws.monitor === monitorName);
+                let windows = 0;
+
+                for (const ws of matches) {
+                    windows = Math.max(windows, ws.windows ?? 0);
+                }
+
+                rows.push({
+                    id: id,
+                    active: id === activeId,
+                    windows: windows
+                });
+            }
+
+            workspaceRows = rows;
+        } catch (e) {
+            console.warn("line workspace parse error:", e);
+        }
     }
 
     PanelWindow {
@@ -70,15 +154,13 @@ Scope {
                 height: monitorHeight * 0.5
                 spacing: 10
                 Repeater {
-                    model: Hyprland.workspaces
+                    model: root.workspaceRows
                     delegate: Rectangle {
-                        required property HyprlandWorkspace modelData
-                        readonly property bool isSpecial: modelData.id < 0 || (modelData.name && modelData.name.startsWith("special:"))
-                        readonly property bool isOnThisMonitor: modelData.monitor?.name === currentMonitor?.name
-                        readonly property bool hasWindows: modelData.lastIpcObject && modelData.lastIpcObject.windows > 0
-                        visible: !isSpecial && isOnThisMonitor
+                        required property var modelData
+                        readonly property bool hasWindows: modelData.windows > 0
+                        visible: true
                         width: wsContainer.width
-                        height: visible ? wsContainer.height / 10 : 0
+                        height: wsContainer.height / 10
                         radius: 4
                         color: modelData.active ? wal.adapter.colors["color1"] :
                                hasWindows ? wal.adapter.colors["color244"] :
@@ -93,7 +175,7 @@ Scope {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: modelData.activate()
+                            onClicked: root.dispatchWorkspace(modelData.id)
                         }
                     }
                 }
@@ -105,14 +187,13 @@ Scope {
                 acceptedButtons: Qt.NoButton
                 onWheel: wheel => {
                     const direction = wheel.angleDelta.y > 0 ? "r-1" : "r+1";
-                    wsSwitchProc.command = ["hyprctl", "dispatch", "workspace", direction];
-                    wsSwitchProc.running = true;
+                    root.dispatchWorkspace(direction);
                 }
             }
         }
 
         Component.onCompleted: {
-            Hyprland.refreshWorkspaces();
+            refreshWorkspaceRows();
         }
     }
 }
