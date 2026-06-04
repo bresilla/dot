@@ -56,3 +56,6 @@ FIX.md
 build
 install
 log
+**/.venv/
+GAP.md
+.agent-handoff/

@@ -29,6 +29,49 @@ use_nvidia() {
     export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
     export __GLX_VENDOR_LIBRARY_NAME=nvidia
     export __VK_LAYER_NV_optimus=NVIDIA_only
+
+    # Snapshot the running NVIDIA driver version for flakes that need to read
+    # it through `builtins.getEnv` under `--impure`.
+    if [ -r /proc/driver/nvidia/version ]; then
+        export NVIDIA_VERSION="$(head -n1 /proc/driver/nvidia/version \
+            | sed -nE 's/.*  ([0-9.]+)  Release.*/\1/p')"
+    fi
+}
+
+use_display() {
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+    # Trust WAYLAND_DISPLAY only when it names a live socket. Over SSH /
+    # waypipe / nested shells it can leak through while pointing at nothing.
+    if [ -z "${WL_SOCKET:-}" ]; then
+        if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+            export WL_SOCKET="$WAYLAND_DISPLAY"
+        else
+            export WL_SOCKET="wayland-0"
+        fi
+    fi
+
+    # Prefer native Wayland only when the resolved socket exists; otherwise
+    # use X11/XWayland. Override before direnv loads with BACKEND=x11/wayland.
+    if [ -z "${BACKEND:-}" ]; then
+        if [ -S "$XDG_RUNTIME_DIR/$WL_SOCKET" ]; then
+            export BACKEND="wayland"
+        else
+            export BACKEND="x11"
+        fi
+    fi
+
+    export RUN_WITH="${RUN_WITH:-nixVulkan}"
+
+    if [ "$BACKEND" = "wayland" ]; then
+        unset WAYLAND_SOCKET
+        export WAYLAND_DISPLAY="$WL_SOCKET"
+        unset DISPLAY
+    else
+        unset WAYLAND_DISPLAY
+        unset WAYLAND_SOCKET
+        export DISPLAY="${DISPLAY:-:1}"
+    fi
 }
 
 layout_pixi() {

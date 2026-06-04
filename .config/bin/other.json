@@ -1,262 +1,268 @@
 {
     "default_path": "$HOME/.local/bin",
     "bins": {
-        "/env/bin/aichat": {
-            "path": "/env/bin/aichat",
+        "handoff": {
+            "path": "$HOME/.local/bin/handoff",
+            "remote_name": "handoff",
+            "url": "https://github.com/TStansel/handoff",
+            "provider": "github"
+        },
+        "aichat": {
+            "path": "$HOME/.local/bin/aichat",
             "remote_name": "aichat",
             "url": "https://github.com/sigoden/aichat",
             "provider": "github"
         },
-        "/env/bin/asciinema": {
-            "path": "/env/bin/asciinema",
+        "asciinema": {
+            "path": "$HOME/.local/bin/asciinema",
             "remote_name": "asciinema-x86_64-unknown-linux-musl",
             "url": "https://github.com/asciinema/asciinema",
             "provider": "github"
         },
-        "/env/bin/bd": {
-            "path": "/env/bin/bd",
+        "bd": {
+            "path": "$HOME/.local/bin/bd",
             "remote_name": "bd",
             "url": "https://github.com/steveyegge/beads",
             "provider": "github"
         },
-        "/env/bin/bibiman-musl": {
-            "path": "/env/bin/bibiman-musl",
+        "bibiman": {
+            "path": "$HOME/.local/bin/bibiman",
             "remote_name": "bibiman-x86_64-musl",
             "url": "https://codeberg.org/lukeflo/bibiman",
             "provider": "codeberg"
         },
-        "/env/bin/buf": {
-            "path": "/env/bin/buf",
+        "buf": {
+            "path": "$HOME/.local/bin/buf",
             "remote_name": "buf-Linux-x86_64",
             "url": "https://github.com/bufbuild/buf",
             "provider": "github"
         },
-        "/env/bin/bun": {
-            "path": "/env/bin/bun",
+        "bun": {
+            "path": "$HOME/.local/bin/bun",
             "remote_name": "bun",
             "url": "https://github.com/oven-sh/bun",
             "provider": "github"
         },
-        "/env/bin/clipse": {
-            "path": "/env/bin/clipse",
+        "clipse": {
+            "path": "$HOME/.local/bin/clipse",
             "remote_name": "clipse-linux-wayland-amd64",
             "url": "https://github.com/savedra1/clipse",
             "provider": "github"
         },
-        "/env/bin/codex": {
-            "path": "/env/bin/codex",
+        "codex": {
+            "path": "$HOME/.local/bin/codex",
             "remote_name": "codex-x86_64-unknown-linux-musl",
             "url": "https://github.com/openai/codex",
             "provider": "github"
         },
-        "/env/bin/crush": {
-            "path": "/env/bin/crush",
+        "crush": {
+            "path": "$HOME/.local/bin/crush",
             "remote_name": "crush",
             "url": "https://github.com/charmbracelet/crush",
             "provider": "github"
         },
-        "/env/bin/difi": {
-            "path": "/env/bin/difi",
+        "difi": {
+            "path": "$HOME/.local/bin/difi",
             "remote_name": "difi",
             "url": "https://github.com/oug-t/difi",
             "provider": "github"
         },
-        "/env/bin/dufs": {
-            "path": "/env/bin/dufs",
+        "dufs": {
+            "path": "$HOME/.local/bin/dufs",
             "remote_name": "dufs",
             "url": "https://github.com/sigoden/dufs",
             "provider": "github"
         },
-        "/env/bin/ec": {
-            "path": "/env/bin/ec",
+        "ec": {
+            "path": "$HOME/.local/bin/ec",
             "remote_name": "ec-linux-amd64",
             "url": "https://github.com/chojs23/ec",
             "provider": "github"
         },
-        "/env/bin/engram": {
-            "path": "/env/bin/engram",
+        "engram": {
+            "path": "$HOME/.local/bin/engram",
             "remote_name": "engram",
             "url": "https://github.com/Gentleman-Programming/engram",
             "provider": "github"
         },
-        "/env/bin/gh": {
-            "path": "/env/bin/gh",
+        "gh": {
+            "path": "$HOME/.local/bin/gh",
             "remote_name": "gh",
             "url": "https://github.com/cli/cli",
             "provider": "github"
         },
-        "/env/bin/gh-dash": {
-            "path": "/env/bin/gh-dash",
+        "gh-dash": {
+            "path": "$HOME/.local/bin/gh-dash",
             "remote_name": "gh-dash_v4.23.2_linux-amd64",
             "url": "https://github.com/dlvhdr/gh-dash",
             "provider": "github"
         },
-        "/env/bin/git-who": {
-            "path": "/env/bin/git-who",
+        "git-who": {
+            "path": "$HOME/.local/bin/git-who",
             "remote_name": "git-who",
             "url": "https://github.com/sinclairtarget/git-who",
             "provider": "github"
         },
-        "/env/bin/ha": {
-            "path": "/env/bin/ha",
+        "ha": {
+            "path": "$HOME/.local/bin/ha",
             "remote_name": "ha_amd64",
             "url": "https://github.com/home-assistant/cli",
             "provider": "github"
         },
-        "/env/bin/hugo": {
-            "path": "/env/bin/hugo",
+        "hugo": {
+            "path": "$HOME/.local/bin/hugo",
             "remote_name": "hugo",
             "url": "https://github.com/gohugoio/hugo",
             "provider": "github"
         },
-        "/env/bin/hyperfine": {
-            "path": "/env/bin/hyperfine",
-            "remote_name": "hyperfine",
-            "url": "https://github.com/sharkdp/hyperfine",
-            "provider": "github"
-        },
-        "/env/bin/hyprdynamicmonitors": {
-            "path": "/env/bin/hyprdynamicmonitors",
-            "remote_name": "hyprdynamicmonitors",
-            "url": "https://github.com/fiffeek/hyprdynamicmonitors",
-            "provider": "github"
-        },
-        "/env/bin/lockbook": {
-            "path": "/env/bin/lockbook",
+        "lockbook": {
+            "path": "$HOME/.local/bin/lockbook",
             "remote_name": "lockbook-cli-linux",
             "url": "https://github.com/lockbook/lockbook",
             "provider": "github"
         },
-        "/env/bin/mods": {
-            "path": "/env/bin/mods",
+        "mods": {
+            "path": "$HOME/.local/bin/mods",
             "remote_name": "mods",
             "url": "https://github.com/charmbracelet/mods",
             "provider": "github"
         },
-        "/env/bin/names": {
-            "path": "/env/bin/names",
+        "names": {
+            "path": "$HOME/.local/bin/names",
             "remote_name": "names-x86_64-unknown-linux-musl",
             "url": "https://github.com/fnichol/names",
             "provider": "github"
         },
-        "/env/bin/nom": {
-            "path": "/env/bin/nom",
+        "nom": {
+            "path": "$HOME/.local/bin/nom",
             "remote_name": "nom",
             "url": "https://github.com/guyfedwards/nom",
             "provider": "github"
         },
-        "/env/bin/nostromo": {
-            "path": "/env/bin/nostromo",
+        "nostromo": {
+            "path": "$HOME/.local/bin/nostromo",
             "remote_name": "nostromo",
             "url": "https://github.com/pokanop/nostromo",
             "provider": "github"
         },
-        "/env/bin/oc": {
-            "path": "/env/bin/oc",
-            "remote_name": "opencloud-5.2.0-linux-amd64",
+        "oc": {
+            "path": "$HOME/.local/bin/oc",
+            "remote_name": "opencloud-6.1.0-linux-amd64",
             "url": "https://github.com/opencloud-eu/opencloud",
             "provider": "github"
         },
-        "/env/bin/perles": {
-            "path": "/env/bin/perles",
+        "perles": {
+            "path": "$HOME/.local/bin/perles",
             "remote_name": "perles",
             "url": "https://github.com/zjrosen/perles",
             "provider": "github"
         },
-        "/env/bin/rargs": {
-            "path": "/env/bin/rargs",
+        "presenterm": {
+            "path": "$HOME/.local/bin/presenterm",
+            "remote_name": "presenterm",
+            "url": "https://github.com/mfontanini/presenterm",
+            "provider": "github"
+        },
+        "rargs": {
+            "path": "$HOME/.local/bin/rargs",
             "remote_name": "rargs",
             "url": "https://github.com/lotabout/rargs",
             "provider": "github"
         },
-        "/env/bin/rerun": {
-            "path": "/env/bin/rerun",
-            "remote_name": "rerun-cli-0.30.1-x86_64-unknown-linux-gnu",
+        "rerun": {
+            "path": "$HOME/.local/bin/rerun",
+            "remote_name": "rerun-cli-0.32.0-x86_64-unknown-linux-gnu",
             "url": "https://github.com/rerun-io/rerun",
             "provider": "github"
         },
-        "/env/bin/rustscan": {
-            "path": "/env/bin/rustscan",
+        "rustscan": {
+            "path": "$HOME/.local/bin/rustscan",
             "remote_name": "rustscan",
             "url": "https://github.com/bee-san/RustScan",
             "provider": "github"
         },
-        "/env/bin/sdt": {
-            "path": "/env/bin/sdt",
+        "sdt": {
+            "path": "$HOME/.local/bin/sdt",
             "remote_name": "systemd-manager-tui",
             "url": "https://github.com/matheus-git/systemd-manager-tui",
             "provider": "github"
         },
-        "/env/bin/serpl": {
-            "path": "/env/bin/serpl",
-            "remote_name": "serpl",
-            "url": "https://github.com/yassinebridi/serpl",
-            "provider": "github"
-        },
-        "/env/bin/sg": {
-            "path": "/env/bin/sg",
-            "remote_name": "sg_linux_amd64_static",
-            "url": "https://github.com/sourcegraph/sg",
-            "provider": "github"
-        },
-        "/env/bin/soft": {
-            "path": "/env/bin/soft",
-            "remote_name": "soft",
-            "url": "https://github.com/charmbracelet/soft-serve",
-            "provider": "github"
-        },
-        "/env/bin/spotifyd": {
-            "path": "/env/bin/spotifyd",
-            "remote_name": "spotifyd",
-            "url": "https://github.com/Spotifyd/spotifyd",
-            "provider": "github"
-        },
-        "/env/bin/srss": {
-            "path": "/env/bin/srss",
-            "remote_name": "srss",
-            "url": "https://github.com/sheepla/srss",
-            "provider": "github"
-        },
-        "/env/bin/step": {
-            "path": "/env/bin/step",
-            "remote_name": "step",
-            "url": "https://github.com/smallstep/cli",
-            "provider": "github"
-        },
-        "/env/bin/subcog": {
-            "path": "/env/bin/subcog",
-            "remote_name": "subcog",
-            "url": "https://github.com/zircote/subcog",
-            "provider": "github"
-        },
-        "/env/bin/systemd-manager-tui": {
-            "path": "/env/bin/systemd-manager-tui",
-            "remote_name": "systemd-manager-tui",
-            "url": "https://github.com/matheus-git/systemd-manager-tui",
-            "provider": "github"
-        },
-        "/env/bin/trunk": {
-            "path": "/env/bin/trunk",
-            "remote_name": "trunk",
-            "url": "https://github.com/trunk-rs/trunk",
-            "provider": "github"
-        },
-        "/env/bin/wasm-pack": {
-            "path": "/env/bin/wasm-pack",
-            "remote_name": "wasm-pack",
-            "url": "https://github.com/rustwasm/wasm-pack",
-            "provider": "github"
-        },
-        "/home/bresilla/$HOME/.local/bin/sentrux": {
-            "path": "/home/bresilla/$HOME/.local/bin/sentrux",
+        "sentrux": {
+            "path": "$HOME/.local/bin/sentrux",
             "remote_name": "sentrux-linux-x86_64",
             "url": "https://github.com/sentrux/sentrux",
             "provider": "github"
         },
-        "/home/bresilla/data/code/bresilla/fol/$HOME/.local/bin/tree-sitter": {
-            "path": "/home/bresilla/data/code/bresilla/fol/$HOME/.local/bin/tree-sitter",
+        "serpl": {
+            "path": "$HOME/.local/bin/serpl",
+            "remote_name": "serpl",
+            "url": "https://github.com/yassinebridi/serpl",
+            "provider": "github"
+        },
+        "sg": {
+            "path": "$HOME/.local/bin/sg",
+            "remote_name": "sg_darwin_amd64",
+            "url": "https://github.com/sourcegraph/sg",
+            "provider": "github"
+        },
+        "skillshare": {
+            "path": "$HOME/.local/bin/skillshare",
+            "remote_name": "skillshare",
+            "url": "https://github.com/runkids/skillshare",
+            "provider": "github"
+        },
+        "soft": {
+            "path": "$HOME/.local/bin/soft",
+            "remote_name": "soft",
+            "url": "https://github.com/charmbracelet/soft-serve",
+            "provider": "github"
+        },
+        "spotifyd": {
+            "path": "$HOME/.local/bin/spotifyd",
+            "remote_name": "spotifyd",
+            "url": "https://github.com/Spotifyd/spotifyd",
+            "provider": "github"
+        },
+        "srss": {
+            "path": "$HOME/.local/bin/srss",
+            "remote_name": "srss",
+            "url": "https://github.com/sheepla/srss",
+            "provider": "github"
+        },
+        "step": {
+            "path": "$HOME/.local/bin/step",
+            "remote_name": "step",
+            "url": "https://github.com/smallstep/cli",
+            "provider": "github"
+        },
+        "subcog": {
+            "path": "$HOME/.local/bin/subcog",
+            "remote_name": "subcog",
+            "url": "https://github.com/zircote/subcog",
+            "provider": "github"
+        },
+        "systemd-manager-tui": {
+            "path": "$HOME/.local/bin/systemd-manager-tui",
+            "remote_name": "systemd-manager-tui",
+            "url": "https://github.com/matheus-git/systemd-manager-tui",
+            "provider": "github"
+        },
+        "tree-sitter": {
+            "path": "$HOME/.local/bin/tree-sitter",
             "remote_name": "tree-sitter",
             "url": "https://github.com/tree-sitter/tree-sitter",
+            "provider": "github"
+        },
+        "trunk": {
+            "path": "$HOME/.local/bin/trunk",
+            "remote_name": "trunk",
+            "url": "https://github.com/trunk-rs/trunk",
+            "provider": "github"
+        },
+        "wasm-pack": {
+            "path": "$HOME/.local/bin/wasm-pack",
+            "remote_name": "wasm-pack",
+            "url": "https://github.com/rustwasm/wasm-pack",
             "provider": "github"
         }
     }

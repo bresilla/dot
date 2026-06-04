@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "entries": {
+    "humanizer": {
+      "source": "github.com/blader/humanizer",
+      "type": "github",
+      "installed_at": "2026-05-23T23:59:13.621962469+02:00",
+      "repo_url": "https://github.com/blader/humanizer.git",
+      "version": "8b3a178",
+      "file_hashes": {
+        "LICENSE": "sha256:4ac4810254ab36d45419141aeb8e69bf50652cfafe5b2dab947d06d44e5cbf96",
+        "README.md": "sha256:65d02050fa1f0dc0cd6f74e1d39f68d9a6c1aeefd7a73a852d26b30e3e41d2b1",
+        "SKILL.md": "sha256:85618b50f189c0ff49858e5e2ed6aea04fef992a88b072d0980f78a7da3b18e8",
+        "WARP.md": "sha256:bade18a87e69ee83386d618b8e896823ca1e4f44c58fa38c0646c93472c362ba"
+      }
+    }
+  }
+}

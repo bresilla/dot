@@ -1,1 +1,0 @@
-/home/bresilla/data/code/tools/hexe/config/layout.lua

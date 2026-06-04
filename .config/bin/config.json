@@ -1,224 +1,224 @@
 {
-    "default_path": "/env/bin",
+    "default_path": "$HOME/.local/bin",
     "bins": {
-        "/env/bin/act": {
-            "path": "/env/bin/act",
+        "$HOME/.local/bin/act": {
+            "path": "$HOME/.local/bin/act",
             "remote_name": "act",
             "url": "https://github.com/nektos/act",
             "provider": "github"
         },
-        "/env/bin/argc": {
-            "path": "/env/bin/argc",
+        "$HOME/.local/bin/argc": {
+            "path": "$HOME/.local/bin/argc",
             "remote_name": "argc",
             "url": "https://github.com/sigoden/argc",
             "provider": ""
         },
-        "/env/bin/atuin": {
-            "path": "/env/bin/atuin",
+        "$HOME/.local/bin/atuin": {
+            "path": "$HOME/.local/bin/atuin",
             "remote_name": "atuin",
             "url": "https://github.com/atuinsh/atuin",
             "provider": ""
         },
-        "/env/bin/bat": {
-            "path": "/env/bin/bat",
+        "$HOME/.local/bin/bat": {
+            "path": "$HOME/.local/bin/bat",
             "remote_name": "bat",
             "url": "https://github.com/sharkdp/bat",
             "provider": "github"
         },
-        "/env/bin/choose": {
-            "path": "/env/bin/choose",
+        "$HOME/.local/bin/choose": {
+            "path": "$HOME/.local/bin/choose",
             "remote_name": "choose-x86_64-unknown-linux-musl",
             "url": "https://github.com/theryangeary/choose",
             "provider": ""
         },
-        "/env/bin/cloudflared": {
-            "path": "/env/bin/cloudflared",
+        "$HOME/.local/bin/cloudflared": {
+            "path": "$HOME/.local/bin/cloudflared",
             "remote_name": "cloudflared-linux-amd64",
             "url": "https://github.com/cloudflare/cloudflared",
             "provider": ""
         },
-        "/env/bin/delta": {
-            "path": "/env/bin/delta",
+        "$HOME/.local/bin/delta": {
+            "path": "$HOME/.local/bin/delta",
             "remote_name": "delta",
             "url": "https://github.com/dandavison/delta",
             "provider": ""
         },
-        "/env/bin/devbox": {
-            "path": "/env/bin/devbox",
+        "$HOME/.local/bin/devbox": {
+            "path": "$HOME/.local/bin/devbox",
             "remote_name": "devbox",
             "url": "https://github.com/jetify-com/devbox",
             "provider": ""
         },
-        "/env/bin/direnv": {
-            "path": "/env/bin/direnv",
+        "$HOME/.local/bin/direnv": {
+            "path": "$HOME/.local/bin/direnv",
             "remote_name": "direnv.linux-amd64",
             "url": "https://github.com/direnv/direnv",
             "provider": ""
         },
-        "/env/bin/eza": {
-            "path": "/env/bin/eza",
+        "$HOME/.local/bin/eza": {
+            "path": "$HOME/.local/bin/eza",
             "remote_name": "eza",
             "url": "https://github.com/eza-community/eza",
             "provider": ""
         },
-        "/env/bin/git-cliff": {
-            "path": "/env/bin/git-cliff",
+        "$HOME/.local/bin/git-cliff": {
+            "path": "$HOME/.local/bin/git-cliff",
             "remote_name": "git-cliff",
             "url": "https://github.com/orhun/git-cliff",
             "provider": "github"
         },
-        "/env/bin/git-flow": {
-            "path": "/env/bin/git-flow",
+        "$HOME/.local/bin/git-flow": {
+            "path": "$HOME/.local/bin/git-flow",
             "remote_name": "git-flow-v0.1.1-linux-amd64",
             "url": "https://github.com/gittower/git-flow-next",
             "provider": "github"
         },
-        "/env/bin/git-town": {
-            "path": "/env/bin/git-town",
+        "$HOME/.local/bin/git-town": {
+            "path": "$HOME/.local/bin/git-town",
             "remote_name": "git-town",
             "url": "https://github.com/git-town/git-town",
             "provider": "github"
         },
-        "/env/bin/gomi": {
-            "path": "/env/bin/gomi",
+        "$HOME/.local/bin/gomi": {
+            "path": "$HOME/.local/bin/gomi",
             "remote_name": "gomi",
             "url": "https://github.com/babarot/gomi",
             "provider": ""
         },
-        "/env/bin/gum": {
-            "path": "/env/bin/gum",
+        "$HOME/.local/bin/gum": {
+            "path": "$HOME/.local/bin/gum",
             "remote_name": "gum",
             "url": "https://github.com/charmbracelet/gum",
             "provider": ""
         },
-        "/env/bin/hub": {
-            "path": "/env/bin/hub",
+        "$HOME/.local/bin/hub": {
+            "path": "$HOME/.local/bin/hub",
             "remote_name": "hub",
             "url": "https://github.com/github/hub",
             "provider": ""
         },
-        "/env/bin/ipinfo": {
-            "path": "/env/bin/ipinfo",
+        "$HOME/.local/bin/ipinfo": {
+            "path": "$HOME/.local/bin/ipinfo",
             "remote_name": "ipinfo_3.3.1_linux_amd64",
             "url": "https://github.com/ipinfo/cli",
             "provider": ""
         },
-        "/env/bin/jj": {
-            "path": "/env/bin/jj",
+        "$HOME/.local/bin/jj": {
+            "path": "$HOME/.local/bin/jj",
             "remote_name": "jj",
             "url": "https://github.com/jj-vcs/jj",
             "provider": "github"
         },
-        "/env/bin/just": {
-            "path": "/env/bin/just",
+        "$HOME/.local/bin/just": {
+            "path": "$HOME/.local/bin/just",
             "remote_name": "just",
             "url": "https://github.com/casey/just",
             "provider": "github"
         },
-        "/env/bin/lazygit": {
-            "path": "/env/bin/lazygit",
+        "$HOME/.local/bin/lazygit": {
+            "path": "$HOME/.local/bin/lazygit",
             "remote_name": "lazygit",
             "url": "https://github.com/jesseduffield/lazygit",
             "provider": "github"
         },
-        "/env/bin/lemonade": {
-            "path": "/env/bin/lemonade",
+        "$HOME/.local/bin/lemonade": {
+            "path": "$HOME/.local/bin/lemonade",
             "remote_name": "lemonade",
             "url": "https://github.com/lemonade-command/lemonade",
             "provider": ""
         },
-        "/env/bin/mdbook": {
-            "path": "/env/bin/mdbook",
+        "$HOME/.local/bin/mdbook": {
+            "path": "$HOME/.local/bin/mdbook",
             "remote_name": "mdbook",
             "url": "https://github.com/rust-lang/mdBook",
             "provider": "github"
         },
-        "/env/bin/micromamba": {
-            "path": "/env/bin/micromamba",
+        "$HOME/.local/bin/micromamba": {
+            "path": "$HOME/.local/bin/micromamba",
             "remote_name": "micromamba-linux-64",
             "url": "https://github.com/mamba-org/micromamba-releases",
             "provider": "github"
         },
-        "/env/bin/netbird": {
-            "path": "/env/bin/netbird",
+        "$HOME/.local/bin/netbird": {
+            "path": "$HOME/.local/bin/netbird",
             "remote_name": "netbird",
             "url": "https://github.com/netbirdio/netbird",
             "provider": "github"
         },
-        "/env/bin/newt": {
-            "path": "/env/bin/newt",
+        "$HOME/.local/bin/newt": {
+            "path": "$HOME/.local/bin/newt",
             "remote_name": "newt_linux_amd64",
             "url": "https://github.com/fosrl/newt",
             "provider": "github"
         },
-        "/env/bin/olm": {
-            "path": "/env/bin/olm",
+        "$HOME/.local/bin/olm": {
+            "path": "$HOME/.local/bin/olm",
             "remote_name": "olm_linux_amd64",
             "url": "https://github.com/fosrl/olm",
             "provider": "github"
         },
-        "/env/bin/pik": {
-            "path": "/env/bin/pik",
+        "$HOME/.local/bin/pik": {
+            "path": "$HOME/.local/bin/pik",
             "remote_name": "pik",
             "url": "https://github.com/jacek-kurlit/pik",
             "provider": "github"
         },
-        "/env/bin/pixi": {
-            "path": "/env/bin/pixi",
+        "$HOME/.local/bin/pixi": {
+            "path": "$HOME/.local/bin/pixi",
             "remote_name": "pixi-x86_64-unknown-linux-musl",
             "url": "https://github.com/prefix-dev/pixi",
             "provider": "github"
         },
-        "/env/bin/ser": {
-            "path": "/env/bin/ser",
+        "$HOME/.local/bin/ser": {
+            "path": "$HOME/.local/bin/ser",
             "remote_name": "servicer-x86_64-unknown-linux-gnu",
             "url": "https://github.com/servicer-labs/servicer",
             "provider": "github"
         },
-        "/env/bin/starship": {
-            "path": "/env/bin/starship",
+        "$HOME/.local/bin/starship": {
+            "path": "$HOME/.local/bin/starship",
             "remote_name": "starship",
             "url": "https://github.com/starship/starship",
             "provider": "github"
         },
-        "/env/bin/tab": {
-            "path": "/env/bin/tab",
+        "$HOME/.local/bin/tab": {
+            "path": "$HOME/.local/bin/tab",
             "remote_name": "tab",
             "url": "https://github.com/austinjones/tab-rs",
             "provider": "github"
         },
-        "/env/bin/tldr": {
-            "path": "/env/bin/tldr",
+        "$HOME/.local/bin/tldr": {
+            "path": "$HOME/.local/bin/tldr",
             "remote_name": "tealdeer-linux-x86_64-musl",
             "url": "https://github.com/tealdeer-rs/tealdeer",
             "provider": "github"
         },
-        "/env/bin/xmake": {
-            "path": "/env/bin/xmake",
+        "$HOME/.local/bin/xmake": {
+            "path": "$HOME/.local/bin/xmake",
             "remote_name": "xmake-bundle-v3.0.5.linux.x86_64",
             "url": "https://github.com/xmake-io/xmake",
             "provider": "github"
         },
-        "/env/bin/yazi": {
-            "path": "/env/bin/yazi",
-            "remote_name": "ya",
+        "$HOME/.local/bin/yazi": {
+            "path": "$HOME/.local/bin/yazi",
+            "remote_name": "yazi",
             "url": "https://github.com/sxyazi/yazi",
             "provider": "github"
         },
-        "/env/bin/zellij": {
-            "path": "/env/bin/zellij",
+        "$HOME/.local/bin/zellij": {
+            "path": "$HOME/.local/bin/zellij",
             "remote_name": "zellij",
             "url": "https://github.com/zellij-org/zellij",
             "provider": "github"
         },
-        "/env/bin/zenohd": {
-            "path": "/env/bin/zenohd",
+        "$HOME/.local/bin/zenohd": {
+            "path": "$HOME/.local/bin/zenohd",
             "remote_name": "zenohd",
             "url": "https://github.com/eclipse-zenoh/zenoh",
             "provider": "github"
         },
-        "/env/bin/zoxide": {
-            "path": "/env/bin/zoxide",
+        "$HOME/.local/bin/zoxide": {
+            "path": "$HOME/.local/bin/zoxide",
             "remote_name": "zoxide",
             "url": "https://github.com/ajeetdsouza/zoxide",
             "provider": ""

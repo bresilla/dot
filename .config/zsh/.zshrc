@@ -57,29 +57,8 @@ vi-yank-x-selection(){ print -rn -- $CUTBUFFER | xsel -i -p; }
 zle -N vi-yank-x-selection
 bindkey -M vicmd '^Y' vi-yank-x-selection
 
-
-#--------------------------------------------------------------------------------------------------------------------
-###SEPARATOR
-# Add full-width separator before each prompt (except first)
-# FIRST_PROMPT=true
-# PROMPT_NUM=0
-# add_separator() {
-#     if ! $FIRST_PROMPT; then
-#         echo
-#         (( PROMPT_NUM++ ))
-#         local prompt_text="[ $PROMPT_NUM ]"
-#         local prompt_len=${#prompt_text}
-#         local separator_len=$(( COLUMNS - prompt_len - 2 ))
-#         printf "\033[38;5;240m%s%s══\033[0m\n" "${(l:$separator_len::═:)}" "$prompt_text"
-#     fi
-#     FIRST_PROMPT=false
-# }
-# precmd_functions+=(add_separator)
-
 #--------------------------------------------------------------------------------------------------------------------
 ###MODULES
-# autoload -U colors && colors
-
 # Load completion modules
 zmodload zsh/complist
 
@@ -168,35 +147,17 @@ alias sw=$HOME/.config/profile/functions/wm/startw
 ###PROFILE
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
-
 ###SECRETS
 [[ -e "/env/set/variables" ]] && source /env/set/variables
-
-##NAME
-# [[ -x "$(command -v tmux)" ]] && tmux setenv -g TMUX_FANCY_$(tmux display -p "#D" | tr -d %) $FANCY
-# [[ -x "$(command -v tmux)" ]] && tmux setenv FANCY $FANCY
 
 ###DIRENV
 [[ -x "$(command -v direnv)" ]] && eval "$(direnv hook zsh)"
 
-##DEVBOX
-# [[ -x "$(command -v devbox)" ]] && eval "$(devbox global shellenv --init-hook)"
-
 ###AUTIN
 [[ -x "$(command -v atuin)" ]] && eval "$(atuin init zsh)"
 
-
-###CARAPACE
-# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-# [[ -x "$(command -v carapace)" ]] && source <(carapace _carapace)
-# zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
-
-###NOSTROMO
-[[ -x "$(command -v nostromo)" ]] && source <(nostromo completion zsh)
-
 ###STARSHIP
-#source ~/.config/promptline
+# source ~/.config/promptline
 # [[ -x "$(command -v starship)" ]] && eval "$(starship init zsh)" || source ~/.config/promptline
 export HEXE_UNRESTRICTED_CONFIG=1
 eval "$(hexe shp init zsh)"
@@ -212,36 +173,6 @@ bindkey -M viins -s '^O' 'hexe mux float --title="replace" -c '\''serpl -p .'\''
 ###SSH&GPG
 export GPG_TTY=$(tty)
 [[ -x "$(command -v gpgconf)" ]] && export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-
-#--------------------------------------------------------------------------------------------------------------------
-# NNN
-# [[ -e ~/.config/nnn/config.sh ]] && emulate sh -c 'source ~/.config/nnn/config.sh'
-# n(){
-#   export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-#   if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then echo "already running"; return; fi
-#   nnn -deuUHQ "$@"
-#   if [ -f "$NNN_TMPFILE" ]; then
-#     . "$NNN_TMPFILE"; rm -f "$NNN_TMPFILE" > /dev/null
-#   fi
-# }
-# #YAZI
-# yazicd() {
-#     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-#     local cwd
-#     yazi "$@" --cwd-file="$tmp"
-#     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-#         builtin cd -- "$cwd"
-#         for precmd in $precmd_functions; do
-#           $precmd
-#         done
-#         zle reset-prompt
-#         printf '\e[4 q'
-#     fi
-#     rm -f -- "$tmp"
-# }
-# zle -N yazicd
-# bindkey '^W' yazicd
-
 
 #--------------------------------------------------------------------------------------------------------------------
 # ALT-KEY shortcut
@@ -291,21 +222,18 @@ bindkey -s '^A' ' scrr\n'
 # [[ -n $TMUX ]] && tab $(names)
 
 #--------------------------------------------------------------------------------------------------------------------
-###CLEAR (preserves scrollback)
-clear() {
-    # Clear screen but preserve scrollback for viewing history
-    # tmux has its own separate scrollback buffer, so we can use normal clear
-    printf '\033[2J\033[H'
-    FIRST_PROMPT=true
-}
+# ###CLEAR (preserves scrollback)
+# clear() {
+#     # Clear screen but preserve scrollback for viewing history
+#     # tmux has its own separate scrollback buffer, so we can use normal clear
+#     printf '\033[2J\033[H'
+#     FIRST_PROMPT=true
+# }
 
 #---------------------------            EXTERNAL       --------------------------
 [[ -s "$HOME/.external" ]] && source "$HOME/.external"
 
 #-------------------------------------------------------------------------------------------------------------------- 
-#--------------------------------------------------------------------------------------------------------------------
-#--------------------------------------------------------------------------------------------------------------------
-
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 # opencode

@@ -105,3 +105,9 @@
     process = git-lfs filter-process
     required = true
     clean = git-lfs clean -- %f
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/bresilla/.local/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/bresilla/.local/bin/gh auth git-credential

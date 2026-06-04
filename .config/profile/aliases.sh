@@ -116,6 +116,8 @@ alias own='sudo chown -R $USER:$USER'
 alias exe='chmod u+x'
 alias dxe='chmod u-x'
 
+alias ali="nvim ~/.config/profile/aliases.sh"
+
 ##OTHER
 alias open='nohup mimeo $1 > /dev/null 2>&1 &!'
 alias rn='renamer'
@@ -140,12 +142,12 @@ alias anytype='anytype-cli'
 alias bm=bibiman
 alias zik='zk --notebook-dir /doc/data/notes/zk'
 alias ask=aichat
-alias cop="gh copilot suggest"
+alias sks='skillshare'
 
-alias claude='bun x --package @anthropic-ai/claude-code claude'
-alias copilot='bun x --package @github/copilot copilot'
-alias gemini='bun x --package @google/gemini-cli gemini'
-alias openspec='bun x --package @fission-ai/openspec@latest openspec'
+# alias claude='bun x --package @anthropic-ai/claude-code claude'
+# alias copilot='bun x --package @github/copilot copilot'
+# alias gemini='bun x --package @google/gemini-cli gemini'
+# alias openspec='bun x --package @fission-ai/openspec@latest openspec'
 
 ##MEDIA
 alias color='pastel format hex' 

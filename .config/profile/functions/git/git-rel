@@ -40,6 +40,6 @@ git merge develop || {
 }
 git push origin main
 
-gh release create "$version" --notes "$changelog"
-
 git checkout --ignore-other-worktrees "$original_branch"
+
+gh release create "$version" --notes "$changelog"

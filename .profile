@@ -112,5 +112,7 @@ if [ "$HOSTNAME" = core ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)
 fi
+export LOGO_PATH=/home/bresilla/.bresilla
+export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
 if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

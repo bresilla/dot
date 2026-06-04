@@ -72,7 +72,7 @@ bunn() {
         tmux detach-client
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
-            tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" /env/bin/bun x --package "$argc_cmd" "$argc_name"; 
+            tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" /home/bresilla/.local/bin/bun x --package "$argc_cmd" "$argc_name"; 
             tmux set-option -t "$session" status off
             tmux set-option -t "$session" @popup_parent_session "$parent_session"
             tmux set-option -t "$session" @popup_parent_window "$parent_window"
