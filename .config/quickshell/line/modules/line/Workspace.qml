@@ -9,7 +9,7 @@ Scope {
     readonly property var currentMonitor: Hyprland.monitorFor(modelData)
     readonly property int monitorHeight: modelData ? modelData.height : 1080
     readonly property int monitorWidth: modelData ? modelData.width : 1920
-    readonly property real lineBarWidth: monitorWidth * 0.005
+    readonly property int lineBarWidth: Math.max(8, Math.round(monitorWidth * 0.005))
 
     property string positionMode: "auto"
     property string mainMonitorName: "eDP-1"

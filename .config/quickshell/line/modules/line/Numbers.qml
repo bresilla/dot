@@ -1,7 +1,9 @@
 import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
+import Quickshell.Wayland
 import QtQuick
+import "../../../shared/ribbon"
 
 Scope {
     id: root
@@ -36,6 +38,8 @@ Scope {
     readonly property int containerHeight: monitorHeight * 0.5
     readonly property int itemHeight: containerHeight / 10
     readonly property int wsSpacing: 10
+    readonly property real pillWidthFactor: 0.55
+    readonly property int popupSlide: 46
 
     function getWorkspaceYOffset(workspaceId) {
         var index = (workspaceId - 1) % 10;
@@ -166,32 +170,23 @@ Scope {
         }
     }
 
-    PanelWindow {
+    RibbonPopup {
         id: osdWindow
         screen: modelData
         visible: shouldShowOSD
+        sideRight: root.barOnRight
+        popupY: osdWindow.containerStartY
+        ribbonWidth: Math.round(root.lineBarWidth)
+        reservedThickness: Math.round(root.lineBarWidth + 6)
+        expanded: false
+        expandProgress: 0
+        popupSlide: root.popupSlide
 
-        anchors {
-            left: !barOnRight
-            right: barOnRight
-            top: true
-        }
-
-        implicitWidth: 140
+        implicitWidth: Math.round(root.itemHeight + root.popupSlide + 16)
         implicitHeight: containerHeight + (wsSpacing * 9)
-
-        exclusiveZone: 0
-        color: "#00000000"
-        mask: Region {}
 
         readonly property real lineWidth: lineBarWidth
         readonly property int containerStartY: (monitorHeight - containerHeight) / 2
-
-        margins {
-            left: barOnRight ? 0 : -lineWidth
-            right: barOnRight ? -lineWidth : 0
-            top: containerStartY
-        }
 
         Rectangle {
             id: morphingOSD
@@ -199,13 +194,13 @@ Scope {
             anchors {
                 left: barOnRight ? undefined : parent.left
                 right: barOnRight ? parent.right : undefined
-                leftMargin: barOnRight ? 0 : 30 * morphProgress
-                rightMargin: barOnRight ? 30 * morphProgress : 0
+                leftMargin: barOnRight ? 0 : root.popupSlide * morphProgress
+                rightMargin: barOnRight ? root.popupSlide * morphProgress : 0
             }
 
             y: displayY
 
-            readonly property real startWidth: osdWindow.lineWidth * 0.7
+            readonly property real startWidth: osdWindow.lineWidth * root.pillWidthFactor
             readonly property real startHeight: root.itemHeight
             readonly property real endSize: root.itemHeight
 

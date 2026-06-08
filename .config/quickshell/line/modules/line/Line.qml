@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Hyprland
 import QtQuick
+import "../../../shared/ribbon"
 
 Scope {
     id: root
@@ -9,7 +10,7 @@ Scope {
     required property var currentMonitor
     required property int monitorHeight
     required property int monitorWidth
-    required property real lineBarWidth
+    required property int lineBarWidth
     required property bool barOnRight
     property var workspaceRows: []
     property string monitorsJson: ""
@@ -124,76 +125,45 @@ Scope {
         }
     }
 
-    PanelWindow {
+    Ribbon {
         id: lineWindow
-        screen: modelData
-        anchors {
-            top: true
-            left: !barOnRight
-            right: barOnRight
-            bottom: true
+        screen: root.modelData
+        sideRight: root.barOnRight
+        ribbonWidth: root.lineBarWidth
+        trackHeight: root.monitorHeight * 0.5
+        pillSpacing: 10
+        onWheel: angleDelta => {
+            const direction = angleDelta.y > 0 ? "r-1" : "r+1";
+            root.dispatchWorkspace(direction);
         }
-        implicitWidth: lineBarWidth
-        color: "transparent"
 
-        Rectangle {
-            id: box
-            anchors { fill: parent; margins: 0 }
-            color: "#000000"
-            opacity: 0.95
-            Behavior on color { ColorAnimation { duration: 300 } }
+        Repeater {
+            model: root.workspaceRows
+            delegate: Rectangle {
+                required property var modelData
+                readonly property bool hasWindows: modelData.windows > 0
+                visible: true
+                width: lineWindow.pillWidth
+                height: lineWindow.trackHeight / 10
+                radius: 4
+                color: modelData.active ? wal.adapter.colors["color1"] :
+                       hasWindows ? wal.adapter.colors["color244"] :
+                       wal.adapter.colors["color240"]
+                opacity: modelData.active ? 1.0 :
+                         wsMouseArea.containsMouse ? 0.9 : 0.6
+                Behavior on color { ColorAnimation { duration: 200 } }
+                Behavior on opacity { NumberAnimation { duration: 200 } }
 
-            Column {
-                id: wsContainer
-                anchors {
-                    left: barOnRight ? undefined : parent.left
-                    right: barOnRight ? parent.right : undefined
-                    verticalCenter: parent.verticalCenter
-                }
-                width: parent.width * 0.7
-                height: monitorHeight * 0.5
-                spacing: 10
-                Repeater {
-                    model: root.workspaceRows
-                    delegate: Rectangle {
-                        required property var modelData
-                        readonly property bool hasWindows: modelData.windows > 0
-                        visible: true
-                        width: wsContainer.width
-                        height: wsContainer.height / 10
-                        radius: 4
-                        color: modelData.active ? wal.adapter.colors["color1"] :
-                               hasWindows ? wal.adapter.colors["color244"] :
-                               wal.adapter.colors["color240"]
-                        opacity: modelData.active ? 1.0 :
-                                 wsMouseArea.containsMouse ? 0.9 : 0.6
-                        Behavior on color { ColorAnimation { duration: 200 } }
-                        Behavior on opacity { NumberAnimation { duration: 200 } }
-
-                        MouseArea {
-                            id: wsMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: root.dispatchWorkspace(modelData.id)
-                        }
-                    }
-                }
-            }
-
-            // Scroll overlay: accepts wheel events without blocking clicks
-            MouseArea {
-                anchors.fill: parent
-                acceptedButtons: Qt.NoButton
-                onWheel: wheel => {
-                    const direction = wheel.angleDelta.y > 0 ? "r-1" : "r+1";
-                    root.dispatchWorkspace(direction);
+                MouseArea {
+                    id: wsMouseArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.dispatchWorkspace(modelData.id)
                 }
             }
         }
 
-        Component.onCompleted: {
-            refreshWorkspaceRows();
-        }
+        Component.onCompleted: refreshWorkspaceRows()
     }
 }

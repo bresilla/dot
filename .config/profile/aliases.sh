@@ -16,7 +16,7 @@ alias ser="sudo /env/bin/ser"
 alias rustdesk="sudo rustdesk"
 alias in="sudo innernet"
 # alias ssh="TERM=tmux-256color ssh -X"
-alias ssh="waypipe ssh -R 2489:127.0.0.1:2489"
+alias ssh="ssh -t"
 alias bolt="boltctl"
 
 alias dot='/usr/bin/git --git-dir=$HOME/.dot/ --work-tree=$HOME'

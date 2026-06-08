@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "." as S
+import "../../../shared/ribbon"
 
 Scope {
     id: root
@@ -13,8 +14,9 @@ Scope {
 
     // ─── Dimensions ───
 
-    readonly property real barWidth: monitorWidth * 0.005
-    readonly property real pillW: barWidth * 0.7
+    readonly property int barWidth: Math.max(8, Math.round(monitorWidth * 0.005))
+    readonly property int borderPadding: 6
+    readonly property int reservedThickness: barWidth + borderPadding
     readonly property real pillH: monitorHeight * 0.5 / 10
     readonly property real pillGap: 10
     readonly property real buttonSize: pillH
@@ -37,9 +39,10 @@ Scope {
     readonly property real volPanelH: panelPad + mainCardH + (visibleApps > 0 ? panelPad + appCardH : 0) + panelPad
     readonly property real brightPanelH: panelPad * 2 + mainCardH
 
-    // Extension Y derived from actual rendered pill positions
-    readonly property real volExtY: settingsColumn.y + volPillRect.y
-    readonly property real brightExtY: settingsColumn.y + brightPillRect.y
+    // Extension Y derived from the shared ribbon geometry.
+    readonly property real ribbonTrackY: (monitorHeight - barPanel.trackHeight) / 2
+    readonly property real volExtY: ribbonTrackY + volPillRect.y
+    readonly property real brightExtY: ribbonTrackY + brightPillRect.y
 
     // ─── Volume state ───
 
@@ -50,6 +53,7 @@ Scope {
     property bool volPanelShown: false
     property bool volWidePanel: false
     property real volBubbleMorph: 0.0
+    property real volExpandMorph: 0.0
 
     property real volume: 0.5
     property bool isMuted: false
@@ -84,7 +88,11 @@ Scope {
         if (volumeExpanded) {
             volShrinkTimer.stop()
             volWidePanel = true
+            volExpandMorphOut.stop()
+            volExpandMorphIn.start()
         } else {
+            volExpandMorphIn.stop()
+            volExpandMorphOut.start()
             volShrinkTimer.start()
         }
     }
@@ -101,7 +109,7 @@ Scope {
     }
 
     Timer { id: volDismissTimer; interval: 300; onTriggered: { volPanelShown = false; volumeExpanded = false } }
-    Timer { id: volShrinkTimer; interval: 250; onTriggered: volWidePanel = false }
+    Timer { id: volShrinkTimer; interval: 260; onTriggered: volWidePanel = false }
     Timer { id: volAutoHideTimer; interval: 30000; onTriggered: volumeExpanded = false }
 
     NumberAnimation {
@@ -124,6 +132,26 @@ Scope {
         easing.type: Easing.InCubic
     }
 
+    NumberAnimation {
+        id: volExpandMorphIn
+        target: root
+        property: "volExpandMorph"
+        from: volExpandMorph
+        to: 1
+        duration: 260
+        easing.type: Easing.OutCubic
+    }
+
+    NumberAnimation {
+        id: volExpandMorphOut
+        target: root
+        property: "volExpandMorph"
+        from: volExpandMorph
+        to: 0
+        duration: 220
+        easing.type: Easing.InCubic
+    }
+
     // ─── Brightness state ───
 
     property bool brightPillHovered: false
@@ -133,6 +161,7 @@ Scope {
     property bool brightPanelShown: false
     property bool brightWidePanel: false
     property real brightBubbleMorph: 0.0
+    property real brightExpandMorph: 0.0
 
     property real brightness: 0.7
 
@@ -152,7 +181,11 @@ Scope {
         if (brightnessExpanded) {
             brightShrinkTimer.stop()
             brightWidePanel = true
+            brightExpandMorphOut.stop()
+            brightExpandMorphIn.start()
         } else {
+            brightExpandMorphIn.stop()
+            brightExpandMorphOut.start()
             brightShrinkTimer.start()
         }
     }
@@ -168,7 +201,7 @@ Scope {
     }
 
     Timer { id: brightDismissTimer; interval: 300; onTriggered: { brightPanelShown = false; brightnessExpanded = false } }
-    Timer { id: brightShrinkTimer; interval: 250; onTriggered: brightWidePanel = false }
+    Timer { id: brightShrinkTimer; interval: 260; onTriggered: brightWidePanel = false }
     Timer { id: brightAutoHideTimer; interval: 30000; onTriggered: brightnessExpanded = false }
 
     NumberAnimation {
@@ -188,6 +221,26 @@ Scope {
         from: 1
         to: 0
         duration: 180
+        easing.type: Easing.InCubic
+    }
+
+    NumberAnimation {
+        id: brightExpandMorphIn
+        target: root
+        property: "brightExpandMorph"
+        from: brightExpandMorph
+        to: 1
+        duration: 260
+        easing.type: Easing.OutCubic
+    }
+
+    NumberAnimation {
+        id: brightExpandMorphOut
+        target: root
+        property: "brightExpandMorph"
+        from: brightExpandMorph
+        to: 0
+        duration: 220
         easing.type: Easing.InCubic
     }
 
@@ -284,78 +337,55 @@ Scope {
     // Bar — identical to Line.qml, pills always visible
     // ═══════════════════════════════════════════════
 
-    PanelWindow {
+    Ribbon {
         id: barPanel
-        screen: modelData
-        anchors {
-            top: true
-            left: !settingsOnRight
-            right: settingsOnRight
-            bottom: true
-        }
-        implicitWidth: barWidth
-        color: "transparent"
+        screen: root.modelData
+        sideRight: root.settingsOnRight
+        ribbonWidth: root.barWidth
+        trackHeight: (root.pillH * 2) + root.pillGap
+        pillSpacing: root.pillGap
 
         Rectangle {
-            id: box
-            anchors { fill: parent; margins: 0 }
-            color: "#000000"
-            opacity: 0.95
-            Behavior on color { ColorAnimation { duration: 300 } }
+            id: volPillRect
+            width: barPanel.pillWidth
+            height: pillH
+            radius: 4
+            color: volumeExpanded ? S.Theme.color1 : S.Theme.color240
+            opacity: volumeExpanded ? 1.0 :
+                     volPillMouse.containsMouse ? 0.9 : 0.6
 
-            Column {
-                id: settingsColumn
-                anchors {
-                    left: settingsOnRight ? undefined : parent.left
-                    right: settingsOnRight ? parent.right : undefined
-                    verticalCenter: parent.verticalCenter
-                }
-                width: parent.width * 0.7
-                spacing: 10
+            Behavior on color { ColorAnimation { duration: 200 } }
+            Behavior on opacity { NumberAnimation { duration: 200 } }
 
-                Rectangle {
-                    id: volPillRect
-                    width: settingsColumn.width
-                    height: pillH
-                    radius: 4
-                    color: volumeExpanded ? S.Theme.color1 : S.Theme.color240
-                    opacity: volumeExpanded ? 1.0 :
-                             volPillMouse.containsMouse ? 0.9 : 0.6
+            MouseArea {
+                id: volPillMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onContainsMouseChanged: volPillHovered = containsMouse
+                onClicked: if (volumeExpanded) volumeExpanded = false
+            }
+        }
 
-                    Behavior on color { ColorAnimation { duration: 200 } }
-                    Behavior on opacity { NumberAnimation { duration: 200 } }
+        Rectangle {
+            id: brightPillRect
+            width: barPanel.pillWidth
+            height: pillH
+            radius: 4
+            color: brightnessExpanded ? S.Theme.color1 : S.Theme.color240
+            opacity: brightnessExpanded ? 1.0 :
+                     brightPillMouse.containsMouse ? 0.9 : 0.6
 
-                    MouseArea {
-                        id: volPillMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onContainsMouseChanged: volPillHovered = containsMouse
-                        onClicked: if (volumeExpanded) volumeExpanded = false
-                    }
-                }
+            Behavior on color { ColorAnimation { duration: 200 } }
+            Behavior on opacity { NumberAnimation { duration: 200 } }
 
-                Rectangle {
-                    id: brightPillRect
-                    width: settingsColumn.width
-                    height: pillH
-                    radius: 4
-                    color: brightnessExpanded ? S.Theme.color1 : S.Theme.color240
-                    opacity: brightnessExpanded ? 1.0 :
-                             brightPillMouse.containsMouse ? 0.9 : 0.6
-
-                    Behavior on color { ColorAnimation { duration: 200 } }
-                    Behavior on opacity { NumberAnimation { duration: 200 } }
-
-                    MouseArea {
-                        id: brightPillMouse
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onContainsMouseChanged: brightPillHovered = containsMouse
-                        onClicked: if (brightnessExpanded) brightnessExpanded = false
-                    }
-                }
+            MouseArea {
+                id: brightPillMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onContainsMouseChanged: brightPillHovered = containsMouse
+                onClicked: if (brightnessExpanded) brightnessExpanded = false
             }
         }
     }
@@ -364,28 +394,23 @@ Scope {
     // Volume extension — board-style panel
     // ═══════════════════════════════════════════════
 
-    PanelWindow {
+    RibbonPopup {
         id: volExtPanel
-        screen: modelData
+        screen: root.modelData
+        sideRight: root.settingsOnRight
+        popupY: root.volExtY
+        ribbonWidth: root.barWidth
+        reservedThickness: root.reservedThickness
+        expanded: root.volWidePanel
+        expandProgress: root.volExpandMorph
         visible: volPanelShown || volPanelMorphOut.running
 
-        anchors {
-            left: !settingsOnRight
-            right: settingsOnRight
-            top: true
-            bottom: false
-        }
+        readonly property real compactW: buttonSize + popupSlide + 8
+        readonly property real compactH: pillH
+        readonly property real morphEase: volExpandMorph * volExpandMorph * (3 - (2 * volExpandMorph))
 
-        implicitWidth: volWidePanel ? Math.round(panelWidth) : Math.round(buttonSize + 38)
-        implicitHeight: volWidePanel ? Math.round(volPanelH) : Math.round(pillH)
-        exclusiveZone: 0
-        color: "#00000000"
-
-        margins {
-            left: settingsOnRight ? 0 : Math.round((volWidePanel ? barWidth : 0) - 20)
-            right: settingsOnRight ? Math.round((volWidePanel ? barWidth : 0) - 20) : 0
-            top: Math.round(volExtY)
-        }
+        implicitWidth: Math.round(compactW + ((panelWidth - compactW) * morphEase))
+        implicitHeight: Math.round(compactH + ((volPanelH - compactH) * morphEase))
 
         Item {
             anchors.fill: parent
@@ -393,8 +418,8 @@ Scope {
 
             // Icon button (only when hovering, not expanded, not dismissing)
             Rectangle {
-                visible: (volPanelShown || volPanelMorphOut.running) && !volumeExpanded
-                readonly property real startWidth: barPanel.width * 0.7
+                visible: (volPanelShown || volPanelMorphOut.running) && volExpandMorph < 0.98
+                readonly property real startWidth: barPanel.pillWidth
                 readonly property real startHeight: pillH
                 readonly property real endSize: buttonSize
 
@@ -402,12 +427,13 @@ Scope {
                 height: startHeight + (endSize - startHeight) * volBubbleMorph
                 radius: 4 + ((endSize * 0.5 - 4) * volBubbleMorph)
                 color: isMuted ? S.Theme.color240 : S.Theme.color1
+                opacity: 1 - volExpandMorph
                 z: 1
                 anchors {
                     right: settingsOnRight ? parent.right : undefined
                     left: !settingsOnRight ? parent.left : undefined
-                    leftMargin: settingsOnRight ? 0 : 36 * volBubbleMorph
-                    rightMargin: settingsOnRight ? 36 * volBubbleMorph : 0
+                    leftMargin: settingsOnRight ? 0 : volExtPanel.popupSlide * volBubbleMorph
+                    rightMargin: settingsOnRight ? volExtPanel.popupSlide * volBubbleMorph : 0
                     verticalCenter: parent.verticalCenter
                 }
                 border.color: S.Theme.color0
@@ -449,21 +475,34 @@ Scope {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: volumeExpanded = true
+                    onClicked: if (!volumeExpanded) volumeExpanded = true
                 }
             }
 
-            // Board-style container (stays visible during fade-out via volWidePanel)
+            // Board-style container morphs from the round icon footprint into the full widget.
             Rectangle {
-                visible: volWidePanel
-                anchors.fill: parent
+                visible: volWidePanel || volExpandMorph > 0
+                readonly property real surfaceW: buttonSize + ((parent.width - buttonSize) * volExtPanel.morphEase)
+                readonly property real surfaceH: buttonSize + ((parent.height - buttonSize) * volExtPanel.morphEase)
+
+                width: surfaceW
+                height: surfaceH
+                x: settingsOnRight
+                    ? parent.width - surfaceW - (volExtPanel.popupSlide * (1 - volExtPanel.morphEase))
+                    : volExtPanel.popupSlide * (1 - volExtPanel.morphEase)
+                y: 0
                 color: S.Theme.color238
-                radius: 12
+                radius: (buttonSize * 0.5) + ((12 - (buttonSize * 0.5)) * volExtPanel.morphEase)
+                opacity: volExpandMorph
+                border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08 * volExpandMorph)
+                border.width: 1
 
                 Column {
                     anchors.fill: parent
                     anchors.margins: panelPad
                     spacing: panelPad
+                    opacity: volExtPanel.morphEase
+                    visible: volExpandMorph > 0.08
 
                     // ── Main volume card ──
                     Rectangle {
@@ -637,28 +676,23 @@ Scope {
     // Brightness extension — board-style panel
     // ═══════════════════════════════════════════════
 
-    PanelWindow {
+    RibbonPopup {
         id: brightExtPanel
-        screen: modelData
+        screen: root.modelData
+        sideRight: root.settingsOnRight
+        popupY: root.brightExtY
+        ribbonWidth: root.barWidth
+        reservedThickness: root.reservedThickness
+        expanded: root.brightWidePanel
+        expandProgress: root.brightExpandMorph
         visible: brightPanelShown || brightPanelMorphOut.running
 
-        anchors {
-            left: !settingsOnRight
-            right: settingsOnRight
-            top: true
-            bottom: false
-        }
+        readonly property real compactW: buttonSize + popupSlide + 8
+        readonly property real compactH: pillH
+        readonly property real morphEase: brightExpandMorph * brightExpandMorph * (3 - (2 * brightExpandMorph))
 
-        implicitWidth: brightWidePanel ? Math.round(panelWidth) : Math.round(buttonSize + 38)
-        implicitHeight: brightWidePanel ? Math.round(brightPanelH) : Math.round(pillH)
-        exclusiveZone: 0
-        color: "#00000000"
-
-        margins {
-            left: settingsOnRight ? 0 : Math.round((brightWidePanel ? barWidth : 0) - 20)
-            right: settingsOnRight ? Math.round((brightWidePanel ? barWidth : 0) - 20) : 0
-            top: Math.round(brightExtY)
-        }
+        implicitWidth: Math.round(compactW + ((panelWidth - compactW) * morphEase))
+        implicitHeight: Math.round(compactH + ((brightPanelH - compactH) * morphEase))
 
         Item {
             anchors.fill: parent
@@ -666,8 +700,8 @@ Scope {
 
             // Icon button (only when hovering, not expanded, not dismissing)
             Rectangle {
-                visible: (brightPanelShown || brightPanelMorphOut.running) && !brightnessExpanded
-                readonly property real startWidth: barPanel.width * 0.7
+                visible: (brightPanelShown || brightPanelMorphOut.running) && brightExpandMorph < 0.98
+                readonly property real startWidth: barPanel.pillWidth
                 readonly property real startHeight: pillH
                 readonly property real endSize: buttonSize
 
@@ -675,12 +709,13 @@ Scope {
                 height: startHeight + (endSize - startHeight) * brightBubbleMorph
                 radius: 4 + ((endSize * 0.5 - 4) * brightBubbleMorph)
                 color: S.Theme.color1
+                opacity: 1 - brightExpandMorph
                 z: 1
                 anchors {
                     right: settingsOnRight ? parent.right : undefined
                     left: !settingsOnRight ? parent.left : undefined
-                    leftMargin: settingsOnRight ? 0 : 36 * brightBubbleMorph
-                    rightMargin: settingsOnRight ? 36 * brightBubbleMorph : 0
+                    leftMargin: settingsOnRight ? 0 : brightExtPanel.popupSlide * brightBubbleMorph
+                    rightMargin: settingsOnRight ? brightExtPanel.popupSlide * brightBubbleMorph : 0
                     verticalCenter: parent.verticalCenter
                 }
                 border.color: S.Theme.color0
@@ -703,21 +738,34 @@ Scope {
                 MouseArea {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: brightnessExpanded = true
+                    onClicked: if (!brightnessExpanded) brightnessExpanded = true
                 }
             }
 
-            // Board-style container (stays visible during fade-out via brightWidePanel)
+            // Board-style container morphs from the round icon footprint into the full widget.
             Rectangle {
-                visible: brightWidePanel
-                anchors.fill: parent
+                visible: brightWidePanel || brightExpandMorph > 0
+                readonly property real surfaceW: buttonSize + ((parent.width - buttonSize) * brightExtPanel.morphEase)
+                readonly property real surfaceH: buttonSize + ((parent.height - buttonSize) * brightExtPanel.morphEase)
+
+                width: surfaceW
+                height: surfaceH
+                x: settingsOnRight
+                    ? parent.width - surfaceW - (brightExtPanel.popupSlide * (1 - brightExtPanel.morphEase))
+                    : brightExtPanel.popupSlide * (1 - brightExtPanel.morphEase)
+                y: 0
                 color: S.Theme.color238
-                radius: 12
+                radius: (buttonSize * 0.5) + ((12 - (buttonSize * 0.5)) * brightExtPanel.morphEase)
+                opacity: brightExpandMorph
+                border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08 * brightExpandMorph)
+                border.width: 1
 
                 Column {
                     anchors.fill: parent
                     anchors.margins: panelPad
                     spacing: panelPad
+                    opacity: brightExtPanel.morphEase
+                    visible: brightExpandMorph > 0.08
 
                     Rectangle {
                         width: parent.width
