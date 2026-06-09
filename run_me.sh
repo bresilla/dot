@@ -53,6 +53,59 @@ bin_asset_arch() {
     esac
 }
 
+nvim_asset_arch() {
+    case "$(uname -m)" in
+        x86_64 | amd64) printf 'x86_64' ;;
+        aarch64 | arm64) printf 'arm64' ;;
+        *)
+            printf 'unsupported'
+            ;;
+    esac
+}
+
+install_neovim() {
+    if have nvim; then
+        log "Neovim already installed"
+        return
+    fi
+
+    if ! have curl; then
+        printf 'curl is required to install Neovim. Install curl first and rerun this script.\n' >&2
+        exit 1
+    fi
+
+    if ! have tar; then
+        printf 'tar is required to install Neovim. Install tar first and rerun this script.\n' >&2
+        exit 1
+    fi
+
+    local nvim_arch
+    nvim_arch="$(nvim_asset_arch)"
+    if [[ "$nvim_arch" == "unsupported" ]]; then
+        log "Skipping Neovim binary install: unsupported architecture $(uname -m)"
+        return
+    fi
+
+    local version="${NVIM_VERSION:-latest}"
+    local archive_name="nvim-linux-${nvim_arch}.tar.gz"
+    local url="https://github.com/neovim/neovim/releases/${version}/download/${archive_name}"
+    local opt_dir="$HOME/.local/opt"
+    local install_dir="$opt_dir/nvim"
+    local tmp_dir
+
+    tmp_dir="$(mktemp -d)"
+
+    log "Installing Neovim ${version} for $(uname -m)"
+    curl -fsSL "$url" -o "$tmp_dir/$archive_name"
+    tar -xzf "$tmp_dir/$archive_name" -C "$tmp_dir"
+
+    mkdir -p "$opt_dir" "$BINDIR"
+    rm -rf "$install_dir"
+    mv "$tmp_dir/nvim-linux-${nvim_arch}" "$install_dir"
+    ln -sfn "$install_dir/bin/nvim" "$BINDIR/nvim"
+    rm -rf "$tmp_dir"
+}
+
 mkdir -p "$HOME/.config"
 
 shopt -s nullglob
@@ -104,6 +157,8 @@ else
     log "Running bin ensure"
     bin ensure
 fi
+
+install_neovim
 
 # Install Nix
 if ! have nix-env; then
