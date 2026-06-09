@@ -1,41 +1,97 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Colors
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 BLUE_BOLD='\033[1;34m'
 NC='\033[0m' # No Color
 
-# Parse PROJECT file - extracts name (line 1) and version (line 2) from non-comment, non-section lines
-parse_project() {
-    local project_dir="$1"
-    local file="$project_dir/PROJECT"
-    [[ -f "$file" ]] || return 1
-    sed -n '/^[[:space:]]*[^#\[[:space:]]/p' "$file" | head -2
-}
+find_project_dir() {
+    local dir="$PWD"
 
-# Update PROJECT file version (second non-comment, non-section line)
-update_project() {
-    local project_dir="$1"
-    local version="$2"
-    local file="$project_dir/PROJECT"
-    [[ -f "$file" ]] || return
-
-    # Find line number of second data line and replace it
-    local line_num=$(grep -n '^[[:space:]]*[^#\[[:space:]]' "$file" | sed -n '2p' | cut -d: -f1)
-    if [[ -n "$line_num" ]]; then
-        sed -i "${line_num}s/.*/$version/" "$file"
-        echo "  Updated PROJECT"
+    if command -v git >/dev/null 2>&1 && git rev-parse --show-toplevel >/dev/null 2>&1; then
+        git rev-parse --show-toplevel
+        return
     fi
+
+    while [[ "$dir" != "/" ]]; do
+        if [[ -f "$dir/Cargo.toml" || -f "$dir/build.zig.zon" || -f "$dir/xmake.lua" \
+            || -f "$dir/package.json" || -f "$dir/pyproject.toml" || -f "$dir/flake.nix" ]]; then
+            printf '%s\n' "$dir"
+            return
+        fi
+        dir="$(dirname "$dir")"
+    done
+
+    printf '%s\n' "$PWD"
 }
 
-# Update functions for each build system
+extract_first_match() {
+    local file="$1"
+    local regex="$2"
+
+    sed -nE "s/$regex/\\1/p" "$file" | head -1
+}
+
+project_name() {
+    local project_dir="$1"
+    local value=""
+
+    if [[ -f "$project_dir/Cargo.toml" ]]; then
+        value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*name[[:space:]]*=[[:space:]]*"([^"]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/package.json" ]]; then
+        value="$(extract_first_match "$project_dir/package.json" '^[[:space:]]*"name"[[:space:]]*:[[:space:]]*"([^"]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/pyproject.toml" ]]; then
+        value="$(extract_first_match "$project_dir/pyproject.toml" '^[[:space:]]*name[[:space:]]*=[[:space:]]*"([^"]+)".*')"
+    fi
+
+    if [[ -z "$value" ]]; then
+        value="$(basename "$project_dir")"
+    fi
+
+    printf '%s\n' "$value"
+}
+
+project_version() {
+    local project_dir="$1"
+    local value=""
+
+    if [[ -f "$project_dir/Cargo.toml" ]]; then
+        value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/build.zig.zon" ]]; then
+        value="$(extract_first_match "$project_dir/build.zig.zon" '^[[:space:]]*\.version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/xmake.lua" ]]; then
+        value="$(extract_first_match "$project_dir/xmake.lua" '^[[:space:]]*local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/package.json" ]]; then
+        value="$(extract_first_match "$project_dir/package.json" '^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/pyproject.toml" ]]; then
+        value="$(extract_first_match "$project_dir/pyproject.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+    fi
+
+    [[ -n "$value" ]] || return 1
+    printf '%s\n' "$value"
+}
+
 update_zig() {
     local project_dir="$1"
     local version="$2"
     local file="$project_dir/build.zig.zon"
-    [[ -f "$file" ]] || return
-    sed -i "s/\.version = \"[0-9]*\.[0-9]*\.[0-9]*\"/.version = \"$version\"/" "$file"
+    [[ -f "$file" ]] || return 0
+    sed -i -E "s/(\.version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated build.zig.zon"
 }
 
@@ -43,8 +99,8 @@ update_xmake() {
     local project_dir="$1"
     local version="$2"
     local file="$project_dir/xmake.lua"
-    [[ -f "$file" ]] || return
-    sed -i "s/local PROJECT_VERSION = \"[0-9]*\.[0-9]*\.[0-9]*\"/local PROJECT_VERSION = \"$version\"/" "$file"
+    [[ -f "$file" ]] || return 0
+    sed -i -E "s/(local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated xmake.lua"
 }
 
@@ -52,44 +108,41 @@ update_cargo() {
     local project_dir="$1"
     local version="$2"
     local file="$project_dir/Cargo.toml"
-    [[ -f "$file" ]] || return
-    sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"/version = \"$version\"/" "$file"
+    [[ -f "$file" ]] || return 0
+    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated Cargo.toml"
 }
 
-# Check required files exist and have content
-check_required_files() {
+update_package_json() {
     local project_dir="$1"
-    local file="$project_dir/PROJECT"
+    local version="$2"
+    local file="$project_dir/package.json"
+    [[ -f "$file" ]] || return 0
+    sed -i -E "s/^([[:space:]]*\"version\"[[:space:]]*:[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    echo "  Updated package.json"
+}
 
-    if [[ ! -f "$file" ]]; then
-        echo -e "Updating version: ${RED}[ FAILED: PROJECT file not found ]${NC}"
-        return 1
-    fi
-
-    local data=$(parse_project "$project_dir")
-    local name=$(echo "$data" | head -1 | tr -d '[:space:]')
-    local version=$(echo "$data" | tail -1 | tr -d '[:space:]')
-
-    if [[ -z "$name" ]]; then
-        echo -e "Updating version: ${RED}[ FAILED: PROJECT file missing name ]${NC}"
-        return 1
-    fi
-    if [[ -z "$version" ]]; then
-        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: PROJECT file missing version ]${NC}"
-        return 1
-    fi
-    return 0
+update_pyproject() {
+    local project_dir="$1"
+    local version="$2"
+    local file="$project_dir/pyproject.toml"
+    [[ -f "$file" ]] || return 0
+    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    echo "  Updated pyproject.toml"
 }
 
 main() {
-    local project_dir="${PWD}"
+    local project_dir
+    project_dir="$(find_project_dir)"
 
-    check_required_files "$project_dir" || return 1
+    local name
+    name="$(project_name "$project_dir")"
 
-    local data=$(parse_project "$project_dir")
-    local name=$(echo "$data" | head -1 | tr -d '[:space:]')
-    local current_version=$(echo "$data" | tail -1 | tr -d '[:space:]')
+    local current_version
+    if ! current_version="$(project_version "$project_dir")"; then
+        echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: no supported version file found ]${NC}"
+        return 1
+    fi
 
     # No arguments - just show version
     if [[ $# -eq 0 ]]; then
@@ -100,7 +153,6 @@ main() {
     local arg="$1"
     local version
 
-    # Check if arg is patch/minor/major or a direct version
     case "$arg" in
         patch|minor|major)
             IFS='.' read -r major minor patch <<< "$current_version"
@@ -120,13 +172,11 @@ main() {
             ;;
     esac
 
-    # Update PROJECT file
-    update_project "$project_dir" "$version"
-
-    # Update other build system files if they exist
     update_zig "$project_dir" "$version"
     update_xmake "$project_dir" "$version"
     update_cargo "$project_dir" "$version"
+    update_package_json "$project_dir" "$version"
+    update_pyproject "$project_dir" "$version"
 
     echo -e "Updating ${BLUE_BOLD}$name${NC} version: $current_version -> $version ${GREEN}[ SUCCESS ]${NC}"
 }

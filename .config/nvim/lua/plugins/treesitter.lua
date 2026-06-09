@@ -10,6 +10,10 @@ return {
             local parser_config = parsers.get_parser_configs()
 
             local function ensure_fol_tree_bundle()
+                if vim.fn.executable('fol') ~= 1 then
+                    return false
+                end
+
                 if vim.fn.filereadable(fol_tree_parser) == 1 then
                     return true
                 end
