@@ -228,6 +228,12 @@
             "remote_name": "zoxide",
             "url": "https://github.com/ajeetdsouza/zoxide",
             "provider": ""
+        },
+        "$HOME/.local/bin/gh": {
+            "path": "$HOME/.local/bin/gh",
+            "remote_name": "gh",
+            "url": "https://github.com/cli/cli",
+            "provider": "github"
         }
     }
 }
