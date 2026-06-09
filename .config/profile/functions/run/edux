@@ -9,6 +9,16 @@ current_path=$(tmux display-message -p "#{pane_current_path}")
 view=$(tmux display-message -p "#{pane_current_command}")
 parent_session=$(tmux display-message -p "#{session_name}")
 parent_window=$(tmux display-message -p "#{window_id}")
+
+set_popup_parent() {
+    local session="$1"
+
+    tmux set-option -t "$session" status off
+    tmux set-option -t "$session" @popup_parent_session "$parent_session"
+    tmux set-option -t "$session" @popup_parent_window "$parent_window"
+    tmux set-option -t "$session" @popup_parent_pane "$pane_id"
+}
+
 case "$view" in
   nvim|vim|view)
     context="editor"
@@ -32,9 +42,7 @@ inter() {
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E bash -c "$HOME/.config/profile/functions/run/inter $argc_val $current_path $context $pane_id $view"
-            tmux set-option -t "$session" status off
-            tmux set-option -t "$session" @popup_parent_session "$parent_session"
-            tmux set-option -t "$session" @popup_parent_window "$parent_window"
+            set_popup_parent "$session"
             # sleep 0.5
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
@@ -53,9 +61,7 @@ runn() {
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" bash -c "$argc_cmd; read -p ''"
-            tmux set-option -t "$session" status off
-            tmux set-option -t "$session" @popup_parent_session "$parent_session"
-            tmux set-option -t "$session" @popup_parent_window "$parent_window"
+            set_popup_parent "$session"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
@@ -73,9 +79,7 @@ bunn() {
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" /home/bresilla/.local/bin/bun x --package "$argc_cmd" "$argc_name"; 
-            tmux set-option -t "$session" status off
-            tmux set-option -t "$session" @popup_parent_session "$parent_session"
-            tmux set-option -t "$session" @popup_parent_window "$parent_window"
+            set_popup_parent "$session"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi
@@ -91,9 +95,7 @@ term() {
     else
         if ! tmux has-session -t "$session" 2>/dev/null; then
             tmux new-session -d -s "$session" -c "$current_path" -E direnv exec "$current_path" zsh -i
-            tmux set-option -t "$session" status off
-            tmux set-option -t "$session" @popup_parent_session "$parent_session"
-            tmux set-option -t "$session" @popup_parent_window "$parent_window"
+            set_popup_parent "$session"
         fi
         tmux display-popup -d "#{pane_current_path}" -w 80% -h 70% -E "tmux attach-session -t $session"
     fi

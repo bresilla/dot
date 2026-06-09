@@ -311,6 +311,10 @@ function __tmuxline_right_prompt {
     #SESSION AND WINDOW
     prefix="${conTX}${arrER}${space}${defaultFG}" suffix="${space}${greyTX}"; 
     tmux_session=$(tmux display-message -p '#S')
+    if [[ "$tmux_session" == popup* ]]; then
+        tmux_parent_session=$(tmux show -t "$tmux_session" -v @popup_parent_session 2>/dev/null)
+        [[ -n "$tmux_parent_session" ]] && tmux_session="$tmux_parent_session"
+    fi
     tmux_window=$(tmux display-message -p '#W')
     printf "%s" "$prefix" "$tmux_session" "$suffix"
     #CMD TIME
@@ -430,8 +434,9 @@ function __promptline {
     local NLD=$(tput sgr0)
 
     TMUX_PWD=$(
-        if [ -n $TMUX ]; then
-            [[ -x "$(command -v tmux)" ]] && tmux setenv -g TMUX_PWD_$(tmux display -p "#D" | tr -d %) $PWD
+        if [[ -n "${TMUX:-}" ]] && [[ -x "$(command -v tmux)" ]]; then
+            tmux_display="$(tmux display -p "#D" 2>/dev/null)" || exit 0
+            tmux setenv -g "TMUX_PWD_$(printf '%s' "$tmux_display" | tr -d %)" "$PWD" 2>/dev/null
         fi
     )
 
