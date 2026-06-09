@@ -1,10 +1,10 @@
 {
     "default_path": "$HOME/.local/bin",
     "bins": {
-        "handoff": {
-            "path": "$HOME/.local/bin/handoff",
-            "remote_name": "handoff",
-            "url": "https://github.com/TStansel/handoff",
+        "bin": {
+            "path": "$HOME/.local/bin/bin",
+            "remote_name": "bin_0.1.0_linux_amd64",
+            "url": "https://github.com/bresilla/bin",
             "provider": "github"
         },
         "aichat": {
@@ -107,6 +107,12 @@
             "path": "$HOME/.local/bin/ha",
             "remote_name": "ha_amd64",
             "url": "https://github.com/home-assistant/cli",
+            "provider": "github"
+        },
+        "handoff": {
+            "path": "$HOME/.local/bin/handoff",
+            "remote_name": "handoff",
+            "url": "https://github.com/TStansel/handoff",
             "provider": "github"
         },
         "hugo": {
