@@ -35,6 +35,12 @@ sudo_append_line_once() {
     fi
 }
 
+load_github_auth_token() {
+    if [[ -n "${GITHUB_AUTH_TOKEN:-}" ]]; then
+        export GITHUB_AUTH_TOKEN
+    fi
+}
+
 bin_asset_arch() {
     case "$(uname -m)" in
         x86_64 | amd64) printf 'amd64' ;;
@@ -73,6 +79,8 @@ sudo_write_file /etc/profile.d/envy.sh "export PATH=$BINDIR:\$PATH"
 sudo_append_line_once /etc/zsh/zshrc 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done'
 sudo_append_line_once /etc/bash.bashrc 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done'
 sudo_write_file /etc/fish/conf.d/envy.fish "set -gx PATH $BINDIR \$PATH"
+
+load_github_auth_token
 
 if ! have bin; then
     if ! have curl; then
