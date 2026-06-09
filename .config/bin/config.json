@@ -25,6 +25,12 @@
             "url": "https://github.com/sharkdp/bat",
             "provider": "github"
         },
+        "$HOME/.local/bin/bin": {
+            "path": "$HOME/.local/bin/bin",
+            "remote_name": "bin_0.1.0_linux_amd64",
+            "url": "https://github.com/bresilla/bin",
+            "provider": "github"
+        },
         "$HOME/.local/bin/choose": {
             "path": "$HOME/.local/bin/choose",
             "remote_name": "choose-x86_64-unknown-linux-musl",
@@ -222,12 +228,6 @@
             "remote_name": "zoxide",
             "url": "https://github.com/ajeetdsouza/zoxide",
             "provider": ""
-        },
-        "$HOME/.local/bin/bin": {
-            "path": "$HOME/.local/bin/bin",
-            "remote_name": "bin_0.1.0_linux_amd64",
-            "url": "https://github.com/bresilla/bin",
-            "provider": "github"
         }
     }
 }

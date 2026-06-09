@@ -1,6 +1,21 @@
 {
   "version": 1,
   "entries": {
+    "caveman": {
+      "source": "github.com/JuliusBrussee/caveman/plugins/caveman/skills/caveman",
+      "type": "github-subdir",
+      "installed_at": "2026-06-09T00:39:55.356645977+02:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "plugins/caveman/skills/caveman",
+      "version": "655b7d9",
+      "tree_hash": "309622dcb4f658baf01762b0b95652c885ddc44e",
+      "file_hashes": {
+        "SKILL.md": "sha256:6a93e68b5d843ab6da3290dfe81cfdf26de166be7f3feca5acb52744f63db593",
+        "agents/openai.yaml": "sha256:4961a650c93d688aab1f68850149cfde235a9f25b20072fcad3ee192914808fc",
+        "assets/caveman-small.svg": "sha256:1c8f55516541b6094cb20ceabb50ff89b01d1acafaae84487e53739deebcbb1f",
+        "assets/caveman.svg": "sha256:8024fa96dce034675eb5610139e75f6d2b5db3b4cb3df3090adb8a2b2a285595"
+      }
+    },
     "humanizer": {
       "source": "github.com/blader/humanizer",
       "type": "github",
