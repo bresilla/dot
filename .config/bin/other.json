@@ -1,12 +1,6 @@
 {
     "default_path": "$HOME/.local/bin",
     "bins": {
-        "bin": {
-            "path": "$HOME/.local/bin/bin",
-            "remote_name": "bin_0.1.0_linux_amd64",
-            "url": "https://github.com/bresilla/bin",
-            "provider": "github"
-        },
         "aichat": {
             "path": "$HOME/.local/bin/aichat",
             "remote_name": "aichat",
