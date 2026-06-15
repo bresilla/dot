@@ -12,6 +12,49 @@ have() {
     command -v "$1" >/dev/null 2>&1
 }
 
+replace_path() {
+    local target="$1"
+
+    rm -rf -- "$target"
+}
+
+write_file_replace() {
+    local file="$1"
+    local content="$2"
+
+    mkdir -p "$(dirname "$file")"
+    replace_path "$file"
+    printf '%s\n' "$content" > "$file"
+}
+
+link_replace() {
+    local source="$1"
+    local target="$2"
+
+    mkdir -p "$(dirname "$target")"
+    replace_path "$target"
+    ln -s "$source" "$target"
+}
+
+install_config_links() {
+    local config_dir="$HOME/.config"
+    local item
+    local target
+
+    mkdir -p "$config_dir"
+
+    shopt -s nullglob dotglob
+    for target in "$config_dir"/*; do
+        [[ -L "$target" ]] || continue
+        rm -f -- "$target"
+    done
+
+    for item in "$ENVY"/.config/*; do
+        link_replace "$item" "$config_dir/$(basename "$item")"
+    done
+    shopt -u nullglob dotglob
+}
+
 sudo_install_dir() {
     sudo install -d "$1"
 }
@@ -21,6 +64,7 @@ sudo_write_file() {
     local content="$2"
 
     sudo_install_dir "$(dirname "$file")"
+    sudo rm -rf -- "$file"
     printf '%s\n' "$content" | sudo tee "$file" >/dev/null
 }
 
@@ -33,6 +77,19 @@ sudo_append_line_once() {
     if ! sudo grep -qxF "$line" "$file"; then
         printf '%s\n' "$line" | sudo tee -a "$file" >/dev/null
     fi
+}
+
+sudo_remove_line() {
+    local file="$1"
+    local line="$2"
+    local tmp_file
+
+    [[ -e "$file" ]] || return
+
+    tmp_file="$(mktemp)"
+    sudo grep -vxF "$line" "$file" > "$tmp_file" || true
+    sudo tee "$file" < "$tmp_file" >/dev/null
+    rm -f "$tmp_file"
 }
 
 load_github_auth_token() {
@@ -102,25 +159,18 @@ install_neovim() {
     mkdir -p "$opt_dir" "$BINDIR"
     rm -rf "$install_dir"
     mv "$tmp_dir/nvim-linux-${nvim_arch}" "$install_dir"
-    ln -sfn "$install_dir/bin/nvim" "$BINDIR/nvim"
+    link_replace "$install_dir/bin/nvim" "$BINDIR/nvim"
     rm -rf "$tmp_dir"
 }
 
-mkdir -p "$HOME/.config"
+install_config_links
 
-shopt -s nullglob
-for item in "$ENVY"/.config/*; do
-    rm -rf "$HOME/.config/$(basename "$item")"
-    ln -sf "$item" "$HOME/.config/"
-done
-shopt -u nullglob
-
-echo 'export ZDOTDIR="$HOME/.config/zsh"' > ~/.zshenv
+write_file_replace "$HOME/.zshenv" 'export ZDOTDIR="$HOME/.config/zsh"
+export NVIM_LOG_FILE=/dev/null'
 
 for item in "$ENVY"/.{profile,winitrc}; do
     [[ -e "$item" ]] || continue
-    rm -rf "$HOME/$(basename "$item")"
-    ln -sf "$item" "$HOME/"
+    link_replace "$item" "$HOME/$(basename "$item")"
 done
 
 # Install bin
@@ -128,9 +178,14 @@ BINDIR="$HOME/.local/bin"
 mkdir -p "$BINDIR"
 
 log "Installing shell PATH hooks"
-sudo_write_file /etc/profile.d/envy.sh "export PATH=$BINDIR:\$PATH"
-sudo_append_line_once /etc/zsh/zshrc 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done'
-sudo_append_line_once /etc/bash.bashrc 'for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done'
+BAD_PROFILE_D_SOURCE='for f in /etc/profile.d/*.sh; do [[ -r $f ]] && source "$f"; done'
+PATH_HOOK="case \":\$PATH:\" in *\":$BINDIR:\"*) ;; *) export PATH=\"$BINDIR:\$PATH\" ;; esac"
+
+sudo_remove_line /etc/zsh/zshrc "$BAD_PROFILE_D_SOURCE"
+sudo_remove_line /etc/bash.bashrc "$BAD_PROFILE_D_SOURCE"
+sudo_write_file /etc/profile.d/envy.sh "$PATH_HOOK"
+sudo_append_line_once /etc/zsh/zshrc "$PATH_HOOK"
+sudo_append_line_once /etc/bash.bashrc "$PATH_HOOK"
 sudo_write_file /etc/fish/conf.d/envy.fish "set -gx PATH $BINDIR \$PATH"
 
 load_github_auth_token

@@ -29,6 +29,7 @@ export HELIX_RUNTIME=$HOME/.local/share/helix
 #---------------------------         LOC & TERM          --------------------------
 export COLORTERM=truecolor
 export BROWSER=app.zen_browser.zen
+export NVIM_LOG_FILE=/dev/null
 export EDITOR=hx
 # export TERMINAL=kitty
 # export CONSOLE=kitty
