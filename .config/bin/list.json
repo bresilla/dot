@@ -1,0 +1,767 @@
+{
+    "default_path": "$HOME/.local/bin",
+    "bins": {
+        "$HOME/.local/bin/act": {
+            "path": "$HOME/.local/bin/act",
+            "remote_name": "act",
+            "url": "https://github.com/nektos/act",
+            "provider": "github",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/aichat": {
+            "path": "$HOME/.local/bin/aichat",
+            "remote_name": "aichat",
+            "url": "https://github.com/sigoden/aichat",
+            "provider": "github",
+            "description": "All-in-one LLM CLI tool featuring Shell Assistant, Chat-REPL, RAG, AI Tools \u0026 Agents, with access to OpenAI, Claude, Gemini, Ollama, Groq, and more.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/argc": {
+            "path": "$HOME/.local/bin/argc",
+            "remote_name": "argc",
+            "url": "https://github.com/sigoden/argc",
+            "provider": "",
+            "description": "A Bash CLI framework, also a Bash command runner.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/asciinema": {
+            "path": "$HOME/.local/bin/asciinema",
+            "remote_name": "asciinema-x86_64-unknown-linux-musl",
+            "url": "https://github.com/asciinema/asciinema",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/atuin": {
+            "path": "$HOME/.local/bin/atuin",
+            "remote_name": "atuin",
+            "url": "https://github.com/atuinsh/atuin",
+            "provider": "",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/bat": {
+            "path": "$HOME/.local/bin/bat",
+            "remote_name": "bat",
+            "url": "https://github.com/sharkdp/bat",
+            "provider": "github",
+            "description": "A cat(1) clone with wings.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/bd": {
+            "path": "$HOME/.local/bin/bd",
+            "remote_name": "bd",
+            "url": "https://github.com/steveyegge/beads",
+            "provider": "github",
+            "description": "Beads - A memory upgrade for your coding agent",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/bibiman": {
+            "path": "$HOME/.local/bin/bibiman",
+            "remote_name": "bibiman-x86_64-musl",
+            "url": "https://codeberg.org/lukeflo/bibiman",
+            "provider": "codeberg",
+            "description": "A TUI for fast and simple interacting with your BibLaTeX database",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/bin": {
+            "path": "$HOME/.local/bin/bin",
+            "remote_name": "bin_0.1.0_linux_amd64",
+            "url": "https://github.com/bresilla/bin",
+            "provider": "github",
+            "description": "Effortless binary manager",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/buf": {
+            "path": "$HOME/.local/bin/buf",
+            "remote_name": "buf-Linux-x86_64",
+            "url": "https://github.com/bufbuild/buf",
+            "provider": "github",
+            "description": "The best way of working with Protocol Buffers.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/bun": {
+            "path": "$HOME/.local/bin/bun",
+            "remote_name": "bun",
+            "url": "https://github.com/oven-sh/bun",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/choose": {
+            "path": "$HOME/.local/bin/choose",
+            "remote_name": "choose-x86_64-unknown-linux-musl",
+            "url": "https://github.com/theryangeary/choose",
+            "provider": "",
+            "description": "A human-friendly and fast alternative to cut (and sometimes awk)",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/clipse": {
+            "path": "$HOME/.local/bin/clipse",
+            "remote_name": "clipse-linux-wayland-amd64",
+            "url": "https://github.com/savedra1/clipse",
+            "provider": "github",
+            "description": "Configurable TUI clipboard manager for Unix",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/cloudflared": {
+            "path": "$HOME/.local/bin/cloudflared",
+            "remote_name": "cloudflared-linux-amd64",
+            "url": "https://github.com/cloudflare/cloudflared",
+            "provider": "",
+            "description": "Cloudflare Tunnel client",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/codex": {
+            "path": "$HOME/.local/bin/codex",
+            "remote_name": "codex-x86_64-unknown-linux-musl",
+            "url": "https://github.com/openai/codex",
+            "provider": "github",
+            "description": "Lightweight coding agent that runs in your terminal",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/crush": {
+            "path": "$HOME/.local/bin/crush",
+            "remote_name": "crush",
+            "url": "https://github.com/charmbracelet/crush",
+            "provider": "github",
+            "description": "Glamourous agentic coding for all 💘",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/delta": {
+            "path": "$HOME/.local/bin/delta",
+            "remote_name": "delta",
+            "url": "https://github.com/dandavison/delta",
+            "provider": "",
+            "description": "A syntax-highlighting pager for git, diff, grep, rg --json, and blame output",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/devbox": {
+            "path": "$HOME/.local/bin/devbox",
+            "remote_name": "devbox",
+            "url": "https://github.com/jetify-com/devbox",
+            "provider": "",
+            "description": "Instant, easy, and predictable development environments",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/difi": {
+            "path": "$HOME/.local/bin/difi",
+            "remote_name": "difi",
+            "url": "https://github.com/oug-t/difi",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/direnv": {
+            "path": "$HOME/.local/bin/direnv",
+            "remote_name": "direnv.linux-amd64",
+            "url": "https://github.com/direnv/direnv",
+            "provider": "",
+            "description": "unclutter your .profile",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/dufs": {
+            "path": "$HOME/.local/bin/dufs",
+            "remote_name": "dufs",
+            "url": "https://github.com/sigoden/dufs",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/ec": {
+            "path": "$HOME/.local/bin/ec",
+            "remote_name": "ec-linux-amd64",
+            "url": "https://github.com/chojs23/ec",
+            "provider": "github",
+            "description": "Easy terminal-native 3-way git mergetool vim-like workflow",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/engram": {
+            "path": "$HOME/.local/bin/engram",
+            "remote_name": "engram",
+            "url": "https://github.com/Gentleman-Programming/engram",
+            "provider": "github",
+            "description": "Persistent memory system for AI coding agents. Agent-agnostic Go binary with SQLite + FTS5, MCP server, HTTP API, CLI, and TUI.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/eza": {
+            "path": "$HOME/.local/bin/eza",
+            "remote_name": "eza",
+            "url": "https://github.com/eza-community/eza",
+            "provider": "",
+            "description": "A modern alternative to ls",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/gh": {
+            "path": "$HOME/.local/bin/gh",
+            "remote_name": "gh",
+            "url": "https://github.com/cli/cli",
+            "provider": "github",
+            "description": "GitHub’s official command line tool",
+            "tags": [
+                "default",
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/gh-dash": {
+            "path": "$HOME/.local/bin/gh-dash",
+            "remote_name": "gh-dash_v4.23.2_linux-amd64",
+            "url": "https://github.com/dlvhdr/gh-dash",
+            "provider": "github",
+            "description": "A rich terminal UI for GitHub that doesn't break your flow.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/git-cliff": {
+            "path": "$HOME/.local/bin/git-cliff",
+            "remote_name": "git-cliff",
+            "url": "https://github.com/orhun/git-cliff",
+            "provider": "github",
+            "description": "A highly customizable Changelog Generator that follows Conventional Commit specifications ⛰️",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/git-flow": {
+            "path": "$HOME/.local/bin/git-flow",
+            "remote_name": "git-flow-v0.1.1-linux-amd64",
+            "url": "https://github.com/gittower/git-flow-next",
+            "provider": "github",
+            "description": "A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/git-town": {
+            "path": "$HOME/.local/bin/git-town",
+            "remote_name": "git-town",
+            "url": "https://github.com/git-town/git-town",
+            "provider": "github",
+            "description": "Git branches made easy",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/git-who": {
+            "path": "$HOME/.local/bin/git-who",
+            "remote_name": "git-who",
+            "url": "https://github.com/sinclairtarget/git-who",
+            "provider": "github",
+            "description": "Git blame for file trees",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/gomi": {
+            "path": "$HOME/.local/bin/gomi",
+            "remote_name": "gomi",
+            "url": "https://github.com/babarot/gomi",
+            "provider": "",
+            "description": "🗑️ Your UNIX rm command with a safety net!",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/gum": {
+            "path": "$HOME/.local/bin/gum",
+            "remote_name": "gum",
+            "url": "https://github.com/charmbracelet/gum",
+            "provider": "",
+            "description": "A tool for glamorous shell scripts 🎀",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/ha": {
+            "path": "$HOME/.local/bin/ha",
+            "remote_name": "ha_amd64",
+            "url": "https://github.com/home-assistant/cli",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/handoff": {
+            "path": "$HOME/.local/bin/handoff",
+            "remote_name": "handoff",
+            "url": "https://github.com/TStansel/handoff",
+            "provider": "github",
+            "description": "Handoff context from one agent to another agent",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/hub": {
+            "path": "$HOME/.local/bin/hub",
+            "remote_name": "hub",
+            "url": "https://github.com/github/hub",
+            "provider": "",
+            "description": "A command-line tool that makes git easier to use with GitHub.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/hugo": {
+            "path": "$HOME/.local/bin/hugo",
+            "remote_name": "hugo",
+            "url": "https://github.com/gohugoio/hugo",
+            "provider": "github",
+            "description": "The world’s fastest framework for building websites.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/ipinfo": {
+            "path": "$HOME/.local/bin/ipinfo",
+            "remote_name": "ipinfo_3.3.1_linux_amd64",
+            "url": "https://github.com/ipinfo/cli",
+            "provider": "",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/jj": {
+            "path": "$HOME/.local/bin/jj",
+            "remote_name": "jj",
+            "url": "https://github.com/jj-vcs/jj",
+            "provider": "github",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/just": {
+            "path": "$HOME/.local/bin/just",
+            "remote_name": "just",
+            "url": "https://github.com/casey/just",
+            "provider": "github",
+            "description": "🤖 Just a command runner",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/lockbook": {
+            "path": "$HOME/.local/bin/lockbook",
+            "remote_name": "lockbook-cli-linux",
+            "url": "https://github.com/lockbook/lockbook",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/mdbook": {
+            "path": "$HOME/.local/bin/mdbook",
+            "remote_name": "mdbook",
+            "url": "https://github.com/rust-lang/mdBook",
+            "provider": "github",
+            "description": "Create book from markdown files. Like Gitbook but implemented in Rust",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/micromamba": {
+            "path": "$HOME/.local/bin/micromamba",
+            "remote_name": "micromamba-linux-64",
+            "url": "https://github.com/mamba-org/micromamba-releases",
+            "provider": "github",
+            "description": "Micromamba executables mirrored from conda-forge as Github releases",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/mods": {
+            "path": "$HOME/.local/bin/mods",
+            "remote_name": "mods",
+            "url": "https://github.com/charmbracelet/mods",
+            "provider": "github",
+            "description": "AI on the command line",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/names": {
+            "path": "$HOME/.local/bin/names",
+            "remote_name": "names-x86_64-unknown-linux-musl",
+            "url": "https://github.com/fnichol/names",
+            "provider": "github",
+            "description": "Random name generator for Rust",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/netbird": {
+            "path": "$HOME/.local/bin/netbird",
+            "remote_name": "netbird",
+            "url": "https://github.com/netbirdio/netbird",
+            "provider": "github",
+            "description": "Connect your devices into a secure WireGuard®-based overlay network with SSO, MFA and granular access controls.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/newt": {
+            "path": "$HOME/.local/bin/newt",
+            "remote_name": "newt_linux_amd64",
+            "url": "https://github.com/fosrl/newt",
+            "provider": "github",
+            "description": "Pangolin tunneled site \u0026 network connector",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/nom": {
+            "path": "$HOME/.local/bin/nom",
+            "remote_name": "nom",
+            "url": "https://github.com/guyfedwards/nom",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/nostromo": {
+            "path": "$HOME/.local/bin/nostromo",
+            "remote_name": "nostromo",
+            "url": "https://github.com/pokanop/nostromo",
+            "provider": "github",
+            "description": "👽 CLI for building powerful aliases and tools",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/oc": {
+            "path": "$HOME/.local/bin/oc",
+            "remote_name": "opencloud-6.1.0-linux-amd64",
+            "url": "https://github.com/opencloud-eu/opencloud",
+            "provider": "github",
+            "description": "🌤️ OpenCloud is the open source platform for file management, sharing and collaboration. Simple and sovereign.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/olm": {
+            "path": "$HOME/.local/bin/olm",
+            "remote_name": "olm_linux_amd64",
+            "url": "https://github.com/fosrl/olm",
+            "provider": "github",
+            "description": "A remote access machine VPN client for Pangolin",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/perles": {
+            "path": "$HOME/.local/bin/perles",
+            "remote_name": "perles",
+            "url": "https://github.com/zjrosen/perles",
+            "provider": "github",
+            "description": "A BQL (Beads Query Language) search, dependency and multi-view kanban board Terminal UI for Beads issue tracking and multi-agent orchestration control plane workflow runner.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/pik": {
+            "path": "$HOME/.local/bin/pik",
+            "remote_name": "pik",
+            "url": "https://github.com/jacek-kurlit/pik",
+            "provider": "github",
+            "description": "Process Interactive Kill",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/pixi": {
+            "path": "$HOME/.local/bin/pixi",
+            "remote_name": "pixi-x86_64-unknown-linux-musl",
+            "url": "https://github.com/prefix-dev/pixi",
+            "provider": "github",
+            "description": "Powerful system-level package manager for Linux, macOS and Windows written in Rust – building on top of the Conda ecosystem.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/presenterm": {
+            "path": "$HOME/.local/bin/presenterm",
+            "remote_name": "presenterm",
+            "url": "https://github.com/mfontanini/presenterm",
+            "provider": "github",
+            "description": "A markdown terminal slideshow tool",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/rargs": {
+            "path": "$HOME/.local/bin/rargs",
+            "remote_name": "rargs",
+            "url": "https://github.com/lotabout/rargs",
+            "provider": "github",
+            "description": "xargs + awk with pattern matching support. `ls *.bak | rargs -p '(.*)\\.bak' mv {0} {1}`",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/rerun": {
+            "path": "$HOME/.local/bin/rerun",
+            "remote_name": "rerun-cli-0.32.0-x86_64-unknown-linux-gnu",
+            "url": "https://github.com/rerun-io/rerun",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/rustscan": {
+            "path": "$HOME/.local/bin/rustscan",
+            "remote_name": "rustscan",
+            "url": "https://github.com/bee-san/RustScan",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/sdt": {
+            "path": "$HOME/.local/bin/sdt",
+            "remote_name": "systemd-manager-tui",
+            "url": "https://github.com/matheus-git/systemd-manager-tui",
+            "provider": "github",
+            "description": "A TUI application for managing systemd services.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/sentrux": {
+            "path": "$HOME/.local/bin/sentrux",
+            "remote_name": "sentrux-linux-x86_64",
+            "url": "https://github.com/sentrux/sentrux",
+            "provider": "github",
+            "description": "Real-time architectural sensor that helps AI agents close the feedback loop, enabling recursive self-improvement of code quality. Pure Rust.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/ser": {
+            "path": "$HOME/.local/bin/ser",
+            "remote_name": "servicer-x86_64-unknown-linux-gnu",
+            "url": "https://github.com/servicer-labs/servicer",
+            "provider": "github",
+            "description": "A CLI to simplify service management on systemd",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/serpl": {
+            "path": "$HOME/.local/bin/serpl",
+            "remote_name": "serpl",
+            "url": "https://github.com/yassinebridi/serpl",
+            "provider": "github",
+            "description": "A simple terminal UI for search and replace, ala VS Code.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/sg": {
+            "path": "$HOME/.local/bin/sg",
+            "remote_name": "sg_darwin_amd64",
+            "url": "https://github.com/sourcegraph/sg",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/skillshare": {
+            "path": "$HOME/.local/bin/skillshare",
+            "remote_name": "skillshare",
+            "url": "https://github.com/runkids/skillshare",
+            "provider": "github",
+            "description": "📚 Sync skills across all AI CLI tools with one command and simplify team sharing. Supporting Codex, Claude Code, OpenClaw \u0026 more",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/soft": {
+            "path": "$HOME/.local/bin/soft",
+            "remote_name": "soft",
+            "url": "https://github.com/charmbracelet/soft-serve",
+            "provider": "github",
+            "description": "The mighty, self-hostable Git server for the command line🍦",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/spotifyd": {
+            "path": "$HOME/.local/bin/spotifyd",
+            "remote_name": "spotifyd",
+            "url": "https://github.com/Spotifyd/spotifyd",
+            "provider": "github",
+            "description": "A spotify daemon",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/srss": {
+            "path": "$HOME/.local/bin/srss",
+            "remote_name": "srss",
+            "url": "https://github.com/sheepla/srss",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/starship": {
+            "path": "$HOME/.local/bin/starship",
+            "remote_name": "starship",
+            "url": "https://github.com/starship/starship",
+            "provider": "github",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/step": {
+            "path": "$HOME/.local/bin/step",
+            "remote_name": "step",
+            "url": "https://github.com/smallstep/cli",
+            "provider": "github",
+            "description": "🧰  A zero trust swiss army knife for working with X509, OAuth, JWT, OATH OTP, etc.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/subcog": {
+            "path": "$HOME/.local/bin/subcog",
+            "remote_name": "subcog",
+            "url": "https://github.com/zircote/subcog",
+            "provider": "github",
+            "description": "Persistent memory system for AI coding assistants.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/systemd-manager-tui": {
+            "path": "$HOME/.local/bin/systemd-manager-tui",
+            "remote_name": "systemd-manager-tui",
+            "url": "https://github.com/matheus-git/systemd-manager-tui",
+            "provider": "github",
+            "description": "A TUI application for managing systemd services.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/tab": {
+            "path": "$HOME/.local/bin/tab",
+            "remote_name": "tab",
+            "url": "https://github.com/austinjones/tab-rs",
+            "provider": "github",
+            "description": "The intuitive, config-driven terminal multiplexer designed for software \u0026 systems engineers",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/tldr": {
+            "path": "$HOME/.local/bin/tldr",
+            "remote_name": "tealdeer-linux-x86_64-musl",
+            "url": "https://github.com/tealdeer-rs/tealdeer",
+            "provider": "github",
+            "description": "A very fast implementation of tldr in Rust.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/tree-sitter": {
+            "path": "$HOME/.local/bin/tree-sitter",
+            "remote_name": "tree-sitter",
+            "url": "https://github.com/tree-sitter/tree-sitter",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/trunk": {
+            "path": "$HOME/.local/bin/trunk",
+            "remote_name": "trunk",
+            "url": "https://github.com/trunk-rs/trunk",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/wasm-pack": {
+            "path": "$HOME/.local/bin/wasm-pack",
+            "remote_name": "wasm-pack",
+            "url": "https://github.com/rustwasm/wasm-pack",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/yazi": {
+            "path": "$HOME/.local/bin/yazi",
+            "remote_name": "yazi",
+            "url": "https://github.com/sxyazi/yazi",
+            "provider": "github",
+            "description": "💥 Blazing fast terminal file manager written in Rust, based on async I/O.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/zenohd": {
+            "path": "$HOME/.local/bin/zenohd",
+            "remote_name": "zenohd",
+            "url": "https://github.com/eclipse-zenoh/zenoh",
+            "provider": "github",
+            "description": "zenoh unifies data in motion, data in-use, data at rest and computations.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/zoxide": {
+            "path": "$HOME/.local/bin/zoxide",
+            "remote_name": "zoxide",
+            "url": "https://github.com/ajeetdsouza/zoxide",
+            "provider": "",
+            "description": "A smarter cd command. Supports all major shells.",
+            "tags": [
+                "default"
+            ]
+        }
+    }
+}

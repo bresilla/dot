@@ -203,11 +203,12 @@ if ! have bin; then
     fi
 
     log "Installing bin for $(uname -m)"
-    TMP_BIN="$(mktemp)"
-    trap 'rm -f "$TMP_BIN"' EXIT
-    curl -fsSL "https://github.com/marcosnils/bin/releases/download/v0.24.0/bin_0.24.0_linux_${BIN_ARCH}" -o "$TMP_BIN"
-    chmod +x "$TMP_BIN"
-    "$TMP_BIN" ensure
+    TMP_BIN_DIR="$(mktemp -d)"
+    trap 'rm -rf "$TMP_BIN_DIR"' EXIT
+    curl -fsSL "https://github.com/bresilla/bin/releases/latest/download/bin_linux_${BIN_ARCH}.tar.gz" \
+        | tar -xzf - -C "$TMP_BIN_DIR"
+    chmod +x "$TMP_BIN_DIR/bin"
+    "$TMP_BIN_DIR/bin" ensure
 else
     log "Running bin ensure"
     bin ensure

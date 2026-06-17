@@ -1,0 +1,17 @@
+# bin TUI theme — colors are terminal palette indexes (0-255) or hex (#aabbcc).
+# Palette names recolor automatically with pywal-style tools. The 232..255
+# grayscale ramp is handy for subtle row shading.
+
+# foreground colors
+accent = 1     # highlights, selection, title background
+text   = 15    # primary text
+muted  = 8     # secondary text / separators
+ok     = 2     # up to date / present
+warn   = 3     # update available / pinned
+err    = 9     # missing / errors
+tag    = 6     # tag chips & repo
+
+# TUI row backgrounds (alternating + selected)
+row_bg          = 235  # even rows
+row_bg_alt      = 0  # odd rows
+row_bg_selected = 237  # selected row

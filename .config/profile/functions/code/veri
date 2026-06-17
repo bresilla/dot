@@ -35,12 +35,31 @@ extract_first_match() {
     sed -nE "s/$regex/\\1/p" "$file" | head -1
 }
 
+# go_version_file echoes the path to the Go source file holding the app version
+# string (a `version = "X.Y.Z"` declaration), preferring common entrypoints.
+go_version_file() {
+    local project_dir="$1"
+    local re='(^|[[:space:]])[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
+    local cand
+    for cand in main.go src/main.go version.go internal/version/version.go cmd/version.go; do
+        if [[ -f "$project_dir/$cand" ]] && grep -qE "$re" "$project_dir/$cand"; then
+            printf '%s\n' "$project_dir/$cand"
+            return 0
+        fi
+    done
+    grep -rElE "$re" --include='*.go' "$project_dir" 2>/dev/null | head -1
+}
+
 project_name() {
     local project_dir="$1"
     local value=""
 
     if [[ -f "$project_dir/Cargo.toml" ]]; then
         value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*name[[:space:]]*=[[:space:]]*"([^"]+)".*')"
+    fi
+
+    if [[ -z "$value" && -f "$project_dir/go.mod" ]]; then
+        value="$(basename "$(sed -n 's/^module[[:space:]]*//p' "$project_dir/go.mod" | head -1)")"
     fi
 
     if [[ -z "$value" && -f "$project_dir/package.json" ]]; then
@@ -66,6 +85,14 @@ project_version() {
         value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
+    if [[ -z "$value" && -f "$project_dir/go.mod" ]]; then
+        local gofile
+        gofile="$(go_version_file "$project_dir")"
+        if [[ -n "$gofile" ]]; then
+            value="$(extract_first_match "$gofile" '^[[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        fi
+    fi
+
     if [[ -z "$value" && -f "$project_dir/build.zig.zon" ]]; then
         value="$(extract_first_match "$project_dir/build.zig.zon" '^[[:space:]]*\.version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
@@ -84,6 +111,17 @@ project_version() {
 
     [[ -n "$value" ]] || return 1
     printf '%s\n' "$value"
+}
+
+update_go() {
+    local project_dir="$1"
+    local version="$2"
+    [[ -f "$project_dir/go.mod" ]] || return 0
+    local gofile
+    gofile="$(go_version_file "$project_dir")"
+    [[ -n "$gofile" ]] || return 0
+    sed -i -E "s/^([[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
+    echo "  Updated ${gofile#$project_dir/}"
 }
 
 update_zig() {
@@ -172,6 +210,7 @@ main() {
             ;;
     esac
 
+    update_go "$project_dir" "$version"
     update_zig "$project_dir" "$version"
     update_xmake "$project_dir" "$version"
     update_cargo "$project_dir" "$version"
