@@ -14,7 +14,7 @@ return function(ctx)
     bind_exec(super .. " + L", "hyprlock")
 
     bind_exec(super_meta .. " + P", "doas chvt 2")
-    scratchpads.bind(super_meta .. " + Backspace", "ask", "kitty --title ask -e /env/bin/aichat", {
+    scratchpads.bind(super_meta .. " + Backspace", "ask", "kitty --title ask -e aichat", {
         size = { "monitor_h*0.8", "monitor_h*0.8" },
     })
     scratchpads.bind(super_meta .. " + Space", "browsy", "kitty --title browsy -e browsy", {
@@ -75,8 +75,8 @@ return function(ctx)
     bind_exec("XF86AudioLowerVolume", "pamixer -d 2", { repeating = true })
     bind_exec("XF86AudioPlay", "playerctl next", { repeating = true })
 
-    bind_exec("XF86MonBrightnessDown", "light -U 2")
-    bind_exec("XF86MonBrightnessUp", "light -A 2")
+    bind_exec("XF86MonBrightnessDown", "bright -2")
+    bind_exec("XF86MonBrightnessUp", "bright +2")
 
     bind_exec("Print", "/env/dot/.config/profile/functions/wm/capture i")
 
