@@ -6,7 +6,7 @@ elif [ "$1" == "rofi" ]; then
     runner=rofit
 fi
 
-source /home/bresilla/.cache/wal/colors.sh
+source $HOME/.cache/wal/colors.sh
 
 path=syspath
 font=sysfonts
@@ -22,7 +22,7 @@ $note
 $conf" | $runner)
 
 if [ "$another" == "$conf" ] ; then
-    confile=$(find /env/dot/ -type f -not -path "/home/bresilla/dots/.other/*" -not -path "/home/bresilla/dots/.config/Code*" -not -path "/home/bresilla/dots/.config/nvim/plugged/*" | $runner)
+    confile=$(find /env/dot/ -type f -not -path "$HOME/dots/.other/*" -not -path "$HOME/dots/.config/Code*" -not -path "$HOME/dots/.config/nvim/plugged/*" | $runner)
     [[ $confile != "" ]] && kitty --class=til nvim $confile
 
 elif [ "$another" == "$path" ] ; then
@@ -36,7 +36,7 @@ elif [ "$another" == "$clip" ] ; then
     greenclip print | $runner
 
 elif [ "$another" == "$note" ] ; then
-    nnn /home/bresilla/.local/share/notes
+    nnn $HOME/.local/share/notes
 
 else
   exec nohup $another > /dev/null 2>&1 &

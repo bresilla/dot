@@ -6,4 +6,4 @@ windows:
   - commands:
     - clear
     focus: true
-    root: /home/bresilla
+    root: ~

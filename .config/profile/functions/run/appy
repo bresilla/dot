@@ -10,7 +10,7 @@ elif [ "$1" == "rofi" ]; then
     runner=rofit
 fi
 
-source /home/bresilla/.cache/wal/colors.sh
+source $HOME/.cache/wal/colors.sh
 
 # applaunch=$(flatpak list --columns=application | sort -u | $runner)
 

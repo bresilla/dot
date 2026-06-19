@@ -6,12 +6,12 @@ elif [ "$1" == "rofi" ]; then
     runner=rofit
 fi
 
-source /home/bresilla/.cache/wal/colors.sh
+source $HOME/.cache/wal/colors.sh
 
 
 foxy() {
-    # PLACES_PATH="/home/bresilla/.mozilla/firefox/dq7krxug.default-1630495882574/places.sqlite"
-    PLACES_PATH="/home/bresilla/.var/app/org.mozilla.firefox/.mozilla/firefox/gxw08cft.default-release/places.sqlite"
+    # PLACES_PATH="$HOME/.mozilla/firefox/dq7krxug.default-1630495882574/places.sqlite"
+    PLACES_PATH="$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox/gxw08cft.default-release/places.sqlite"
     DB_PATH=$(mktemp /tmp/ffhist.XXXXX)
     cp -f $PLACES_PATH $DB_PATH
 
@@ -60,7 +60,7 @@ elif [ "$another" == "$hist" ] ; then
     foxy
 
 elif [ "$another" == "$mark" ] ; then
-    LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/webmarks_v0.1.json" list -g default| tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g default| tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
@@ -68,7 +68,7 @@ elif [ "$another" == "$mark" ] ; then
     fi
 
 elif [ "$another" == "$loca" ] ; then
-    LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/webmarks_v0.1.json" list -g proxmox | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g proxmox | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
@@ -76,7 +76,7 @@ elif [ "$another" == "$loca" ] ; then
     fi
 
 elif [ "$another" == "$list" ] ; then
-    LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/playmarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/playmarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
@@ -84,7 +84,7 @@ elif [ "$another" == "$list" ] ; then
     fi
 
 elif [ "$another" == "$apps" ] ; then
-    LINK=$(/env/bin/bookmark --file "/home/bresilla/.local/share/bookmark/climarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/climarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else

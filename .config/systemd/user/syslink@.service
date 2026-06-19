@@ -4,12 +4,12 @@ After=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/bresilla
+WorkingDirectory=%h
 
 ExecStart=/bin/sh -c '\
 HOST="$${1%-*}"; \
 PORT="$${1#*-}"; \
-exec /home/bresilla/.local/bin/syslink server start \
+exec %h/.local/bin/syslink server start \
   -k %h/.ssh/sl_host_key \
   --host "$$HOST" \
   --port "$$PORT"' sh "%i"

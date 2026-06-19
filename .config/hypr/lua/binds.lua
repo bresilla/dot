@@ -23,7 +23,7 @@ return function(ctx)
     scratchpads.bind(super_meta .. " + Return", "appy", "kitty --title appy -e appy", {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
-    bind_exec(super_meta .. " + F9", "/env/dot/.config/profile/functions/wm/lule_switch")
+    bind_exec(super_meta .. " + F9", ctx.home .. "/.config/profile/functions/wm/lule_switch")
 
     hl.bind(super .. " + Escape", hl.dsp.window.close())
     bind_exec(super .. " + Return", "alacritty")
@@ -78,14 +78,14 @@ return function(ctx)
     bind_exec("XF86MonBrightnessDown", "bright -2")
     bind_exec("XF86MonBrightnessUp", "bright +2")
 
-    bind_exec("Print", "/env/dot/.config/profile/functions/wm/capture i")
+    bind_exec("Print", ctx.home .. "/.config/profile/functions/wm/capture i")
 
     bind_exec(menu .. " + Return", "play")
     bind_exec(menu .. " + Space", "mpv_control cycle")
     bind_exec(menu .. " + comma", "mpv_control backwards 10")
     bind_exec(menu .. " + period", "mpv_control forewards 10")
 
-    bind_exec(super .. " + F9", "/env/dot/.config/profile/functions/wm/lule_create")
+    bind_exec(super .. " + F9", ctx.home .. "/.config/profile/functions/wm/lule_create")
 
     _ = hyper
 end

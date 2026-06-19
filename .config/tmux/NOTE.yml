@@ -5,27 +5,27 @@ windows:
 #   panes:
 #   - commands:
 #     - spt
-#     root: /home/bresilla
+#     root: ~
 #   - commands:
 #     - taskwarrior-tui
-#     root: /home/bresilla
+#     root: ~
 #   - commands:
 #     - ncpamixer
 #     focus: true
-#     root: /home/bresilla
+#     root: ~
 #   - commands:
 #     - tock -c
-#     root: /home/bresilla
+#     root: ~
 - name: top
   layout: a4ab,279x66,0,0{153x66,0,0,5,125x66,154,0[125x33,154,0,7,125x32,154,34,6]}
   panes:
   - commands:
     - btop
     focus: true
-    root: /home/bresilla
+    root: ~
   - commands:
     - battop
-    root: /home/bresilla
+    root: ~
   - commands:
     - taskwarrior-tui
-    root: /home/bresilla
+    root: ~

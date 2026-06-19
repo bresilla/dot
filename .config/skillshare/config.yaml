@@ -1,18 +1,18 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/runkids/skillshare/main/schemas/config.schema.json
 sources:
-  skills: /home/bresilla/.config/skillshare/skills
-  agents: /home/bresilla/.config/skillshare/agents
+  skills: ~/.config/skillshare/skills
+  agents: ~/.config/skillshare/agents
 mode: merge
 targets:
   claude:
     skills:
-      path: /home/bresilla/.claude/skills
+      path: ~/.claude/skills
   codex:
     skills:
-      path: /home/bresilla/.codex/skills
+      path: ~/.codex/skills
   universal:
     skills:
-      path: /home/bresilla/.agents/skills
+      path: ~/.agents/skills
 ignore:
   - '**/.DS_Store'
   - '**/.git/**'

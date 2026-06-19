@@ -5,11 +5,10 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/env/bin/wireproxy -c /home/bresilla/.local/share/mlvd.conf
+ExecStart=%h/.local/bin/wireproxy -c %h/.local/share/mlvd.conf
 ExecReload=/usr/bin/kill -SIGUSR1 $MAINPID
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=default.target
-

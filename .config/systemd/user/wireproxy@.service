@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/env/bin/wireproxy -c %h/.local/share/%I.conf
+ExecStart=%h/.local/bin/wireproxy -c %h/.local/share/%I.conf
 ExecReload=/usr/bin/kill -SIGUSR1 $MAINPID
 Restart=always
 RestartSec=5

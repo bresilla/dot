@@ -1,4 +1,4 @@
-local home = os.getenv("HOME") or "/home/bresilla"
+local home = assert(os.getenv("HOME"), "HOME is not set")
 local config_dir = home .. "/.config/hypr"
 local util = dofile(config_dir .. "/lua/lib.lua")
 

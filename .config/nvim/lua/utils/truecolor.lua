@@ -1,4 +1,6 @@
 -- Helper function to check if a file exists
+local home = os.getenv("HOME") or vim.fn.expand("~")
+
 local function file_exists(file)
   local f = io.open(file, "rb")
   if f then f:close() end
@@ -43,7 +45,7 @@ end
 
 function mycolors()
   -- Read rainbow colors from file
-  local rainbow = fileToList('/home/bresilla/.cache/lule/colors')
+  local rainbow = fileToList(home .. '/.cache/lule/colors')
   local c = {}
   for i, color in ipairs(rainbow) do
       if not vim.o.termguicolors then
@@ -399,15 +401,14 @@ function mycolors()
 end
 
 -- Set initial theme based on file value (or default to "dark")
--- local themecolor = fileToList('/home/bresilla/.cache/wal/theme')[1] or "dark"
+-- local themecolor = fileToList(home .. '/.cache/wal/theme')[1] or "dark"
 mycolors()
 
 vim.keymap.set('n', '<leader>d', function() mycolors() end)
 
 -- Watch the colors file for changes and reapply the theme.
-local filepathtowatch = '/home/bresilla/.cache/lule/colors'
+local filepathtowatch = home .. '/.cache/lule/colors'
 local watcher = require("utils.watcher")
 local handle = watcher.watch_file(filepathtowatch, function(fname, status)
   mycolors()
 end)
-

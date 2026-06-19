@@ -7,7 +7,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/env/bin/spotifyd --no-daemon --config-path /home/bresilla/.config/spotifyd/spotifyd.conf
+ExecStart=%h/.local/bin/spotifyd --no-daemon --config-path %h/.config/spotifyd/spotifyd.conf
 # ExecStart=/usr/bin/spotifyd --no-daemon --verbose
 Restart=always
 RestartSec=12

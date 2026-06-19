@@ -89,7 +89,7 @@ alias xfreerdp=xfreerdp3
 alias ari='aria2c'
 alias inxi='prime inxi -Fxxxz'
 alias font='fc-query'
-alias pomo='pomo -p /home/bresilla/.config/pomo'
+alias pomo='pomo -p $HOME/.config/pomo'
 alias git='hub'
 alias lines='tokei'
 alias search='rg --hidden'
@@ -105,8 +105,8 @@ alias rer='WGPU_BACKEND=vulkan WAYLAND_DISPLAY= rerun --connect rerun+http://100
 alias nixenv="nix shell --experimental-features 'nix-command flakes' github:NixOS/nixpkgs/nixos-unstable#nixos-install-tools"
 
 ##BIN
-# alias bins="BIN_CONFIG=/home/bresilla/.config/bin/config.json /env/bin/bin list"
-alias bino="BIN_CONFIG=/home/bresilla/.config/bin/other.json bin"
+# alias bins="BIN_CONFIG=$HOME/.config/bin/config.json /env/bin/bin list"
+alias bino="BIN_CONFIG=$HOME/.config/bin/other.json bin"
 
 ##ROBO
 alias ros="ros2"

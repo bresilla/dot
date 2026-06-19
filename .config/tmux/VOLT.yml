@@ -5,14 +5,14 @@ windows:
   panes:
   - commands:
     - voltron view reg
-    root: /home/bresilla
+    root: ~
   - commands:
     - voltron view disasm
-    root: /home/bresilla
+    root: ~
   - commands:
     - echo "Default CMD"
     focus: true
-    root: /home/bresilla
+    root: ~
   - commands:
     - voltron view stack
-    root: /home/bresilla
+    root: ~

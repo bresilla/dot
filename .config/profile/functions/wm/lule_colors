@@ -1,5 +1,8 @@
 #!/bin/bash
 
+TEMP=${TEMP:-/tmp}
+mkdir -p "$HOME/.cache/wal"
+
 # cat $TMP/lule_colors > $HOME/.cache/wal/colors
 cp $TEMP/lule_colors $HOME/.cache/wal/colors
 cp $TEMP/lule_theme $HOME/.cache/wal/theme
@@ -87,7 +90,7 @@ create_files(){
     printf "}\n" >> $HOME/.cache/wal/colors.lua
 
     #update logo colors
-    sed -i "s/fill=\"#\([^\"]*\)\"/fill=\"$col1\"/" /home/bresilla/.config/bresilla.svg
+    sed -i "s/fill=\"#\([^\"]*\)\"/fill=\"$col1\"/" "$HOME/.config/bresilla.svg"
 }
 
 create_files
@@ -101,5 +104,5 @@ colors_to_tty(){
 colors_to_tty &
 
 source $HOME/.cache/wal/colors.sh
-hyprctl hyprpaper wallpaper ",$(cat /home/bresilla/.cache/wal/wallpaper),"
+hyprctl hyprpaper wallpaper ",$(cat "$HOME/.cache/wal/wallpaper"),"
 zedtheme &

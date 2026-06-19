@@ -1,5 +1,5 @@
 #dynamic_padding = true
-# import = ["/home/bresilla/.cache/wal/colors.toml"]
+# import = ["~/.cache/wal/colors.toml"]
 #ingnore-schemes = true
 [general]
 live_config_reload = true

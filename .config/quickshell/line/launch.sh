@@ -1,4 +1,4 @@
 #!/bin/bash
 
-qs kill -p /home/bresilla/.config/quickshell --any-display 2>/dev/null
-DISPLAY=:0 qs -n -p /home/bresilla/.config/quickshell
+qs kill -p $HOME/.config/quickshell --any-display 2>/dev/null
+DISPLAY=:0 qs -n -p $HOME/.config/quickshell

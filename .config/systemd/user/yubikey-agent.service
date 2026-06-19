@@ -3,7 +3,7 @@ Description=Seamless ssh-agent for YubiKeys
 Documentation=https://filippo.io/yubikey-agent
 
 [Service]
-ExecStart=/env/bin/yubikey-agent -l %t/yubikey-agent/yubikey-agent.sock
+ExecStart=%h/.local/bin/yubikey-agent -l %t/yubikey-agent/yubikey-agent.sock
 ExecReload=/bin/kill -HUP $MAINPID
 IPAddressDeny=any
 RestrictAddressFamilies=AF_UNIX

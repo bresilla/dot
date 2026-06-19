@@ -3,13 +3,13 @@
 
 if [ "$1" == "cycle" ] ; then
     adb shell input keyevent 85
-    echo "{ \"command\": [\"cycle\", \"pause\"] }" | socat - /home/bresilla/.config/mpv/control
+    echo "{ \"command\": [\"cycle\", \"pause\"] }" | socat - $HOME/.config/mpv/control
 elif [ "$1" == "forewards" ] ; then
     adb shell input tap 1600 600 &
-    echo "{ \"command\": [\"seek\", \"$2\"] }" | socat - /home/bresilla/.config/mpv/control
+    echo "{ \"command\": [\"seek\", \"$2\"] }" | socat - $HOME/.config/mpv/control
 elif [ "$1" == "backwards" ] ; then
     adb shell input tap 600 600 &
-    echo "{ \"command\": [\"seek\", \"-$2\"] }" | socat - /home/bresilla/.config/mpv/control
+    echo "{ \"command\": [\"seek\", \"-$2\"] }" | socat - $HOME/.config/mpv/control
 fi
 
 
@@ -22,14 +22,14 @@ hide() {
     bspc node $win --flag hidden=off
     bspc node $win --to-monitor $mon
     bspc node $wid --to-desktop $des
-    echo "{ \"command\": [\"set\", \"pause\", \"no\"] }" | socat - /home/bresilla/.config/mpv/control
+    echo "{ \"command\": [\"set\", \"pause\", \"no\"] }" | socat - $HOME/.config/mpv/control
 }
 unhide() {
     bspc node $win --flag hidden -f
     if [[ "$(bspc query --node $win --tree | jq -e '.hidden')" == "true" ]]; then
-        echo "{ \"command\": [\"set\", \"pause\", \"yes\"] }" | socat - /home/bresilla/.config/mpv/control
+        echo "{ \"command\": [\"set\", \"pause\", \"yes\"] }" | socat - $HOME/.config/mpv/control
     else
-        echo "{ \"command\": [\"set\", \"pause\", \"no\"] }" | socat - /home/bresilla/.config/mpv/control
+        echo "{ \"command\": [\"set\", \"pause\", \"no\"] }" | socat - $HOME/.config/mpv/control
     fi
 }
 

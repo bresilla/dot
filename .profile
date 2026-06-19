@@ -61,8 +61,8 @@ export PIXI_DIR=/pkg/pixi/
 #---------------------------             LULE           --------------------------
 export BAT_THEME="TwoDark"
 export LULE_W="/env/set/.wallpaper"
-export LULE_S="/home/bresilla/.config/profile/functions/wm/lule_colors"
-export LULE_C="/home/bresilla/.config/lule/configs.json"
+export LULE_S="$HOME/.config/profile/functions/wm/lule_colors"
+export LULE_C="$HOME/.cache/lule"
 export DSTASK_GIT_REPO=/doc/self/TASKS
 export GUM_CHOOSE_CURSOR_FOREGROUND="1"
 export GUM_CHOOSE_SELECTED_FOREGROUND="9"
@@ -113,7 +113,7 @@ if [ "$HOSTNAME" = core ]; then
     export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/yubikey-agent/yubikey-agent.sock"
     export GPG_TTY=$(tty)
 fi
-export LOGO_PATH=/home/bresilla/.bresilla
+export LOGO_PATH="$HOME/.bresilla"
 export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 
-if [ -e /home/bresilla/.nix-profile/etc/profile.d/nix.sh ]; then . /home/bresilla/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
