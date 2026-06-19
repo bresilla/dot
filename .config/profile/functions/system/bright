@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+backlight_dir=${BACKLIGHT_DIR:-/sys/class/backlight/intel_backlight}
+brightness_file="$backlight_dir/brightness"
+max_file="$backlight_dir/max_brightness"
+min_raw=1
+max_raw=400
+
+if [ -r "$max_file" ]; then
+    max_raw=$(cat "$max_file")
+fi
+
+usage() {
+    printf 'usage: bright [+N|-N|N|get|raw]\n' >&2
+    printf '  +/-N changes perceptual brightness by N percent points\n' >&2
+    printf '  N sets perceptual brightness to N percent, from 0 to 100\n' >&2
+    printf '  get prints perceptual percent; raw prints raw sysfs value\n' >&2
+}
+
+raw_to_level() {
+    awk -v raw="$1" -v min="$min_raw" -v max="$max_raw" '
+        BEGIN {
+            if (raw < min) raw = min
+            if (raw > max) raw = max
+            level = log(raw / min) / log(max / min) * 100
+            printf "%.0f\n", level
+        }
+    '
+}
+
+level_to_raw() {
+    awk -v level="$1" -v min="$min_raw" -v max="$max_raw" '
+        BEGIN {
+            if (level < 0) level = 0
+            if (level > 100) level = 100
+            raw = min * exp(log(max / min) * level / 100)
+            raw = int(raw + 0.5)
+            if (raw < min) raw = min
+            if (raw > max) raw = max
+            print raw
+        }
+    '
+}
+
+read_raw() {
+    cat "$brightness_file"
+}
+
+clamp_raw() {
+    local raw=$1
+
+    if (( raw < min_raw )); then
+        raw=$min_raw
+    elif (( raw > max_raw )); then
+        raw=$max_raw
+    fi
+
+    printf '%s\n' "$raw"
+}
+
+write_raw() {
+    local raw=$1
+
+    if [ ! -w "$brightness_file" ]; then
+        printf 'bright: %s is not writable\n' "$brightness_file" >&2
+        exit 1
+    fi
+
+    printf '%s\n' "$raw" > "$brightness_file"
+}
+
+arg=${1:-get}
+
+case "$arg" in
+    -h|--help|help)
+        usage
+        exit 0
+        ;;
+    raw)
+        read_raw
+        exit 0
+        ;;
+    get)
+        raw_to_level "$(read_raw)"
+        exit 0
+        ;;
+    +*|-*)
+        if ! [[ "$arg" =~ ^[+-][0-9]+$ ]]; then
+            usage
+            exit 2
+        fi
+
+        current_raw=$(clamp_raw "$(read_raw)")
+        current_level=$(raw_to_level "$current_raw")
+        target_level=$((current_level + arg))
+        target_raw=$(level_to_raw "$target_level")
+
+        if [[ "$arg" == +* ]] && (( target_raw <= current_raw && current_raw < max_raw )); then
+            target_raw=$((current_raw + 1))
+        elif [[ "$arg" == -* ]] && (( target_raw >= current_raw && current_raw > min_raw )); then
+            target_raw=$((current_raw - 1))
+        fi
+
+        write_raw "$(clamp_raw "$target_raw")"
+        ;;
+    *)
+        if ! [[ "$arg" =~ ^[0-9]+$ ]]; then
+            usage
+            exit 2
+        fi
+
+        write_raw "$(level_to_raw "$arg")"
+        ;;
+esac

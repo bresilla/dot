@@ -10,6 +10,7 @@ Scope {
     required property int monitorHeight
     required property int monitorWidth
     property bool enabled: true
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
 
     property bool shouldShowOSD: false
     property real brightness: 0.7
@@ -23,7 +24,7 @@ Scope {
         onTriggered: {
             if (isInteracting) return;
 
-            OSD.Proc.runCommand("brightness-check", ["light", "-G"], (output, exitCode) => {
+            OSD.Proc.runCommand("brightness-check", [brightCommand, "get"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const newBrightness = parseFloat(output.trim()) / 100;
                     if (Math.abs(newBrightness - lastBrightness) > 0.01 || lastBrightness < 0) {
@@ -128,13 +129,13 @@ Scope {
                     onSeeking: pos => {
                         isInteracting = true;
                         brightness = pos;
-                        OSD.Proc.runCommand("brightness-set", ["light", "-S", String(Math.round(pos * 100))], () => {}, 50);
+                        OSD.Proc.runCommand("brightness-set", [brightCommand, String(Math.round(pos * 100))], () => {}, 50);
                     }
 
                     onClicked: pos => {
                         brightness = pos;
                         lastBrightness = pos;
-                        OSD.Proc.runCommand("brightness-set", ["light", "-S", String(Math.round(pos * 100))], () => {}, 0);
+                        OSD.Proc.runCommand("brightness-set", [brightCommand, String(Math.round(pos * 100))], () => {}, 0);
                         isInteracting = false;
                         hideTimer.restart();
                     }

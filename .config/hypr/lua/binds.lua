@@ -75,8 +75,8 @@ return function(ctx)
     bind_exec("XF86AudioLowerVolume", "pamixer -d 2", { repeating = true })
     bind_exec("XF86AudioPlay", "playerctl next", { repeating = true })
 
-    bind_exec("XF86MonBrightnessDown", "bright -2")
-    bind_exec("XF86MonBrightnessUp", "bright +2")
+    bind_exec("XF86MonBrightnessDown", ctx.home .. "/.config/profile/functions/system/bright -2")
+    bind_exec("XF86MonBrightnessUp", ctx.home .. "/.config/profile/functions/system/bright +2")
 
     bind_exec("Print", ctx.home .. "/.config/profile/functions/wm/capture i")
 

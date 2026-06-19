@@ -9,6 +9,7 @@ BaseCard {
     
     readonly property real screenBasedLineHeight: Screen.height * 0.005
     readonly property real iconSize: Theme.iconSize * 1.5
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
     
     property real volume: -1
     property real brightness: -1
@@ -31,7 +32,7 @@ BaseCard {
     
     Process {
         id: brightnessGetProc
-        command: ["light", "-G"]
+        command: [root.brightCommand, "get"]
         running: false
         stdout: SplitParser {
             onRead: data => {
@@ -204,13 +205,13 @@ BaseCard {
                         visible: root.brightness >= 0
                         
                         onClicked: position => {
-                            brightnessSetProc.command = ["light", "-S", (position * 100).toString()]
+                            brightnessSetProc.command = [root.brightCommand, Math.round(position * 100).toString()]
                             brightnessSetProc.running = true
                             root.brightness = position
                         }
                         
                         onSeeking: position => {
-                            brightnessSetProc.command = ["light", "-S", (position * 100).toString()]
+                            brightnessSetProc.command = [root.brightCommand, Math.round(position * 100).toString()]
                             brightnessSetProc.running = true
                             root.brightness = position
                         }

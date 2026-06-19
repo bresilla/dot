@@ -11,6 +11,7 @@ Scope {
     required property int monitorHeight
     required property int monitorWidth
     required property bool settingsOnRight
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
 
     // ─── Dimensions ───
 
@@ -272,7 +273,7 @@ Scope {
                     }, 0)
                 }
             if (brightnessExpanded && !brightInteracting) {
-                S.Proc.runCommand(cmdId("bright"), ["light", "-G"], (out, code) => {
+                S.Proc.runCommand(cmdId("bright"), [brightCommand, "get"], (out, code) => {
                     if (code === 0 && out) brightness = parseFloat(out.trim()) / 100
                 }, 0)
             }
@@ -812,14 +813,14 @@ Scope {
                                     brightInteracting = true
                                     brightness = pos
                                     brightAutoHideTimer.restart()
-                                    S.Proc.runCommand(cmdId("bright-set"), ["light", "-S", String(Math.round(pos * 100))], () => {}, 50)
+                                    S.Proc.runCommand(cmdId("bright-set"), [brightCommand, String(Math.round(pos * 100))], () => {}, 50)
                                 }
 
                                 onClicked: pos => {
                                     brightness = pos
                                     brightInteracting = false
                                     brightAutoHideTimer.restart()
-                                    S.Proc.runCommand(cmdId("bright-set"), ["light", "-S", String(Math.round(pos * 100))], () => {}, 0)
+                                    S.Proc.runCommand(cmdId("bright-set"), [brightCommand, String(Math.round(pos * 100))], () => {}, 0)
                                 }
                             }
                         }
