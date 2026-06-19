@@ -59,3 +59,6 @@ log
 **/.venv/
 GAP.md
 .agent-handoff/
+PLAN_DOCS.md PLAN.md
+add
+PLAN_DOCS.md

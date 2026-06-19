@@ -28,3 +28,4 @@ OSS/
 .config/systemd/user/sockets.target.wants/
 .config/systemd/user/pipewire.service.wants/
 .config/systemd/user/pipewire-session-manager.service
+.config/zsh/.zcompdump
