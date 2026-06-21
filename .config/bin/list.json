@@ -275,6 +275,15 @@
                 "default"
             ]
         },
+        "$HOME/.local/bin/goose": {
+            "path": "$HOME/.local/bin/goose",
+            "url": "https://github.com/aaif-goose/goose",
+            "provider": "github",
+            "description": "an open source, extensible AI agent that goes beyond code suggestions - install, execute, edit, and test with any LLM",
+            "tags": [
+                "other"
+            ]
+        },
         "$HOME/.local/bin/gum": {
             "path": "$HOME/.local/bin/gum",
             "url": "https://github.com/charmbracelet/gum",
@@ -315,6 +324,15 @@
             "url": "https://github.com/gohugoio/hugo",
             "provider": "github",
             "description": "The world’s fastest framework for building websites.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/impala": {
+            "path": "$HOME/.local/bin/impala",
+            "url": "https://github.com/pythops/impala",
+            "provider": "github",
+            "description": "🛜 TUI for managing wifi on Linux",
             "tags": [
                 "other"
             ]
@@ -432,6 +450,16 @@
                 "other"
             ]
         },
+        "$HOME/.local/bin/ollama": {
+            "path": "$HOME/.local/bin/ollama",
+            "url": "https://github.com/ollama/ollama",
+            "provider": "github",
+            "description": "Get up and running with Kimi-K2.6, GLM-5.1, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
+            "tags": [
+                "other"
+            ],
+            "patch": true
+        },
         "$HOME/.local/bin/olm": {
             "path": "$HOME/.local/bin/olm",
             "url": "https://github.com/fosrl/olm",
@@ -439,6 +467,15 @@
             "description": "A remote access machine VPN client for Pangolin",
             "tags": [
                 "default"
+            ]
+        },
+        "$HOME/.local/bin/opencode": {
+            "path": "$HOME/.local/bin/opencode",
+            "url": "https://github.com/anomalyco/opencode",
+            "provider": "github",
+            "description": "The open source coding agent.",
+            "tags": [
+                "other"
             ]
         },
         "$HOME/.local/bin/perles": {

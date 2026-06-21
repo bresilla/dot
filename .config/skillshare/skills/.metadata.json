@@ -28,6 +28,21 @@
         "SKILL.md": "sha256:85618b50f189c0ff49858e5e2ed6aea04fef992a88b072d0980f78a7da3b18e8",
         "WARP.md": "sha256:bade18a87e69ee83386d618b8e896823ca1e4f44c58fa38c0646c93472c362ba"
       }
+    },
+    "improve": {
+      "source": "https://github.com/shadcn/improve/skills/improve",
+      "type": "github-subdir",
+      "installed_at": "2026-06-20T18:58:47.819846872+02:00",
+      "repo_url": "https://github.com/shadcn/improve.git",
+      "subdir": "skills/improve",
+      "version": "03369ee",
+      "tree_hash": "7d77d76815e6deb704427f17f6e393f55e3cb6da",
+      "file_hashes": {
+        "SKILL.md": "sha256:1599aa29e9b16424cb767779efac53fa56e3f38be92dff4ac587393a1ad5070a",
+        "references/audit-playbook.md": "sha256:587c1b927070f3c28139ad95ac34cc21a7da32618cfeb966cb774e58a865d4c8",
+        "references/closing-the-loop.md": "sha256:5d526bb378e1783bbeb68d7af527776cbe98cde27a1aeccbd13e818e5b73b454",
+        "references/plan-template.md": "sha256:7be76dd3c29442288fa7cee4432fc6e95c2fdbf748c9b356344bf647c5f8722e"
+      }
     }
   }
 }
