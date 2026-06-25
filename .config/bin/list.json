@@ -310,6 +310,15 @@
                 "other"
             ]
         },
+        "$HOME/.local/bin/hexe": {
+            "path": "$HOME/.local/bin/hexe",
+            "url": "github.com/termworks/hexe",
+            "provider": "github",
+            "description": "terminal multiplexer based on libghostty",
+            "tags": [
+                "default"
+            ]
+        },
         "$HOME/.local/bin/hub": {
             "path": "$HOME/.local/bin/hub",
             "url": "https://github.com/github/hub",
@@ -457,8 +466,7 @@
             "description": "Get up and running with Kimi-K2.6, GLM-5.1, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
             "tags": [
                 "other"
-            ],
-            "patch": true
+            ]
         },
         "$HOME/.local/bin/olm": {
             "path": "$HOME/.local/bin/olm",
@@ -685,6 +693,25 @@
             "provider": "github",
             "tags": [
                 "other"
+            ]
+        },
+        "$HOME/.local/bin/tylax": {
+            "path": "$HOME/.local/bin/tylax",
+            "url": "https://github.com/scipenai/tylax",
+            "provider": "github",
+            "description": "A bi-directional converter between Typst and LaTeX. Available as both a CLI tool and a Web interface.",
+            "tags": [
+                "other"
+            ]
+        },
+        "$HOME/.local/bin/unifly": {
+            "path": "$HOME/.local/bin/unifly",
+            "url": "https://github.com/hyperb1iss/unifly",
+            "provider": "github",
+            "description": "🌐 Elegant UniFi network management CLI \u0026 TUI - for humans and agents",
+            "tags": [
+                "other",
+                "net"
             ]
         },
         "$HOME/.local/bin/wasm-pack": {

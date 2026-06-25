@@ -23,6 +23,7 @@ alias dot='/usr/bin/git --git-dir=$HOME/.dot/ --work-tree=$HOME'
 alias run.sh="./run.sh"
 alias run="./run.sh"
 alias pk="sudo /env/bin/pik -o false"
+alias wifi="impala"
 
 ##WM
 alias sx="startx"
