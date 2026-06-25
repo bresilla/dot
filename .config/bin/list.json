@@ -312,7 +312,7 @@
         },
         "$HOME/.local/bin/hexe": {
             "path": "$HOME/.local/bin/hexe",
-            "url": "github.com/termworks/hexe",
+            "url": "https://github.com/termworks/hexe",
             "provider": "github",
             "description": "terminal multiplexer based on libghostty",
             "tags": [
