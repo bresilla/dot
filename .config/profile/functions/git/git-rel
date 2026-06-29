@@ -33,6 +33,12 @@ git commit --no-verify -m "chore(release): prepare for $version"
 git tag -a "$version" -m "$version" -m "$changelog"
 git push --follow-tags --force --set-upstream origin "$original_branch"
 
+# Sync to all remotes that aren't origin
+for remote in $(git remote | grep -v '^origin$'); do
+    git push "$remote" --tags --force 2>/dev/null || true
+    git push "$remote" develop main --force 2>/dev/null || true
+done
+
 git checkout main
 git pull origin main
 git merge develop || {
@@ -42,4 +48,9 @@ git push origin main
 
 git checkout --ignore-other-worktrees "$original_branch"
 
-gh release create "$version" --notes "$changelog"
+# Sync main back to all non-origin remotes
+for remote in $(git remote | grep -v '^origin$'); do
+    git push "$remote" main --force 2>/dev/null || true
+done
+
+gh release create "$version" --notes "$changelog" || true

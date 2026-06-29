@@ -18,7 +18,8 @@ find_project_dir() {
 
     while [[ "$dir" != "/" ]]; do
         if [[ -f "$dir/Cargo.toml" || -f "$dir/build.zig.zon" || -f "$dir/xmake.lua" \
-            || -f "$dir/package.json" || -f "$dir/pyproject.toml" || -f "$dir/flake.nix" ]]; then
+            || -f "$dir/package.json" || -f "$dir/pyproject.toml" || -f "$dir/flake.nix" \
+            || -n "$(find "$dir" -maxdepth 1 -name '*.nimble' -type f -print -quit)" ]]; then
             printf '%s\n' "$dir"
             return
         fi
@@ -39,7 +40,7 @@ extract_first_match() {
 # string (a `version = "X.Y.Z"` declaration), preferring common entrypoints.
 go_version_file() {
     local project_dir="$1"
-    local re='(^|[[:space:]])[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
+    local re='(^|[[:space:]])((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
     local cand
     for cand in main.go src/main.go version.go internal/version/version.go cmd/version.go; do
         if [[ -f "$project_dir/$cand" ]] && grep -qE "$re" "$project_dir/$cand"; then
@@ -47,7 +48,25 @@ go_version_file() {
             return 0
         fi
     done
-    grep -rElE "$re" --include='*.go' "$project_dir" 2>/dev/null | head -1
+    grep -rElE "$re" --include='*.go' "$project_dir" 2>/dev/null | head -1 || true
+}
+
+nimble_file() {
+    local project_dir="$1"
+    find "$project_dir" -maxdepth 1 -name '*.nimble' -type f | sort | head -1
+}
+
+nim_version_file() {
+    local project_dir="$1"
+    local re='(^|[[:space:]])[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
+    local cand
+    for cand in src/"$(basename "$project_dir")".nim src/main.nim src/dp.nim main.nim version.nim; do
+        if [[ -f "$project_dir/$cand" ]] && grep -qE "$re" "$project_dir/$cand"; then
+            printf '%s\n' "$project_dir/$cand"
+            return 0
+        fi
+    done
+    grep -rElE "$re" --include='*.nim' "$project_dir" 2>/dev/null | head -1 || true
 }
 
 project_name() {
@@ -71,6 +90,14 @@ project_name() {
     fi
 
     if [[ -z "$value" ]]; then
+        local nimble
+        nimble="$(nimble_file "$project_dir")"
+        if [[ -n "$nimble" ]]; then
+            value="$(basename "$nimble" .nimble)"
+        fi
+    fi
+
+    if [[ -z "$value" ]]; then
         value="$(basename "$project_dir")"
     fi
 
@@ -89,7 +116,7 @@ project_version() {
         local gofile
         gofile="$(go_version_file "$project_dir")"
         if [[ -n "$gofile" ]]; then
-            value="$(extract_first_match "$gofile" '^[[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+            value="$(extract_first_match "$gofile" '^[[:space:]]*.*[vV]ersion[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
         fi
     fi
 
@@ -109,6 +136,14 @@ project_version() {
         value="$(extract_first_match "$project_dir/pyproject.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
+    if [[ -z "$value" ]]; then
+        local nimble
+        nimble="$(nimble_file "$project_dir")"
+        if [[ -n "$nimble" ]]; then
+            value="$(extract_first_match "$nimble" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        fi
+    fi
+
     [[ -n "$value" ]] || return 1
     printf '%s\n' "$value"
 }
@@ -120,7 +155,7 @@ update_go() {
     local gofile
     gofile="$(go_version_file "$project_dir")"
     [[ -n "$gofile" ]] || return 0
-    sed -i -E "s/^([[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
+    sed -i -E "s/^([[:space:]]*((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
     echo "  Updated ${gofile#$project_dir/}"
 }
 
@@ -167,6 +202,26 @@ update_pyproject() {
     [[ -f "$file" ]] || return 0
     sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated pyproject.toml"
+}
+
+update_nimble() {
+    local project_dir="$1"
+    local version="$2"
+    local file
+    file="$(nimble_file "$project_dir")"
+    [[ -n "$file" ]] || return 0
+    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    echo "  Updated ${file#$project_dir/}"
+}
+
+update_nim() {
+    local project_dir="$1"
+    local version="$2"
+    local file
+    file="$(nim_version_file "$project_dir")"
+    [[ -n "$file" ]] || return 0
+    sed -i -E "s/^([[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    echo "  Updated ${file#$project_dir/}"
 }
 
 main() {
@@ -216,6 +271,8 @@ main() {
     update_cargo "$project_dir" "$version"
     update_package_json "$project_dir" "$version"
     update_pyproject "$project_dir" "$version"
+    update_nimble "$project_dir" "$version"
+    update_nim "$project_dir" "$version"
 
     echo -e "Updating ${BLUE_BOLD}$name${NC} version: $current_version -> $version ${GREEN}[ SUCCESS ]${NC}"
 }
