@@ -11,9 +11,26 @@ return function(ctx)
     local super_meta = super .. " + " .. meta
     local super_meta_shift = super .. " + " .. meta_mod .. " + SHIFT"
 
+    local function active_monitor()
+        return hl.get_active_monitor() or hl.get_monitors()[1]
+    end
+
     local function active_monitor_height()
-        local monitor = hl.get_active_monitor()
+        local monitor = active_monitor()
         return monitor and monitor.height or 1080
+    end
+
+    local function active_monitor_short_edge()
+        local monitor = active_monitor()
+        local width = monitor and monitor.width or 1920
+        local height = monitor and monitor.height or 1080
+
+        return math.min(width, height)
+    end
+
+    local function is_internal_panel(monitor)
+        local name = monitor and monitor.name or ""
+        return name:match("^eDP") or name:match("^LVDS") or name:match("^DSI")
     end
 
     local function clamp(value, min, max)
@@ -28,12 +45,15 @@ return function(ctx)
         return tostring(math.floor(scaled_number(value, baseline) + 0.5))
     end
 
-    local function scaled_font_size(base, min)
-        return string.format("%.1f", clamp(scaled_number(base, 1080), min, base))
-    end
-
     local function terminal_font_size()
-        return scaled_font_size(14, 10.5)
+        local monitor = active_monitor()
+        local font_size = 10.5 + clamp(active_monitor_short_edge() - 1080, 0, 1080) * 3.5 / 1080
+
+        if is_internal_panel(monitor) then
+            font_size = math.min(font_size, 11)
+        end
+
+        return string.format("%.1f", clamp(font_size, 10.5, 14))
     end
 
     local function terminal_padding_x()
