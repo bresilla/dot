@@ -36,6 +36,9 @@ Singleton {
     readonly property real cornerRadius: referenceShortSide * (10 / 2160)
     readonly property real iconSize: referenceShortSide * (36 / 2160)
     readonly property real progressLineHeight: referenceShortSide * (10 / 2160)
+    readonly property real borderWidth: referenceShortSide * (1 / 2160)
+    readonly property real fineInset: referenceShortSide * (2 / 2160)
+    readonly property real smallRadius: referenceShortSide * (2 / 2160)
     
     readonly property real fontSizeSmall: referenceShortSide * (18 / 2160)
     readonly property real fontSizeMedium: referenceShortSide * (22 / 2160)

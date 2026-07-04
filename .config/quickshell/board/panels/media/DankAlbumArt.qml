@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Effects
 import QtQuick.Shapes
 import Quickshell.Services.Mpris
+import "../../board"
 
 
 
@@ -157,7 +158,7 @@ Item {
         imageSource: artUrl || lastValidArtUrl || ""
         fallbackIcon: "album"
         border.color: Theme.primary
-        border.width: 2
+        border.width: Theme.borderWidth * 2
 
         onImageSourceChanged: {
             if (imageSource && imageStatus !== Image.Error) {

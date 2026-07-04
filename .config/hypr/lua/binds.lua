@@ -11,28 +11,84 @@ return function(ctx)
     local super_meta = super .. " + " .. meta
     local super_meta_shift = super .. " + " .. meta_mod .. " + SHIFT"
 
+    local function active_monitor_height()
+        local monitor = hl.get_active_monitor()
+        return monitor and monitor.height or 1080
+    end
+
+    local function scaled_number(value, baseline)
+        return active_monitor_height() * value / baseline
+    end
+
+    local function scaled_px(value, baseline)
+        return tostring(math.floor(scaled_number(value, baseline) + 0.5))
+    end
+
+    local function scaled_font_size()
+        return string.format("%.1f", scaled_number(16, 1080))
+    end
+
+    local function kitty_cmd(args)
+        local cmd = "kitty"
+            .. " -o font_size=" .. scaled_font_size()
+            .. " -o window_padding_width=" .. scaled_px(30, 2160)
+
+        if args and args ~= "" then
+            cmd = cmd .. " " .. args
+        end
+
+        return cmd
+    end
+
+    local function alacritty_cmd(args)
+        local cmd = "alacritty"
+            .. " -o font.size=" .. scaled_font_size()
+            .. " -o window.padding.x=" .. scaled_px(60, 2160)
+            .. " -o window.padding.y=" .. scaled_px(40, 2160)
+
+        if args and args ~= "" then
+            cmd = cmd .. " " .. args
+        end
+
+        return cmd
+    end
+
     bind_exec(super .. " + L", "hyprlock")
 
     bind_exec(super_meta .. " + P", "doas chvt 2")
-    scratchpads.bind(super_meta .. " + Backspace", "ask", "kitty --title ask -e aichat", {
+    scratchpads.bind(super_meta .. " + Backspace", "ask", function()
+        return kitty_cmd("--title ask -e aichat")
+    end, {
         size = { "monitor_h*0.8", "monitor_h*0.8" },
     })
-    scratchpads.bind(super_meta .. " + Space", "browsy", "kitty --title browsy -e browsy", {
+    scratchpads.bind(super_meta .. " + Space", "browsy", function()
+        return kitty_cmd("--title browsy -e browsy")
+    end, {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
-    scratchpads.bind(super_meta .. " + Return", "appy", "kitty --title appy -e appy", {
+    scratchpads.bind(super_meta .. " + Return", "appy", function()
+        return kitty_cmd("--title appy -e appy")
+    end, {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
     bind_exec(super_meta .. " + F9", ctx.home .. "/.config/profile/functions/wm/lule_switch")
 
     hl.bind(super .. " + Escape", hl.dsp.window.close())
-    bind_exec(super .. " + Return", "alacritty")
-    bind_exec(meta .. " + Return", "kitty")
+    hl.bind(super .. " + Return", function()
+        hl.exec_cmd(alacritty_cmd())
+    end)
+    hl.bind(meta .. " + Return", function()
+        hl.exec_cmd(kitty_cmd())
+    end)
 
-    scratchpads.bind(super .. " + Space", "noteing", "alacritty --title noteing", {
+    scratchpads.bind(super .. " + Space", "noteing", function()
+        return alacritty_cmd("--title noteing")
+    end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
-    scratchpads.bind(meta .. " + Space", "main", "alacritty --title main", {
+    scratchpads.bind(meta .. " + Space", "main", function()
+        return alacritty_cmd("--title main")
+    end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
 

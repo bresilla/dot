@@ -211,6 +211,11 @@ return function(ctx)
         center_special_windows(name)
     end
 
+    local function apply_visible_special_geometry(name, rules)
+        resize_special_windows(name, rules, hl.get_active_monitor())
+        center_special_windows(name)
+    end
+
     local function special_visible_on_active_monitor(name)
         local monitor = hl.get_active_monitor()
 
@@ -236,8 +241,12 @@ return function(ctx)
             ensure_special_visible_on_active_monitor(name)
 
             hl.timer(function()
-                center_special_windows(name)
+                apply_visible_special_geometry(name, rules)
             end, { timeout = 50, type = "oneshot" })
+
+            hl.timer(function()
+                apply_visible_special_geometry(name, rules)
+            end, { timeout = 140, type = "oneshot" })
         end, { timeout = 20, type = "oneshot" })
     end
 
@@ -259,8 +268,12 @@ return function(ctx)
                 end, { timeout = 60, type = "oneshot" })
 
                 hl.timer(function()
-                    center_special_windows(name)
+                    apply_visible_special_geometry(name, rules)
                 end, { timeout = 100, type = "oneshot" })
+
+                hl.timer(function()
+                    apply_visible_special_geometry(name, rules)
+                end, { timeout = 180, type = "oneshot" })
             elseif visible_monitor then
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
             else
@@ -281,7 +294,8 @@ return function(ctx)
             exec_rules[key] = value
         end
 
-        hl.exec_cmd(cmd, exec_rules)
+        local launch_cmd = type(cmd) == "function" and cmd() or cmd
+        hl.exec_cmd(launch_cmd, exec_rules)
     end
 
     function M.bind(keys, name, cmd, rules)

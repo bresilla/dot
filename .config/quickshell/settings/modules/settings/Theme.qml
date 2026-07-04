@@ -38,4 +38,11 @@ Singleton {
     readonly property var referenceScreen: Quickshell.screens.length > 0 ? Quickshell.screens[0] : null
     readonly property real referenceShortSide: referenceScreen ? Math.min(referenceScreen.width, referenceScreen.height) : 2160
     readonly property real cornerRadius: referenceShortSide * (10 / 2160)
+    readonly property real panelRadius: referenceShortSide * (12 / 2160)
+    readonly property real pillRadius: referenceShortSide * (4 / 2160)
+    readonly property real borderWidth: referenceShortSide * (1 / 2160)
+    readonly property real heavyBorderWidth: referenceShortSide * (2 / 2160)
+    readonly property real morphBorderGrowth: referenceShortSide * (4 / 2160)
+    readonly property real slashThickness: referenceShortSide * (3.3 / 2160)
+    readonly property real tinyRadius: referenceShortSide * (1 / 2160)
 }

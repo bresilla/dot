@@ -128,7 +128,7 @@ Scope {
                 anchors.left: parent.left
                 anchors.leftMargin: root.osdPadding
                 border.color: OSD.Theme.color0
-                border.width: 2
+                border.width: OSD.Theme.borderWidth
 
                 Behavior on color {
                     ColorAnimation { duration: 200; easing.type: Easing.OutCubic }
@@ -161,9 +161,9 @@ Scope {
                 height: parent.height * 0.4
                 width: Math.max(0, parent.width - x - root.osdPadding)
                 color: OSD.Theme.color1
-                radius: 8
+                radius: OSD.Theme.progressRadius
                 border.color: OSD.Theme.color0
-                border.width: 2
+                border.width: OSD.Theme.borderWidth
 
                 StyledProgressBar {
                     anchors.centerIn: parent

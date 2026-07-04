@@ -21,7 +21,7 @@ Rectangle {
     Image {
         id: internalImage
         anchors.fill: parent
-        anchors.margins: 2
+        anchors.margins: Theme.fineInset
         asynchronous: true
         fillMode: Image.PreserveAspectCrop
         smooth: true
@@ -33,7 +33,7 @@ Rectangle {
 
     MultiEffect {
         anchors.fill: parent
-        anchors.margins: 2
+        anchors.margins: Theme.fineInset
         source: internalImage
         maskEnabled: true
         maskSource: circularMask

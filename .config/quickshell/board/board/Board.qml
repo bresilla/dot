@@ -39,7 +39,7 @@ Scope {
                 anchors.fill: parent
                 color: Theme.color238
                 opacity: 0.98
-                radius: Theme.cornerRadius * 2
+                radius: Theme.cornerRadius
                 clip: true
                 
                 Behavior on opacity {

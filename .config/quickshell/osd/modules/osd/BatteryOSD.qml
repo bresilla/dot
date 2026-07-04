@@ -92,7 +92,7 @@ Scope {
                     color: warningColor
                     anchors.centerIn: parent
                     border.color: OSD.Theme.color0
-                    border.width: 2
+                    border.width: OSD.Theme.borderWidth
 
                     Text {
                         anchors.centerIn: parent

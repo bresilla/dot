@@ -145,7 +145,7 @@ Scope {
                 visible: true
                 width: lineWindow.pillWidth
                 height: (lineWindow.trackHeight - (lineWindow.pillSpacing * 9)) / 10
-                radius: 4
+                radius: root.lineBarWidth * (4 / 8)
                 color: modelData.active ? wal.adapter.colors["color1"] :
                        hasWindows ? wal.adapter.colors["color244"] :
                        wal.adapter.colors["color240"]

@@ -86,7 +86,7 @@ Rectangle {
     radius: Theme.cornerRadius
     color: Theme.color236
     border.color: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.08)
-    border.width: 1
+    border.width: Theme.borderWidth
 
     Column {
         anchors.fill: parent
@@ -251,10 +251,10 @@ Rectangle {
                         Rectangle {
                             anchors.bottom: parent.bottom
                             anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottomMargin: 4
+                            anchors.bottomMargin: scaledFontSize * (4 / 14)
                             width: scaledFontSize * 0.8
                             height: scaledFontSize * 0.14
-                            radius: 1
+                            radius: height * 0.5
                             visible: CalendarService && CalendarService.khalAvailable && CalendarService.hasEventsForDate(dayDate)
                             color: isToday ? Qt.lighter(Theme.primary, 1.3) : Theme.primary
                             opacity: isToday ? 0.9 : 0.7

@@ -65,7 +65,7 @@ BaseCard {
                 height: parent.lineHeight
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.max(0, parent.width * (batteryLevel / 100))
-                radius: 2
+                radius: Theme.smallRadius
                 color: parent.fillColor
                 
                 Behavior on width {
@@ -81,7 +81,7 @@ BaseCard {
                 anchors.verticalCenter: parent.verticalCenter
                 x: parent.width * (batteryLevel / 100)
                 width: Math.max(0, parent.width - x)
-                radius: 2
+                radius: Theme.smallRadius
                 color: parent.trackColor
                 
                 Behavior on x {

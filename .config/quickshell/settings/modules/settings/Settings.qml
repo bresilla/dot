@@ -353,7 +353,7 @@ Scope {
             id: volPillRect
             width: barPanel.pillWidth
             height: pillH
-            radius: 4
+            radius: S.Theme.pillRadius
             color: volumeExpanded ? S.Theme.color1 : S.Theme.color240
             opacity: volumeExpanded ? 1.0 :
                      volPillMouse.containsMouse ? 0.9 : 0.6
@@ -375,7 +375,7 @@ Scope {
             id: brightPillRect
             width: barPanel.pillWidth
             height: pillH
-            radius: 4
+            radius: S.Theme.pillRadius
             color: brightnessExpanded ? S.Theme.color1 : S.Theme.color240
             opacity: brightnessExpanded ? 1.0 :
                      brightPillMouse.containsMouse ? 0.9 : 0.6
@@ -431,7 +431,7 @@ Scope {
 
                 width: startWidth + (endSize - startWidth) * (volBubbleMorph * volBubbleMorph)
                 height: startHeight + (endSize - startHeight) * volBubbleMorph
-                radius: 4 + ((endSize * 0.5 - 4) * volBubbleMorph)
+                radius: S.Theme.pillRadius + ((endSize * 0.5 - S.Theme.pillRadius) * volBubbleMorph)
                 color: isMuted ? S.Theme.color240 : S.Theme.color1
                 opacity: 1 - volExpandMorph
                 z: 1
@@ -443,7 +443,7 @@ Scope {
                     verticalCenter: parent.verticalCenter
                 }
                 border.color: S.Theme.color0
-                border.width: 2 + (4 * volBubbleMorph)
+                border.width: S.Theme.heavyBorderWidth + (S.Theme.morphBorderGrowth * volBubbleMorph)
 
                 Behavior on color {
                     ColorAnimation {
@@ -470,10 +470,10 @@ Scope {
                     id: volBubbleMuteLine
                     anchors.centerIn: parent
                     width: Math.sqrt((parent.width * parent.width) + (parent.height * parent.height)) * 0.5
-                    height: 2.2 * 1.5
+                    height: S.Theme.slashThickness
                     color: S.Theme.color0
                     rotation: -45
-                    radius: 1
+                    radius: S.Theme.tinyRadius
                     visible: isMuted
                     opacity: 0.9
                 }
@@ -498,10 +498,10 @@ Scope {
                     : volExtPanel.popupSlide * (1 - volExtPanel.morphEase)
                 y: 0
                 color: S.Theme.color238
-                radius: (buttonSize * 0.5) + ((12 - (buttonSize * 0.5)) * volExtPanel.morphEase)
+                radius: (buttonSize * 0.5) + ((S.Theme.panelRadius - (buttonSize * 0.5)) * volExtPanel.morphEase)
                 opacity: volExpandMorph
                 border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08 * volExpandMorph)
-                border.width: 1
+                border.width: S.Theme.borderWidth
 
                 Column {
                     anchors.fill: parent
@@ -517,7 +517,7 @@ Scope {
                         radius: S.Theme.cornerRadius
                         color: S.Theme.color236
                         border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08)
-                        border.width: 1
+                        border.width: S.Theme.borderWidth
 
                         Row {
                             anchors.fill: parent
@@ -543,10 +543,10 @@ Scope {
                                 Rectangle {
                                     anchors.centerIn: parent
                                     width: Math.sqrt((parent.width * parent.width) + (parent.height * parent.height)) * 0.5
-                                    height: 2.2 * 1.5
+                                    height: S.Theme.slashThickness
                                     color: isMuted ? S.Theme.color0 : "transparent"
                                     rotation: -45
-                                    radius: 1
+                                    radius: S.Theme.tinyRadius
                                     opacity: 0.95
                                     visible: isMuted
                                 }
@@ -599,7 +599,7 @@ Scope {
                         radius: S.Theme.cornerRadius
                         color: S.Theme.color236
                         border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08)
-                        border.width: 1
+                        border.width: S.Theme.borderWidth
 
                         Column {
                             anchors.fill: parent
@@ -715,7 +715,7 @@ Scope {
 
                 width: startWidth + (endSize - startWidth) * (brightBubbleMorph * brightBubbleMorph)
                 height: startHeight + (endSize - startHeight) * brightBubbleMorph
-                radius: 4 + ((endSize * 0.5 - 4) * brightBubbleMorph)
+                radius: S.Theme.pillRadius + ((endSize * 0.5 - S.Theme.pillRadius) * brightBubbleMorph)
                 color: S.Theme.color1
                 opacity: 1 - brightExpandMorph
                 z: 1
@@ -727,7 +727,7 @@ Scope {
                     verticalCenter: parent.verticalCenter
                 }
                 border.color: S.Theme.color0
-                border.width: 2 + (4 * brightBubbleMorph)
+                border.width: S.Theme.heavyBorderWidth + (S.Theme.morphBorderGrowth * brightBubbleMorph)
 
                 Text {
                     anchors.centerIn: parent
@@ -763,10 +763,10 @@ Scope {
                     : brightExtPanel.popupSlide * (1 - brightExtPanel.morphEase)
                 y: 0
                 color: S.Theme.color238
-                radius: (buttonSize * 0.5) + ((12 - (buttonSize * 0.5)) * brightExtPanel.morphEase)
+                radius: (buttonSize * 0.5) + ((S.Theme.panelRadius - (buttonSize * 0.5)) * brightExtPanel.morphEase)
                 opacity: brightExpandMorph
                 border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08 * brightExpandMorph)
-                border.width: 1
+                border.width: S.Theme.borderWidth
 
                 Column {
                     anchors.fill: parent
@@ -781,7 +781,7 @@ Scope {
                         radius: S.Theme.cornerRadius
                         color: S.Theme.color236
                         border.color: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.08)
-                        border.width: 1
+                        border.width: S.Theme.borderWidth
 
                         Row {
                             anchors.fill: parent
