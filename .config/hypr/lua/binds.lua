@@ -16,6 +16,10 @@ return function(ctx)
         return monitor and monitor.height or 1080
     end
 
+    local function clamp(value, min, max)
+        return math.max(min, math.min(max, value))
+    end
+
     local function scaled_number(value, baseline)
         return active_monitor_height() * value / baseline
     end
@@ -24,14 +28,26 @@ return function(ctx)
         return tostring(math.floor(scaled_number(value, baseline) + 0.5))
     end
 
-    local function scaled_font_size()
-        return string.format("%.1f", scaled_number(16, 1080))
+    local function scaled_font_size(base, min)
+        return string.format("%.1f", clamp(scaled_number(base, 1080), min, base))
+    end
+
+    local function terminal_font_size()
+        return scaled_font_size(14, 10.5)
+    end
+
+    local function terminal_padding_x()
+        return scaled_px(36, 2160)
+    end
+
+    local function terminal_padding_y()
+        return scaled_px(24, 2160)
     end
 
     local function kitty_cmd(args)
         local cmd = "kitty"
-            .. " -o font_size=" .. scaled_font_size()
-            .. " -o window_padding_width=" .. scaled_px(30, 2160)
+            .. " -o font_size=" .. terminal_font_size()
+            .. " -o window_padding_width=" .. terminal_padding_y()
 
         if args and args ~= "" then
             cmd = cmd .. " " .. args
@@ -42,9 +58,9 @@ return function(ctx)
 
     local function alacritty_cmd(args)
         local cmd = "alacritty"
-            .. " -o font.size=" .. scaled_font_size()
-            .. " -o window.padding.x=" .. scaled_px(60, 2160)
-            .. " -o window.padding.y=" .. scaled_px(40, 2160)
+            .. " -o font.size=" .. terminal_font_size()
+            .. " -o window.padding.x=" .. terminal_padding_x()
+            .. " -o window.padding.y=" .. terminal_padding_y()
 
         if args and args ~= "" then
             cmd = cmd .. " " .. args

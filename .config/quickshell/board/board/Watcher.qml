@@ -19,6 +19,7 @@ Scope {
     property int activeWorkspaceId: focusedWorkspace?.id ?? 1
     property string activeWorkspaceMonitor: focusedWorkspace?.monitor?.name ?? ""
     property int activeWorkspaceWindows: -1
+    property bool activeSpecialOnThisMonitor: false
 
     function isActiveWorkspaceOnThisMonitor() {
         return currentMonitor && activeWorkspaceMonitor === currentMonitor.name
@@ -28,10 +29,67 @@ Scope {
         return activeWorkspaceWindows === 0
     }
 
-    function refreshActiveWorkspaceState(callback) {
-        Proc.runCommand("boardActiveWorkspace", ["hyprctl", "activeworkspace", "-j"], function(stdout, exitCode) {
+    function monitorName() {
+        return currentMonitor?.name ?? modelData?.name ?? "unknown"
+    }
+
+    function commandId(name) {
+        return name + ":" + monitorName()
+    }
+
+    function isSpecialWorkspaceActive(value) {
+        if (!value) return false
+
+        if (typeof value === "string") {
+            return value.length > 0 && value !== "special:"
+        }
+
+        if (typeof value === "number") {
+            return value < 0
+        }
+
+        if (typeof value === "object") {
+            const name = String(value.name ?? value.config_name ?? "")
+            const id = value.id ?? 0
+            return id < 0 || (name.length > 0 && name !== "special:")
+        }
+
+        return false
+    }
+
+    function refreshMonitorSpecialState(callback) {
+        Proc.runCommand(commandId("boardMonitorSpecialState"), ["hyprctl", "monitors", "-j"], function(stdout, exitCode) {
             if (exitCode !== 0) {
+                activeSpecialOnThisMonitor = false
                 if (typeof callback === "function") callback(false)
+                return
+            }
+
+            try {
+                const monitors = JSON.parse(stdout)
+                const monitor = monitors.find(mon => mon.name === monitorName())
+
+                activeSpecialOnThisMonitor = monitor ? (
+                    isSpecialWorkspaceActive(monitor.activeSpecialWorkspace)
+                    || isSpecialWorkspaceActive(monitor.specialWorkspace)
+                    || isSpecialWorkspaceActive(monitor.active_special_workspace)
+                    || isSpecialWorkspaceActive(monitor.special_workspace)
+                ) : false
+
+                if (typeof callback === "function") callback(true)
+            } catch(e) {
+                activeSpecialOnThisMonitor = false
+                if (typeof callback === "function") callback(false)
+            }
+        }, 0)
+    }
+
+    function refreshActiveWorkspaceState(callback) {
+        Proc.runCommand(commandId("boardActiveWorkspace"), ["hyprctl", "activeworkspace", "-j"], function(stdout, exitCode) {
+            if (exitCode !== 0) {
+                refreshMonitorSpecialState(function() {
+                    if (typeof callback === "function") callback(false)
+                })
                 return
             }
 
@@ -40,9 +98,13 @@ Scope {
                 activeWorkspaceId = workspace.id ?? focusedWorkspace?.id ?? 1
                 activeWorkspaceMonitor = workspace.monitor ?? focusedWorkspace?.monitor?.name ?? ""
                 activeWorkspaceWindows = workspace.windows ?? -1
-                if (typeof callback === "function") callback(true)
+                refreshMonitorSpecialState(function() {
+                    if (typeof callback === "function") callback(true)
+                })
             } catch(e) {
-                if (typeof callback === "function") callback(false)
+                refreshMonitorSpecialState(function() {
+                    if (typeof callback === "function") callback(false)
+                })
             }
         }, 0)
     }
@@ -59,7 +121,7 @@ Scope {
             return
         }
 
-        if (isOnThisMonitor && isEmpty) {
+        if (isOnThisMonitor && isEmpty && !activeSpecialOnThisMonitor) {
             shouldShowBoard = true
             mouseHasMoved = false
             lastMousePos = Qt.point(0, 0)
@@ -83,7 +145,7 @@ Scope {
                     shouldShowBoard = true
                 } else {
                     refreshActiveWorkspaceState(function() {
-                        if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor()) {
+                        if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor() || activeSpecialOnThisMonitor) {
                             shouldShowBoard = false
                         }
                     })
@@ -123,7 +185,8 @@ Scope {
     Connections {
         target: Hyprland
         function onRawEvent(event) {
-            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow") {
+            if (event.name === "movewindow" || event.name === "openwindow" || event.name === "closewindow"
+                    || event.name === "activespecial" || event.name === "workspace" || event.name === "workspacev2") {
                 if (event.name === "movewindow" || event.name === "openwindow") {
                     windowMoving = true
                     windowMoveTimer.restart()
@@ -133,7 +196,7 @@ Scope {
                 }
                 Hyprland.refreshWorkspaces()
                 refreshActiveWorkspaceState(function() {
-                    if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor()) {
+                    if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor() || activeSpecialOnThisMonitor) {
                         shouldShowBoard = false
                     }
                 })

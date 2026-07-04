@@ -97,15 +97,6 @@ return function(ctx)
         end
     end
 
-    local function float_special_windows(name)
-        for _, window in ipairs(hl.get_workspace_windows(special_workspace_selector(name))) do
-            hl.dispatch(hl.dsp.window.float({
-                window = window,
-                action = "set",
-            }))
-        end
-    end
-
     local function resolve_scratch_size_component(component, monitor, axis)
         if type(component) == "number" then
             return math.floor(component)
@@ -216,14 +207,12 @@ return function(ctx)
 
     local function prepare_special_scratch(name, rules)
         local monitor = move_special_to_active_monitor(name)
-        float_special_windows(name)
         resize_special_windows(name, rules, monitor)
         center_special_windows(name)
     end
 
     local function apply_visible_special_geometry(name, rules)
         local monitor = visible_special_monitor(name) or hl.get_active_monitor()
-        float_special_windows(name)
         resize_special_windows(name, rules, monitor)
         center_special_windows(name)
     end
@@ -255,12 +244,9 @@ return function(ctx)
 
     local function show_special_scratch(name, rules)
         disable_animations_temporarily(150)
-        prepare_special_scratch(name, rules)
-
-            hl.timer(function()
-                ensure_special_visible_on_active_monitor(name)
-                schedule_visible_geometry(name, rules, { 40, 120, 260, 420 })
-            end, { timeout = 20, type = "oneshot" })
+        move_special_to_active_monitor(name)
+        ensure_special_visible_on_active_monitor(name)
+        schedule_visible_geometry(name, rules, { 20, 60, 140, 260 })
     end
 
     function M.toggle(name, cmd, rules)
@@ -273,14 +259,10 @@ return function(ctx)
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
 
                 hl.timer(function()
-                    prepare_special_scratch(name, rules)
-                end, { timeout = 20, type = "oneshot" })
-
-                hl.timer(function()
+                    move_special_to_active_monitor(name)
                     ensure_special_visible_on_active_monitor(name)
-                end, { timeout = 60, type = "oneshot" })
-
-                schedule_visible_geometry(name, rules, { 100, 180, 320, 480 })
+                    schedule_visible_geometry(name, rules, { 20, 80, 160, 300 })
+                end, { timeout = 40, type = "oneshot" })
             elseif visible_monitor then
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
             else
