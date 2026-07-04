@@ -47,13 +47,13 @@ return function(ctx)
 
     local function terminal_font_size()
         local monitor = active_monitor()
-        local font_size = 10.5 + clamp(active_monitor_short_edge() - 1080, 0, 1080) * 3.5 / 1080
+        local font_size = 8.5 + clamp(active_monitor_short_edge() - 1080, 0, 1080) * 5.5 / 1080
 
         if is_internal_panel(monitor) then
-            font_size = math.min(font_size, 11)
+            font_size = math.min(font_size, 9.5)
         end
 
-        return string.format("%.1f", clamp(font_size, 10.5, 14))
+        return string.format("%.1f", clamp(font_size, 8.5, 14))
     end
 
     local function terminal_padding_x()
