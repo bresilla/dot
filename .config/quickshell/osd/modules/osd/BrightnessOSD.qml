@@ -51,7 +51,7 @@ Scope {
         if (brightness < 0.66) return "󰃟";
         return "󰃠";
     }
-    readonly property int osdWidth: Math.round(monitorWidth * 0.34)
+    readonly property int osdWidth: Math.round(monitorWidth * 0.272)
     readonly property int osdHeight: Math.round(monitorHeight * 0.065)
     readonly property int osdPadding: Math.round(osdHeight * 0.32)
     readonly property int osdGap: Math.round(osdHeight * 0.22)

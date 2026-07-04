@@ -11,8 +11,8 @@ Item {
     property bool showIndicator: false
     property bool interactive: true
     property real lineHeight: parent ? parent.height * 0.16 : 1
-    property real indicatorWidth: lineHeight * 0.3
-    property real indicatorGap: lineHeight * 0.8
+    property real indicatorWidth: Math.max(1, lineHeight * (3 / 60))
+    property real indicatorGap: Math.max(3, lineHeight * (8 / 60))
     
     signal clicked(real position)
     signal seeking(real position)
@@ -21,13 +21,14 @@ Item {
     
     readonly property real indicatorPosition: width * root.value
     readonly property real indicatorHeight: lineHeight * 2.0
+    readonly property real trackRadius: Math.max(1, root.lineHeight * (2 / 60))
     
     Rectangle {
         id: pastTrack
         height: root.lineHeight
         anchors.verticalCenter: parent.verticalCenter
         width: Math.max(0, root.indicatorPosition - root.indicatorGap)
-        radius: root.lineHeight * 0.2
+        radius: root.trackRadius
         color: root.fillColor
         
         Behavior on width {
@@ -44,7 +45,7 @@ Item {
         visible: root.showIndicator
         width: root.indicatorWidth
         height: indicatorHeight
-        radius: root.indicatorWidth * 0.5
+        radius: Math.max(0.5, root.indicatorWidth * 0.5)
         color: root.indicatorColor
         x: root.indicatorPosition - width / 2
         anchors.verticalCenter: parent.verticalCenter
@@ -64,7 +65,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         x: root.indicatorPosition + root.indicatorGap
         width: Math.max(0, parent.width - x)
-        radius: root.lineHeight * 0.2
+        radius: root.trackRadius
         color: root.trackColor
         
         Behavior on x {

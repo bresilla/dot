@@ -97,6 +97,15 @@ return function(ctx)
         end
     end
 
+    local function float_special_windows(name)
+        for _, window in ipairs(hl.get_workspace_windows(special_workspace_selector(name))) do
+            hl.dispatch(hl.dsp.window.float({
+                window = window,
+                action = "set",
+            }))
+        end
+    end
+
     local function resolve_scratch_size_component(component, monitor, axis)
         if type(component) == "number" then
             return math.floor(component)
@@ -207,13 +216,24 @@ return function(ctx)
 
     local function prepare_special_scratch(name, rules)
         local monitor = move_special_to_active_monitor(name)
+        float_special_windows(name)
         resize_special_windows(name, rules, monitor)
         center_special_windows(name)
     end
 
     local function apply_visible_special_geometry(name, rules)
-        resize_special_windows(name, rules, hl.get_active_monitor())
+        local monitor = visible_special_monitor(name) or hl.get_active_monitor()
+        float_special_windows(name)
+        resize_special_windows(name, rules, monitor)
         center_special_windows(name)
+    end
+
+    local function schedule_visible_geometry(name, rules, delays)
+        for _, delay in ipairs(delays) do
+            hl.timer(function()
+                apply_visible_special_geometry(name, rules)
+            end, { timeout = delay, type = "oneshot" })
+        end
     end
 
     local function special_visible_on_active_monitor(name)
@@ -237,17 +257,10 @@ return function(ctx)
         disable_animations_temporarily(150)
         prepare_special_scratch(name, rules)
 
-        hl.timer(function()
-            ensure_special_visible_on_active_monitor(name)
-
             hl.timer(function()
-                apply_visible_special_geometry(name, rules)
-            end, { timeout = 50, type = "oneshot" })
-
-            hl.timer(function()
-                apply_visible_special_geometry(name, rules)
-            end, { timeout = 140, type = "oneshot" })
-        end, { timeout = 20, type = "oneshot" })
+                ensure_special_visible_on_active_monitor(name)
+                schedule_visible_geometry(name, rules, { 40, 120, 260, 420 })
+            end, { timeout = 20, type = "oneshot" })
     end
 
     function M.toggle(name, cmd, rules)
@@ -267,13 +280,7 @@ return function(ctx)
                     ensure_special_visible_on_active_monitor(name)
                 end, { timeout = 60, type = "oneshot" })
 
-                hl.timer(function()
-                    apply_visible_special_geometry(name, rules)
-                end, { timeout = 100, type = "oneshot" })
-
-                hl.timer(function()
-                    apply_visible_special_geometry(name, rules)
-                end, { timeout = 180, type = "oneshot" })
+                schedule_visible_geometry(name, rules, { 100, 180, 320, 480 })
             elseif visible_monitor then
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
             else

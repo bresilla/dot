@@ -4,6 +4,7 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import QtQuick
 import "../../../shared/ribbon"
+import "../../../settings/modules/settings" as S
 
 Scope {
     id: root
@@ -13,20 +14,6 @@ Scope {
     required property int monitorWidth
     required property real lineBarWidth
     required property bool barOnRight
-
-    FileView {
-        id: wal
-        path: Quickshell.env("HOME") + "/.cache/wal/colors.json"
-        watchChanges: true
-        onFileChanged: reload()
-        JsonAdapter {
-            property JsonObject special: JsonObject {
-                property string background: "#000000"
-                property string foreground: "#ffffff"
-            }
-            property var colors: ({})
-        }
-    }
 
     property var activeWorkspace: currentMonitor?.activeWorkspace
     property int currentWorkspace: 1
@@ -41,6 +28,17 @@ Scope {
     readonly property real pillWidthFactor: 0.55
     readonly property real popupSlide: Math.min(monitorWidth, monitorHeight) * (46 / 2160)
     readonly property real popupGap: Math.min(monitorWidth, monitorHeight) * (24 / 2160)
+
+    function readableTextColor(bg) {
+        const raw = String(bg || "").replace("#", "");
+        if (raw.length < 6) return "#ffffff";
+
+        const r = parseInt(raw.substring(0, 2), 16);
+        const g = parseInt(raw.substring(2, 4), 16);
+        const b = parseInt(raw.substring(4, 6), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        return luminance < 0.45 ? "#ffffff" : "#000000";
+    }
 
     function getWorkspaceYOffset(workspaceId) {
         var index = (workspaceId - 1) % 10;
@@ -208,11 +206,11 @@ Scope {
 
             width: startWidth + (endSize - startWidth) * (morphProgress * morphProgress)
             height: startHeight + (endSize - startHeight) * morphProgress
-            radius: 4 + ((endSize * 0.5 - 4) * morphProgress)
+            radius: S.Theme.pillRadius + ((endSize * 0.5 - S.Theme.pillRadius) * morphProgress)
 
-            color: wal.adapter.colors["color1"] || "#CC000000"
-            border.color: wal.adapter.colors["color0"] || "#000000"
-            border.width: 2 + (4 * morphProgress)
+            color: S.Theme.color1
+            border.color: S.Theme.color0
+            border.width: S.Theme.heavyBorderWidth + (S.Theme.morphBorderGrowth * morphProgress)
 
             Text {
                 anchors.centerIn: parent
@@ -225,7 +223,7 @@ Scope {
                 font.pixelSize: Math.round(Math.min(width, height) * 0.495)
                 font.bold: true
                 font.weight: Font.Black
-                color: wal.adapter.colors["color0"] || "#ffffff"
+                color: root.readableTextColor(morphingOSD.color)
                 opacity: morphProgress
             }
         }
