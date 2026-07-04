@@ -11,8 +11,34 @@ return function(ctx)
             ctx.util.hypr_rgb(colors.color8 or colors.color0) or "rgb(595959)"
     end
 
+    local function active_monitor()
+        local monitor = hl.get_active_monitor()
+
+        if monitor then
+            return monitor
+        end
+
+        return hl.get_monitors()[1]
+    end
+
+    local function monitor_short_edge(monitor)
+        local width = monitor and monitor.width or 1920
+        local height = monitor and monitor.height or 1080
+
+        return math.min(width, height)
+    end
+
+    function ctx.hypr_border_size()
+        return math.max(1, math.min(3, math.floor(monitor_short_edge(active_monitor()) / 720 + 0.5)))
+    end
+
+    function ctx.hypr_extra_border_size()
+        return ctx.hypr_border_size() >= 3 and 1 or 0
+    end
+
     local active_border, inactive_border = border_colors()
     ctx.border_color_signature = active_border .. "|" .. inactive_border
+    ctx.border_size_signature = nil
 
     function ctx.apply_border_colors()
         load_colors()
@@ -34,6 +60,29 @@ return function(ctx)
                 },
             },
         })
+    end
+
+    function ctx.apply_border_size()
+        local border_size = ctx.hypr_border_size()
+        local extra_border_size = ctx.hypr_extra_border_size()
+        local signature = border_size .. "|" .. extra_border_size
+
+        if signature == ctx.border_size_signature then
+            return
+        end
+
+        ctx.border_size_signature = signature
+
+        hl.config({
+            general = {
+                border_size = border_size,
+            },
+        })
+
+        hl.exec_cmd(table.concat({
+            "hyprctl keyword plugin:borders-plus-plus:border_size_1 " .. extra_border_size,
+            "hyprctl keyword plugin:borders-plus-plus:border_size_2 -1",
+        }, " && "))
     end
 
     hl.config({
@@ -60,7 +109,7 @@ return function(ctx)
         general = {
             gaps_in = 5,
             gaps_out = 10,
-            border_size = 3,
+            border_size = ctx.hypr_border_size(),
             col = {
                 active_border = active_border,
                 inactive_border = inactive_border,
@@ -105,4 +154,5 @@ return function(ctx)
     hl.animation({ leaf = "specialWorkspaceOut", enabled = false })
 
     hl.timer(ctx.apply_border_colors, { timeout = 1000, type = "repeat" })
+    hl.timer(ctx.apply_border_size, { timeout = 1000, type = "repeat" })
 end
