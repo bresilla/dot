@@ -36,9 +36,14 @@ return function(ctx)
         return ctx.hypr_border_size() >= 3 and 1 or 0
     end
 
+    function ctx.hypr_rounding()
+        return math.max(10, math.min(20, math.floor(monitor_short_edge(active_monitor()) / 108 + 0.5)))
+    end
+
     local active_border, inactive_border = border_colors()
     ctx.border_color_signature = active_border .. "|" .. inactive_border
     ctx.border_size_signature = nil
+    ctx.rounding_signature = nil
 
     function ctx.apply_border_colors()
         load_colors()
@@ -85,6 +90,22 @@ return function(ctx)
         }, " && "))
     end
 
+    function ctx.apply_rounding()
+        local rounding = ctx.hypr_rounding()
+
+        if rounding == ctx.rounding_signature then
+            return
+        end
+
+        ctx.rounding_signature = rounding
+
+        hl.config({
+            decoration = {
+                rounding = rounding,
+            },
+        })
+    end
+
     hl.config({
         debug = {
             disable_logs = true,
@@ -119,7 +140,7 @@ return function(ctx)
         },
 
         decoration = {
-            rounding = 20,
+            rounding = ctx.hypr_rounding(),
             blur = {
                 enabled = false,
             },
@@ -155,4 +176,5 @@ return function(ctx)
 
     hl.timer(ctx.apply_border_colors, { timeout = 1000, type = "repeat" })
     hl.timer(ctx.apply_border_size, { timeout = 1000, type = "repeat" })
+    hl.timer(ctx.apply_rounding, { timeout = 1000, type = "repeat" })
 end
