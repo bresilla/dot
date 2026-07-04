@@ -18,16 +18,16 @@ Scope {
     readonly property int barWidth: Math.max(8, Math.round(monitorWidth * 0.005))
     readonly property int borderPadding: 6
     readonly property int reservedThickness: barWidth + borderPadding
-    readonly property real pillGap: Math.max(6, Math.min(10, monitorHeight * 0.012))
-    readonly property real pillH: Math.max(28, Math.min(42, (monitorHeight * 0.5 - pillGap) / 10))
+    readonly property real pillGap: 10
+    readonly property real pillH: Math.max(8, (monitorHeight * 0.5 - (pillGap * 9)) / 10)
     readonly property real buttonSize: pillH
 
     // Panel layout (board-style)
-    readonly property real panelWidth: Math.min(460, Math.max(320, monitorWidth * 0.24))
-    readonly property real panelPad: Math.max(8, Math.min(12, monitorHeight * 0.014))
-    readonly property real cardPad: Math.max(6, Math.min(8, monitorHeight * 0.01))
-    readonly property real rowH: Math.max(26, Math.min(36, pillH * 0.78))
-    readonly property real appRowH: Math.max(22, Math.min(30, pillH * 0.62))
+    readonly property real panelWidth: Math.min(760, Math.max(360, monitorWidth * 0.2))
+    readonly property real panelPad: Math.max(10, Math.min(18, pillH * 0.16))
+    readonly property real cardPad: Math.max(8, Math.min(12, pillH * 0.11))
+    readonly property real rowH: Math.max(34, Math.min(72, pillH * 0.65))
+    readonly property real appRowH: Math.max(28, Math.min(54, pillH * 0.5))
     readonly property real iconSize: rowH * 0.85
     readonly property real appSpacing: 6
 
