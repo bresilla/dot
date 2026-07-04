@@ -30,10 +30,10 @@ return function(ctx)
     bind_exec(meta .. " + Return", "kitty")
 
     scratchpads.bind(super .. " + Space", "noteing", "alacritty --title noteing", {
-        size = { "monitor_w*0.9", "monitor_h*0.6" },
+        size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
     scratchpads.bind(meta .. " + Space", "main", "alacritty --title main", {
-        size = { "monitor_w*0.9", "monitor_h*0.6" },
+        size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
 
     scratchpads.bind(super .. " + M", "spotify", "flatpak run com.spotify.Client", {

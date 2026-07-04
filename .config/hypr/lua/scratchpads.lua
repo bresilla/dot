@@ -142,8 +142,17 @@ return function(ctx)
             return nil, nil
         end
 
-        return resolve_scratch_size_component(size[1], monitor, "x"),
-            resolve_scratch_size_component(size[2], monitor, "y")
+        local width = resolve_scratch_size_component(size[1], monitor, "x")
+        local height = resolve_scratch_size_component(size[2], monitor, "y")
+
+        if monitor then
+            local max_width = math.floor(monitor.width * 0.86)
+            local max_height = math.floor(monitor.height * 0.82)
+            width = width and math.min(width, max_width) or nil
+            height = height and math.min(height, max_height) or nil
+        end
+
+        return width, height
     end
 
     local function resize_special_windows(name, rules, monitor)

@@ -144,7 +144,7 @@ Scope {
                 readonly property bool hasWindows: modelData.windows > 0
                 visible: true
                 width: lineWindow.pillWidth
-                height: lineWindow.trackHeight / 10
+                height: Math.max(8, (lineWindow.trackHeight - (lineWindow.pillSpacing * 9)) / 10)
                 radius: 4
                 color: modelData.active ? wal.adapter.colors["color1"] :
                        hasWindows ? wal.adapter.colors["color244"] :

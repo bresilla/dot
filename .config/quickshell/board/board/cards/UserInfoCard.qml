@@ -7,8 +7,13 @@ import "../../panels/media"
 BaseCard {
     id: root
     
-    readonly property real screenBasedLineHeight: Screen.height * 0.005
-    readonly property real iconSize: Theme.iconSize * 1.5
+    readonly property real uiScale: Math.max(0.62, Math.min(1.0, Math.min(width / 520, height / 150)))
+    readonly property real cardSpacing: Math.max(6, Theme.spacing * uiScale)
+    readonly property real screenBasedLineHeight: Math.max(3, Math.min(6, height * 0.035))
+    readonly property real iconSize: Math.max(28, Math.min(Theme.iconSize * 1.5, height * 0.34))
+    readonly property real titleFontSize: Math.max(16, Theme.fontSizeLarge * 1.2 * uiScale)
+    readonly property real smallFontSize: Math.max(11, Theme.fontSizeSmall * uiScale)
+    readonly property real logoFontSize: Math.max(24, Theme.iconSize * 1.5 * uiScale)
     readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
     
     property real volume: -1
@@ -53,8 +58,8 @@ BaseCard {
     
     Row {
         anchors.fill: parent
-        anchors.margins: Theme.spacing
-        spacing: Theme.spacing * 2
+        anchors.margins: root.cardSpacing
+        spacing: root.cardSpacing * 1.5
         
         Item {
             width: parent.width * 0.5 - parent.spacing
@@ -75,22 +80,25 @@ BaseCard {
             
             Column {
                 anchors.centerIn: parent
-                spacing: Theme.spacing * 1.5
+                spacing: root.cardSpacing * 0.75
                 width: parent.width
                 
                 Text {
                     text: Quickshell.env("USER") || "User"
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: Theme.fontSizeLarge * 1.2
+                    font.pixelSize: root.titleFontSize
                     font.weight: Font.Medium
                     color: Theme.surfaceText
                     anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
                 }
                 
                 Text {
                     text: "" // Nerd Font Arch Linux logo
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: Theme.iconSize * 1.5
+                    font.pixelSize: root.logoFontSize
                     color: Theme.primary
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
@@ -118,9 +126,12 @@ BaseCard {
                 Text {
                     text: uptimeProc.uptimeText || "Loading..."
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: Theme.fontSizeSmall
+                    font.pixelSize: root.smallFontSize
                     color: Theme.surfaceVariantText
                     anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
+                    elide: Text.ElideRight
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }
@@ -131,12 +142,12 @@ BaseCard {
             
             Column {
                 anchors.centerIn: parent
-                spacing: Theme.spacing * 2
+                spacing: root.cardSpacing
                 width: parent.width * 0.8
                 
                 Row {
                     width: parent.width
-                    spacing: Theme.spacing
+                    spacing: root.cardSpacing
                     
                     Rectangle {
                         width: root.iconSize
@@ -178,7 +189,7 @@ BaseCard {
                 
                 Row {
                     width: parent.width
-                    spacing: Theme.spacing
+                    spacing: root.cardSpacing
                     
                     Rectangle {
                         width: root.iconSize

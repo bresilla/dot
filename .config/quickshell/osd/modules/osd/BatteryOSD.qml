@@ -39,6 +39,7 @@ Scope {
 
     readonly property string batteryIcon: "\u{f0083}"
     readonly property color warningColor: "#d32f2f"
+    readonly property int osdSize: Math.round(Math.min(64, Math.max(44, monitorHeight * 0.065)))
 
     PanelWindow {
         id: osdWindow
@@ -52,13 +53,13 @@ Scope {
             bottom: true
         }
 
-        implicitWidth: monitorWidth * 0.05
-        implicitHeight: monitorWidth * 0.05
+        implicitWidth: osdSize
+        implicitHeight: osdSize
 
         exclusiveZone: 0
         color: "#00000000"
 
-        margins.bottom: 40
+        margins.bottom: Math.max(24, Math.round(monitorHeight * 0.05))
 
         Item {
             id: osdContent

@@ -35,9 +35,9 @@ Scope {
     property real displayY: 0
     property int lastShownWorkspace: -1
 
-    readonly property int containerHeight: monitorHeight * 0.5
-    readonly property int itemHeight: containerHeight / 10
     readonly property int wsSpacing: 10
+    readonly property int containerHeight: monitorHeight * 0.5
+    readonly property int itemHeight: Math.max(8, (containerHeight - (wsSpacing * 9)) / 10)
     readonly property real pillWidthFactor: 0.55
     readonly property int popupSlide: 46
 
@@ -183,7 +183,7 @@ Scope {
         popupSlide: root.popupSlide
 
         implicitWidth: Math.round(root.itemHeight + root.popupSlide + 16)
-        implicitHeight: containerHeight + (wsSpacing * 9)
+        implicitHeight: containerHeight
 
         readonly property real lineWidth: lineBarWidth
         readonly property int containerStartY: (monitorHeight - containerHeight) / 2

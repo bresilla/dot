@@ -299,14 +299,17 @@ return function(ctx)
         local monitor = hl.get_active_monitor()
         local preset_name = preset_for_monitor(monitor)
         local base = preset_name and workspace_base_for_preset(preset_name) or nil
+        local workspace = hl.get_active_workspace(monitor)
+        local current_id = workspace and workspace.id or nil
 
-        if not base then
-            return nil
+        if not base and current_id then
+            local _, _, source_base = workspace_source_for_id(current_id)
+            base = source_base
         end
 
-        local workspace = hl.get_active_workspace(monitor)
-        local current_id = workspace and workspace.id or base
-        local current_offset = current_id - base
+        base = base or workspace_base_for_preset("laptop") or assign_workspace_base("laptop")
+
+        local current_offset = (current_id or base) - base
 
         if current_offset < 0 or current_offset > 9 then
             local _, _, _, source_offset = workspace_source_for_id(current_id)

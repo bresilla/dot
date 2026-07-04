@@ -15,15 +15,17 @@ Scope {
     PanelWindow {
         id: mainWindow
         screen: root.screen
-        implicitWidth: Screen.width * 0.5
-        implicitHeight: Screen.height * 0.5
+        readonly property real targetWidth: Math.min(Screen.width * 0.86, Math.max(760, Screen.width * 0.5))
+        readonly property real targetHeight: Math.min(Screen.height * 0.78, Math.max(500, Screen.height * 0.5))
+        implicitWidth: Math.round(targetWidth)
+        implicitHeight: Math.round(targetHeight)
         color: "transparent"
         exclusiveZone: 0
         mask: Region { item: container }
         
         margins {
-            left: Screen.width * 0.25
-            top: Screen.height * 0.25
+            left: Math.round((Screen.width - mainWindow.implicitWidth) / 2)
+            top: Math.round((Screen.height - mainWindow.implicitHeight) / 2)
         }
         
         MouseArea {
@@ -38,6 +40,7 @@ Scope {
                 color: Theme.color238
                 opacity: 0.98
                 radius: 20
+                clip: true
                 
                 Behavior on opacity {
                     NumberAnimation {
@@ -53,8 +56,8 @@ Scope {
                 
                 readonly property real spacing: Theme.spacing
                 
-                readonly property real leftColWidth: (width - spacing) * 0.25
-                readonly property real rightColWidth: (width - spacing) * 0.75
+                readonly property real leftColWidth: (width - spacing) * 0.22
+                readonly property real rightColWidth: (width - spacing) * 0.78
                 
                 readonly property real leftColX: 0
                 readonly property real rightColX: leftColWidth + spacing
@@ -65,11 +68,11 @@ Scope {
                 readonly property real userHeight: (height - spacing) * 0.25
                 readonly property real bottomHeight: (height - spacing) * 0.75
                 
-                readonly property real infoWidth: (rightColWidth - spacing) * 0.75
-                readonly property real logoWidth: (rightColWidth - spacing) * 0.25
+                readonly property real infoWidth: (rightColWidth - spacing) * 0.68
+                readonly property real logoWidth: (rightColWidth - spacing) * 0.32
                 
-                readonly property real calendarWidth: (rightColWidth - spacing) * 0.6
-                readonly property real mediaWidth: (rightColWidth - spacing) * 0.4
+                readonly property real calendarWidth: (rightColWidth - spacing) * 0.56
+                readonly property real mediaWidth: (rightColWidth - spacing) * 0.44
                 
                 LogoCard {
                     x: grid.leftColX

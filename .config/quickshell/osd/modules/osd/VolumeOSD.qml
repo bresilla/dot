@@ -80,6 +80,10 @@ Scope {
         if (volume < 0.66) return "󰖀";
         return "󰕾";
     }
+    readonly property int osdWidth: Math.round(Math.min(monitorWidth * 0.68, Math.max(360, monitorWidth * 0.34)))
+    readonly property int osdHeight: Math.round(Math.min(64, Math.max(44, monitorHeight * 0.065)))
+    readonly property int osdPadding: Math.round(osdHeight * 0.32)
+    readonly property int osdGap: Math.round(osdHeight * 0.22)
 
     PanelWindow {
         id: osdWindow
@@ -93,13 +97,13 @@ Scope {
             bottom: true
         }
 
-        implicitWidth: monitorHeight * 0.4
-        implicitHeight: monitorWidth * 0.05
+        implicitWidth: osdWidth
+        implicitHeight: osdHeight
 
         exclusiveZone: 0
         color: "#00000000"
 
-        margins.bottom: 40
+        margins.bottom: Math.max(24, Math.round(monitorHeight * 0.05))
 
         Item {
             id: osdContent
@@ -122,7 +126,7 @@ Scope {
                 color: isMuted ? OSD.Theme.color240 : OSD.Theme.color1
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: 40
+                anchors.leftMargin: root.osdPadding
                 border.color: OSD.Theme.color0
                 border.width: 2
 
@@ -152,10 +156,10 @@ Scope {
             Rectangle {
                 id: progressRect
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: parent.height * 0.9
+                anchors.left: iconCircle.right
+                anchors.leftMargin: root.osdGap
                 height: parent.height * 0.4
-                width: parent.width - parent.height * 0.9
+                width: Math.max(0, parent.width - x - root.osdPadding)
                 color: OSD.Theme.color1
                 radius: 8
                 border.color: OSD.Theme.color0
