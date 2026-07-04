@@ -15,8 +15,8 @@ Scope {
     PanelWindow {
         id: mainWindow
         screen: root.screen
-        readonly property real targetWidth: Math.min(Screen.width * 0.86, Math.max(760, Screen.width * 0.5))
-        readonly property real targetHeight: Math.min(Screen.height * 0.78, Math.max(500, Screen.height * 0.5))
+        readonly property real targetWidth: Screen.width * 0.576
+        readonly property real targetHeight: Screen.height * 0.544
         implicitWidth: Math.round(targetWidth)
         implicitHeight: Math.round(targetHeight)
         color: "transparent"
@@ -39,7 +39,7 @@ Scope {
                 anchors.fill: parent
                 color: Theme.color238
                 opacity: 0.98
-                radius: 20
+                radius: Theme.cornerRadius * 2
                 clip: true
                 
                 Behavior on opacity {
@@ -52,9 +52,9 @@ Scope {
                 Item {
                     id: grid
                 anchors.fill: parent
-                anchors.margins: Theme.spacing
+                anchors.margins: Theme.spacing * 0.5
                 
-                readonly property real spacing: Theme.spacing
+                readonly property real spacing: Theme.spacing * 0.5
                 
                 readonly property real leftColWidth: (width - spacing) * 0.22
                 readonly property real rightColWidth: (width - spacing) * 0.78

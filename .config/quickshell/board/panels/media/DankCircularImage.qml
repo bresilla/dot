@@ -72,7 +72,7 @@ Rectangle {
         anchors.centerIn: parent
         visible: root.imageSource === "" && root.fallbackIcon === "" && root.fallbackText !== ""
         text: root.fallbackText
-        font.pixelSize: Math.max(12, parent.width * 0.5)
+        font.pixelSize: parent.width * 0.5
         font.weight: Font.Bold
         color: Theme.surfaceVariantText
     }

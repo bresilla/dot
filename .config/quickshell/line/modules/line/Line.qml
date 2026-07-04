@@ -131,7 +131,7 @@ Scope {
         sideRight: root.barOnRight
         ribbonWidth: root.lineBarWidth
         trackHeight: root.monitorHeight * 0.5
-        pillSpacing: 10
+        pillSpacing: Math.min(root.monitorWidth, root.monitorHeight) * (10 / 2160)
         onWheel: angleDelta => {
             const direction = angleDelta.y > 0 ? "r-1" : "r+1";
             root.dispatchWorkspace(direction);
@@ -144,7 +144,7 @@ Scope {
                 readonly property bool hasWindows: modelData.windows > 0
                 visible: true
                 width: lineWindow.pillWidth
-                height: Math.max(8, (lineWindow.trackHeight - (lineWindow.pillSpacing * 9)) / 10)
+                height: (lineWindow.trackHeight - (lineWindow.pillSpacing * 9)) / 10
                 radius: 4
                 color: modelData.active ? wal.adapter.colors["color1"] :
                        hasWindows ? wal.adapter.colors["color244"] :

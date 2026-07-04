@@ -57,7 +57,7 @@ BaseCard {
             height: Screen.height * 0.005 * 6
             anchors.horizontalCenter: parent.horizontalCenter
             
-            property real lineHeight: Screen.height * 0.005
+            property real lineHeight: Theme.progressLineHeight
             property color trackColor: Qt.rgba(Theme.outline.r, Theme.outline.g, Theme.outline.b, 0.15)
             property color fillColor: batteryLevel > 20 ? Theme.primary : "#ff5555"
             

@@ -29,14 +29,17 @@ Singleton {
     readonly property string color244: wal.adapter.colors["color244"] || "#555555"
     
     // Design tokens
-    readonly property int spacing: 12
+    readonly property var referenceScreen: Quickshell.screens.length > 0 ? Quickshell.screens[0] : null
+    readonly property real referenceShortSide: referenceScreen ? Math.min(referenceScreen.width, referenceScreen.height) : 2160
+    readonly property real spacing: referenceShortSide * (12 / 2160)
     
-    readonly property int cornerRadius: 10
-    readonly property int iconSize: 36
+    readonly property real cornerRadius: referenceShortSide * (10 / 2160)
+    readonly property real iconSize: referenceShortSide * (36 / 2160)
+    readonly property real progressLineHeight: referenceShortSide * (10 / 2160)
     
-    readonly property int fontSizeSmall: 18
-    readonly property int fontSizeMedium: 22
-    readonly property int fontSizeLarge: 28
+    readonly property real fontSizeSmall: referenceShortSide * (18 / 2160)
+    readonly property real fontSizeMedium: referenceShortSide * (22 / 2160)
+    readonly property real fontSizeLarge: referenceShortSide * (28 / 2160)
     
     readonly property int shortDuration: 200
     readonly property int mediumDuration: 300

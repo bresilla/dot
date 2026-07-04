@@ -7,13 +7,12 @@ import "../../panels/media"
 BaseCard {
     id: root
     
-    readonly property real uiScale: Math.max(0.62, Math.min(1.0, Math.min(width / 520, height / 150)))
-    readonly property real cardSpacing: Math.max(6, Theme.spacing * uiScale)
-    readonly property real screenBasedLineHeight: Math.max(3, Math.min(6, height * 0.035))
-    readonly property real iconSize: Math.max(28, Math.min(Theme.iconSize * 1.5, height * 0.34))
-    readonly property real titleFontSize: Math.max(16, Theme.fontSizeLarge * 1.2 * uiScale)
-    readonly property real smallFontSize: Math.max(11, Theme.fontSizeSmall * uiScale)
-    readonly property real logoFontSize: Math.max(24, Theme.iconSize * 1.5 * uiScale)
+    readonly property real cardSpacing: height * 0.08
+    readonly property real screenBasedLineHeight: Theme.progressLineHeight
+    readonly property real iconSize: height * 0.34
+    readonly property real titleFontSize: height * 0.24
+    readonly property real smallFontSize: height * 0.13
+    readonly property real logoFontSize: height * 0.32
     readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
     
     property real volume: -1

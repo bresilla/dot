@@ -51,8 +51,8 @@ Scope {
         if (brightness < 0.66) return "󰃟";
         return "󰃠";
     }
-    readonly property int osdWidth: Math.round(Math.min(monitorWidth * 0.68, Math.max(360, monitorWidth * 0.34)))
-    readonly property int osdHeight: Math.round(Math.min(64, Math.max(44, monitorHeight * 0.065)))
+    readonly property int osdWidth: Math.round(monitorWidth * 0.34)
+    readonly property int osdHeight: Math.round(monitorHeight * 0.065)
     readonly property int osdPadding: Math.round(osdHeight * 0.32)
     readonly property int osdGap: Math.round(osdHeight * 0.22)
 
@@ -74,7 +74,7 @@ Scope {
         exclusiveZone: 0
         color: "#00000000"
 
-        margins.bottom: Math.max(24, Math.round(monitorHeight * 0.05))
+        margins.bottom: Math.round(monitorHeight * 0.05)
 
         Item {
             id: osdContent

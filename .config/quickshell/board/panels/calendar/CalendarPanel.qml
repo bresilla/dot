@@ -5,7 +5,7 @@ import "../../board"
 Rectangle {
     id: root
     
-    readonly property real scaledFontSize: Math.max(12, Math.min(width, height) * 0.04)
+    readonly property real scaledFontSize: Math.min(width, height) * 0.04
     readonly property real scaledSpacing: Math.min(width, height) * 0.02
 
     property bool showEventDetails: false
@@ -108,7 +108,7 @@ Rectangle {
                     anchors.centerIn: parent
                     text: "<"
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: 14
+                    font.pixelSize: scaledFontSize
                     color: Theme.primary
                 }
 
@@ -147,7 +147,7 @@ Rectangle {
                     anchors.centerIn: parent
                     text: ">"
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: 14
+                    font.pixelSize: scaledFontSize
                     color: Theme.primary
                 }
 
@@ -252,8 +252,8 @@ Rectangle {
                             anchors.bottom: parent.bottom
                             anchors.horizontalCenter: parent.horizontalCenter
                             anchors.bottomMargin: 4
-                            width: 12
-                            height: 2
+                            width: scaledFontSize * 0.8
+                            height: scaledFontSize * 0.14
                             radius: 1
                             visible: CalendarService && CalendarService.khalAvailable && CalendarService.hasEventsForDate(dayDate)
                             color: isToday ? Qt.lighter(Theme.primary, 1.3) : Theme.primary

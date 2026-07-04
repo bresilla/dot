@@ -8,10 +8,13 @@ Scope {
 
     required property var modelData
 
-    readonly property int thickness: Math.max(8, Math.round((modelData?.width ?? 1920) * 0.005))
-    readonly property int padding: 6
+    readonly property real monitorWidth: modelData ? modelData.width : (Quickshell.screens.length > 0 ? Quickshell.screens[0].width : 3840)
+    readonly property real monitorHeight: modelData ? modelData.height : (Quickshell.screens.length > 0 ? Quickshell.screens[0].height : 2160)
+    readonly property real monitorShortSide: Math.min(monitorWidth, monitorHeight)
+    readonly property int thickness: Math.round(monitorWidth * 0.005)
+    readonly property int padding: Math.round(monitorShortSide * (6 / 2160))
     readonly property int reservedThickness: thickness + padding
-    readonly property int innerRadius: 24
+    readonly property int innerRadius: Math.round(monitorShortSide * (24 / 2160))
     readonly property int cornerSize: thickness + innerRadius
     readonly property color borderColor: wal.adapter.colors["color0"] || "#000000"
 

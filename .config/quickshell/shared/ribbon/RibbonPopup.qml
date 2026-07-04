@@ -12,8 +12,8 @@ PanelWindow {
 
     property bool expanded: false
     property real expandProgress: expanded ? 1 : 0
-    property int popupGap: 24
-    property int popupSlide: 46
+    property real popupGap: ribbonWidth * (24 / 8)
+    property real popupSlide: ribbonWidth * (46 / 8)
 
     readonly property real compactInset: -ribbonWidth
     readonly property real expandedInset: reservedThickness + popupGap

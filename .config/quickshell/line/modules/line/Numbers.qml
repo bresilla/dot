@@ -35,11 +35,12 @@ Scope {
     property real displayY: 0
     property int lastShownWorkspace: -1
 
-    readonly property int wsSpacing: 10
+    readonly property real wsSpacing: Math.min(monitorWidth, monitorHeight) * (10 / 2160)
     readonly property int containerHeight: monitorHeight * 0.5
-    readonly property int itemHeight: Math.max(8, (containerHeight - (wsSpacing * 9)) / 10)
+    readonly property real itemHeight: (containerHeight - (wsSpacing * 9)) / 10
     readonly property real pillWidthFactor: 0.55
-    readonly property int popupSlide: 46
+    readonly property real popupSlide: Math.min(monitorWidth, monitorHeight) * (46 / 2160)
+    readonly property real popupGap: Math.min(monitorWidth, monitorHeight) * (24 / 2160)
 
     function getWorkspaceYOffset(workspaceId) {
         var index = (workspaceId - 1) % 10;
@@ -180,9 +181,10 @@ Scope {
         reservedThickness: Math.round(root.lineBarWidth + 6)
         expanded: false
         expandProgress: 0
+        popupGap: root.popupGap
         popupSlide: root.popupSlide
 
-        implicitWidth: Math.round(root.itemHeight + root.popupSlide + 16)
+        implicitWidth: Math.round(root.itemHeight + root.popupSlide + (root.popupGap * 0.66))
         implicitHeight: containerHeight
 
         readonly property real lineWidth: lineBarWidth
@@ -220,7 +222,7 @@ Scope {
                 verticalAlignment: Text.AlignVCenter
                 text: currentWorkspace
                 font.family: "IosevkaTerm Nerd Font Mono"
-                font.pixelSize: Math.max(12, Math.round(Math.min(width, height) * 0.495))
+                font.pixelSize: Math.round(Math.min(width, height) * 0.495)
                 font.bold: true
                 font.weight: Font.Black
                 color: wal.adapter.colors["color0"] || "#ffffff"

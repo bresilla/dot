@@ -15,21 +15,24 @@ Scope {
 
     // ─── Dimensions ───
 
-    readonly property int barWidth: Math.max(8, Math.round(monitorWidth * 0.005))
-    readonly property int borderPadding: 6
+    readonly property int barWidth: Math.round(monitorWidth * 0.005)
+    readonly property int borderPadding: Math.round(Math.min(monitorWidth, monitorHeight) * (6 / 2160))
     readonly property int reservedThickness: barWidth + borderPadding
-    readonly property real pillGap: 10
-    readonly property real pillH: Math.max(8, (monitorHeight * 0.5 - (pillGap * 9)) / 10)
+    readonly property real pillGap: Math.min(monitorWidth, monitorHeight) * (10 / 2160)
+    readonly property real pillH: (monitorHeight * 0.5 - (pillGap * 9)) / 10
     readonly property real buttonSize: pillH
 
     // Panel layout (board-style)
-    readonly property real panelWidth: Math.min(760, Math.max(360, monitorWidth * 0.2))
-    readonly property real panelPad: Math.max(10, Math.min(18, pillH * 0.16))
-    readonly property real cardPad: Math.max(8, Math.min(12, pillH * 0.11))
-    readonly property real rowH: Math.max(34, Math.min(72, pillH * 0.65))
-    readonly property real appRowH: Math.max(28, Math.min(54, pillH * 0.5))
+    readonly property real panelWidth: monitorWidth * 0.2
+    readonly property real panelPad: Math.min(monitorWidth, monitorHeight) * (12 / 2160)
+    readonly property real cardPad: Math.min(monitorWidth, monitorHeight) * (8 / 2160)
+    readonly property real rowH: pillH * 0.65
+    readonly property real appRowH: pillH * 0.5
     readonly property real iconSize: rowH * 0.85
-    readonly property real appSpacing: 6
+    readonly property real appSpacing: Math.min(monitorWidth, monitorHeight) * (6 / 2160)
+    readonly property real popupGap: Math.min(monitorWidth, monitorHeight) * (24 / 2160)
+    readonly property real popupSlide: Math.min(monitorWidth, monitorHeight) * (46 / 2160)
+    readonly property real progressLineHeight: monitorHeight * 0.005
 
     // Card heights
     readonly property real mainCardH: cardPad * 2 + rowH
@@ -404,9 +407,11 @@ Scope {
         reservedThickness: root.reservedThickness
         expanded: root.volWidePanel
         expandProgress: root.volExpandMorph
+        popupGap: root.popupGap
+        popupSlide: root.popupSlide
         visible: volPanelShown || volPanelMorphOut.running
 
-        readonly property real compactW: buttonSize + popupSlide + 8
+        readonly property real compactW: buttonSize + popupSlide + (popupGap * 0.33)
         readonly property real compactH: pillH
         readonly property real morphEase: volExpandMorph * volExpandMorph * (3 - (2 * volExpandMorph))
 
@@ -455,7 +460,7 @@ Scope {
                     verticalAlignment: Text.AlignVCenter
                     text: volumeIcon
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: Math.max(12, Math.round(Math.min(width, height) * 0.495))
+                    font.pixelSize: Math.round(Math.min(width, height) * 0.495)
                     font.bold: true
                     font.weight: Font.Black
                     color: S.Theme.color0
@@ -562,7 +567,7 @@ Scope {
                                 height: parent.height
                                 anchors.verticalCenter: parent.verticalCenter
                                 value: volume
-                                lineHeight: monitorHeight * 0.005
+                                lineHeight: root.progressLineHeight
                                 fillColor: S.Theme.primary
                                 trackColor: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.15)
                                 indicatorColor: S.Theme.primary
@@ -630,7 +635,7 @@ Scope {
                                             height: parent.height
                                             anchors.verticalCenter: parent.verticalCenter
                                             value: appVol
-                                            lineHeight: monitorHeight * 0.004
+                                            lineHeight: root.progressLineHeight
                                             fillColor: S.Theme.primary
                                             trackColor: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.15)
                                             indicatorColor: S.Theme.primary
@@ -686,9 +691,11 @@ Scope {
         reservedThickness: root.reservedThickness
         expanded: root.brightWidePanel
         expandProgress: root.brightExpandMorph
+        popupGap: root.popupGap
+        popupSlide: root.popupSlide
         visible: brightPanelShown || brightPanelMorphOut.running
 
-        readonly property real compactW: buttonSize + popupSlide + 8
+        readonly property real compactW: buttonSize + popupSlide + (popupGap * 0.33)
         readonly property real compactH: pillH
         readonly property real morphEase: brightExpandMorph * brightExpandMorph * (3 - (2 * brightExpandMorph))
 
@@ -730,7 +737,7 @@ Scope {
                     verticalAlignment: Text.AlignVCenter
                     text: brightnessIcon
                     font.family: "IosevkaTerm Nerd Font Mono"
-                    font.pixelSize: Math.max(12, Math.round(Math.min(width, height) * 0.495))
+                    font.pixelSize: Math.round(Math.min(width, height) * 0.495)
                     font.bold: true
                     font.weight: Font.Black
                     color: S.Theme.color0
@@ -802,7 +809,7 @@ Scope {
                                 height: parent.height
                                 anchors.verticalCenter: parent.verticalCenter
                                 value: brightness
-                                lineHeight: monitorHeight * 0.005
+                                lineHeight: root.progressLineHeight
                                 fillColor: S.Theme.primary
                                 trackColor: Qt.rgba(S.Theme.outline.r, S.Theme.outline.g, S.Theme.outline.b, 0.15)
                                 indicatorColor: S.Theme.primary

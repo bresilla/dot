@@ -35,5 +35,7 @@ Singleton {
     readonly property color surfaceContainerHigh: color240
     readonly property color outline: color244
 
-    readonly property int cornerRadius: 10
+    readonly property var referenceScreen: Quickshell.screens.length > 0 ? Quickshell.screens[0] : null
+    readonly property real referenceShortSide: referenceScreen ? Math.min(referenceScreen.width, referenceScreen.height) : 2160
+    readonly property real cornerRadius: referenceShortSide * (10 / 2160)
 }

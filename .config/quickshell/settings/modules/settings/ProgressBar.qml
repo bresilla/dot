@@ -9,9 +9,9 @@ Item {
     property color indicatorColor: "#000000"
     property bool showIndicator: false
     property bool interactive: true
-    property real lineHeight: 60
-    property real indicatorWidth: 3
-    property real indicatorGap: 8
+    property real lineHeight: parent ? parent.height * 0.16 : 1
+    property real indicatorWidth: lineHeight * 0.3
+    property real indicatorGap: lineHeight * 0.8
 
     signal clicked(real position)
     signal seeking(real position)
@@ -26,7 +26,7 @@ Item {
         height: root.lineHeight
         anchors.verticalCenter: parent.verticalCenter
         width: Math.max(0, root.indicatorPosition - root.indicatorGap)
-        radius: 2
+        radius: root.lineHeight * 0.2
         color: root.fillColor
 
         Behavior on width {
@@ -43,7 +43,7 @@ Item {
         visible: root.showIndicator
         width: root.indicatorWidth
         height: indicatorHeight
-        radius: 1
+        radius: root.indicatorWidth * 0.5
         color: root.indicatorColor
         x: root.indicatorPosition - width / 2
         anchors.verticalCenter: parent.verticalCenter
@@ -63,7 +63,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         x: root.indicatorPosition + root.indicatorGap
         width: Math.max(0, parent.width - x)
-        radius: 2
+        radius: root.lineHeight * 0.2
         color: root.trackColor
 
         Behavior on x {

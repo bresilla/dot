@@ -10,7 +10,7 @@ PanelWindow {
 
     property real pillWidthFactor: 0.55
     property real trackHeight: 0
-    property int pillSpacing: 10
+    property real pillSpacing: ribbonWidth * 1.25
 
     readonly property real pillWidth: ribbonWidth * pillWidthFactor
 

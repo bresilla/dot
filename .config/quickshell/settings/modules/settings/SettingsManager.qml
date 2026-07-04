@@ -6,8 +6,9 @@ Scope {
     id: root
     required property var modelData
     readonly property var currentMonitor: Hyprland.monitorFor(modelData)
-    readonly property int monitorHeight: modelData ? modelData.height : 1080
-    readonly property int monitorWidth: modelData ? modelData.width : 1920
+    readonly property var referenceScreen: Quickshell.screens.length > 0 ? Quickshell.screens[0] : null
+    readonly property int monitorHeight: modelData ? modelData.height : (referenceScreen ? referenceScreen.height : 2160)
+    readonly property int monitorWidth: modelData ? modelData.width : (referenceScreen ? referenceScreen.width : 3840)
 
     property string positionMode: "auto"
     property string mainMonitorName: "eDP-1"

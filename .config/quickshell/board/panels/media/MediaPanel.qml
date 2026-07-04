@@ -7,7 +7,7 @@ import "."
 Rectangle {
     id: root
     
-    readonly property real screenBasedLineHeight: Screen.height * 0.005
+    readonly property real screenBasedLineHeight: Theme.progressLineHeight
     
     property MprisPlayer activePlayer: MprisController.activePlayer
     property real currentPosition: activePlayer?.positionSupported ? activePlayer.position : 0
@@ -81,7 +81,7 @@ Rectangle {
                 anchors.centerIn: parent
                 width: parent.width * 0.5
                 value: activePlayer?.volume ?? 0
-                lineHeight: 10
+                lineHeight: root.screenBasedLineHeight
                 showIndicator: true
                 interactive: activePlayer !== null
                 

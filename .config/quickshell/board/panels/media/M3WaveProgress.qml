@@ -110,8 +110,8 @@ Item {
 
     Rectangle {
         id: playhead
-        width: 3.5
-        height: Math.max(root.lineWidth + 12, 16)
+        width: root.lineWidth * 0.35
+        height: root.lineWidth * 2.5
         radius: width / 2
         color: root.playheadColor
         x: root.playX - width / 2
