@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 $HOME/.config/quickshell/border/launch.sh &
 $HOME/.config/quickshell/board/launch.sh &

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Zellij version of inter - interactive tools for editor/shell
 # Uses zellij actions to send keys back to the original pane
 

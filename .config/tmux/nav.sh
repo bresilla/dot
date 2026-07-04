@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Navigate windows while preserving popup state
 
 ACTION=$1

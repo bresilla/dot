@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Remote host details
 REMOTE_USER="bresilla" # Replace with your username on the remote host

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 flatokill=$(flatpak ps | fzy | choose 2)
 

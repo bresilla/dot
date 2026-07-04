@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 comd=":e"
 
 # @cmd pick file with explorer

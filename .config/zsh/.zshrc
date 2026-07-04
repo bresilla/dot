@@ -4,7 +4,9 @@
 [ -f ~/.cache/wal/sequences ] && (cat ~/.cache/wal/sequences &)
 [ -f ~/.cache/wal/colors.sh ] && source ~/.cache/wal/colors.sh
 
-export SHELL=/bin/zsh
+if [[ -n "${commands[zsh]:-}" ]]; then
+    export SHELL="${commands[zsh]}"
+fi
 
 #--------------------------------------------------------------------------------------------------------------------
 # treat `#', `~' and `^' characters as part of patterns for filename generation

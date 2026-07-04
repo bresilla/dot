@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export isaac_sim_package_path=/opt/isaac # adjust to right folder
 

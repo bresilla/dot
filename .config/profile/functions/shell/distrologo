@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # if_incontainer=$(systemd-detect-virt | xargs)
 # if [[ $in_container == "lxc" ]]; then

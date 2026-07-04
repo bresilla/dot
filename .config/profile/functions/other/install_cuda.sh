@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Default to Ubuntu 24.04
 version="ubuntu2404"

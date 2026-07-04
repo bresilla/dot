@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 export LULE_S="$HOME/.config/profile/functions/wm/lule_colors"
 export LULE_C="$HOME/.cache/lule"

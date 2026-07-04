@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 [ "$(git rev-parse --abbrev-ref HEAD)" != "develop" ] && { echo "Must be on develop branch"; exit 1; }
 VERI="$HOME/.config/profile/functions/code/veri"

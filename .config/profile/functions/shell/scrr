@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 screens=$(screen -ls | sed '1d; $d' | choose 0 | cut -d "." -f 2)
 words=($screens)

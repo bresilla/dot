@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Restore popup for current window if one exists
 
 CURRENT_WINDOW=$(tmux display -p '#{window_id}')

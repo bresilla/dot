@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##SUDO
 alias virsh="sudo virsh"
 alias virt-viewer="sudo virt-viewer"

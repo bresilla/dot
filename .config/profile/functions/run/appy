@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # otter-launcher
-
-#!/bin/bash
 
 if [ "$1" == "fzf" ] || [ -z "$1" ]; then
     runner=fzy

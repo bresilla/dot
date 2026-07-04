@@ -12,7 +12,9 @@ if test -f ~/.cache/wal/colors.sh
     replay 'source ~/.cache/wal/colors.sh'
 end
 
-set -x SHELL /bin/fish
+if type -q fish
+    set -x SHELL (command -v fish)
+end
 
 # ─────────────────────────────────────────────────────────────────────────────
 if type -q direnv

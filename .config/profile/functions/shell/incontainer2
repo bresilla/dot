@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 distro_name=$(systemd-detect-virt | xargs)
 if [[ $distro_name == "lxc" ]]; then
     printf "lxc"

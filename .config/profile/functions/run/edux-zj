@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Zellij version of edux - simple floating pane launcher
 
