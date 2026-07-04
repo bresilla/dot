@@ -168,7 +168,9 @@ bindkey -M viins -s '^F' 'file=$(hexe mux float --title="finder" -c '\''tv text 
 bindkey -M viins -s '^O' 'hexe mux float --title="replace" -c '\''serpl -p .'\'' \n'
 
 ###MICROMAMBA
-[[ -x "$(command -v micromamba)" ]] && eval "$(micromamba shell hook --shell=zsh)"
+if command -v micromamba >/dev/null 2>&1 && micromamba --version >/dev/null 2>&1; then
+    eval "$(micromamba shell hook --shell=zsh)"
+fi
 
 ###SSH&GPG
 export GPG_TTY=$(tty)

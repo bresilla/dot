@@ -3,6 +3,24 @@
 set -euo pipefail
 
 ENVY="$(cd "$(dirname "$0")" && pwd)"
+SKIP_BIN=false
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --skip-bin)
+            SKIP_BIN=true
+            shift
+            ;;
+        -h | --help)
+            printf 'usage: %s [--skip-bin]\n' "$(basename "$0")"
+            exit 0
+            ;;
+        *)
+            printf 'unknown argument: %s\n' "$1" >&2
+            exit 1
+            ;;
+    esac
+done
 
 log() {
     printf '==> %s\n' "$*"
@@ -79,12 +97,30 @@ sudo_append_line_once() {
     fi
 }
 
+sudo_append_line_once_existing() {
+    local file="$1"
+    local line="$2"
+
+    [[ -e "$file" ]] || return 0
+    sudo_append_line_once "$file" "$line"
+}
+
+sudo_write_file_in_existing_dir() {
+    local file="$1"
+    local content="$2"
+    local dir
+
+    dir="$(dirname "$file")"
+    [[ -d "$dir" ]] || return 0
+    sudo_write_file "$file" "$content"
+}
+
 sudo_remove_line() {
     local file="$1"
     local line="$2"
     local tmp_file
 
-    [[ -e "$file" ]] || return
+    [[ -e "$file" ]] || return 0
 
     tmp_file="$(mktemp)"
     sudo grep -vxF "$line" "$file" > "$tmp_file" || true
@@ -183,14 +219,16 @@ PATH_HOOK="case \":\$PATH:\" in *\":$BINDIR:\"*) ;; *) export PATH=\"$BINDIR:\$P
 
 sudo_remove_line /etc/zsh/zshrc "$BAD_PROFILE_D_SOURCE"
 sudo_remove_line /etc/bash.bashrc "$BAD_PROFILE_D_SOURCE"
-sudo_write_file /etc/profile.d/envy.sh "$PATH_HOOK"
-sudo_append_line_once /etc/zsh/zshrc "$PATH_HOOK"
-sudo_append_line_once /etc/bash.bashrc "$PATH_HOOK"
-sudo_write_file /etc/fish/conf.d/envy.fish "set -gx PATH $BINDIR \$PATH"
+sudo_write_file_in_existing_dir /etc/profile.d/envy.sh "$PATH_HOOK"
+sudo_append_line_once_existing /etc/zsh/zshrc "$PATH_HOOK"
+sudo_append_line_once_existing /etc/bash.bashrc "$PATH_HOOK"
+sudo_write_file_in_existing_dir /etc/fish/conf.d/envy.fish "set -gx PATH $BINDIR \$PATH"
 
 load_github_auth_token
 
-if ! have bin; then
+if [[ "$SKIP_BIN" == true ]]; then
+    log "Skipping bin install"
+elif ! have bin; then
     if ! have curl; then
         printf 'curl is required to install bin. Install curl first and rerun this script.\n' >&2
         exit 1

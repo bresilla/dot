@@ -6,7 +6,7 @@
             "url": "https://github.com/nektos/act",
             "provider": "github",
             "tags": [
-                "default"
+                "other"
             ]
         },
         "$HOME/.local/bin/aichat": {
@@ -79,15 +79,6 @@
                 "default"
             ]
         },
-        "$HOME/.local/bin/buf": {
-            "path": "$HOME/.local/bin/buf",
-            "url": "https://github.com/bufbuild/buf",
-            "provider": "github",
-            "description": "The best way of working with Protocol Buffers.",
-            "tags": [
-                "other"
-            ]
-        },
         "$HOME/.local/bin/bun": {
             "path": "$HOME/.local/bin/bun",
             "url": "https://github.com/oven-sh/bun",
@@ -120,7 +111,7 @@
             "provider": "github",
             "description": "Cloudflare Tunnel client",
             "tags": [
-                "default"
+                "net"
             ]
         },
         "$HOME/.local/bin/codex": {
@@ -217,8 +208,8 @@
             "provider": "github",
             "description": "GitHub’s official command line tool",
             "tags": [
-                "default",
-                "other"
+                "other",
+                "git"
             ]
         },
         "$HOME/.local/bin/gh-dash": {
@@ -236,7 +227,8 @@
             "provider": "github",
             "description": "A highly customizable Changelog Generator that follows Conventional Commit specifications ⛰️",
             "tags": [
-                "default"
+                "default",
+                "git"
             ]
         },
         "$HOME/.local/bin/git-flow": {
@@ -245,7 +237,8 @@
             "provider": "github",
             "description": "A modern reimplementation of git-flow in Go that offers greater flexibility while maintaining backward compatibility with the original git-flow and git-flow-avh.",
             "tags": [
-                "default"
+                "default",
+                "git"
             ]
         },
         "$HOME/.local/bin/git-town": {
@@ -254,7 +247,7 @@
             "provider": "github",
             "description": "Git branches made easy",
             "tags": [
-                "default"
+                "git"
             ]
         },
         "$HOME/.local/bin/git-who": {
@@ -359,7 +352,8 @@
             "url": "https://github.com/jj-vcs/jj",
             "provider": "github",
             "tags": [
-                "default"
+                "default",
+                "git"
             ]
         },
         "$HOME/.local/bin/just": {
@@ -397,6 +391,14 @@
                 "default"
             ]
         },
+        "$HOME/.local/bin/midy": {
+            "path": "$HOME/.local/bin/midy",
+            "url": "https://github.com/bresilla/midy",
+            "provider": "github",
+            "tags": [
+                "other"
+            ]
+        },
         "$HOME/.local/bin/mods": {
             "path": "$HOME/.local/bin/mods",
             "url": "https://github.com/charmbracelet/mods",
@@ -430,7 +432,7 @@
             "provider": "github",
             "description": "Pangolin tunneled site \u0026 network connector",
             "tags": [
-                "default"
+                "net"
             ]
         },
         "$HOME/.local/bin/nom": {
@@ -474,7 +476,7 @@
             "provider": "github",
             "description": "A remote access machine VPN client for Pangolin",
             "tags": [
-                "default"
+                "net"
             ]
         },
         "$HOME/.local/bin/opencode": {
@@ -501,7 +503,7 @@
             "provider": "github",
             "description": "Process Interactive Kill",
             "tags": [
-                "default"
+                "other"
             ]
         },
         "$HOME/.local/bin/pixi": {
@@ -571,7 +573,7 @@
             "provider": "github",
             "description": "A CLI to simplify service management on systemd",
             "tags": [
-                "default"
+                "other"
             ]
         },
         "$HOME/.local/bin/serpl": {

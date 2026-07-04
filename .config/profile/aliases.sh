@@ -144,6 +144,7 @@ alias bm=bibiman
 alias zik='zk --notebook-dir /doc/data/notes/zk'
 alias ask=aichat
 alias sks='skillshare'
+alias bitwig='/var/lib/flatpak/app/com.bitwig.BitwigStudio/x86_64/stable/active/files/bitwig-studio'
 
 # alias claude='bun x --package @anthropic-ai/claude-code claude'
 # alias copilot='bun x --package @github/copilot copilot'
