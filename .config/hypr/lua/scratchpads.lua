@@ -1,6 +1,7 @@
 return function(ctx)
     local M = {}
     local scratchpad_tag = "scratchpad"
+    local shell_quote = ctx.util.shell_quote
 
     local function special_workspace_has_windows(name)
         return #hl.get_workspace_windows("special:" .. name) > 0
@@ -91,10 +92,18 @@ return function(ctx)
         end, { timeout = 20, type = "oneshot" })
     end)
 
-    local function center_special_windows(name)
-        for _, window in ipairs(hl.get_workspace_windows(special_workspace_selector(name))) do
-            hl.dispatch(hl.dsp.window.center({ window = window }))
+    local function window_selector(window)
+        local address = window and (window.address or window.addr)
+
+        if type(address) == "number" then
+            address = string.format("0x%x", address)
         end
+
+        if type(address) ~= "string" or address == "" then
+            return nil
+        end
+
+        return "address:" .. address
     end
 
     local function resolve_scratch_size_component(component, monitor, axis)
@@ -155,24 +164,41 @@ return function(ctx)
         return width, height
     end
 
-    local function resize_special_windows(name, rules, monitor)
+    local function force_special_window_geometry(name, rules, monitor)
         if not rules or not rules.size then
             return
         end
 
-        local width, height = resolve_scratch_size(rules.size, monitor or hl.get_active_monitor())
+        monitor = monitor or visible_special_monitor(name) or hl.get_active_monitor()
+
+        local width, height = resolve_scratch_size(rules.size, monitor)
 
         if not width or not height then
             return
         end
 
         for _, window in ipairs(hl.get_workspace_windows(special_workspace_selector(name))) do
-            hl.dispatch(hl.dsp.window.resize({
-                window = window,
-                x = width,
-                y = height,
-                relative = false,
-            }))
+            local selector = window_selector(window)
+
+            if selector then
+                local batch = table.concat({
+                    "dispatch setfloating " .. selector,
+                    "dispatch resizewindowpixel exact " .. width .. " " .. height .. "," .. selector,
+                }, "; ")
+
+                hl.exec_cmd("hyprctl --batch " .. shell_quote(batch))
+                hl.timer(function()
+                    hl.dispatch(hl.dsp.window.center({ window = window }))
+                end, { timeout = 15, type = "oneshot" })
+            else
+                hl.dispatch(hl.dsp.window.resize({
+                    window = window,
+                    x = width,
+                    y = height,
+                    relative = false,
+                }))
+                hl.dispatch(hl.dsp.window.center({ window = window }))
+            end
         end
     end
 
@@ -207,14 +233,12 @@ return function(ctx)
 
     local function prepare_special_scratch(name, rules)
         local monitor = move_special_to_active_monitor(name)
-        resize_special_windows(name, rules, monitor)
-        center_special_windows(name)
+        force_special_window_geometry(name, rules, monitor)
     end
 
     local function apply_visible_special_geometry(name, rules)
         local monitor = visible_special_monitor(name) or hl.get_active_monitor()
-        resize_special_windows(name, rules, monitor)
-        center_special_windows(name)
+        force_special_window_geometry(name, rules, monitor)
     end
 
     local function schedule_visible_geometry(name, rules, delays)
