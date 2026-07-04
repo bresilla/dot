@@ -1,7 +1,12 @@
 return function(ctx)
     local M = {}
     local scratchpad_tag = "scratchpad"
+    local scratchpad_transition_ms = 35
     local shell_quote = ctx.util.shell_quote
+
+    local function transition_delay(multiplier)
+        return math.floor(scratchpad_transition_ms * multiplier)
+    end
 
     local function special_workspace_has_windows(name)
         return #hl.get_workspace_windows("special:" .. name) > 0
@@ -106,6 +111,77 @@ return function(ctx)
         return "address:" .. address
     end
 
+    local function nested_number(root, ...)
+        local value = root
+
+        for _, key in ipairs({ ... }) do
+            if type(value) ~= "table" then
+                return nil
+            end
+
+            value = value[key]
+        end
+
+        return type(value) == "number" and value or nil
+    end
+
+    local function monitor_axis(monitor, axis)
+        local direct = monitor and monitor[axis]
+
+        if type(direct) == "number" then
+            return direct
+        end
+
+        local underscored = monitor and monitor["pos_" .. axis]
+
+        if type(underscored) == "number" then
+            return underscored
+        end
+
+        local position_axis = monitor and monitor["position_" .. axis]
+
+        if type(position_axis) == "number" then
+            return position_axis
+        end
+
+        return nested_number(monitor, "position", axis)
+            or nested_number(monitor, "pos", axis)
+            or nested_number(monitor, "geometry", axis)
+            or nested_number(monitor, "rect", axis)
+    end
+
+    local function infer_monitor_x(monitor)
+        local x = 0
+
+        for _, candidate in ipairs(hl.get_monitors()) do
+            if candidate.name == monitor.name then
+                return x
+            end
+
+            x = x + (candidate.width or 0)
+        end
+
+        return 0
+    end
+
+    local function centered_position(monitor, width, height)
+        local monitor_x = monitor_axis(monitor, "x")
+        local monitor_y = monitor_axis(monitor, "y")
+
+        if not monitor_x and monitor then
+            monitor_x = infer_monitor_x(monitor)
+        end
+
+        monitor_x = monitor_x or 0
+        monitor_y = monitor_y or 0
+
+        local monitor_width = monitor and monitor.width or width
+        local monitor_height = monitor and monitor.height or height
+
+        return math.floor(monitor_x + (monitor_width - width) / 2),
+            math.floor(monitor_y + (monitor_height - height) / 2)
+    end
+
     local function resolve_scratch_size_component(component, monitor, axis)
         if type(component) == "number" then
             return math.floor(component)
@@ -177,6 +253,8 @@ return function(ctx)
             return
         end
 
+        local x, y = centered_position(monitor, width, height)
+
         for _, window in ipairs(hl.get_workspace_windows(special_workspace_selector(name))) do
             local selector = window_selector(window)
 
@@ -184,6 +262,7 @@ return function(ctx)
                 local batch = table.concat({
                     "dispatch setfloating " .. selector,
                     "dispatch resizewindowpixel exact " .. width .. " " .. height .. "," .. selector,
+                    "dispatch movewindowpixel exact " .. x .. " " .. y .. "," .. selector,
                 }, "; ")
 
                 hl.exec_cmd("hyprctl --batch " .. shell_quote(batch))
@@ -267,10 +346,16 @@ return function(ctx)
     end
 
     local function show_special_scratch(name, rules)
-        disable_animations_temporarily(150)
-        move_special_to_active_monitor(name)
-        ensure_special_visible_on_active_monitor(name)
-        schedule_visible_geometry(name, rules, { 20, 60, 140, 260 })
+        disable_animations_temporarily(transition_delay(3))
+        prepare_special_scratch(name, rules)
+        hl.timer(function()
+            ensure_special_visible_on_active_monitor(name)
+            schedule_visible_geometry(name, rules, {
+                transition_delay(1),
+                transition_delay(3),
+                transition_delay(5),
+            })
+        end, { timeout = transition_delay(2), type = "oneshot" })
     end
 
     function M.toggle(name, cmd, rules)
@@ -279,14 +364,22 @@ return function(ctx)
             local visible_monitor = visible_special_monitor(name)
 
             if monitor and visible_monitor and monitor.name ~= visible_monitor.name then
-                disable_animations_temporarily(180)
+                disable_animations_temporarily(transition_delay(7))
+                hl.dispatch(hl.dsp.focus({ monitor = visible_monitor.name }))
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
 
                 hl.timer(function()
-                    move_special_to_active_monitor(name)
-                    ensure_special_visible_on_active_monitor(name)
-                    schedule_visible_geometry(name, rules, { 20, 80, 160, 300 })
-                end, { timeout = 40, type = "oneshot" })
+                    hl.dispatch(hl.dsp.focus({ monitor = monitor.name }))
+                    prepare_special_scratch(name, rules)
+
+                    hl.timer(function()
+                        ensure_special_visible_on_active_monitor(name)
+                        schedule_visible_geometry(name, rules, {
+                            transition_delay(3),
+                            transition_delay(5),
+                        })
+                    end, { timeout = transition_delay(2), type = "oneshot" })
+                end, { timeout = transition_delay(1), type = "oneshot" })
             elseif visible_monitor then
                 hl.dispatch(hl.dsp.workspace.toggle_special(name))
             else
