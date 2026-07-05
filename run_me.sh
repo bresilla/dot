@@ -134,6 +134,23 @@ load_github_auth_token() {
     fi
 }
 
+confirm_user_bin_ensure() {
+    [[ -t 0 ]] || return 0
+
+    if have gum; then
+        gum confirm "Run user bin ensure?"
+        return
+    fi
+
+    local answer
+    printf 'Run user bin ensure? [Y/n] '
+    read -r answer
+    case "$answer" in
+        n | N | no | NO | No) return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
 bin_asset_arch() {
     case "$(uname -m)" in
         x86_64 | amd64) printf 'amd64' ;;
@@ -228,6 +245,8 @@ load_github_auth_token
 
 if [[ "$SKIP_BIN" == true ]]; then
     log "Skipping bin install"
+elif ! confirm_user_bin_ensure; then
+    log "Skipping user bin ensure"
 elif ! have bin; then
     if ! have curl; then
         printf 'curl is required to install bin. Install curl first and rerun this script.\n' >&2
