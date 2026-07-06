@@ -20,12 +20,25 @@ return function(ctx)
         return monitor and monitor.height or 1080
     end
 
+    local function monitor_scale(monitor)
+        return tonumber(monitor and monitor.scale) or 1
+    end
+
     local function active_monitor_short_edge()
         local monitor = active_monitor()
         local width = monitor and monitor.width or 1920
         local height = monitor and monitor.height or 1080
 
         return math.min(width, height)
+    end
+
+    local function active_monitor_physical_edges()
+        local monitor = active_monitor()
+        local scale = monitor_scale(monitor)
+        local width = monitor and monitor.width or 1920
+        local height = monitor and monitor.height or 1080
+
+        return math.min(width, height) * scale, math.max(width, height) * scale
     end
 
     local function is_internal_panel(monitor)
@@ -35,6 +48,10 @@ return function(ctx)
 
     local function clamp(value, min, max)
         return math.max(min, math.min(max, value))
+    end
+
+    local function sigmoid(value)
+        return 1 / (1 + math.exp(-value))
     end
 
     local function scaled_number(value, baseline)
@@ -47,13 +64,19 @@ return function(ctx)
 
     local function terminal_font_size()
         local monitor = active_monitor()
-        local font_size = 7.25 + clamp(active_monitor_short_edge() - 1080, 0, 1080) * 6.75 / 1080
+        local short_edge, long_edge = active_monitor_physical_edges()
+        local resolution_score = math.max(short_edge / 1440, long_edge / 2560)
+        local min_font_size = 6.75
+        local max_font_size = 18
+        local internal_max_font_size = 13.5
+        local font_size = min_font_size
+            + sigmoid((resolution_score - 1.2) * 6) * (max_font_size - min_font_size)
 
         if is_internal_panel(monitor) then
-            font_size = math.min(font_size, 8.25)
+            font_size = math.min(font_size, internal_max_font_size)
         end
 
-        return string.format("%.1f", clamp(font_size, 7.25, 14))
+        return string.format("%.2f", clamp(font_size, min_font_size, max_font_size))
     end
 
     local function terminal_padding_x()
