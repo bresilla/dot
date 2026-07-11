@@ -1,0 +1,566 @@
+#!/usr/bin/env python3
+
+import argparse
+import json
+import math
+import os
+import shutil
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
+
+
+REVERSE = True
+BAR_CHAR = "━"
+
+RESET = "\033[0m"
+BOLD = "\033[1m"
+DEFAULT_FG = "\033[39m"
+DEFAULT_BG = "\033[49m"
+
+USAGE_FG = "\033[38;5;1m"
+USAGE_BG = "\033[48;5;1m"
+
+TIME_FG = "\033[38;5;239m"
+TIME_BG = "\033[48;5;239m"
+
+USE_COLOR = (
+    sys.stdout.isatty()
+    and "NO_COLOR" not in os.environ
+    and os.environ.get("TERM") != "dumb"
+)
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description="Display Codex and Claude usage limits."
+    )
+
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output machine-readable JSON without terminal formatting.",
+    )
+
+    return parser.parse_args()
+
+
+def clamp(value, minimum=0.0, maximum=100.0):
+    return max(minimum, min(maximum, value))
+
+
+def get_json(url, headers):
+    request = Request(
+        url,
+        headers=headers,
+        method="GET",
+    )
+
+    try:
+        with urlopen(request, timeout=20) as response:
+            encoding = response.headers.get_content_charset() or "utf-8"
+            return json.loads(response.read().decode(encoding))
+
+    except HTTPError as error:
+        body = error.read().decode(
+            "utf-8",
+            errors="replace",
+        ).strip()
+
+        if error.code in (401, 403):
+            raise RuntimeError(
+                f"authentication failed: HTTP {error.code}; log in again"
+            ) from error
+
+        raise RuntimeError(
+            f"HTTP {error.code}: {body[:300] or error.reason}"
+        ) from error
+
+    except URLError as error:
+        raise RuntimeError(
+            f"network error: {error.reason}"
+        ) from error
+
+
+def parse_reset(value):
+    if isinstance(value, (int, float)):
+        return datetime.fromtimestamp(
+            value,
+            timezone.utc,
+        )
+
+    if isinstance(value, str):
+        value = value.strip()
+
+        try:
+            return datetime.fromtimestamp(
+                float(value),
+                timezone.utc,
+            )
+        except ValueError:
+            return datetime.fromisoformat(
+                value.replace("Z", "+00:00")
+            ).astimezone(timezone.utc)
+
+    raise ValueError(
+        f"invalid reset time: {value!r}"
+    )
+
+
+def reset_seconds(reset_at):
+    remaining = (
+        parse_reset(reset_at)
+        - datetime.now(timezone.utc)
+    )
+
+    return max(
+        0,
+        math.ceil(remaining.total_seconds()),
+    )
+
+
+def reset_text(reset_at):
+    seconds = reset_seconds(reset_at)
+
+    days, seconds = divmod(seconds, 86400)
+    hours, seconds = divmod(seconds, 3600)
+    minutes, seconds = divmod(seconds, 60)
+
+    if days:
+        return f"in {days}d {hours}h"
+
+    if hours:
+        return f"in {hours}h {minutes}m"
+
+    if minutes:
+        return f"in {minutes}m {seconds}s"
+
+    return f"in {seconds}s"
+
+
+def reset_iso(reset_at):
+    return parse_reset(reset_at).isoformat().replace(
+        "+00:00",
+        "Z",
+    )
+
+
+def time_left_percent(reset_at, window_seconds):
+    remaining_seconds = reset_seconds(reset_at)
+
+    return clamp(
+        remaining_seconds
+        / float(window_seconds)
+        * 100.0
+    )
+
+
+def overlay_bar(
+    usage_left,
+    time_left,
+    width,
+    reverse=REVERSE,
+):
+    usage_cells = round(
+        width * clamp(usage_left) / 100
+    )
+
+    time_cells = round(
+        width * clamp(time_left) / 100
+    )
+
+    output = [RESET, "|"]
+
+    for index in range(width):
+        usage_active = index < usage_cells
+        time_active = index < time_cells
+
+        if not USE_COLOR:
+            if usage_active and time_active:
+                output.append(BAR_CHAR)
+            elif usage_active:
+                output.append("·" if reverse else BAR_CHAR)
+            elif time_active:
+                output.append(BAR_CHAR if reverse else "·")
+            else:
+                output.append(" ")
+
+            continue
+
+        if reverse:
+            output.append(
+                USAGE_BG
+                if usage_active
+                else DEFAULT_BG
+            )
+
+            if time_active:
+                output.append(TIME_FG)
+                output.append(BAR_CHAR)
+            else:
+                output.append(DEFAULT_FG)
+                output.append(" ")
+
+        else:
+            output.append(
+                TIME_BG
+                if time_active
+                else DEFAULT_BG
+            )
+
+            if usage_active:
+                output.append(USAGE_FG)
+                output.append(BAR_CHAR)
+            else:
+                output.append(DEFAULT_FG)
+                output.append(" ")
+
+    output.extend([RESET, "|"])
+
+    return "".join(output)
+
+
+def codex_auth_path():
+    codex_home = Path(
+        os.environ.get(
+            "CODEX_HOME",
+            "~/.codex",
+        )
+    ).expanduser()
+
+    return codex_home / "auth.json"
+
+
+def load_codex_credentials():
+    path = codex_auth_path()
+
+    if not path.exists():
+        raise RuntimeError(
+            f"{path} does not exist; run `codex login`"
+        )
+
+    data = json.loads(path.read_text())
+    tokens = data.get("tokens") or {}
+
+    access_token = (
+        tokens.get("access_token")
+        or tokens.get("accessToken")
+    )
+
+    account_id = (
+        tokens.get("account_id")
+        or tokens.get("accountId")
+    )
+
+    if not access_token:
+        raise RuntimeError(
+            f"no Codex OAuth access token found in {path}"
+        )
+
+    return access_token, account_id
+
+
+def fetch_codex():
+    access_token, account_id = (
+        load_codex_credentials()
+    )
+
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json",
+        "User-Agent": "ailimit/1.0",
+    }
+
+    if account_id:
+        headers["ChatGPT-Account-Id"] = account_id
+
+    data = get_json(
+        "https://chatgpt.com/backend-api/wham/usage",
+        headers,
+    )
+
+    rate_limit = data.get("rate_limit") or {}
+    session = rate_limit.get("primary_window")
+    weekly = rate_limit.get("secondary_window")
+
+    if not session or not weekly:
+        raise RuntimeError(
+            "Codex response did not contain "
+            "session and weekly limits"
+        )
+
+    return {
+        "id": "codex",
+        "name": "Codex",
+        "session": {
+            "left": clamp(
+                100.0
+                - float(session["used_percent"])
+            ),
+            "reset": session["reset_at"],
+            "window": int(
+                session.get(
+                    "limit_window_seconds",
+                    5 * 60 * 60,
+                )
+            ),
+        },
+        "weekly": {
+            "left": clamp(
+                100.0
+                - float(weekly["used_percent"])
+            ),
+            "reset": weekly["reset_at"],
+            "window": int(
+                weekly.get(
+                    "limit_window_seconds",
+                    7 * 24 * 60 * 60,
+                )
+            ),
+        },
+    }
+
+
+def claude_credentials_path():
+    root = os.environ.get(
+        "CLAUDE_CONFIG_DIR",
+        "~/.claude",
+    )
+
+    root = root.split(
+        ",",
+        maxsplit=1,
+    )[0]
+
+    return (
+        Path(root).expanduser()
+        / ".credentials.json"
+    )
+
+
+def load_claude_credentials():
+    path = claude_credentials_path()
+
+    if not path.exists():
+        raise RuntimeError(
+            f"{path} does not exist; run `claude login`"
+        )
+
+    data = json.loads(path.read_text())
+    oauth = data.get("claudeAiOauth") or {}
+
+    access_token = oauth.get(
+        "accessToken"
+    )
+
+    if not access_token:
+        raise RuntimeError(
+            f"no Claude OAuth access token found in {path}"
+        )
+
+    return access_token
+
+
+def fetch_claude():
+    access_token = (
+        load_claude_credentials()
+    )
+
+    data = get_json(
+        "https://api.anthropic.com/api/oauth/usage",
+        {
+            "Authorization": f"Bearer {access_token}",
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "anthropic-beta": "oauth-2025-04-20",
+            "User-Agent": "claude-code/2.1.0",
+        },
+    )
+
+    session = data.get("five_hour")
+    weekly = data.get("seven_day")
+
+    if not session or not weekly:
+        raise RuntimeError(
+            "Claude response did not contain "
+            "session and weekly limits"
+        )
+
+    return {
+        "id": "claude",
+        "name": "Claude",
+        "session": {
+            "left": clamp(
+                100.0
+                - float(session["utilization"])
+            ),
+            "reset": session["resets_at"],
+            "window": 5 * 60 * 60,
+        },
+        "weekly": {
+            "left": clamp(
+                100.0
+                - float(weekly["utilization"])
+            ),
+            "reset": weekly["resets_at"],
+            "window": 7 * 24 * 60 * 60,
+        },
+    }
+
+
+def bar_width():
+    terminal_width = (
+        shutil.get_terminal_size(
+            fallback=(120, 24)
+        ).columns
+    )
+
+    return max(
+        25,
+        min(
+            50,
+            terminal_width - 50,
+        ),
+    )
+
+
+def show_provider(provider):
+    width = bar_width()
+
+    if USE_COLOR:
+        print(
+            f"{BOLD}"
+            f"{provider['name']}"
+            f"{RESET}"
+        )
+    else:
+        print(provider["name"])
+
+    for label, key in (
+        ("Session", "session"),
+        ("Weekly", "weekly"),
+    ):
+        limit = provider[key]
+        usage_left = limit["left"]
+
+        time_left = time_left_percent(
+            limit["reset"],
+            limit["window"],
+        )
+
+        progress = overlay_bar(
+            usage_left,
+            time_left,
+            width,
+        )
+
+        print(
+            f"{label:<8}"
+            f"{usage_left:3.0f}%  "
+            f"{progress}  "
+            f"{reset_text(limit['reset'])}"
+        )
+
+    print()
+
+
+def json_limit(limit):
+    return {
+        "remaining_percent": round(
+            limit["left"],
+            2,
+        ),
+        "time_remaining_percent": round(
+            time_left_percent(
+                limit["reset"],
+                limit["window"],
+            ),
+            2,
+        ),
+        "reset_at": reset_iso(
+            limit["reset"]
+        ),
+        "reset_in_seconds": reset_seconds(
+            limit["reset"]
+        ),
+        "window_seconds": limit["window"],
+    }
+
+
+def json_provider(provider):
+    return {
+        "session": json_limit(
+            provider["session"]
+        ),
+        "weekly": json_limit(
+            provider["weekly"]
+        ),
+    }
+
+
+def main():
+    args = parse_arguments()
+
+    providers = {}
+    errors = {}
+
+    for provider_id, fetcher in (
+        ("codex", fetch_codex),
+        ("claude", fetch_claude),
+    ):
+        try:
+            provider = fetcher()
+            providers[provider_id] = provider
+
+        except Exception as error:
+            errors[provider_id] = str(error)
+
+    if args.json:
+        output = {
+            "generated_at": (
+                datetime.now(timezone.utc)
+                .isoformat()
+                .replace("+00:00", "Z")
+            ),
+            "providers": {
+                provider_id: json_provider(provider)
+                for provider_id, provider in providers.items()
+            },
+            "errors": errors,
+        }
+
+        print(
+            json.dumps(
+                output,
+                separators=(",", ":"),
+            )
+        )
+
+    else:
+        for provider_id in (
+            "codex",
+            "claude",
+        ):
+            provider = providers.get(
+                provider_id
+            )
+
+            if provider:
+                show_provider(provider)
+
+            elif provider_id in errors:
+                print(
+                    f"{provider_id.title()}: "
+                    f"{errors[provider_id]}",
+                    file=sys.stderr,
+                )
+
+    raise SystemExit(
+        1 if not providers else 0
+    )
+
+
+if __name__ == "__main__":
+    main()
