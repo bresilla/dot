@@ -51,6 +51,15 @@ go_version_file() {
     grep -rElE "$re" --include='*.go' "$project_dir" 2>/dev/null | head -1 || true
 }
 
+nix_package_file() {
+    local project_dir="$1"
+    local file="$project_dir/nix/package.nix"
+
+    [[ -f "$file" ]] || return 0
+    grep -qE '^[[:space:]]*version[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"[[:space:]]*;' "$file" || return 0
+    printf '%s\n' "$file"
+}
+
 nimble_file() {
     local project_dir="$1"
     find "$project_dir" -maxdepth 1 -name '*.nimble' -type f | sort | head -1
@@ -79,6 +88,14 @@ project_name() {
 
     if [[ -z "$value" && -f "$project_dir/go.mod" ]]; then
         value="$(basename "$(sed -n 's/^module[[:space:]]*//p' "$project_dir/go.mod" | head -1)")"
+    fi
+
+    if [[ -z "$value" ]]; then
+        local nixpkg
+        nixpkg="$(nix_package_file "$project_dir")"
+        if [[ -n "$nixpkg" ]]; then
+            value="$(extract_first_match "$nixpkg" '^[[:space:]]*pname[[:space:]]*=[[:space:]]*"([^"]+)".*')"
+        fi
     fi
 
     if [[ -z "$value" && -f "$project_dir/package.json" ]]; then
@@ -124,6 +141,14 @@ project_version() {
         value="$(extract_first_match "$project_dir/build.zig.zon" '^[[:space:]]*\.version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
+    if [[ -z "$value" ]]; then
+        local nixpkg
+        nixpkg="$(nix_package_file "$project_dir")"
+        if [[ -n "$nixpkg" ]]; then
+            value="$(extract_first_match "$nixpkg" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        fi
+    fi
+
     if [[ -z "$value" && -f "$project_dir/xmake.lua" ]]; then
         value="$(extract_first_match "$project_dir/xmake.lua" '^[[:space:]]*local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
@@ -157,6 +182,16 @@ update_go() {
     [[ -n "$gofile" ]] || return 0
     sed -i -E "s/^([[:space:]]*((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
     echo "  Updated ${gofile#$project_dir/}"
+}
+
+update_nix_package() {
+    local project_dir="$1"
+    local version="$2"
+    local file
+    file="$(nix_package_file "$project_dir")"
+    [[ -n "$file" ]] || return 0
+    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    echo "  Updated ${file#$project_dir/}"
 }
 
 update_zig() {
@@ -266,6 +301,7 @@ main() {
     esac
 
     update_go "$project_dir" "$version"
+    update_nix_package "$project_dir" "$version"
     update_zig "$project_dir" "$version"
     update_xmake "$project_dir" "$version"
     update_cargo "$project_dir" "$version"

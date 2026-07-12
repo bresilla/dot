@@ -15,5 +15,18 @@
        "enabled": true,
        "command": ["engram", "mcp"]
     }
+  },
+    "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://192.168.1.253:11434/v1"
+      },
+      "models": {
+        "qwen3.5:122b": {},
+        "qwen3.6:35b": {},
+        "ornith:35b": {},
+      }
+    }
   }
 }

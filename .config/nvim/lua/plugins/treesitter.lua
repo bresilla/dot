@@ -3,18 +3,56 @@ return {
         'nvim-treesitter/nvim-treesitter',
         version = '*',
         config = function()
-            local fol_tree_root = '/tmp/fol'
+            local cache_home = vim.env.XDG_CACHE_HOME
+            if not cache_home or cache_home == '' then
+                cache_home = vim.fn.expand('~/.cache')
+            end
+            local fol_tree_root = cache_home .. '/fol'
             local fol_tree_parser = fol_tree_root .. '/src/parser.c'
             local parsers = require('nvim-treesitter.parsers')
             local install = require('nvim-treesitter.install')
             local parser_config = parsers.get_parser_configs()
 
-            local function ensure_fol_tree_bundle()
+            -- Path of the installed, compiled parser (if any) on the runtimepath.
+            local function installed_parser_path()
+                return vim.api.nvim_get_runtime_file('parser/fol.so', false)[1]
+            end
+
+            -- mtime (seconds) of the `fol` executable, or nil if unavailable.
+            local function fol_binary_mtime()
+                local exe = vim.fn.exepath('fol')
+                if exe == '' then
+                    return nil
+                end
+                local st = vim.loop.fs_stat(exe)
+                return st and st.mtime.sec or nil
+            end
+
+            -- The compiled parser is stale when the `fol` binary is newer than
+            -- the installed `fol.so` (the grammar may have changed). Also stale
+            -- when no parser is installed yet.
+            local function fol_parser_is_stale()
+                local binary_mtime = fol_binary_mtime()
+                if not binary_mtime then
+                    return false
+                end
+                local parser = installed_parser_path()
+                if not parser then
+                    return true
+                end
+                local st = vim.loop.fs_stat(parser)
+                if not st then
+                    return true
+                end
+                return binary_mtime > st.mtime.sec
+            end
+
+            local function ensure_fol_tree_bundle(force)
                 if vim.fn.executable('fol') ~= 1 then
                     return false
                 end
 
-                if vim.fn.filereadable(fol_tree_parser) == 1 then
+                if not force and vim.fn.filereadable(fol_tree_parser) == 1 then
                     return true
                 end
 
@@ -99,8 +137,19 @@ return {
             wrap_fol_install('TSInstall', 'TSInstall')
             wrap_fol_install('TSInstallSync', 'TSInstallSync')
 
-            if not parsers.has_parser('fol') and ensure_fol_tree_bundle() then
-                install.commands.TSInstallSync.run('fol')
+            -- Keep the FOL grammar in sync with the current `fol` binary:
+            --   * regenerate the cached bundle when the parser is stale (the fol
+            --     binary is newer than the compiled parser) or missing,
+            --   * expose queries/fol/*.scm via the runtimepath so tree-sitter
+            --     highlighting, locals, and symbols resolve (without this the
+            --     parser compiles and files parse, but no colors show),
+            --   * force-recompile the parser whenever it is stale or missing.
+            local fol_stale = fol_parser_is_stale()
+            if ensure_fol_tree_bundle(fol_stale) then
+                vim.opt.runtimepath:append(fol_tree_root)
+                if fol_stale or not parsers.has_parser('fol') then
+                    install.commands.TSInstallSync['run!']('fol')
+                end
             end
         end,
     },
