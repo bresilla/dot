@@ -91,6 +91,14 @@ Scope {
             onWidthChanged: requestPaint()
             onHeightChanged: requestPaint()
 
+            Connections {
+                target: root
+
+                function onBorderColorChanged() {
+                    requestPaint()
+                }
+            }
+
             onPaint: {
                 const ctx = getContext("2d")
                 const s = root.cornerSize

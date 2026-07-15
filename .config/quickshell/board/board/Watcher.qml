@@ -196,9 +196,7 @@ Scope {
                 }
                 Hyprland.refreshWorkspaces()
                 refreshActiveWorkspaceState(function() {
-                    if (!isActiveWorkspaceEmpty() || !isActiveWorkspaceOnThisMonitor() || activeSpecialOnThisMonitor) {
-                        shouldShowBoard = false
-                    }
+                    updateBoardForFocusedWorkspace()
                 })
             }
         }
@@ -216,9 +214,9 @@ Scope {
     onMouseInsideBoardChanged: {
         if (boardLoader.item && boardLoader.item.isPinned) return
         
-        if (!mouseInsideBoard && shouldShowBoard && mouseHasMoved) {
+        if (!mouseInsideBoard && shouldShowBoard) {
             hideTimer.restart()
-        } else if (mouseInsideBoard && mouseHasMoved) {
+        } else if (mouseInsideBoard) {
             hideTimer.stop()
         }
     }
@@ -233,11 +231,11 @@ Scope {
     
     Timer {
         id: hideTimer
-        interval: 1000
+        interval: 2000
         onTriggered: {
             if (boardLoader.item && boardLoader.item.isPinned) return
             
-            if (!mouseInsideBoard || !mouseHasMoved) {
+            if (!mouseInsideBoard) {
                 shouldShowBoard = false
             }
         }
@@ -265,6 +263,8 @@ Scope {
     
     Component.onCompleted: {
         Hyprland.refreshWorkspaces()
-        refreshActiveWorkspaceState()
+        refreshActiveWorkspaceState(function() {
+            updateBoardForFocusedWorkspace()
+        })
     }
 }

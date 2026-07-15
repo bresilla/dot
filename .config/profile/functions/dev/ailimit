@@ -41,7 +41,19 @@ def parse_arguments():
     parser.add_argument(
         "--json",
         action="store_true",
-        help="Output machine-readable JSON without terminal formatting.",
+        help="Output machine-readable JSON.",
+    )
+
+    parser.add_argument(
+        "--provider",
+        choices=("codex", "claude"),
+        help="Only query the selected provider.",
+    )
+
+    parser.add_argument(
+        "--context",
+        choices=("session", "week"),
+        help="Only show the selected limit window.",
     )
 
     return parser.parse_args()
@@ -141,17 +153,16 @@ def reset_text(reset_at):
 
 
 def reset_iso(reset_at):
-    return parse_reset(reset_at).isoformat().replace(
-        "+00:00",
-        "Z",
+    return (
+        parse_reset(reset_at)
+        .isoformat()
+        .replace("+00:00", "Z")
     )
 
 
 def time_left_percent(reset_at, window_seconds):
-    remaining_seconds = reset_seconds(reset_at)
-
     return clamp(
-        remaining_seconds
+        reset_seconds(reset_at)
         / float(window_seconds)
         * 100.0
     )
@@ -191,9 +202,7 @@ def overlay_bar(
 
         if reverse:
             output.append(
-                USAGE_BG
-                if usage_active
-                else DEFAULT_BG
+                USAGE_BG if usage_active else DEFAULT_BG
             )
 
             if time_active:
@@ -205,9 +214,7 @@ def overlay_bar(
 
         else:
             output.append(
-                TIME_BG
-                if time_active
-                else DEFAULT_BG
+                TIME_BG if time_active else DEFAULT_BG
             )
 
             if usage_active:
@@ -263,9 +270,7 @@ def load_codex_credentials():
 
 
 def fetch_codex():
-    access_token, account_id = (
-        load_codex_credentials()
-    )
+    access_token, account_id = load_codex_credentials()
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -287,8 +292,7 @@ def fetch_codex():
 
     if not session or not weekly:
         raise RuntimeError(
-            "Codex response did not contain "
-            "session and weekly limits"
+            "Codex response did not contain session and weekly limits"
         )
 
     return {
@@ -296,8 +300,7 @@ def fetch_codex():
         "name": "Codex",
         "session": {
             "left": clamp(
-                100.0
-                - float(session["used_percent"])
+                100.0 - float(session["used_percent"])
             ),
             "reset": session["reset_at"],
             "window": int(
@@ -309,8 +312,7 @@ def fetch_codex():
         },
         "weekly": {
             "left": clamp(
-                100.0
-                - float(weekly["used_percent"])
+                100.0 - float(weekly["used_percent"])
             ),
             "reset": weekly["reset_at"],
             "window": int(
@@ -329,10 +331,7 @@ def claude_credentials_path():
         "~/.claude",
     )
 
-    root = root.split(
-        ",",
-        maxsplit=1,
-    )[0]
+    root = root.split(",", maxsplit=1)[0]
 
     return (
         Path(root).expanduser()
@@ -350,10 +349,7 @@ def load_claude_credentials():
 
     data = json.loads(path.read_text())
     oauth = data.get("claudeAiOauth") or {}
-
-    access_token = oauth.get(
-        "accessToken"
-    )
+    access_token = oauth.get("accessToken")
 
     if not access_token:
         raise RuntimeError(
@@ -364,9 +360,7 @@ def load_claude_credentials():
 
 
 def fetch_claude():
-    access_token = (
-        load_claude_credentials()
-    )
+    access_token = load_claude_credentials()
 
     data = get_json(
         "https://api.anthropic.com/api/oauth/usage",
@@ -384,8 +378,7 @@ def fetch_claude():
 
     if not session or not weekly:
         raise RuntimeError(
-            "Claude response did not contain "
-            "session and weekly limits"
+            "Claude response did not contain session and weekly limits"
         )
 
     return {
@@ -393,16 +386,14 @@ def fetch_claude():
         "name": "Claude",
         "session": {
             "left": clamp(
-                100.0
-                - float(session["utilization"])
+                100.0 - float(session["utilization"])
             ),
             "reset": session["resets_at"],
             "window": 5 * 60 * 60,
         },
         "weekly": {
             "left": clamp(
-                100.0
-                - float(weekly["utilization"])
+                100.0 - float(weekly["utilization"])
             ),
             "reset": weekly["resets_at"],
             "window": 7 * 24 * 60 * 60,
@@ -411,11 +402,9 @@ def fetch_claude():
 
 
 def bar_width():
-    terminal_width = (
-        shutil.get_terminal_size(
-            fallback=(120, 24)
-        ).columns
-    )
+    terminal_width = shutil.get_terminal_size(
+        fallback=(120, 24)
+    ).columns
 
     return max(
         25,
@@ -426,7 +415,20 @@ def bar_width():
     )
 
 
-def show_provider(provider):
+def selected_contexts(context):
+    if context == "session":
+        return (("Session", "session"),)
+
+    if context == "week":
+        return (("Weekly", "weekly"),)
+
+    return (
+        ("Session", "session"),
+        ("Weekly", "weekly"),
+    )
+
+
+def show_provider(provider, context):
     width = bar_width()
 
     if USE_COLOR:
@@ -438,10 +440,7 @@ def show_provider(provider):
     else:
         print(provider["name"])
 
-    for label, key in (
-        ("Session", "session"),
-        ("Weekly", "weekly"),
-    ):
+    for label, key in selected_contexts(context):
         limit = provider[key]
         usage_left = limit["left"]
 
@@ -489,15 +488,29 @@ def json_limit(limit):
     }
 
 
-def json_provider(provider):
-    return {
-        "session": json_limit(
-            provider["session"]
-        ),
-        "weekly": json_limit(
-            provider["weekly"]
-        ),
+def json_provider(provider, context):
+    output = {}
+
+    for _, key in selected_contexts(context):
+        output[key] = json_limit(
+            provider[key]
+        )
+
+    return output
+
+
+def selected_fetchers(provider):
+    fetchers = {
+        "codex": fetch_codex,
+        "claude": fetch_claude,
     }
+
+    if provider:
+        return (
+            (provider, fetchers[provider]),
+        )
+
+    return tuple(fetchers.items())
 
 
 def main():
@@ -506,13 +519,11 @@ def main():
     providers = {}
     errors = {}
 
-    for provider_id, fetcher in (
-        ("codex", fetch_codex),
-        ("claude", fetch_claude),
+    for provider_id, fetcher in selected_fetchers(
+        args.provider
     ):
         try:
-            provider = fetcher()
-            providers[provider_id] = provider
+            providers[provider_id] = fetcher()
 
         except Exception as error:
             errors[provider_id] = str(error)
@@ -525,7 +536,10 @@ def main():
                 .replace("+00:00", "Z")
             ),
             "providers": {
-                provider_id: json_provider(provider)
+                provider_id: json_provider(
+                    provider,
+                    args.context,
+                )
                 for provider_id, provider in providers.items()
             },
             "errors": errors,
@@ -539,16 +553,18 @@ def main():
         )
 
     else:
-        for provider_id in (
-            "codex",
-            "claude",
+        for provider_id, _ in selected_fetchers(
+            args.provider
         ):
             provider = providers.get(
                 provider_id
             )
 
             if provider:
-                show_provider(provider)
+                show_provider(
+                    provider,
+                    args.context,
+                )
 
             elif provider_id in errors:
                 print(
@@ -564,3 +580,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
