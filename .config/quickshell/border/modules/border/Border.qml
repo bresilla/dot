@@ -85,6 +85,8 @@ Scope {
         anchors.right: corner === "topRight" || corner === "bottomRight"
 
         Canvas {
+            id: cornerCanvas
+
             anchors.fill: parent
             renderTarget: Canvas.FramebufferObject
 
@@ -95,7 +97,7 @@ Scope {
                 target: root
 
                 function onBorderColorChanged() {
-                    requestPaint()
+                    cornerCanvas.requestPaint()
                 }
             }
 

@@ -9,6 +9,7 @@ Singleton {
     id: root
 
     property int defaultDebounceMs: 50
+    property int commandTimeoutMs: 4000
     property var _procDebouncers: ({})
 
     function runCommand(id, command, callback, debounceMs) {
@@ -18,7 +19,7 @@ Singleton {
         if (!_procDebouncers[procId]) {
             const t = Qt.createQmlObject('import QtQuick; Timer { repeat: false }', root)
             t.triggered.connect(function() { _launchProc(procId) })
-            _procDebouncers[procId] = { timer: t, command: command, callback: callback, waitMs: wait }
+            _procDebouncers[procId] = { timer: t, command: command, callback: callback, waitMs: wait, running: false, pending: false }
         } else {
             _procDebouncers[procId].command = command
             _procDebouncers[procId].callback = callback
@@ -33,38 +34,58 @@ Singleton {
     function _launchProc(id) {
         const entry = _procDebouncers[id]
         if (!entry) return
+        if (entry.running) {
+            entry.pending = true
+            return
+        }
+
+        entry.running = true
 
         const proc = Qt.createQmlObject('import Quickshell.Io; Process { running: false }', root)
         const out = Qt.createQmlObject('import Quickshell.Io; StdioCollector {}', proc)
         const err = Qt.createQmlObject('import Quickshell.Io; StdioCollector {}', proc)
+        const timeout = Qt.createQmlObject('import QtQuick; Timer { repeat: false }', proc)
 
         proc.stdout = out
         proc.stderr = err
         proc.command = entry.command
 
         let capturedOut = ""
-        let exitSeen = false
-        let exitCodeValue = -1
+        let completed = false
 
         out.streamFinished.connect(function() {
             capturedOut = out.text || ""
-            maybeComplete()
         })
 
         proc.exited.connect(function(code) {
-            exitSeen = true
-            exitCodeValue = code
-            maybeComplete()
+            capturedOut = out.text || capturedOut || ""
+            complete(code)
         })
 
-        function maybeComplete() {
-            if (!exitSeen) return
+        timeout.interval = root.commandTimeoutMs
+        timeout.triggered.connect(function() {
+            try { proc.running = false } catch (_) {}
+            complete(-1)
+        })
+
+        function complete(exitCodeValue) {
+            if (completed) return
+            completed = true
+            timeout.stop()
+            entry.running = false
             if (typeof entry.callback === "function") {
                 try { entry.callback(capturedOut, exitCodeValue) } catch (e) { console.warn("runCommand callback error:", e) }
             }
             try { proc.destroy() } catch (_) {}
+
+            if (entry.pending) {
+                entry.pending = false
+                entry.timer.interval = entry.waitMs
+                entry.timer.restart()
+            }
         }
 
         proc.running = true
+        timeout.start()
     }
 }

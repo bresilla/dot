@@ -71,9 +71,10 @@ BaseCard {
                 
                 property string distroName: "Linux"
                 
-                onStarted: {
-                    const text = stdout.readAll()
-                    if (text) distroName = text.trim()
+                stdout: StdioCollector {
+                    onStreamFinished: {
+                        if (text) distroProc.distroName = text.trim()
+                    }
                 }
             }
             
@@ -109,9 +110,10 @@ BaseCard {
                     
                     property string uptimeText: ""
                     
-                    onStarted: {
-                        const text = stdout.readAll()
-                        if (text) uptimeText = text.trim()
+                    stdout: StdioCollector {
+                        onStreamFinished: {
+                            if (text) uptimeProc.uptimeText = text.trim()
+                        }
                     }
                 }
                 

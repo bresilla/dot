@@ -26,8 +26,10 @@ Scope {
     readonly property int containerHeight: monitorHeight * 0.5
     readonly property real itemHeight: (containerHeight - (wsSpacing * 9)) / 10
     readonly property real pillWidthFactor: 0.55
-    readonly property real popupSlide: Math.min(monitorWidth, monitorHeight) * (46 / 2160)
-    readonly property real popupGap: Math.min(monitorWidth, monitorHeight) * (24 / 2160)
+    readonly property real popupGap: Math.round(Math.min(monitorWidth, monitorHeight) * (6 / 2160))
+    readonly property real popupSlide: (lineBarWidth * (1 + ((1 + pillWidthFactor) / 2))) + popupGap
+    readonly property real popupBorderWidth: Math.max(1, Math.min(monitorWidth, monitorHeight) * (2 / 2160))
+    readonly property real popupBorderGrowth: Math.min(monitorWidth, monitorHeight) * (4 / 2160)
 
     function readableTextColor(bg) {
         const raw = String(bg || "").replace("#", "");
@@ -210,7 +212,7 @@ Scope {
 
             color: S.Theme.color1
             border.color: S.Theme.color0
-            border.width: S.Theme.heavyBorderWidth + (S.Theme.morphBorderGrowth * morphProgress)
+            border.width: root.popupBorderWidth + (root.popupBorderGrowth * morphProgress)
 
             Text {
                 anchors.centerIn: parent

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-pkill -f "qs.*osd" 2>/dev/null
-DISPLAY=:0 qs -p $HOME/.config/quickshell/osd
+qs kill -p "$HOME/.config/quickshell/osd" --any-display 2>/dev/null
+DISPLAY=:0 qs -d -p "$HOME/.config/quickshell/osd"

@@ -16,15 +16,24 @@ Scope {
     property real brightness: 0.7
     property real lastBrightness: -1
     property bool isInteracting: false
+    readonly property string procPrefix: {
+        if (currentMonitor && currentMonitor.name) return "brightness-osd-" + currentMonitor.name
+        if (modelData && modelData.name) return "brightness-osd-" + modelData.name
+        return "brightness-osd-screen-" + String(modelData ? modelData.x : 0) + "-" + String(modelData ? modelData.y : 0)
+    }
+
+    function cmdId(suffix) {
+        return procPrefix + "-" + suffix
+    }
 
     Timer {
-        interval: 300
+        interval: 750
         running: enabled
         repeat: true
         onTriggered: {
             if (isInteracting) return;
 
-            OSD.Proc.runCommand("brightness-check", [brightCommand, "get"], (output, exitCode) => {
+            OSD.Proc.runCommand(cmdId("brightness-check"), [brightCommand, "get"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const newBrightness = parseFloat(output.trim()) / 100;
                     if (Math.abs(newBrightness - lastBrightness) > 0.01 || lastBrightness < 0) {
@@ -134,13 +143,13 @@ Scope {
                     onSeeking: pos => {
                         isInteracting = true;
                         brightness = pos;
-                        OSD.Proc.runCommand("brightness-set", [brightCommand, String(Math.round(pos * 100))], () => {}, 50);
+                        OSD.Proc.runCommand(cmdId("brightness-set"), [brightCommand, String(Math.round(pos * 100))], () => {}, 50);
                     }
 
                     onClicked: pos => {
                         brightness = pos;
                         lastBrightness = pos;
-                        OSD.Proc.runCommand("brightness-set", [brightCommand, String(Math.round(pos * 100))], () => {}, 0);
+                        OSD.Proc.runCommand(cmdId("brightness-set"), [brightCommand, String(Math.round(pos * 100))], () => {}, 0);
                         isInteracting = false;
                         hideTimer.restart();
                     }

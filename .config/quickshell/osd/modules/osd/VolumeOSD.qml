@@ -17,15 +17,24 @@ Scope {
     property bool isMuted: false
     property bool isHeadphone: false
     property bool isInteracting: false
+    readonly property string procPrefix: {
+        if (currentMonitor && currentMonitor.name) return "volume-osd-" + currentMonitor.name
+        if (modelData && modelData.name) return "volume-osd-" + modelData.name
+        return "volume-osd-screen-" + String(modelData ? modelData.x : 0) + "-" + String(modelData ? modelData.y : 0)
+    }
+
+    function cmdId(suffix) {
+        return procPrefix + "-" + suffix
+    }
 
     Timer {
-        interval: 300
+        interval: 750
         running: enabled
         repeat: true
         onTriggered: {
             if (isInteracting) return;
 
-            OSD.Proc.runCommand("volume-check", ["pamixer", "--get-volume"], (output, exitCode) => {
+            OSD.Proc.runCommand(cmdId("volume-check"), ["pamixer", "--get-volume"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const newVolume = parseInt(output.trim()) / 100;
                     if (Math.abs(newVolume - lastVolume) > 0.01 || lastVolume < 0) {
@@ -37,7 +46,7 @@ Scope {
                 }
             }, 0);
 
-            OSD.Proc.runCommand("mute-check", ["pamixer", "--get-mute"], (output, exitCode) => {
+            OSD.Proc.runCommand(cmdId("mute-check"), ["pamixer", "--get-mute"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const muted = output.trim() === "true";
                     if (muted !== isMuted) {
@@ -52,11 +61,11 @@ Scope {
 
     // Headphone detection (less frequent)
     Timer {
-        interval: 2000
+        interval: 3000
         running: enabled
         repeat: true
         onTriggered: {
-            OSD.Proc.runCommand("sink-check", ["bash", "-c", "pactl get-default-sink && pactl list sinks | grep -i 'Active Port'"], (output, exitCode) => {
+            OSD.Proc.runCommand(cmdId("sink-check"), ["bash", "-c", "pactl get-default-sink && pactl list sinks | grep -i 'Active Port'"], (output, exitCode) => {
                 if (exitCode === 0 && output) {
                     const lower = output.toLowerCase();
                     isHeadphone = lower.includes("bluez") || lower.includes("headphone");
@@ -147,7 +156,7 @@ Scope {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         isMuted = !isMuted;
-                        OSD.Proc.runCommand("mute-toggle", ["pamixer", "-t"], () => {}, 0);
+                        OSD.Proc.runCommand(cmdId("mute-toggle"), ["pamixer", "-t"], () => {}, 0);
                         hideTimer.restart();
                     }
                 }
@@ -177,13 +186,13 @@ Scope {
                     onSeeking: pos => {
                         isInteracting = true;
                         volume = pos;
-                        OSD.Proc.runCommand("volume-set", ["pamixer", "--set-volume", String(Math.round(pos * 100))], () => {}, 50);
+                        OSD.Proc.runCommand(cmdId("volume-set"), ["pamixer", "--set-volume", String(Math.round(pos * 100))], () => {}, 50);
                     }
 
                     onClicked: pos => {
                         volume = pos;
                         lastVolume = pos;
-                        OSD.Proc.runCommand("volume-set", ["pamixer", "--set-volume", String(Math.round(pos * 100))], () => {}, 0);
+                        OSD.Proc.runCommand(cmdId("volume-set"), ["pamixer", "--set-volume", String(Math.round(pos * 100))], () => {}, 0);
                         isInteracting = false;
                         hideTimer.restart();
                     }

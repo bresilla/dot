@@ -23,7 +23,7 @@ BaseCard {
         command: ["cat", "/sys/class/power_supply/BAT0/capacity"]
         running: true
         stdout: SplitParser {
-            onRead: batteryLevel = parseInt(data) || 0
+            onRead: data => batteryLevel = parseInt(data) || 0
         }
     }
     

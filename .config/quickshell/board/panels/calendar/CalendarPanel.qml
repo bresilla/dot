@@ -61,6 +61,10 @@ Rectangle {
         CalendarService.loadEvents(startDate, endDate)
     }
 
+    function dayHasEvents(dayDate) {
+        return Boolean(CalendarService && CalendarService.khalAvailable && CalendarService.hasEventsForDate(dayDate))
+    }
+
     onSelectedDateChanged: updateSelectedDateEvents()
     Component.onCompleted: {
         loadEventsForMonth()
@@ -255,7 +259,7 @@ Rectangle {
                             width: scaledFontSize * 0.8
                             height: scaledFontSize * 0.14
                             radius: height * 0.5
-                            visible: CalendarService && CalendarService.khalAvailable && CalendarService.hasEventsForDate(dayDate)
+                            visible: root.dayHasEvents(dayDate)
                             color: isToday ? Qt.lighter(Theme.primary, 1.3) : Theme.primary
                             opacity: isToday ? 0.9 : 0.7
                         }
@@ -267,7 +271,7 @@ Rectangle {
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            if (CalendarService && CalendarService.khalAvailable && CalendarService.hasEventsForDate(dayDate)) {
+                            if (root.dayHasEvents(dayDate)) {
                                 root.selectedDate = dayDate
                                 root.showEventDetails = true
                             }

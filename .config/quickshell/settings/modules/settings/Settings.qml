@@ -251,7 +251,7 @@ Scope {
     // ─── Polling ───
 
     Timer {
-        interval: 300
+        interval: 1000
         running: true
         repeat: true
         triggeredOnStart: true
@@ -265,7 +265,7 @@ Scope {
     }
 
     Timer {
-        interval: 300
+        interval: 750
         running: volumeExpanded || brightnessExpanded
         repeat: true
         triggeredOnStart: true
@@ -284,7 +284,7 @@ Scope {
     }
 
     Timer {
-        interval: 1000
+        interval: 3000
         running: true
         repeat: true
         triggeredOnStart: true
@@ -299,7 +299,7 @@ Scope {
 
     // Per-app sink input polling
     Timer {
-        interval: 1000
+        interval: 1500
         running: volumeExpanded && !appVolInteracting
         repeat: true
         triggeredOnStart: true
