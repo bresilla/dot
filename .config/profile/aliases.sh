@@ -57,13 +57,12 @@ alias moonlight="QT_QPA_PLATFORM=xcb moonlight"
 alias hibernate="systemctl hibernate"
 alias cp="rsync -uahP --inplace --no-whole-file --info=progress2"
 alias cat='bat --paging=never'
-alias ll='eza -liSHF --header --git --group-directories-first --git-ignore'
-alias la='eza -laiSHF --header --git --group-directories-first --git-ignore'
-alias lg='eza -laiSHF --header --git --group-directories-first'
+alias ll='eza -liSHF --header --git --group-directories-first'
+alias la='eza -laiSHF --header --git --group-directories-first'
 alias lt='eza -liSHF --header --git --git-ignore --group-directories-first --tree -L5'
 alias lu='dutree -d1 --usage -x .git -x .direnv'
 alias df='dfc -dTmw -p -/dev/loop,tmp,dev,run,one,efivarfs'
-alias lsblk='lsblk --output NAME,SIZE,FSUSE%,MODEL,TRAN,TYPE,FSTYPE,UUID,LABEL,MOUNTPOINT,STATE,HOTPLUG'
+alias lsblk='lsblk --output NAME,SIZE,FSUSE%,MODEL,TRAN,TYPE,FSTYPE,UUID,LABEL,MOUNTPOINT,STATE,HOTPLUG,SERIAL'
 alias lsmnt='lsblk --output LABEL,NAME,SIZE,FSTYPE,MOUNTPOINTS'
 alias vols='sudo lvm pvs && echo && sudo lvm vgs && echo && sudo lvm lvs'
 alias dd='dd status=progress'

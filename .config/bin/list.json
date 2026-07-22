@@ -202,6 +202,15 @@
                 "default"
             ]
         },
+        "$HOME/.local/bin/fj": {
+            "path": "$HOME/.local/bin/fj",
+            "url": "https://codeberg.org/forgejo-contrib/forgejo-cli",
+            "provider": "codeberg",
+            "description": "CLI application for interacting with Forgejo",
+            "tags": [
+                "other"
+            ]
+        },
         "$HOME/.local/bin/gh": {
             "path": "$HOME/.local/bin/gh",
             "url": "https://github.com/cli/cli",

@@ -41,7 +41,7 @@ done
 
 git checkout main
 git pull origin main
-git merge develop || {
+git merge develop --quiet || {
     git merge --abort 2>/dev/null || true
 }
 git push origin main
