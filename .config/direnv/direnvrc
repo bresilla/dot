@@ -41,20 +41,53 @@ use_nvidia() {
 use_display() {
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
-    # Trust WAYLAND_DISPLAY only when it names a live socket. Over SSH /
-    # waypipe / nested shells it can leak through while pointing at nothing.
-    if [ -z "${WL_SOCKET:-}" ]; then
-        if [ -n "${WAYLAND_DISPLAY:-}" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+    # Resolve relative Wayland names under XDG_RUNTIME_DIR while also
+    # accepting absolute socket paths allowed by the Wayland protocol.
+    local wl_socket_path=""
+    case "${WL_SOCKET:-}" in
+        /*) wl_socket_path="$WL_SOCKET" ;;
+        ?*) wl_socket_path="$XDG_RUNTIME_DIR/$WL_SOCKET" ;;
+    esac
+
+    # Reject stale display variables inherited through SSH or terminal
+    # multiplexers. Hexe's persistent daemon can otherwise retain a dead
+    # Waypipe socket even when the attaching client has a new live one.
+    if [ -z "$wl_socket_path" ] || [ ! -S "$wl_socket_path" ]; then
+        local display_socket_path=""
+        case "${WAYLAND_DISPLAY:-}" in
+            /*) display_socket_path="$WAYLAND_DISPLAY" ;;
+            ?*) display_socket_path="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ;;
+        esac
+
+        if [ -n "$display_socket_path" ] && [ -S "$display_socket_path" ]; then
             export WL_SOCKET="$WAYLAND_DISPLAY"
+            wl_socket_path="$display_socket_path"
         else
-            export WL_SOCKET="wayland-0"
+            # Recover the newest live Waypipe server display. This is needed
+            # for shells spawned by a persistent multiplexer daemon, which
+            # cannot inherit the environment of the client that attached it.
+            local waypipe_display
+            waypipe_display="$(
+                ps -u "$(id -u)" -C waypipe -o pid=,args= 2>/dev/null \
+                    | sed -n 's/^[[:space:]]*[0-9][0-9]*[[:space:]].*--display[[:space:]][[:space:]]*\([^[:space:]]*\).*server[[:space:]]*$/\1/p' \
+                    | tail -n 1
+            )"
+
+            if [ -n "$waypipe_display" ] && [ -S "$XDG_RUNTIME_DIR/$waypipe_display" ]; then
+                export WAYLAND_DISPLAY="$waypipe_display"
+                export WL_SOCKET="$waypipe_display"
+                wl_socket_path="$XDG_RUNTIME_DIR/$waypipe_display"
+            else
+                export WL_SOCKET="wayland-0"
+                wl_socket_path="$XDG_RUNTIME_DIR/$WL_SOCKET"
+            fi
         fi
     fi
 
     # Prefer native Wayland only when the resolved socket exists; otherwise
     # use X11/XWayland. Override before direnv loads with BACKEND=x11/wayland.
     if [ -z "${BACKEND:-}" ]; then
-        if [ -S "$XDG_RUNTIME_DIR/$WL_SOCKET" ]; then
+        if [ -S "$wl_socket_path" ]; then
             export BACKEND="wayland"
         else
             export BACKEND="x11"
