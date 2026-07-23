@@ -30,6 +30,13 @@ local layout = hexe.layout("default", {
       title = "codex",
       command = "codex",
     }),
+    hexe.float("antigravity", {
+      key = "4",
+      enabled = true,
+      attrs = { per_cwd = true, inherit_env = true, exclusive = true },
+      title = "antigravity",
+      command = "agy",
+    }),
     hexe.float("explorer", {
       key = "p",
       enabled = true,
@@ -60,6 +67,7 @@ return hexe.setup({
     hexe.key({ hexe.key.alt, hexe.key["1"] }, hexe.action.float.toggle("1")),
     hexe.key({ hexe.key.alt, hexe.key["2"] }, hexe.action.float.toggle("2")),
     hexe.key({ hexe.key.alt, hexe.key["3"] }, hexe.action.float.toggle("3")),
+    hexe.key({ hexe.key.alt, hexe.key["4"] }, hexe.action.float.toggle("4")),
     hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key["9"] }, hexe.action.float.toggle("p")),
     hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key["0"] }, hexe.action.float.toggle("0")),
   },
