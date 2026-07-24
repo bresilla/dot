@@ -35,7 +35,7 @@ USE_COLOR = (
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="Display Codex and Claude usage limits."
+        description="Display Codex, Claude, and Antigravity usage limits."
     )
 
     parser.add_argument(
@@ -46,7 +46,7 @@ def parse_arguments():
 
     parser.add_argument(
         "--provider",
-        choices=("codex", "claude"),
+        choices=("codex", "claude", "antigravity", "google"),
         help="Only query the selected provider.",
     )
 
@@ -63,11 +63,12 @@ def clamp(value, minimum=0.0, maximum=100.0):
     return max(minimum, min(maximum, value))
 
 
-def get_json(url, headers):
+def get_json(url, headers, method="GET", data=None):
     request = Request(
         url,
         headers=headers,
-        method="GET",
+        data=data,
+        method=method,
     )
 
     try:
@@ -287,40 +288,61 @@ def fetch_codex():
     )
 
     rate_limit = data.get("rate_limit") or {}
-    session = rate_limit.get("primary_window")
-    weekly = rate_limit.get("secondary_window")
+    primary = rate_limit.get("primary_window")
+    secondary = rate_limit.get("secondary_window")
 
-    if not session or not weekly:
-        raise RuntimeError(
-            "Codex response did not contain session and weekly limits"
+    session_data = None
+    weekly_data = None
+
+    for window in (primary, secondary):
+        if not window or not isinstance(window, dict):
+            continue
+        win_seconds = int(window.get("limit_window_seconds", 0))
+        if win_seconds >= 86400:
+            weekly_data = window
+        else:
+            session_data = window
+
+    now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+    if session_data:
+        session_left = clamp(
+            100.0 - float(session_data.get("used_percent", 0))
         )
+        session_reset = session_data.get("reset_at") or now_iso
+        session_win = int(
+            session_data.get("limit_window_seconds", 5 * 60 * 60)
+        )
+    else:
+        session_left = 100.0
+        session_reset = now_iso
+        session_win = 5 * 60 * 60
+
+    if weekly_data:
+        weekly_left = clamp(
+            100.0 - float(weekly_data.get("used_percent", 0))
+        )
+        weekly_reset = weekly_data.get("reset_at") or now_iso
+        weekly_win = int(
+            weekly_data.get("limit_window_seconds", 7 * 24 * 60 * 60)
+        )
+    else:
+        weekly_left = 100.0
+        weekly_reset = now_iso
+        weekly_win = 7 * 24 * 60 * 60
 
     return {
         "id": "codex",
         "name": "Codex",
         "session": {
-            "left": clamp(
-                100.0 - float(session["used_percent"])
-            ),
-            "reset": session["reset_at"],
-            "window": int(
-                session.get(
-                    "limit_window_seconds",
-                    5 * 60 * 60,
-                )
-            ),
+            "left": session_left,
+            "reset": session_reset,
+            "window": session_win,
         },
         "weekly": {
-            "left": clamp(
-                100.0 - float(weekly["used_percent"])
-            ),
-            "reset": weekly["reset_at"],
-            "window": int(
-                weekly.get(
-                    "limit_window_seconds",
-                    7 * 24 * 60 * 60,
-                )
-            ),
+            "left": weekly_left,
+            "reset": weekly_reset,
+            "window": weekly_win,
         },
     }
 
@@ -396,6 +418,92 @@ def fetch_claude():
                 100.0 - float(weekly["utilization"])
             ),
             "reset": weekly["resets_at"],
+            "window": 7 * 24 * 60 * 60,
+        },
+    }
+
+
+def antigravity_credentials_path():
+    path = Path(
+        os.environ.get(
+            "ANTIGRAVITY_CONFIG_DIR",
+            "~/.gemini/antigravity-cli",
+        )
+    ).expanduser() / "antigravity-oauth-token"
+    return path
+
+
+def load_antigravity_credentials():
+    path = antigravity_credentials_path()
+
+    if not path.exists():
+        alt_path = Path("~/.gemini/antigravity-oauth-token").expanduser()
+        if alt_path.exists():
+            path = alt_path
+        else:
+            raise RuntimeError(
+                f"{path} does not exist; log in to Antigravity"
+            )
+
+    data = json.loads(path.read_text())
+    token_obj = data.get("token") or data
+    access_token = token_obj.get("access_token")
+
+    if not access_token:
+        raise RuntimeError(
+            f"no Antigravity OAuth access token found in {path}"
+        )
+
+    return access_token
+
+
+def fetch_antigravity():
+    access_token = load_antigravity_credentials()
+
+    data = get_json(
+        "https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels",
+        {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
+            "User-Agent": "antigravity/1.0",
+        },
+        method="POST",
+        data=b"{}",
+    )
+
+    models = data.get("models") or {}
+
+    quota_info = None
+    for model_id, model_data in models.items():
+        if isinstance(model_data, dict) and "quotaInfo" in model_data:
+            qi = model_data["quotaInfo"]
+            if "remainingFraction" in qi:
+                quota_info = qi
+                if "resetTime" in qi:
+                    break
+
+    if not quota_info:
+        raise RuntimeError(
+            "Antigravity response did not contain quota information"
+        )
+
+    remaining_fraction = float(quota_info.get("remainingFraction", 1.0))
+    usage_left = clamp(remaining_fraction * 100.0)
+
+    now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    reset_at = quota_info.get("resetTime") or now_iso
+
+    return {
+        "id": "antigravity",
+        "name": "Antigravity",
+        "session": {
+            "left": usage_left,
+            "reset": reset_at,
+            "window": 3 * 60 * 60,
+        },
+        "weekly": {
+            "left": 100.0,
+            "reset": now_iso,
             "window": 7 * 24 * 60 * 60,
         },
     }
@@ -503,6 +611,8 @@ def selected_fetchers(provider):
     fetchers = {
         "codex": fetch_codex,
         "claude": fetch_claude,
+        "antigravity": fetch_antigravity,
+        "google": fetch_antigravity,
     }
 
     if provider:
@@ -510,7 +620,11 @@ def selected_fetchers(provider):
             (provider, fetchers[provider]),
         )
 
-    return tuple(fetchers.items())
+    return (
+        ("codex", fetch_codex),
+        ("claude", fetch_claude),
+        ("antigravity", fetch_antigravity),
+    )
 
 
 def main():
