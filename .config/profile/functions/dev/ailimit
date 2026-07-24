@@ -460,27 +460,96 @@ def load_antigravity_credentials():
 def fetch_antigravity():
     access_token = load_antigravity_credentials()
 
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+        "User-Agent": "antigravity/1.0",
+    }
+
+    now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+    try:
+        data = get_json(
+            "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuotaSummary",
+            headers,
+            method="POST",
+            data=b"{}",
+        )
+
+        groups = data.get("groups") or []
+        gemini_group = None
+        for group in groups:
+            if "gemini" in group.get("displayName", "").lower():
+                gemini_group = group
+                break
+        if not gemini_group and groups:
+            gemini_group = groups[0]
+
+        if gemini_group:
+            session_info = None
+            weekly_info = None
+
+            for bucket in gemini_group.get("buckets", []):
+                window_type = bucket.get("window", "").lower()
+                bucket_id = bucket.get("bucketId", "").lower()
+                display_name = bucket.get("displayName", "").lower()
+
+                if "5h" in window_type or "5h" in bucket_id or "five" in display_name:
+                    session_info = bucket
+                elif "weekly" in window_type or "weekly" in bucket_id or "week" in display_name:
+                    weekly_info = bucket
+
+            session_left = (
+                clamp(float(session_info.get("remainingFraction", 1.0)) * 100.0)
+                if session_info else 100.0
+            )
+            session_reset = session_info.get("resetTime") if session_info else now_iso
+
+            weekly_left = (
+                clamp(float(weekly_info.get("remainingFraction", 1.0)) * 100.0)
+                if weekly_info else 100.0
+            )
+            weekly_reset = weekly_info.get("resetTime") if weekly_info else now_iso
+
+            return {
+                "id": "antigravity",
+                "name": "Antigravity",
+                "session": {
+                    "left": session_left,
+                    "reset": session_reset,
+                    "window": 5 * 60 * 60,
+                },
+                "weekly": {
+                    "left": weekly_left,
+                    "reset": weekly_reset,
+                    "window": 7 * 24 * 60 * 60,
+                },
+            }
+    except Exception:
+        pass
+
     data = get_json(
         "https://cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels",
-        {
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
-            "User-Agent": "antigravity/1.0",
-        },
+        headers,
         method="POST",
         data=b"{}",
     )
 
     models = data.get("models") or {}
+    default_model = data.get("defaultAgentModelId") or "gemini-3.6-flash-tiered"
 
     quota_info = None
-    for model_id, model_data in models.items():
-        if isinstance(model_data, dict) and "quotaInfo" in model_data:
-            qi = model_data["quotaInfo"]
-            if "remainingFraction" in qi:
-                quota_info = qi
-                if "resetTime" in qi:
-                    break
+    if default_model in models and "quotaInfo" in models[default_model]:
+        quota_info = models[default_model]["quotaInfo"]
+
+    if not quota_info:
+        for model_id, model_data in models.items():
+            if isinstance(model_data, dict) and "quotaInfo" in model_data:
+                qi = model_data["quotaInfo"]
+                if "remainingFraction" in qi:
+                    quota_info = qi
+                    if "resetTime" in qi:
+                        break
 
     if not quota_info:
         raise RuntimeError(
@@ -489,8 +558,6 @@ def fetch_antigravity():
 
     remaining_fraction = float(quota_info.get("remainingFraction", 1.0))
     usage_left = clamp(remaining_fraction * 100.0)
-
-    now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     reset_at = quota_info.get("resetTime") or now_iso
 
     return {
@@ -499,7 +566,7 @@ def fetch_antigravity():
         "session": {
             "left": usage_left,
             "reset": reset_at,
-            "window": 3 * 60 * 60,
+            "window": 5 * 60 * 60,
         },
         "weekly": {
             "left": 100.0,
@@ -549,6 +616,8 @@ def show_provider(provider, context):
         print(provider["name"])
 
     for label, key in selected_contexts(context):
+        if key not in provider:
+            continue
         limit = provider[key]
         usage_left = limit["left"]
 
@@ -600,9 +669,10 @@ def json_provider(provider, context):
     output = {}
 
     for _, key in selected_contexts(context):
-        output[key] = json_limit(
-            provider[key]
-        )
+        if key in provider:
+            output[key] = json_limit(
+                provider[key]
+            )
 
     return output
 
