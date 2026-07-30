@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import Quickshell
-
+import "../../board"
 
 
 Rectangle {

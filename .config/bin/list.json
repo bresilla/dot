@@ -365,6 +365,15 @@
                 "git"
             ]
         },
+        "$HOME/.local/bin/joycast": {
+            "path": "$HOME/.local/bin/joycast",
+            "url": "https://github.com/bresilla/joycast",
+            "provider": "github",
+            "description": "udev input device (joystick) forwarder to remote machine",
+            "tags": [
+                "other"
+            ]
+        },
         "$HOME/.local/bin/just": {
             "path": "$HOME/.local/bin/just",
             "url": "https://github.com/casey/just",
@@ -546,6 +555,7 @@
             "path": "$HOME/.local/bin/rerun",
             "url": "https://github.com/rerun-io/rerun",
             "provider": "github",
+            "description": "Visualize, query, and stream to train on multimodal robotics data.",
             "tags": [
                 "other"
             ]

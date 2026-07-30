@@ -1,0 +1,16 @@
+[Unit]
+Description=QuickShell component (%i)
+PartOf=quickshell.target
+After=graphical-session.target
+StartLimitIntervalSec=30
+StartLimitBurst=5
+
+[Service]
+Type=exec
+ExecStart=%h/.config/quickshell/launch.sh run %i
+Restart=always
+RestartSec=2
+TimeoutStopSec=5
+
+[Install]
+WantedBy=quickshell.target

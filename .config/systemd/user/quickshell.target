@@ -1,0 +1,7 @@
+[Unit]
+Description=QuickShell desktop components
+Wants=quickshell@border.service quickshell@board.service quickshell@osd.service quickshell@main.service
+PartOf=graphical-session.target
+
+[Install]
+WantedBy=default.target

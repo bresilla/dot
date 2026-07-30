@@ -18,17 +18,8 @@ Item {
     property real animationScale: 1.0
 
     onArtUrlChanged: {
-        if (artUrl && albumArt.status !== Image.Error) {
+        if (artUrl && albumArtStatus !== Image.Error) {
             lastValidArtUrl = artUrl
-        }
-    }
-
-    Loader {
-        active: activePlayer?.playbackState === MprisPlaybackState.Playing && showAnimation
-        sourceComponent: Component {
-            Ref {
-                service: CavaService
-            }
         }
     }
 
@@ -49,12 +40,9 @@ Item {
         readonly property real baseRadius: Math.min(width, height) * 0.41 * root.animationScale
         readonly property int segments: 28
         
-        property var audioLevels: {
-            if (!CavaService.cavaAvailable || CavaService.values.length === 0) {
-                return [0.5, 0.3, 0.7, 0.4, 0.6, 0.5, 0.8, 0.2, 0.9, 0.6]
-            }
-            return CavaService.values
-        }
+        // CavaService is not part of this shell. Keep a stable fallback shape
+        // instead of evaluating an undefined singleton every animation frame.
+        property var audioLevels: [0.5, 0.3, 0.7, 0.4, 0.6, 0.5, 0.8, 0.2, 0.9, 0.6]
         
         property var smoothedLevels: [0.5, 0.3, 0.7, 0.4, 0.6, 0.5, 0.8, 0.2, 0.9, 0.6]
         property var cubics: []

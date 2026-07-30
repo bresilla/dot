@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-qs kill -p "$HOME/.config/quickshell" --any-display 2>/dev/null
-DISPLAY=:0 qs -d -p "$HOME/.config/quickshell"
+exec "$HOME/.config/quickshell/launch.sh" restart main
