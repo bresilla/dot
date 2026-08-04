@@ -106,3 +106,5 @@ colors_to_tty &
 source $HOME/.cache/wal/colors.sh
 hyprctl hyprpaper wallpaper ",$(cat "$HOME/.cache/wal/wallpaper"),"
 zedtheme &
+
+scp -r /home/bresilla/.cache/wal tron.netbird:/home/bresilla/.cache/ &

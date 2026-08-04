@@ -506,6 +506,15 @@
                 "other"
             ]
         },
+        "$HOME/.local/bin/oslo": {
+            "path": "$HOME/.local/bin/oslo",
+            "url": "https://github.com/onix-os/oslo",
+            "provider": "github",
+            "description": "onix shell in lua",
+            "tags": [
+                "default"
+            ]
+        },
         "$HOME/.local/bin/perles": {
             "path": "$HOME/.local/bin/perles",
             "url": "https://github.com/zjrosen/perles",
