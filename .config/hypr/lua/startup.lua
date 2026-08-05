@@ -10,5 +10,10 @@ return function(ctx)
         ctx.reload_plugins_and_apply_settings()
         hl.exec_cmd([[hyprctl setcursor "BreezeX-Black" 60]])
         hl.exec_cmd("systemctl --user start hyprpolkitagent")
+
+        -- Imports WAYLAND_DISPLAY/HYPRLAND_INSTANCE_SIGNATURE into the user
+        -- manager before starting quickshell.target. The target is no longer
+        -- WantedBy=default.target, so this is what brings the shell up.
+        hl.exec_cmd(ctx.home .. "/.config/quickshell/launch.sh")
     end)
 end

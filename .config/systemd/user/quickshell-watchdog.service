@@ -1,0 +1,7 @@
+[Unit]
+Description=Restart QuickShell components that lost the Hyprland event socket
+PartOf=quickshell.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/quickshell/watchdog.sh

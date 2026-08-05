@@ -62,13 +62,22 @@ return function(ctx)
         return tostring(math.floor(scaled_number(value, baseline) + 0.5))
     end
 
-    local function terminal_font_size()
+    -- Scratchpads are read at a glance rather than worked in, so they get a
+    -- larger font than the tiled terminals.
+    local scratchpad_font_scale = 1.2
+
+    -- Scaling the bounds rather than the result keeps the sigmoid curve's shape
+    -- intact, so the multiplier applies evenly at every resolution and the
+    -- internal-panel cap moves with it.
+    local function terminal_font_size(scale)
+        scale = scale or 1
+
         local monitor = active_monitor()
         local short_edge, long_edge = active_monitor_physical_edges()
         local resolution_score = math.max(short_edge / 1440, long_edge / 2560)
-        local min_font_size = 6.75
-        local max_font_size = 18
-        local internal_max_font_size = 13.5
+        local min_font_size = 4.73 * scale
+        local max_font_size = 12.6 * scale
+        local internal_max_font_size = 9.45 * scale
         local font_size = min_font_size
             + sigmoid((resolution_score - 1.2) * 6) * (max_font_size - min_font_size)
 
@@ -87,9 +96,9 @@ return function(ctx)
         return scaled_px(24, 2160)
     end
 
-    local function kitty_cmd(args)
+    local function kitty_cmd(args, font_scale)
         local cmd = "kitty"
-            .. " -o font_size=" .. terminal_font_size()
+            .. " -o font_size=" .. terminal_font_size(font_scale)
             .. " -o window_padding_width=" .. terminal_padding_y()
 
         if args and args ~= "" then
@@ -99,9 +108,9 @@ return function(ctx)
         return cmd
     end
 
-    local function alacritty_cmd(args)
+    local function alacritty_cmd(args, font_scale)
         local cmd = "alacritty"
-            .. " -o font.size=" .. terminal_font_size()
+            .. " -o font.size=" .. terminal_font_size(font_scale)
             .. " -o window.padding.x=" .. terminal_padding_x()
             .. " -o window.padding.y=" .. terminal_padding_y()
 
@@ -116,17 +125,17 @@ return function(ctx)
 
     bind_exec(super_meta .. " + P", "doas chvt 2")
     scratchpads.bind(super_meta .. " + Backspace", "ask", function()
-        return kitty_cmd("--title ask -e aichat")
+        return kitty_cmd("--title ask -e aichat", scratchpad_font_scale)
     end, {
         size = { "monitor_h*0.8", "monitor_h*0.8" },
     })
     scratchpads.bind(super_meta .. " + Space", "browsy", function()
-        return kitty_cmd("--title browsy -e browsy")
+        return kitty_cmd("--title browsy -e browsy", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
     scratchpads.bind(super_meta .. " + Return", "appy", function()
-        return kitty_cmd("--title appy -e appy")
+        return kitty_cmd("--title appy -e appy", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
@@ -141,12 +150,12 @@ return function(ctx)
     end)
 
     scratchpads.bind(super .. " + Space", "noteing", function()
-        return alacritty_cmd("--title noteing")
+        return alacritty_cmd("--title noteing", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
     scratchpads.bind(meta .. " + Space", "main", function()
-        return alacritty_cmd("--title main")
+        return alacritty_cmd("--title main", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })

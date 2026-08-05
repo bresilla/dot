@@ -16,7 +16,7 @@ alias ser="sudo /env/bin/ser"
 alias rustdesk="sudo rustdesk"
 alias in="sudo innernet"
 # alias ssh="TERM=tmux-256color ssh -X"
-alias ssh="waypipe --no-gpu ssh -t"
+alias ssh="waypipe ssh -t"
 alias nsh="\ssh -t"
 alias bolt="boltctl"
 

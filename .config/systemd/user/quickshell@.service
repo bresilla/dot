@@ -1,9 +1,14 @@
 [Unit]
 Description=QuickShell component (%i)
 PartOf=quickshell.target
-After=graphical-session.target
 StartLimitIntervalSec=30
 StartLimitBurst=5
+
+# Hyprland is not launched through graphical-session.target here, so ordering
+# against it never waits for anything. Refuse to start until the session
+# environment has been imported -- without WAYLAND_DISPLAY, Qt falls back to xcb
+# and aborts, burning the restart limit before Hyprland is even up.
+ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]
 Type=exec

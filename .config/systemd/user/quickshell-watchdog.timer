@@ -1,0 +1,8 @@
+[Unit]
+Description=Poll QuickShell's Hyprland event socket connection
+PartOf=quickshell.target
+
+[Timer]
+OnActiveSec=30s
+OnUnitActiveSec=30s
+AccuracySec=5s

@@ -1,7 +1,10 @@
 [Unit]
 Description=QuickShell desktop components
 Wants=quickshell@border.service quickshell@board.service quickshell@osd.service quickshell@main.service
-PartOf=graphical-session.target
+Wants=quickshell-watchdog.timer
 
-[Install]
-WantedBy=default.target
+# Deliberately not WantedBy=default.target: the user manager reaches
+# default.target within ~150ms of session start, long before Hyprland exists
+# and before WAYLAND_DISPLAY is imported, which makes every component abort on
+# "no Qt platform plugin could be initialized". Hyprland starts this target via
+# launch.sh once the session environment is actually available.

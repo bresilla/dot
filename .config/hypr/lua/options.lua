@@ -7,29 +7,12 @@ return function(ctx)
     local function border_colors()
         local colors = ctx.colors or {}
 
-        return ctx.util.hypr_rgb(colors.color1) or "rgb(efb9dd)",
-            ctx.util.hypr_rgb(colors.color8 or colors.color0) or "rgb(595959)"
-    end
-
-    local function active_monitor()
-        local monitor = hl.get_active_monitor()
-
-        if monitor then
-            return monitor
-        end
-
-        return hl.get_monitors()[1]
-    end
-
-    local function monitor_short_edge(monitor)
-        local width = monitor and monitor.width or 1920
-        local height = monitor and monitor.height or 1080
-
-        return math.min(width, height)
+        return ctx.util.hypr_rgb(colors.color248) or "rgb(efb9dd)",
+            ctx.util.hypr_rgb(colors.color238) or "rgb(595959)"
     end
 
     function ctx.hypr_border_size()
-        return math.max(1, math.min(3, math.floor(monitor_short_edge(active_monitor()) / 720 + 0.5)))
+        return 3
     end
 
     function ctx.hypr_extra_border_size()
@@ -37,7 +20,7 @@ return function(ctx)
     end
 
     function ctx.hypr_rounding()
-        return math.max(10, math.min(20, math.floor(monitor_short_edge(active_monitor()) / 108 + 0.5)))
+        return 20
     end
 
     local active_border, inactive_border = border_colors()

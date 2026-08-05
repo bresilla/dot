@@ -60,7 +60,7 @@ elif [ "$another" == "$hist" ] ; then
     foxy
 
 elif [ "$another" == "$mark" ] ; then
-    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g default| tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g default| tail -n+3 | sed 's/^\w*\s*//' | $runner | choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
@@ -68,7 +68,7 @@ elif [ "$another" == "$mark" ] ; then
     fi
 
 elif [ "$another" == "$loca" ] ; then
-    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g proxmox | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(bookmark --file "$HOME/.local/share/bookmark/webmarks_v0.1.json" list -g proxmox | tail -n+3 | sed 's/^\w*\s*//' | $runner | choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
@@ -76,15 +76,15 @@ elif [ "$another" == "$loca" ] ; then
     fi
 
 elif [ "$another" == "$list" ] ; then
-    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/playmarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(bookmark --file "$HOME/.local/share/bookmark/playmarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
-        /env/dot/.func/media/play $LINK
+        ~/.config/profile/functions/media/play $LINK
     fi
 
 elif [ "$another" == "$apps" ] ; then
-    LINK=$(/env/bin/bookmark --file "$HOME/.local/share/bookmark/climarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | /env/bin/choose 1)
+    LINK=$(bookmark --file "$HOME/.local/share/bookmark/climarks_v0.1.json" list | tail -n+3 | sed 's/^\w*\s*//' | $runner | choose 1)
     if [[ -z $LINK ]]; then
         browsy
     else
