@@ -1,5 +1,26 @@
 local hexe = require("hexe")
 
+-- add_env/add_path below take effect when a float's process is SPAWNED, so an
+-- already-running float keeps its old environment until it is recreated.
+
+-- Common env for the AI floats; env(extra) returns it plus that float's own
+-- keys (extra wins, so a float can override a common value too).
+local float_env = { HEXE_FLOAT = 1 }
+
+local function env(extra)
+  local t = {}
+  for k, v in pairs(float_env) do t[k] = v end
+  for k, v in pairs(extra or {}) do t[k] = v end
+  return t
+end
+
+-- Prepended to PATH, in order, ahead of whatever the float inherits.
+-- No "~" expansion here — absolute paths only.
+local float_path = {
+  "/home/bresilla/.local/bin",
+  "/usr/local/bin",
+}
+
 local layout = hexe.layout("default", {
   enabled = true,
   tabs = {
@@ -14,7 +35,9 @@ local layout = hexe.layout("default", {
       enabled = true,
       title = "opencode",
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
-      command = "opencode",
+      command = "sh -c 'echo NAME:$HEXE_FLOAT_NAME; echo FLAG:$HEXE_FLOAT; case \"$PATH\" in /home/bresilla/.local/bin:/usr/local/bin:*) echo PATHFIRST;; *) echo PATHNOTFIRST;; esac; echo COUNT:$(echo \"$PATH\" | tr : \"\\n\" | grep -c \"^/home/bresilla/.local/bin$\"); sleep 300'",
+      add_env = env({ HEXE_FLOAT_NAME = "opencode" }),
+      add_path = float_path,
     }),
     hexe.float("claude", {
       key = "2",
@@ -22,6 +45,8 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "claude",
       command = "bun x --package @anthropic-ai/claude-code claude",
+      add_env = env({ HEXE_FLOAT_NAME = "claude" }),
+      add_path = float_path,
     }),
     hexe.float("codex", {
       key = "3",
@@ -29,6 +54,8 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "codex",
       command = "codex",
+      add_env = env({ HEXE_FLOAT_NAME = "codex" }),
+      add_path = float_path,
     }),
     hexe.float("antigravity", {
       key = "4",
@@ -36,6 +63,8 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "antigravity",
       command = "agy",
+      add_env = env({ HEXE_FLOAT_NAME = "antigravity" }),
+      add_path = float_path,
     }),
     hexe.float("explorer", {
       key = "p",
@@ -44,6 +73,8 @@ local layout = hexe.layout("default", {
       position = { x = 100, y = 50 },
       size = { width = 40, height = 80 },
       attrs = { global = false, navigatable = true, inherit_env = true },
+      add_env = { HEXE_FLOAT = 1, HEXE_FLOAT_NAME = "explorer" },
+      add_path = float_path,
     }),
     hexe.float("sandbox", {
       key = "0",
