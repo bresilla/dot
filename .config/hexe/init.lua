@@ -559,6 +559,26 @@ return hexe.setup({
           return { { text = "|", style = "fg:7" } }
         end,
       },
+      {
+        name = "oslo_language",
+        -- Low, so a narrow terminal does not shed it.
+        priority = 3,
+        render = function(ctx)
+          -- **Always shown, both languages.** It used to render only for `lua`, on the argument
+          -- that `sh` is the default and saying so is noise. That made it invisible in the state
+          -- you are in almost always, which reads exactly like a feature that does not work.
+          if not ctx.language then
+            return nil
+          end
+          -- Styled from the same palette the left prompt uses, so the two ends of the line read
+          -- as one prompt rather than as two designs meeting in the middle.
+          -- `$` and `λ` — the sigil each language prompts with, rather than its name.
+          local mark = ctx.language == "lua" and " λ " or " $ "
+          -- No `bold`: with fg:0 the terminal renders bold as *bright* black, which is grey.
+          return { { text = mark, style = "bg:0 fg:1" } }
+        end,
+      },
+
     }),
 
     right = segments({
@@ -566,6 +586,27 @@ return hexe.setup({
       directory_segment(),
       git_branch(),
       git_status(),
+      {
+        name = "oslo_vimode",
+        priority = 2,
+        render = function(ctx)
+          -- oslo spells these as fish's `fish_mode_prompt` does — "I", "N", "R" — not the long
+          -- words. Every mode is shown, insert included: a mode indicator that hides the mode you
+          -- are usually in is not an indicator.
+          if not ctx.vimode then
+            return nil
+          end
+          local mark = ({
+            I = " I ", insert = " I ",
+            N = " N ", normal = " N ",
+            R = " R ", replace = " R ",
+            V = " V ", visual = " V ",
+          })[ctx.vimode] or (" " .. ctx.vimode .. " ")
+          local resting = ctx.vimode == "I" or ctx.vimode == "insert"
+          local style = resting and style_status_directory or style_git_branch
+          return { { text = mark, style = style } }
+        end,
+      },
     }),
   },
 

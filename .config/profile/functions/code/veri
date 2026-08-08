@@ -218,6 +218,15 @@ update_cargo() {
     local file="$project_dir/Cargo.toml"
     [[ -f "$file" ]] || return 0
     sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    # **Sync Cargo.lock in the same breath.** The lock records the crate's *own* version, so a
+    # bumped Cargo.toml leaves it stale — and the next thing to run cargo rewrites it. With an
+    # editor open that happens within seconds: rust-analyzer watches Cargo.toml and re-runs
+    # `cargo metadata`, so the lock went dirty *between* the release commit and the `git checkout
+    # main` that follows it, and the checkout aborted every time.
+    #
+    # `--workspace --offline` touches only this crate's own version — no dependency is upgraded and
+    # no network is used, so it cannot change what a release contains or fail on a bad connection.
+    ( cd "$project_dir" && cargo update --workspace --offline >/dev/null 2>&1 ) || true
     echo "  Updated Cargo.toml"
 }
 

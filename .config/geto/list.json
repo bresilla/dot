@@ -70,15 +70,6 @@
                 "other"
             ]
         },
-        "$HOME/.local/bin/bin": {
-            "path": "$HOME/.local/bin/bin",
-            "url": "https://github.com/bresilla/bin",
-            "provider": "github",
-            "description": "Effortless binary manager",
-            "tags": [
-                "default"
-            ]
-        },
         "$HOME/.local/bin/bun": {
             "path": "$HOME/.local/bin/bun",
             "url": "https://github.com/oven-sh/bun",
@@ -209,6 +200,15 @@
             "description": "CLI application for interacting with Forgejo",
             "tags": [
                 "other"
+            ]
+        },
+        "$HOME/.local/bin/geto": {
+            "path": "$HOME/.local/bin/geto",
+            "url": "https://github.com/termworks/geto",
+            "provider": "github",
+            "description": "binary file manager from github/codeberg build artifacts",
+            "tags": [
+                "default"
             ]
         },
         "$HOME/.local/bin/gh": {

@@ -5,7 +5,9 @@ local hexe = require("hexe")
 
 -- Common env for the AI floats; env(extra) returns it plus that float's own
 -- keys (extra wins, so a float can override a common value too).
-local float_env = { HEXE_FLOAT = 1 }
+-- OSLO_ALLHIST is off: an agent's `sh -c` string is its own wrapper, not a command
+-- anybody typed, so recording it fills the history with unrecallable lines.
+local float_env = { HEXE_FLOAT = 1, OSLO_ALLHIST = 0 }
 
 local function env(extra)
   local t = {}
@@ -18,7 +20,7 @@ end
 -- No "~" expansion here — absolute paths only.
 local float_path = {
   "/home/bresilla/.local/bin",
-  "/usr/local/bin",
+  "/home/bresilla/.local/share/shell"
 }
 
 local layout = hexe.layout("default", {
@@ -35,8 +37,8 @@ local layout = hexe.layout("default", {
       enabled = true,
       title = "opencode",
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
-      command = "sh -c 'echo NAME:$HEXE_FLOAT_NAME; echo FLAG:$HEXE_FLOAT; case \"$PATH\" in /home/bresilla/.local/bin:/usr/local/bin:*) echo PATHFIRST;; *) echo PATHNOTFIRST;; esac; echo COUNT:$(echo \"$PATH\" | tr : \"\\n\" | grep -c \"^/home/bresilla/.local/bin$\"); sleep 300'",
-      add_env = env({ HEXE_FLOAT_NAME = "opencode" }),
+      command = "opencode",
+      add_env = env({ OSLO_PROFILE = "opencode", HEXE_FLOAT_NAME = "opencode" }),
       add_path = float_path,
     }),
     hexe.float("claude", {
@@ -45,7 +47,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "claude",
       command = "bun x --package @anthropic-ai/claude-code claude",
-      add_env = env({ HEXE_FLOAT_NAME = "claude" }),
+      add_env = env({ OSLO_PROFILE = "claude", HEXE_FLOAT_NAME = "claude" }),
       add_path = float_path,
     }),
     hexe.float("codex", {
@@ -54,7 +56,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "codex",
       command = "codex",
-      add_env = env({ HEXE_FLOAT_NAME = "codex" }),
+      add_env = env({ OSLO_PROFILE = "codex", HEXE_FLOAT_NAME = "codex" }),
       add_path = float_path,
     }),
     hexe.float("antigravity", {
@@ -63,7 +65,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "antigravity",
       command = "agy",
-      add_env = env({ HEXE_FLOAT_NAME = "antigravity" }),
+      add_env = env({ OSLO_PROFILE = "antigravity", HEXE_FLOAT_NAME = "antigravity" }),
       add_path = float_path,
     }),
     hexe.float("explorer", {

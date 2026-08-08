@@ -40,10 +40,14 @@ for remote in $(git remote | grep -v '^origin$'); do
 done
 
 git checkout main
-git pull origin main
-git merge develop --quiet || {
+git pull --ff-only origin main
+
+if ! git merge --quiet --no-edit develop; then
     git merge --abort 2>/dev/null || true
-}
+    git checkout --ignore-other-worktrees "$original_branch"
+    exit 1
+fi
+
 git push origin main
 
 git checkout --ignore-other-worktrees "$original_branch"
