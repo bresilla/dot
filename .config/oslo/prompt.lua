@@ -31,30 +31,40 @@
 -- value. That turned this into `hexe shp --status=…` — `prompt` and `--shell=bash` silently gone —
 -- and hexe answered `unrecognized option 'status'`, which points nowhere near the cause.
 --
--- **`async = false`, deliberately.** The async path answers with whatever the tool said last time
--- *for these exact arguments* and runs the fresh one behind the prompt. The arguments include
--- `--duration=$duration_ms`, which is different after almost every command — so the lookup misses,
--- the answer is nothing, and oslo falls back to its own prompt. The visible symptom is a prompt
--- that looks untouched with the right side simply gone, which points nowhere near the cause.
+-- **`async = true` with a short `timeout_ms`, and the two go together.**
 --
--- Synchronous costs one `fork`/`exec` per prompt, bounded by `timeout_ms`, and is what .zshrc
--- already pays through `$(hexe shp prompt …)`. If it ever shows up as lag, the fix is to drop
--- `--duration` from the arguments so the key is stable — not to turn `async` back on with it.
+-- This used to say `async = false, deliberately`, because the async cache keyed on the
+-- *substituted* argv: `--duration=$duration_ms` differs after almost every command, so every
+-- lookup missed, the answer was nothing, and the prompt fell back to oslo's own. That is fixed —
+-- `external::render` keys on the spec instead ("the last output for *this* prompt"), which is
+-- stable across commands, so `--duration` can stay.
+--
+-- The deadline is the part that actually decides the cost, because the async path still *waits*
+-- `timeout_ms` for a fresh answer before falling back to the last one. Measured against a prompt
+-- deliberately made to take 150 ms, Enter-to-prompt was:
+--
+--     async = false, timeout_ms = 400   336 ms
+--     async = true,  timeout_ms = 400   338 ms   -- no better: it waits for the fresh one
+--     async = true,  timeout_ms = 10     31 ms   -- and still the real prompt, not a fallback
+--
+-- So 10, not 400. hexe answers in about 33 ms here, which is over the deadline — the trade is
+-- that the prompt carries the *previous* command's status whenever hexe overruns, and catches up
+-- on the next one. Raise the deadline to trade instant back for fresh.
 oslo.prompt.left = {
   command = "hexe",
   args = { "shp", "prompt", "--shell=bash",
            "--status=$status", "--duration=$duration_ms", "--jobs=$jobs",
            "--language=$language", "--vimode=$vimode" },
-  timeout_ms = 400,
-  async = false,
+  timeout_ms = 10,
+  async = true,
 }
 
 oslo.prompt.right = {
   command = "hexe",
   args = { "shp", "prompt", "--shell=bash", "--right", "--status=$status",
            "--language=$language", "--vimode=$vimode" },
-  timeout_ms = 400,
-  async = false,
+  timeout_ms = 10,
+  async = true,
 }
 
 -- ---------------------------------------------------------------------------------------------
@@ -68,11 +78,23 @@ local function connected()
 end
 
 --- The environment, where hexe can read it — what a new pane is opened with.
+---
+--- **Written from this process, not by `sh -c 'env -0 > …'`.** That spelling forked a shell and
+--- exec'd `env` on *both* `pre_cmd` and `post_cmd`, so every command paid four process starts —
+--- about 20 ms — to write a file oslo can already describe. `oslo.env.all()` is the same set
+--- (188 names either way here) and `oslo.fs.write` is one `write(2)`.
+---
+--- The NUL separator is what `env -0` produces and what hexe parses, so the format is unchanged.
 local function snapshot()
   local pane = oslo.env.get("HEXE_PANE_UUID")
-  if pane then
-    oslo.run{ "sh", "-c", "env -0 > /tmp/hexe-env-" .. pane }
+  if not pane then
+    return
   end
+  local entries = {}
+  for name, value in pairs(oslo.env.all()) do
+    entries[#entries + 1] = name .. "=" .. value
+  end
+  oslo.fs.write("/tmp/hexe-env-" .. pane, table.concat(entries, "\0") .. "\0")
 end
 
 --- Whether hexe is willing to let this shell go. A pane with something still running says no.
