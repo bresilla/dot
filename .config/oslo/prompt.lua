@@ -31,25 +31,25 @@
 -- value. That turned this into `hexe shp --status=…` — `prompt` and `--shell=bash` silently gone —
 -- and hexe answered `unrecognized option 'status'`, which points nowhere near the cause.
 --
--- **`async = true` with a short `timeout_ms`, and the two go together.**
+-- **`async = true` with a short `timeout_ms`, and this needs oslo ≥ `efebbea`.**
 --
--- This used to say `async = false, deliberately`, because the async cache keyed on the
--- *substituted* argv: `--duration=$duration_ms` differs after almost every command, so every
--- lookup missed, the answer was nothing, and the prompt fell back to oslo's own. That is fixed —
--- `external::render` keys on the spec instead ("the last output for *this* prompt"), which is
--- stable across commands, so `--duration` can stay.
+-- The old note said async was unusable because the cache keyed on the *substituted* argv, so
+-- `--duration=$duration_ms` missed every lookup. Fixed: the key is the spec now, "the last output
+-- for *this* prompt".
 --
--- The deadline is the part that actually decides the cost, because the async path still *waits*
--- `timeout_ms` for a fresh answer before falling back to the last one. Measured against a prompt
--- deliberately made to take 150 ms, Enter-to-prompt was:
+-- The deadline decides the cost, because async still *waits* `timeout_ms` for a fresh answer
+-- before falling back to the last one. hexe takes 33-120 ms depending on load, so a deadline it
+-- can meet is a deadline that costs its full run. 10 ms means the previous answer is drawn at
+-- once and the fresh one arrives behind it — oslo redraws the prompt when it lands, so the status
+-- is right within one hexe run rather than one command late.
 --
---     async = false, timeout_ms = 400   336 ms
---     async = true,  timeout_ms = 400   338 ms   -- no better: it waits for the fresh one
---     async = true,  timeout_ms = 10     31 ms   -- and still the real prompt, not a fallback
---
--- So 10, not 400. hexe answers in about 33 ms here, which is over the deadline — the trade is
--- that the prompt carries the *previous* command's status whenever hexe overruns, and catches up
--- on the next one. Raise the deadline to trade instant back for fresh.
+-- **The failure this had, and why it is gone.** With async and an empty cache — the first prompt
+-- of a session — the render answered nothing, oslo drew its *own* prompt instead, and that prompt
+-- is a different width. The editor had laid the row out against the width it was handed, so the
+-- next redraw wrote in the wrong place: the session flipped between two prompts and repeated the
+-- output of the last command. oslo now waits properly for that first answer instead of
+-- substituting a different prompt, so the width never changes identity. A *wider* prompt from the
+-- same tool — `✗ 2` appearing — was always handled correctly and still is.
 oslo.prompt.left = {
   command = "hexe",
   args = { "shp", "prompt", "--shell=bash",
