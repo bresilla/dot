@@ -92,8 +92,17 @@ oslo.suggest.sources = { "predict", "history", "path" }
 --
 -- Guarded on it existing, like `c.commands` is below: this file is shared with machines whose oslo
 -- may not have it yet, and there the key does nothing rather than raising.
+-- **On an empty line it fixes the command that just failed**, which is the `thefuck` case and the
+-- one a key on the input line cannot reach: by the time you want it, the line is gone. Both put the
+-- result in the editor, so Enter is still yours.
 oslo.keys["f4"] = function(line)
-  return oslo.repair and oslo.repair(line.text) or line.text
+  if not oslo.repair then
+    return line.text
+  end
+  if line.text == "" then
+    return oslo.repair() or ""
+  end
+  return oslo.repair(line.text) or line.text
 end
 
 -- Classic `direnv` used to be handed over to the real one from here. It is not any more.
