@@ -77,6 +77,25 @@ for c in ("abcdefghijklmnopqrstuvwxyz"):gmatch(".") do
   end
 end
 
+-- A model of what this shell actually does, learned from the commands that have run here and kept
+-- beside the history. `predict` is not in the default source order, so it has to be asked for; it
+-- goes first because it answers about *this* shell rather than about every line ever typed.
+oslo.suggest.sources = { "predict", "history", "path" }
+
+-- The correction is drawn after the line as you type — reversed, so it reads as the shell
+-- disagreeing rather than as more of your text — and Right takes it when there is no suggestion in
+-- the way. F4 is the same thing on a key of its own, for when the cursor is not at the end.
+--
+-- `oslo.repair` rather than `oslo.predict.repair`: that one asks the model, which can only offer a
+-- command already run here, and this asks `$PATH` as well — `lsvlk` is a misspelling of a real
+-- program on the first day of a new machine.
+--
+-- Guarded on it existing, like `c.commands` is below: this file is shared with machines whose oslo
+-- may not have it yet, and there the key does nothing rather than raising.
+oslo.keys["f4"] = function(line)
+  return oslo.repair and oslo.repair(line.text) or line.text
+end
+
 -- Classic `direnv` used to be handed over to the real one from here. It is not any more.
 --
 -- oslo reads `.envrc` itself, against direnv's stdlib reimplemented in Rust, so an `.envrc`
@@ -207,4 +226,43 @@ oslo.on.on_report(function(r)
 
   b:done()
   return true
+end)
+
+-- ---------------------------------------------------------------------------------------------
+-- `cat` on a directory means `ls`
+-- ---------------------------------------------------------------------------------------------
+--
+-- `cat` on a directory is never what anybody meant — it is a typo for `ls` or a habit from a
+-- shell that autocompleted the wrong thing — and coreutils answers it with `Is a directory`,
+-- which is true and useless. This runs what you meant instead, and says so.
+--
+-- **Registered last, and that is not arbitrary.** Handlers run in the order they were added and
+-- the *first* one to answer with anything stops the rest. `prompt.lua`'s `pre_cmd` — the hexe
+-- link — returns nothing on an ordinary command, so it runs and falls through to this. Putting
+-- this above the `dofile` above would mean a rewritten line never reaches hexe at all.
+--
+-- `c.commands` is the parsed line rather than its text: `argv[1]` is the command and `argv[2]` is
+-- its first word with quoting already resolved, so `cat 'my dir'` is one argument here and not
+-- two. It is absent on a line that does not parse, and on a shell older than the field, which is
+-- what the first line guards.
+oslo.on.pre_cmd(function(c)
+  if not c.commands then
+    return
+  end
+  local first = c.commands[1]
+  if not (first and first.argv and first.argv[1] == "cat") then
+    return
+  end
+  -- Only a lone argument. `cat a b`, `cat -n x` and `cat x | less` all mean what they say, and a
+  -- rewrite that guessed at those would be the surprising kind.
+  if #c.commands > 1 or #first.argv ~= 2 then
+    return
+  end
+  local target = first.argv[2]
+  local found = oslo.fs.stat(target)
+  if found and found.type == "directory" then
+    -- Quoted on the way back out: the word arrived with its quoting resolved, so `a dir` is one
+    -- argument here and would be two if it were concatenated in raw.
+    return "ls " .. oslo.quote(target)
+  end
 end)
