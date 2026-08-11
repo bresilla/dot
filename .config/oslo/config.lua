@@ -77,6 +77,31 @@ for c in ("abcdefghijklmnopqrstuvwxyz"):gmatch(".") do
   end
 end
 
+-- Two shortcuts on keys that mean nothing at an empty prompt: a second space runs `nav`, and Enter
+-- on a blank line runs `ls`.
+--
+-- **`on-key` rather than `oslo.keys`**, because neither of these is a chord — they are ordinary
+-- keys that should keep their ordinary meaning everywhere except on an empty line, and a binding
+-- would take them away entirely.
+--
+-- **A pasted space cannot reach this.** A bracketed paste arrives as one event and is inserted
+-- whole; only a keystroke goes through the path this hook is on. So pasting `a  b` types two
+-- spaces and runs nothing, which is the difference that makes the space shortcut safe to have.
+--
+-- Double-space needs no memory of the last key: after one space the line *is* one space, so the
+-- second is just "space pressed while the line is a single space".
+--
+-- This runs on every keystroke, so it stays two comparisons and returns nothing the rest of the
+-- time — `nil` means the key does what it always did.
+oslo.on.on_key(function(k)
+  if k.name == "char" and k.char == " " and k.text == " " then
+    return { text = "nav", submit = true }
+  end
+  if k.name == "enter" and k.text == "" then
+    return { text = "ls", submit = true }
+  end
+end)
+
 -- A model of what this shell actually does, learned from the commands that have run here and kept
 -- beside the history. `predict` is not in the default source order, so it has to be asked for; it
 -- goes first because it answers about *this* shell rather than about every line ever typed.
