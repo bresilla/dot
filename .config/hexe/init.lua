@@ -497,19 +497,26 @@ return hexe.setup({
         name = "tab",
         priority = 35,
         render = function(ctx)
-          local tab = ((ctx and ctx.env and ctx.env.TAB) or ""):match("^%s*(.-)%s*$")
-          if tab ~= "" and tab ~= ".reset-prompt" and tab ~= "reset-prompt" then
-            return nil
+          -- Inside a scratch: say which one. That is the thing worth knowing, and it costs nothing
+          -- to read — `$SCRATCH` is already in the environment.
+          local name = ((ctx and ctx.env and ctx.env.SCRATCH) or ""):match("^%s*(.-)%s*$")
+          if name ~= "" then
+            return {
+              { text = "|", style = "fg:7" },
+              { text = " " .. name .. " ", style = style_prompt_host },
+            }
           end
 
-          local p = io.popen("tab -l 2> /dev/null | wc -l")
+          -- Outside one: how many are running, so they are not forgotten about. `oslo scratch`
+          -- rather than a bare word, because io.popen goes through /bin/sh where a shell builtin
+          -- does not exist and the name would find whatever is on $PATH.
+          local p = io.popen("oslo scratch -l 2>/dev/null | wc -l")
           if not p then
             return nil
           end
           local raw = p:read("*a") or ""
           p:close()
-          local total = tonumber((raw:match("^%s*(.-)%s*$")) or "0") or 0
-          local n = total - 1
+          local n = tonumber((raw:match("^%s*(.-)%s*$")) or "0") or 0
           if n <= 0 then
             return nil
           end
