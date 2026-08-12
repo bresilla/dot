@@ -303,48 +303,44 @@ def fetch_codex():
         else:
             session_data = window
 
+    if not session_data and not weekly_data:
+        raise RuntimeError(
+            "Codex response did not contain usage limits"
+        )
+
     now_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
-    if session_data:
-        session_left = clamp(
-            100.0 - float(session_data.get("used_percent", 0))
-        )
-        session_reset = session_data.get("reset_at") or now_iso
-        session_win = int(
-            session_data.get("limit_window_seconds", 5 * 60 * 60)
-        )
-    else:
-        session_left = 100.0
-        session_reset = now_iso
-        session_win = 5 * 60 * 60
-
-    if weekly_data:
-        weekly_left = clamp(
-            100.0 - float(weekly_data.get("used_percent", 0))
-        )
-        weekly_reset = weekly_data.get("reset_at") or now_iso
-        weekly_win = int(
-            weekly_data.get("limit_window_seconds", 7 * 24 * 60 * 60)
-        )
-    else:
-        weekly_left = 100.0
-        weekly_reset = now_iso
-        weekly_win = 7 * 24 * 60 * 60
-
-    return {
+    provider = {
         "id": "codex",
         "name": "Codex",
-        "session": {
-            "left": session_left,
-            "reset": session_reset,
-            "window": session_win,
-        },
-        "weekly": {
-            "left": weekly_left,
-            "reset": weekly_reset,
-            "window": weekly_win,
-        },
     }
+
+    if session_data:
+        provider["session"] = {
+            "left": clamp(
+                100.0 - float(session_data.get("used_percent", 0))
+            ),
+            "reset": session_data.get("reset_at") or now_iso,
+            "window": int(
+                session_data.get("limit_window_seconds", 5 * 60 * 60)
+            ),
+        }
+
+    if weekly_data:
+        provider["weekly"] = {
+            "left": clamp(
+                100.0 - float(weekly_data.get("used_percent", 0))
+            ),
+            "reset": weekly_data.get("reset_at") or now_iso,
+            "window": int(
+                weekly_data.get(
+                    "limit_window_seconds",
+                    7 * 24 * 60 * 60,
+                )
+            ),
+        }
+
+    return provider
 
 
 def claude_credentials_path():
@@ -398,29 +394,35 @@ def fetch_claude():
     session = data.get("five_hour")
     weekly = data.get("seven_day")
 
-    if not session or not weekly:
+    if not session and not weekly:
         raise RuntimeError(
-            "Claude response did not contain session and weekly limits"
+            "Claude response did not contain usage limits"
         )
 
-    return {
+    provider = {
         "id": "claude",
         "name": "Claude",
-        "session": {
+    }
+
+    if session:
+        provider["session"] = {
             "left": clamp(
                 100.0 - float(session["utilization"])
             ),
             "reset": session["resets_at"],
             "window": 5 * 60 * 60,
-        },
-        "weekly": {
+        }
+
+    if weekly:
+        provider["weekly"] = {
             "left": clamp(
                 100.0 - float(weekly["utilization"])
             ),
             "reset": weekly["resets_at"],
             "window": 7 * 24 * 60 * 60,
-        },
-    }
+        }
+
+    return provider
 
 
 def antigravity_credentials_path():
@@ -764,4 +766,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

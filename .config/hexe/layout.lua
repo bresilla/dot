@@ -7,7 +7,7 @@ local hexe = require("hexe")
 -- keys (extra wins, so a float can override a common value too).
 -- OSLO_ALLHIST is off: an agent's `sh -c` string is its own wrapper, not a command
 -- anybody typed, so recording it fills the history with unrecallable lines.
-local float_env = { HEXE_FLOAT = 1, OSLO_ALLHIST = 0 }
+local float_env = { HEXE_FLOAT = 1  }
 
 local function env(extra)
   local t = {}
@@ -32,13 +32,13 @@ local layout = hexe.layout("default", {
     }),
   },
   floats = {
-    hexe.float("opencode", {
+    hexe.float("pi", {
       key = "1",
       enabled = true,
-      title = "opencode",
+      title = "pi",
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
-      command = "opencode",
-      add_env = env({ OSLO_PROFILE = "opencode", HEXE_FLOAT_NAME = "opencode" }),
+      command = "bun x --package @earendil-works/pi-coding-agent p",
+      add_env = env({ OSLO_PROFILE = "pi", HEXE_FLOAT_NAME = "pi" }),
       add_path = float_path,
     }),
     hexe.float("claude", {
@@ -47,7 +47,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "claude",
       command = "bun x --package @anthropic-ai/claude-code claude",
-      add_env = env({ OSLO_PROFILE = "claude", HEXE_FLOAT_NAME = "claude" }),
+      add_env = env({ HEXE_FLOAT_NAME = "claude" }),
       add_path = float_path,
     }),
     hexe.float("codex", {
@@ -56,7 +56,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "codex",
       command = "codex",
-      add_env = env({ OSLO_PROFILE = "codex", HEXE_FLOAT_NAME = "codex" }),
+      add_env = env({ HEXE_FLOAT_NAME = "codex" }),
       add_path = float_path,
     }),
     hexe.float("antigravity", {
@@ -65,7 +65,7 @@ local layout = hexe.layout("default", {
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
       title = "antigravity",
       command = "agy",
-      add_env = env({ OSLO_PROFILE = "antigravity", HEXE_FLOAT_NAME = "antigravity" }),
+      add_env = env({ HEXE_FLOAT_NAME = "antigravity" }),
       add_path = float_path,
     }),
     hexe.float("explorer", {

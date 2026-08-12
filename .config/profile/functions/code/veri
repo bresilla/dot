@@ -40,7 +40,7 @@ extract_first_match() {
 # string (a `version = "X.Y.Z"` declaration), preferring common entrypoints.
 go_version_file() {
     local project_dir="$1"
-    local re='(^|[[:space:]])((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
+    local re='(^|[[:space:]])((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*"v?[0-9]+\.[0-9]+\.[0-9]+"'
     local cand
     for cand in main.go src/main.go version.go internal/version/version.go cmd/version.go; do
         if [[ -f "$project_dir/$cand" ]] && grep -qE "$re" "$project_dir/$cand"; then
@@ -56,7 +56,7 @@ nix_package_file() {
     local file="$project_dir/nix/package.nix"
 
     [[ -f "$file" ]] || return 0
-    grep -qE '^[[:space:]]*version[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"[[:space:]]*;' "$file" || return 0
+    grep -qE '^[[:space:]]*version[[:space:]]*=[[:space:]]*"v?[0-9]+\.[0-9]+\.[0-9]+"[[:space:]]*;' "$file" || return 0
     printf '%s\n' "$file"
 }
 
@@ -67,7 +67,7 @@ nimble_file() {
 
 nim_version_file() {
     local project_dir="$1"
-    local re='(^|[[:space:]])[vV]ersion[[:space:]]*=[[:space:]]*"[0-9]+\.[0-9]+\.[0-9]+"'
+    local re='(^|[[:space:]])[vV]ersion[[:space:]]*=[[:space:]]*"v?[0-9]+\.[0-9]+\.[0-9]+"'
     local cand
     for cand in src/"$(basename "$project_dir")".nim src/main.nim src/dp.nim main.nim version.nim; do
         if [[ -f "$project_dir/$cand" ]] && grep -qE "$re" "$project_dir/$cand"; then
@@ -126,46 +126,46 @@ project_version() {
     local value=""
 
     if [[ -f "$project_dir/Cargo.toml" ]]; then
-        value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        value="$(extract_first_match "$project_dir/Cargo.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
     if [[ -z "$value" && -f "$project_dir/go.mod" ]]; then
         local gofile
         gofile="$(go_version_file "$project_dir")"
         if [[ -n "$gofile" ]]; then
-            value="$(extract_first_match "$gofile" '^[[:space:]]*.*[vV]ersion[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+            value="$(extract_first_match "$gofile" '^[[:space:]]*.*[vV]ersion[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
         fi
     fi
 
     if [[ -z "$value" && -f "$project_dir/build.zig.zon" ]]; then
-        value="$(extract_first_match "$project_dir/build.zig.zon" '^[[:space:]]*\.version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        value="$(extract_first_match "$project_dir/build.zig.zon" '^[[:space:]]*\.version[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
     if [[ -z "$value" ]]; then
         local nixpkg
         nixpkg="$(nix_package_file "$project_dir")"
         if [[ -n "$nixpkg" ]]; then
-            value="$(extract_first_match "$nixpkg" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+            value="$(extract_first_match "$nixpkg" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
         fi
     fi
 
     if [[ -z "$value" && -f "$project_dir/xmake.lua" ]]; then
-        value="$(extract_first_match "$project_dir/xmake.lua" '^[[:space:]]*local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        value="$(extract_first_match "$project_dir/xmake.lua" '^[[:space:]]*local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
     if [[ -z "$value" && -f "$project_dir/package.json" ]]; then
-        value="$(extract_first_match "$project_dir/package.json" '^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        value="$(extract_first_match "$project_dir/package.json" '^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
     if [[ -z "$value" && -f "$project_dir/pyproject.toml" ]]; then
-        value="$(extract_first_match "$project_dir/pyproject.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+        value="$(extract_first_match "$project_dir/pyproject.toml" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
     fi
 
     if [[ -z "$value" ]]; then
         local nimble
         nimble="$(nimble_file "$project_dir")"
         if [[ -n "$nimble" ]]; then
-            value="$(extract_first_match "$nimble" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"([0-9]+\.[0-9]+\.[0-9]+)".*')"
+            value="$(extract_first_match "$nimble" '^[[:space:]]*version[[:space:]]*=[[:space:]]*"v?([0-9]+\.[0-9]+\.[0-9]+)".*')"
         fi
     fi
 
@@ -180,7 +180,7 @@ update_go() {
     local gofile
     gofile="$(go_version_file "$project_dir")"
     [[ -n "$gofile" ]] || return 0
-    sed -i -E "s/^([[:space:]]*((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
+    sed -i -E "s/^([[:space:]]*((const|var)[[:space:]]+)?[vV]ersion[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$gofile"
     echo "  Updated ${gofile#$project_dir/}"
 }
 
@@ -190,7 +190,7 @@ update_nix_package() {
     local file
     file="$(nix_package_file "$project_dir")"
     [[ -n "$file" ]] || return 0
-    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated ${file#$project_dir/}"
 }
 
@@ -199,7 +199,7 @@ update_zig() {
     local version="$2"
     local file="$project_dir/build.zig.zon"
     [[ -f "$file" ]] || return 0
-    sed -i -E "s/(\.version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/(\.version[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated build.zig.zon"
 }
 
@@ -208,7 +208,7 @@ update_xmake() {
     local version="$2"
     local file="$project_dir/xmake.lua"
     [[ -f "$file" ]] || return 0
-    sed -i -E "s/(local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/(local[[:space:]]+PROJECT_VERSION[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated xmake.lua"
 }
 
@@ -217,7 +217,7 @@ update_cargo() {
     local version="$2"
     local file="$project_dir/Cargo.toml"
     [[ -f "$file" ]] || return 0
-    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     # **Sync Cargo.lock in the same breath.** The lock records the crate's *own* version, so a
     # bumped Cargo.toml leaves it stale — and the next thing to run cargo rewrites it. With an
     # editor open that happens within seconds: rust-analyzer watches Cargo.toml and re-runs
@@ -235,7 +235,7 @@ update_package_json() {
     local version="$2"
     local file="$project_dir/package.json"
     [[ -f "$file" ]] || return 0
-    sed -i -E "s/^([[:space:]]*\"version\"[[:space:]]*:[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^([[:space:]]*\"version\"[[:space:]]*:[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated package.json"
 }
 
@@ -244,7 +244,7 @@ update_pyproject() {
     local version="$2"
     local file="$project_dir/pyproject.toml"
     [[ -f "$file" ]] || return 0
-    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^(version[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated pyproject.toml"
 }
 
@@ -254,7 +254,7 @@ update_nimble() {
     local file
     file="$(nimble_file "$project_dir")"
     [[ -n "$file" ]] || return 0
-    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^([[:space:]]*version[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated ${file#$project_dir/}"
 }
 
@@ -264,13 +264,27 @@ update_nim() {
     local file
     file="$(nim_version_file "$project_dir")"
     [[ -n "$file" ]] || return 0
-    sed -i -E "s/^([[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*)\"[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
+    sed -i -E "s/^([[:space:]]*[vV]ersion[[:space:]]*=[[:space:]]*)\"v?[0-9]+\.[0-9]+\.[0-9]+\"/\1\"$version\"/" "$file"
     echo "  Updated ${file#$project_dir/}"
 }
 
+# Version strings are reported with a leading `v` (`v1.2.3`), because that is
+# what they are used for: git tags, changelog headings, release names. Version
+# *files* keep the bare number -- `version = "v1.2.3"` is not valid semver for
+# Cargo, npm, or pyproject, so writing the prefix into them would break the
+# manifest. Reading accepts either spelling, so a file that already carries a
+# `v` still parses and still gets bumped.
+#
+# Pass --bare (or -b) to print the number without the prefix.
 main() {
     local project_dir
     project_dir="$(find_project_dir)"
+
+    local bare=0
+    if [[ "${1:-}" == "--bare" || "${1:-}" == "-b" ]]; then
+        bare=1
+        shift
+    fi
 
     local name
     name="$(project_name "$project_dir")"
@@ -283,7 +297,11 @@ main() {
 
     # No arguments - just show version
     if [[ $# -eq 0 ]]; then
-        echo "$current_version"
+        if [[ $bare -eq 1 ]]; then
+            echo "$current_version"
+        else
+            echo "v$current_version"
+        fi
         return 0
     fi
 
@@ -301,11 +319,11 @@ main() {
             version="$major.$minor.$patch"
             ;;
         *)
-            if [[ ! "$arg" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            if [[ ! "$arg" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
                 echo -e "Updating ${BLUE_BOLD}$name${NC} version: ${RED}[ FAILED: invalid version format ]${NC}"
                 return 1
             fi
-            version="$arg"
+            version="${arg#v}"
             ;;
     esac
 
@@ -319,7 +337,7 @@ main() {
     update_nimble "$project_dir" "$version"
     update_nim "$project_dir" "$version"
 
-    echo -e "Updating ${BLUE_BOLD}$name${NC} version: $current_version -> $version ${GREEN}[ SUCCESS ]${NC}"
+    echo -e "Updating ${BLUE_BOLD}$name${NC} version: v$current_version -> v$version ${GREEN}[ SUCCESS ]${NC}"
 }
 
 main "$@"

@@ -300,3 +300,51 @@ oslo.on.pre_cmd(function(c)
     return "ls " .. oslo.quote(target)
   end
 end)
+
+-- ---------------------------------------------------------------------------------------------
+-- nix, where a flake is
+-- ---------------------------------------------------------------------------------------------
+--
+-- All of this is behind `oslo.nix`, which exists only in a build with the `nix` feature. Guarded
+-- as one block: this file is shared with machines whose oslo is `oslo-minimal`, and there the
+-- names below simply never appear rather than raising on the first line.
+if oslo.nix then
+  -- Completion for the real `nix` binary, from the flake's own outputs — `nix develop .#<TAB>`.
+  -- Every other word falls through to oslo's ordinary completion, and so does a named flake:
+  -- `nix build nixpkgs#<TAB>` would evaluate the whole of nixpkgs, which is not a thing to do
+  -- between a keystroke and the screen.
+  oslo.completion.for_command.nix = oslo.nix.complete
+
+  -- `stale` — how old every input of this flake is pinned.
+  --
+  -- **Rows rather than printed text**, which is the whole point of a tool here: the shell draws
+  -- them when a person is looking and passes them on when something else is, so
+  --
+  --   stale | where 'days > 365'
+  --   stale | sort-by days | cols name days
+  --
+  -- both work without this knowing anything about them. `oslo.nix.inputs` reads `flake.lock` and
+  -- evaluates nothing, so this costs one 27 ms call and no nix build.
+  oslo.register_tool{
+    name     = "stale",
+    accepts  = "nothing",
+    produces = "rows",
+    rows = function(_)
+      local found, err = oslo.nix.inputs()
+      if not found then
+        io.write("stale: " .. tostring(err) .. "\n")
+        return {}
+      end
+      local rows = {}
+      for _, i in ipairs(found) do
+        rows[#rows + 1] = {
+          name   = i.name,
+          type   = i.type or "?",
+          days   = i.days,
+          pinned = os.date("%Y-%m-%d", i.pinned),
+        }
+      end
+      return rows
+    end,
+  }
+end

@@ -31,8 +31,9 @@
             "path": "$HOME/.local/bin/asciinema",
             "url": "https://github.com/asciinema/asciinema",
             "provider": "github",
+            "description": "Terminal session recorder, streamer and player 📹",
             "tags": [
-                "other"
+                "default"
             ]
         },
         "$HOME/.local/bin/atuin": {

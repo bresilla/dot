@@ -487,6 +487,22 @@ return hexe.setup({
         end,
       },
       {
+        name = "nix",
+        priority = 24,
+        render = function(ctx)
+          -- **Are we standing in a dev shell?** `IN_NIX_SHELL` is set by the shell itself and
+          -- arrives with the rest of `ctx.env`, so this costs nothing: no file read, no process,
+          -- nothing to install. It is the whole segment.
+          if ((ctx and ctx.env and ctx.env.IN_NIX_SHELL) or "") == "" then
+            return nil
+          end
+          return {
+            { text = "|", style = "fg:7" },
+            { text = " ❄ ", style = style_prompt_host },
+          }
+        end,
+      },
+      {
         name = "sudo",
         priority = 6,
         builtin = function(_)
