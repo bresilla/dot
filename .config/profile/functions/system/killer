@@ -1,5 +1,0 @@
-#!/bin/sh
-
-n=$(ps -ef | sed 1d | tux -m | awk '{print $2}')
-
-sudo kill -9 $n

@@ -13,7 +13,7 @@ BaseCard {
     readonly property real titleFontSize: height * 0.24
     readonly property real smallFontSize: height * 0.13
     readonly property real logoFontSize: height * 0.32
-    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.local/sbin/bright"
     
     property real volume: -1
     property real brightness: -1

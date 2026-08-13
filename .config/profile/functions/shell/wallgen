@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-lule create --image=$(animegen | grep 'saved_file' | cut -d':' -f2 | xargs | crop16x9 | xargs) -- set

@@ -10,7 +10,7 @@ Scope {
     required property int monitorHeight
     required property int monitorWidth
     property bool enabled: true
-    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.local/sbin/bright"
 
     property bool shouldShowOSD: false
     property real brightness: 0.7

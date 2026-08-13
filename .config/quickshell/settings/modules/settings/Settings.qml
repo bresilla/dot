@@ -11,7 +11,7 @@ Scope {
     required property int monitorHeight
     required property int monitorWidth
     required property bool settingsOnRight
-    readonly property string brightCommand: Quickshell.env("HOME") + "/.config/profile/functions/system/bright"
+    readonly property string brightCommand: Quickshell.env("HOME") + "/.local/sbin/bright"
 
     // ─── Dimensions ───
 

@@ -456,7 +456,7 @@ return hexe.setup({
         name = "distro",
         priority = 10,
         render = function(_)
-          local p = io.popen("~/.config/profile/functions/shell/distrologo")
+          local p = io.popen("~/.local/sbin/distrologo")
           if not p then
             return nil
           end

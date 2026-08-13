@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-flatokill=$(flatpak ps | fzy | choose 2)
-
-if [ -n "$flatokill" ]; then
-  flatpak kill $flatokill
-fi

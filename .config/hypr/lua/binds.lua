@@ -139,7 +139,7 @@ return function(ctx)
     end, {
         size = { "monitor_w*0.6", "monitor_h*0.2" },
     })
-    bind_exec(super_meta .. " + F9", ctx.home .. "/.config/profile/functions/wm/lule_switch")
+    bind_exec(super_meta .. " + F9", ctx.home .. "/.local/sbin/lule_switch")
 
     hl.bind(super .. " + Escape", hl.dsp.window.close())
     hl.bind(super .. " + Return", function()
@@ -199,17 +199,17 @@ return function(ctx)
     bind_exec("XF86AudioLowerVolume", "pamixer -d 2", { repeating = true })
     bind_exec("XF86AudioPlay", "playerctl next", { repeating = true })
 
-    bind_exec("XF86MonBrightnessDown", ctx.home .. "/.config/profile/functions/system/bright -2")
-    bind_exec("XF86MonBrightnessUp", ctx.home .. "/.config/profile/functions/system/bright +2")
+    bind_exec("XF86MonBrightnessDown", ctx.home .. "/.local/sbin/bright -2")
+    bind_exec("XF86MonBrightnessUp", ctx.home .. "/.local/sbin/bright +2")
 
-    bind_exec("Print", ctx.home .. "/.config/profile/functions/wm/capture i")
+    bind_exec("Print", ctx.home .. "/.local/sbin/capture i")
 
     bind_exec(menu .. " + Return", "play")
     bind_exec(menu .. " + Space", "mpv_control cycle")
     bind_exec(menu .. " + comma", "mpv_control backwards 10")
     bind_exec(menu .. " + period", "mpv_control forewards 10")
 
-    bind_exec(super .. " + F9", ctx.home .. "/.config/profile/functions/wm/lule_create")
+    bind_exec(super .. " + F9", ctx.home .. "/.local/sbin/lule_create")
 
     _ = hyper
 end

@@ -6,7 +6,7 @@ end
 fish_vi_key_bindings
 
 replay "source ~/.profile"
-replay "source ~/.config/profile/aliases.sh"
+replay "source ~/.local/share/oslo/macros/macros.sh"
 # ─────────────────────────────────────────────────────────────────────────────
 if test -f ~/.cache/wal/colors.sh
     replay 'source ~/.cache/wal/colors.sh'
