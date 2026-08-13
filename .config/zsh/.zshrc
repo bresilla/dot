@@ -131,20 +131,15 @@ bindkey '^Z' fancy-ctrl-z
 export FPATH=~/.config/zsh:$FPATH
 
 ###ALIASES
-[[ -f ~/.config/profile/aliases.sh ]] && source ~/.config/profile/aliases.sh
+# Written by `oslo macros`, from the database every shell shares. Rewritten on every change, so
+# there is nothing here to keep in step by hand.
+[[ -f ~/.local/share/oslo/macros/macros.sh ]] && source ~/.local/share/oslo/macros/macros.sh
 alias \$=''
 
 
 ###FUNCTIONS
-if [ -d ~/.config/profile/functions ]; then
-    for file in ~/.config/profile/functions/*; do
-        if [ -d "$file" ]; then
-            PATH="$file:$PATH"
-        fi
-    done
-fi
-
-alias sw=$HOME/.config/profile/functions/wm/startw
+# The scripts are in the same database and `oslo macros` writes each one into ~/.local/sbin, which
+# ~/.profile already puts on PATH — so `startw` and the rest are found by name.
 
 ###PROFILE
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
