@@ -10,7 +10,10 @@ export TEMP=/tmp
 export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
 [[ -d "/env/bin" ]] && PATH="/env/bin:/opt/TurboVNC/bin:$PATH"
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
-[[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"
+# No existence test on this one: oslo creates it when the first stored script is published, and a
+# shell that logged in before that would go without it until the next login — which is exactly how
+# `git rel` went missing. A PATH entry that is not there yet costs nothing.
+PATH="$HOME/.local/sbin:$PATH"
 
 # The fifteen ~/.config/profile/functions/* directories were added to PATH here. Those scripts are
 # in the oslo macro database now, and every change writes them into ~/.local/sbin — already on PATH
