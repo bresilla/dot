@@ -12,13 +12,10 @@ export LD_LIBRARY_PATH=/env/lib:$LD_LIBRARY_PATH
 [[ -d "$HOME/.local/bin" ]] && PATH="$HOME/.local/bin:$PATH"
 [[ -d "$HOME/.local/sbin" ]] && PATH="$HOME/.local/sbin:$PATH"
 
-if [ -d ~/.config/profile/functions ]; then
-    for file in ~/.config/profile/functions/*; do
-        if [ -d "$file" ]; then
-            PATH="$file:$PATH"
-        fi
-    done
-fi
+# The fifteen ~/.config/profile/functions/* directories were added to PATH here. Those scripts are
+# in the oslo macro database now, and every change writes them into ~/.local/sbin — already on PATH
+# above — so bash, tmux and .desktop files still find them by name. oslo reads the database itself
+# and leaves that directory out of its own search.
 
 #PKGCONFIGS
 export PKG_CONFIG_PATH=/usr/lib/pkgconfig
@@ -61,7 +58,8 @@ export PIXI_DIR=/pkg/pixi/
 #---------------------------             LULE           --------------------------
 export BAT_THEME="TwoDark"
 export LULE_W="/env/set/.wallpaper"
-export LULE_S="$HOME/.config/profile/functions/wm/lule_colors"
+# `lule` reads this as a path rather than running it by name, so it points at the copy oslo writes.
+export LULE_S="$HOME/.local/sbin/lule_colors"
 export LULE_C="$HOME/.cache/lule"
 export DSTASK_GIT_REPO=/doc/self/TASKS
 export GUM_CHOOSE_CURSOR_FOREGROUND="1"

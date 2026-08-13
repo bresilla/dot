@@ -37,15 +37,12 @@ oslo.vi.enabled = true
 oslo.vi.cursor_insert  = "underscore"
 oslo.vi.cursor_normal  = "block"
 
--- Aliases, shared with every other shell on this machine. `oslo.source` runs the file *in this
--- shell*, so its aliases and functions stick — unlike `oslo.run`, which would run it in a child
--- that then exits with everything it defined.
+-- Aliases used to be sourced from ~/.config/profile/aliases.sh here. They are in the oslo macro
+-- database now — `oslo macros show` — which every shell reads for itself at startup, so there is
+-- nothing to source and a change reaches the terminal beside this one before its next prompt.
 --
--- `~/.profile` is deliberately absent: a *login* shell reads `/etc/profile` and then `~/.profile`
--- on its own, as every shell does. Sourcing it here as well would run it twice in the session
--- that already had it. Aliases are here rather than there because `.profile` is read once at
--- login and aliases are not exported, so every later shell needs its own copy.
-oslo.source(oslo.env.get("HOME") .. "/.config/profile/aliases.sh")
+-- `~/.profile` is still deliberately absent: a *login* shell reads `/etc/profile` and then
+-- `~/.profile` on its own, as every shell does, and sourcing it here would run it twice.
 
 -- `rm` at the prompt moves what it removes to /tmp rather than unlinking it, so a mistake is
 -- recoverable until the next reboot. Anything over 100MB is destroyed instead: /tmp is tmpfs
