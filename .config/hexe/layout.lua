@@ -37,7 +37,7 @@ local layout = hexe.layout("default", {
       enabled = true,
       title = "pi",
       attrs = { per_cwd = true, inherit_env = true, exclusive = true },
-      command = "bun x --package @earendil-works/pi-coding-agent p",
+      command = "bun x --package @earendil-works/pi-coding-agent pi",
       add_env = env({ OSLO_PROFILE = "pi", HEXE_FLOAT_NAME = "pi" }),
       add_path = float_path,
     }),
