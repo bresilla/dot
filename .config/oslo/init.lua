@@ -1,7 +1,23 @@
--- oslo configuration. Lua, and the only config file the shell reads.
+-- oslo configuration. Lua, and the file the shell reads last.
+--
+-- `require` rather than the `oslo` global, because the shell runs a real VM and this is a real Lua
+-- program: the dependency is named at the top, the name is a local the rest of the file closes
+-- over, and a reader knows where `oslo` came from without being told. It is the same table either
+-- way — `require "oslo" == _G.oslo` — so this is about saying so, not about reaching something the
+-- global could not.
+local oslo = require "oslo"
 
 -- No version banner or exit hint at startup.
 oslo.misc.welcome = false
+
+-- Three Ctrl-C takes the terminal back from a job that will not give it up. The job is *stopped*
+-- rather than killed and lands in `jobs`, so `fg`, `bg` and `kill %1` all still work on it, and
+-- `exit` asks before leaving one behind.
+--
+-- Off by default: it costs one helper process per session, which is the only way the shell can see
+-- a Ctrl-C at all while a job owns the terminal. It cannot rescue a process wedged in an
+-- uninterruptible kernel call — nothing can.
+oslo.misc.interrupt_escape = 3
 
 -- pywal's palette, which .zshrc sends with
 --   [ -f ~/.cache/wal/sequences ] && (cat ~/.cache/wal/sequences &)
@@ -37,6 +53,62 @@ oslo.vi.enabled = true
 oslo.vi.cursor_insert  = "underscore"
 oslo.vi.cursor_normal  = "block"
 
+-- ---------------------------------------------------------------------------------------------
+-- The prompt, painted by pixy
+-- ---------------------------------------------------------------------------------------------
+--
+-- What `prompt.lua` used to ask hexe for. `hexe shp prompt` no longer exists — the subcommand is
+-- gone from the binary — so the painter is pixy now, reading ~/.config/pixy/init.lua.
+--
+-- **Guarded, so this file still works where pixy is not installed.** Setting `oslo.prompt.left`
+-- to a command that is not there costs a failed spawn on every prompt and leaves the line blank;
+-- unset, oslo draws its own prompt instead. `oslo.fs.stat` answers nil for a path that is not
+-- there, and the type check keeps a *directory* named `pixy` on PATH from counting.
+--
+-- **`--target=ansi`, never a shell-specific target.** The bash and zsh targets wrap escapes in
+-- that shell's "these bytes take no columns" markers, and oslo measures visible width itself, so
+-- those markers would be printed literally and the layout would be wrong by however many there
+-- are. This is the same reason `prompt.lua` passed `--shell=bash` to hexe.
+--
+-- **Every argument written out.** `{ table.unpack(base), "--set", … }` is shorter and wrong: a
+-- call that is not the *last* element of a Lua table constructor is truncated to one value, which
+-- silently drops everything before it.
+--
+-- **Values go through `--set`, not named flags.** pixy has no `--status` or `--vimode`; what a
+-- prompt is made of is named by the zones in ~/.config/pixy/init.lua, and Rust holds no
+-- vocabulary of its own. A new value needs a segment that reads `ctx.values`, and one more
+-- `--set` here.
+local function on_path(program)
+  for directory in (oslo.env.get("PATH") or ""):gmatch("[^:]+") do
+    local found = oslo.fs.stat(directory .. "/" .. program)
+    if found and found.type ~= "directory" then
+      return true
+    end
+  end
+  return false
+end
+
+if on_path("pixy") then
+  oslo.prompt.left = {
+    command = "pixy",
+    args = { "render", "prompt.left", "--target=ansi",
+             "--set", "status=$status", "--set", "duration_ms=$duration_ms",
+             "--set", "jobs=$jobs", "--set", "language=$language",
+             "--set", "vimode=$vimode" },
+    timeout_ms = 10,
+    async = true,
+  }
+
+  oslo.prompt.right = {
+    command = "pixy",
+    args = { "render", "prompt.right", "--target=ansi",
+             "--set", "status=$status", "--set", "language=$language",
+             "--set", "vimode=$vimode" },
+    timeout_ms = 10,
+    async = true,
+  }
+end
+
 -- Aliases used to be sourced from ~/.config/profile/aliases.sh here. They are in the oslo macro
 -- database now — `oslo macros show` — which every shell reads for itself at startup, so there is
 -- nothing to source and a change reaches the terminal beside this one before its next prompt.
@@ -54,11 +126,6 @@ oslo.builtin.rm.to_tmp     = true
 oslo.builtin.rm.max_to_tmp = 100
 oslo.builtin.rm.trash      = "/tmp"
 
--- hexe: the prompt, and the shell↔mux link that .zshrc gets from `eval "$(hexe shp init zsh)"`.
--- Its own file because it is a whole subsystem rather than a setting. An absolute path rather
--- than `require`, whose search path depends on the working directory — which for a shell is
--- wherever you happened to open the terminal.
-dofile(oslo.env.get("HOME") .. "/.config/oslo/prompt.lua")
 
 -- Alt+<letter> runs `_<letter>`, the same 26 shortcuts .zshrc binds with
 --   for key in {a..z}; do bindkey -s "^[${key}" " _${key}\n"; done
@@ -90,19 +157,42 @@ end
 --
 -- This runs on every keystroke, so it stays two comparisons and returns nothing the rest of the
 -- time — `nil` means the key does what it always did.
+-- Enter at a Lua prompt. The default runs a block as soon as it parses, which works on every
+-- terminal; `newline` makes Enter always start another line so a block ends only on an empty one.
+--
+-- Asked of the terminal rather than assumed: Ctrl+Enter does not exist without the kitty keyboard
+-- protocol — in the legacy encoding Ctrl-M *is* Enter — so `newline` is only worth having where
+-- the modifier is actually reported. `oslo.term` answers what was negotiated at startup; see
+-- `oslo.term.all()` for the rest of it.
+if oslo.term.kitty_keyboard() then
+  oslo.lua.enter = "newline"
+end
+
+-- **Shell only.** `k.language` says which prompt the key was pressed at, and both of these are
+-- shell shortcuts: `nav` and `la` are commands. Enter on an empty line matters more than it looks —
+-- at a Lua prompt that is what ends a multi-line block, so running `la` there made a block
+-- impossible to finish.
 oslo.on.on_key(function(k)
+  if k.language ~= "sh" then
+    return
+  end
   if k.name == "char" and k.char == " " and k.text == " " then
     return { text = "nav", submit = true }
   end
   if k.name == "enter" and k.text == "" then
-    return { text = "ls", submit = true }
+    return { text = "la --git-ignore", submit = true }
   end
 end)
 
 -- A model of what this shell actually does, learned from the commands that have run here and kept
 -- beside the history. `predict` is not in the default source order, so it has to be asked for; it
 -- goes first because it answers about *this* shell rather than about every line ever typed.
-oslo.suggest.sources = { "predict", "history", "path" }
+--
+-- One list per prompt: `predict` and `path` are trained on and made of shell, so neither means
+-- anything at a Lua prompt. There `completion` is the whole list — the names that exist in the
+-- session — which is what makes it behave like an editor rather than like a history.
+oslo.suggest.sh_sources  = { "predict", "history", "path" }
+oslo.suggest.lua_sources = { "completion" }
 
 -- The correction is drawn after the line as you type — reversed, so it reads as the shell
 -- disagreeing rather than as more of your text — and Right takes it when there is no suggestion in

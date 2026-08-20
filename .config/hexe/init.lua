@@ -1,12 +1,5 @@
 local hexe = require("hexe")
 
-local function segments(list)
-  for i, segment in ipairs(list) do
-    list[i] = hexe.segment(segment)
-  end
-  return list
-end
-
 local function concat(...)
   local out = {}
   for _, list in ipairs({ ... }) do
@@ -19,127 +12,19 @@ local function concat(...)
   return out
 end
 
+-- Conditions and actions are plain Lua over live state. `ctx` is the query API
+-- (also reachable as `hexe.live` outside a callback): ctx.pane(), ctx.panes(),
+-- ctx.floats{}, ctx.splits{}, ctx.tabs(), ctx.session(), ctx.ui(), ctx.count(),
+-- ctx.env(). Everything is read at the moment the key is pressed.
+
 local function focused_process_is_editor(ctx)
-  local p = ctx.pane(0)
-  return p and (p.process_name == "nvim" or p.process_name == "vim")
+  local p = ctx.pane()
+  return p ~= nil and (p.process == "nvim" or p.process == "vim")
 end
 
 local function focused_split(ctx)
-  local p = ctx.pane(0)
-  return p and p.focus_split
-end
-
-local style_git_branch = "bg:1 fg:0"
-local style_prompt_host = "bg:237 italic fg:15"
-local style_status_directory = "bg:237 fg:15"
-local style_recording_active = "bg:1 fg:15 bold"
-
-local function git_branch(opts)
-  opts = opts or {}
-  return hexe.segment.git_branch({
-    priority = opts.priority or 4,
-    style = opts.style or style_git_branch,
-    prefix = opts.prefix or " ",
-    suffix = opts.suffix or " ",
-  })
-end
-
-local function git_status(opts)
-  opts = opts or {}
-  return hexe.segment.git_status({
-    priority = opts.priority or 5,
-    style = opts.style or style_git_branch,
-    prefix = opts.prefix or " ",
-    suffix = opts.suffix or " ",
-  })
-end
-
-local function session_segment(opts)
-  opts = opts or {}
-  return hexe.segment.session({
-    priority = opts.priority or 30,
-    style = opts.style or style_git_branch,
-    prefix = opts.prefix or { output = "| " },
-    suffix = opts.suffix or { output = " |" },
-  })
-end
-
-local function battery_segment(opts)
-  opts = opts or {}
-  return hexe.segment.battery({
-    priority = opts.priority or 40,
-    style = opts.style or "bg:237 fg:250",
-    suffix = opts.suffix or " ",
-  })
-end
-
-local function pod_name_segment(opts)
-  opts = opts or {}
-  return hexe.segment.pod_name({
-    priority = opts.priority or 1,
-    style = opts.style or "bg:5 fg:0",
-    prefix = opts.prefix or "| ",
-    suffix = opts.suffix or " |",
-  })
-end
-
-local function directory_segment(opts)
-  opts = opts or {}
-  return hexe.segment.directory({
-    priority = opts.priority or 2,
-    style = opts.style or style_status_directory,
-    suffix = opts.suffix or " ",
-  })
-end
-
-local function fish_style_truncate(path)
-  if not path or path == "" then return "/" end
-
-  local home = os and os.getenv("HOME") or ""
-  local p = path
-  if home and home ~= "" and p:sub(1, home:len()) == home then
-    p = "~" .. p:sub(home:len() + 1)
-  end
-
-  local starts_with_tilde = p:sub(1, 1) == "~"
-  local starts_with_slash = p:sub(1, 1) == "/"
-  local base = p
-  if starts_with_tilde then
-    base = p:sub(2)
-  elseif starts_with_slash then
-    base = p:sub(2)
-  end
-
-  local components = {}
-  for comp in base:gmatch("[^/]+") do
-    table.insert(components, comp)
-  end
-
-  if #components == 0 then
-    return p:sub(1, 1)
-  end
-
-  local result = {}
-  for i, comp in ipairs(components) do
-    if i < #components then
-      if comp:sub(1, 1) == "." and comp:len() > 1 then
-        table.insert(result, "." .. comp:sub(2, 2))
-      else
-        table.insert(result, comp:sub(1, 1))
-      end
-    else
-      table.insert(result, comp)
-    end
-  end
-
-  local prefix = ""
-  if starts_with_tilde then
-    prefix = "~"
-  elseif starts_with_slash then
-    prefix = "/"
-  end
-
-  return prefix .. table.concat(result, "/")
+  local p = ctx.pane()
+  return p ~= nil and p.is_split
 end
 
 local border = {
@@ -158,11 +43,6 @@ local border = {
   },
 }
 
-local rec_opts = {
-  scope = "pod",
-  out = "/tmp/hexe-active-pod.cast",
-  capture_input = false,
-}
 
 local layout_config = dofile(os.getenv("HOME") .. "/.config/hexe/layout.lua")
 local layout_keys = layout_config.keys or {}
@@ -175,30 +55,6 @@ elseif layout_config.ses and layout_config.ses.layouts then
 end
 
 return hexe.setup({
-  theme = hexe.theme({
-    colors = {
-      bg = 237,
-      fg = 250,
-      accent = 1,
-      good = 2,
-      warn = 3,
-    },
-
-    styles = {
-      ["status.active"] = "bg:1 fg:0 bold",
-      ["status.inactive"] = "bg:237 fg:250",
-      ["status.directory"] = "bg:237 fg:15",
-      ["recording.active"] = "bg:1 fg:15 bold",
-      ["prompt.host"] = "bg:237 italic fg:15",
-      ["git.branch"] = "bg:1 fg:0",
-    },
-
-    chars = {
-      split_vertical = "│",
-      split_horizontal = "─",
-    },
-  }),
-
   keys = concat(layout_keys, {
     hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.q }, hexe.action.quit()),
     hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.d }, hexe.action.detach()),
@@ -258,18 +114,7 @@ return hexe.setup({
         color = { active = 1, passive = 237 },
         style = {
           border = border,
-          title = {
-            name = "title",
-            render = function(ctx)
-              local t = hexe.segment.title(ctx)
-              return {
-                { text = " ", style = "bg:1 fg:1" },
-                { text = t, style = "bg:1 fg:0" },
-                { text = " ", style = "bg:1 fg:1" },
-              }
-            end,
-            position = "bottomright",
-          },
+          position = "bottomright",
         },
       },
 
@@ -285,18 +130,7 @@ return hexe.setup({
           style = {
             shadow = { color = 236 },
             border = border,
-            title = {
-              name = "title",
-              render = function(ctx)
-                local t = hexe.segment.title(ctx)
-                return {
-                  { text = " ", style = "bg:0 fg:1" },
-                  { text = t, style = "bg:1 fg:0" },
-                  { text = " ", style = "bg:0 fg:1" },
-                }
-              end,
-              position = "topright",
-            },
+            position = "topright",
           },
         },
       },
@@ -311,326 +145,22 @@ return hexe.setup({
     },
   },
 
+  -- The bar is drawn by an external painter (see hexe's docs/regions.md).
+  -- hexe says which view to ask for; the painter decides what it looks like.
+  -- Started below by `command`, which hexe runs when nothing holds the socket.
   status = {
     enabled = true,
-
-    left = segments({
-      {
-        name = "time_lua",
-        priority = 10,
-        render = function(_)
-          return {
-            { text = " ", style = "bg:237 fg:250" },
-            { text = os.date("%H:%M:%S"), style = "bold bg:237 fg:250" },
-            { text = " ", style = "bg:237 fg:250" },
-          }
-        end,
-      },
-      session_segment(),
-      {
-        name = "spinner",
-        priority = 20,
-        builtin = function(ctx)
-          local p = ctx.pane(0)
-          if p and ((p.shell_running and not p.alt_screen) or p.adhoc_float) then
-            return hexe.segment.builtin.spinner({
-              kind = "knight_rider",
-              width = 10,
-              step = 40,
-              hold = 20,
-              colors = { 243, 242, 241, 240, 239, 238, 237, 236 },
-              bg = 0,
-              prefix = " ",
-              suffix = " ",
-            })
-          end
-          return nil
-        end,
-      },
-      {
-        name = "randomdo",
-        priority = 200000,
-        builtin = function(ctx)
-          local p = ctx.pane(0)
-          if p and ((p.shell_running and not p.alt_screen) or p.adhoc_float) then
-            return hexe.segment.builtin.randomdo({ style = "bg:0 fg:1", suffix = " " })
-          end
-          return nil
-        end,
-      },
-    }),
-
-    center = segments({
-      {
-        name = "tabs",
-        priority = 1,
-        render = function(ctx)
-          return hexe.segment.tabs(ctx)
-        end,
-        tab_title = "basename",
-        active_style = style_git_branch,
-        inactive_style = "bg:237 fg:250",
-        separator = " | ",
-        separator_style = "fg:7",
-      },
-    }),
-
-    right = segments({
-      {
-        name = "rec",
-        priority = 11,
-        render = function(_)
-          local st = hexe.status.recording(rec_opts.scope)
-          if st and st.active then
-            return { { text = " REC ", style = style_recording_active } }
-          end
-          return { { text = " rec ", style = style_recording_active } }
-        end,
-        button = {
-          on_left_click = function(ctx)
-            local rec = hexe.record.active(ctx, rec_opts)
-            if not rec then return nil end
-            return rec.switch()
-          end,
-          on_right_click = function(_)
-            return hexe.record.stop({ scope = rec_opts.scope })
-          end,
-          active_when = function(_)
-            local st = hexe.status.recording(rec_opts.scope)
-            return st and st.active == true
-          end,
-          left_style = "bg:2 fg:0 bold",
-          middle_style = "bg:3 fg:0 bold",
-          right_style = style_recording_active,
-          inverse_on_hover = true,
-        },
-      },
-      battery_segment(),
-      {
-        name = "directory",
-        priority = 50,
-        render = function(ctx)
-          local cwd = ctx and ctx.cwd and ctx.cwd ~= "" and ctx.cwd or nil
-          if not cwd then
-            cwd = os and os.getenv and os.getenv("PWD") or nil
-          end
-          if not cwd and ctx and ctx.pane then
-            local p = ctx.pane(0)
-            if p and p.cwd and p.cwd ~= "" then
-              cwd = p.cwd
-            end
-          end
-          if cwd and cwd ~= "" then
-            local truncated = fish_style_truncate(cwd)
-            return {
-              { text = " " .. truncated, style = style_status_directory },
-              { text = " ", style = style_status_directory },
-            }
-          end
-          return nil
-        end,
-      },
-    }),
-  },
-
-  prompt = {
-    left = segments({
-      {
-        name = "ssh",
-        priority = 60,
-        render = function(ctx)
-          if not ctx.env.SSH_CONNECTION then
-            return nil
-          end
-          return { { text = " //", style = style_prompt_host } }
-        end,
-      },
-      {
-        name = "hostname",
-        priority = 15,
-        builtin = function(_)
-          return hexe.segment.builtin.hostname({ style = style_prompt_host, suffix = " " })
-        end,
-      },
-      {
-        name = "distro",
-        priority = 10,
-        render = function(_)
-          local p = io.popen("~/.local/sbin/distrologo")
-          if not p then
-            return nil
-          end
-          local raw = p:read("*a") or ""
-          p:close()
-          local t = raw:match("^%s*(.-)%s*$")
-          if not t or t == "" then
-            return nil
-          end
-          return { { text = " " .. t, style = style_git_branch } }
-        end,
-      },
-      {
-        name = "username",
-        priority = 1,
-        builtin = function(_)
-          return hexe.segment.builtin.username({ style = style_git_branch, suffix = " " })
-        end,
-      },
-      {
-        name = "direnv",
-        priority = 25,
-        render = function(ctx)
-          if not ctx.env.DIRENV_DIR then
-            return nil
-          end
-          return { { text = "▓", style = style_git_branch } }
-        end,
-      },
-      {
-        name = "nix",
-        priority = 24,
-        render = function(ctx)
-          -- **Are we standing in a dev shell?** `IN_NIX_SHELL` is set by the shell itself and
-          -- arrives with the rest of `ctx.env`, so this costs nothing: no file read, no process,
-          -- nothing to install. It is the whole segment.
-          if ((ctx and ctx.env and ctx.env.IN_NIX_SHELL) or "") == "" then
-            return nil
-          end
-          return {
-            { text = "|", style = "fg:7" },
-            { text = " ❄ ", style = style_prompt_host },
-          }
-        end,
-      },
-      {
-        name = "sudo",
-        priority = 6,
-        builtin = function(_)
-          return hexe.segment.builtin.sudo({ style = "bold bg:240 fg:171" })
-        end,
-      },
-      {
-        name = "tab",
-        priority = 35,
-        render = function(ctx)
-          -- Inside a scratch: say which one. That is the thing worth knowing, and it costs nothing
-          -- to read — `$SCRATCH` is already in the environment.
-          local name = ((ctx and ctx.env and ctx.env.SCRATCH) or ""):match("^%s*(.-)%s*$")
-          if name ~= "" then
-            return {
-              { text = "|", style = "fg:7" },
-              { text = " " .. name .. " ", style = style_prompt_host },
-            }
-          end
-
-          -- Outside one: how many are running, so they are not forgotten about. `oslo scratch`
-          -- rather than a bare word, because io.popen goes through /bin/sh where a shell builtin
-          -- does not exist and the name would find whatever is on $PATH.
-          local p = io.popen("oslo scratch -l 2>/dev/null | wc -l")
-          if not p then
-            return nil
-          end
-          local raw = p:read("*a") or ""
-          p:close()
-          local n = tonumber((raw:match("^%s*(.-)%s*$")) or "0") or 0
-          if n <= 0 then
-            return nil
-          end
-          return {
-            { text = "|", style = "fg:7" },
-            { text = " " .. tostring(n) .. " ", style = style_prompt_host },
-          }
-        end,
-      },
-      {
-        name = "status",
-        priority = 3,
-        builtin = function(_)
-          return hexe.segment.builtin.status({ style = "bg:0 fg:9", prefix = " ", suffix = " " })
-        end,
-      },
-      {
-        name = "container",
-        priority = 50,
-        render = function(_)
-          local p = io.popen("systemd-detect-virt 2>/dev/null")
-          if not p then
-            return nil
-          end
-          local out = p:read("*a") or ""
-          p:close()
-          local virt = out:match("^%s*(.-)%s*$")
-          if virt == "" or virt == "none" then
-            return nil
-          end
-          if virt == "lxc" then
-            return {
-              { text = " ", style = "bg:0 fg:0" },
-              { text = " >> ", style = "bg:5 fg:0" },
-            }
-          end
-          return {
-            { text = " ", style = "bg:0 fg:0" },
-            { text = " :: ", style = "bg:5 fg:0" },
-          }
-        end,
-      },
-      {
-        name = "separator",
-        priority = 20,
-        render = function(_)
-          return { { text = "|", style = "fg:7" } }
-        end,
-      },
-      {
-        name = "oslo_language",
-        -- Low, so a narrow terminal does not shed it.
-        priority = 3,
-        render = function(ctx)
-          -- **Always shown, both languages.** It used to render only for `lua`, on the argument
-          -- that `sh` is the default and saying so is noise. That made it invisible in the state
-          -- you are in almost always, which reads exactly like a feature that does not work.
-          if not ctx.language then
-            return nil
-          end
-          -- Styled from the same palette the left prompt uses, so the two ends of the line read
-          -- as one prompt rather than as two designs meeting in the middle.
-          -- `$` and `λ` — the sigil each language prompts with, rather than its name.
-          local mark = ctx.language == "lua" and " λ " or " $ "
-          -- No `bold`: with fg:0 the terminal renders bold as *bright* black, which is grey.
-          return { { text = mark, style = "bg:0 fg:1" } }
-        end,
-      },
-
-    }),
-
-    right = segments({
-      pod_name_segment(),
-      directory_segment(),
-      git_branch(),
-      git_status(),
-      {
-        name = "oslo_vimode",
-        priority = 2,
-        render = function(ctx)
-          -- oslo spells these as fish's `fish_mode_prompt` does — "I", "N", "R" — not the long
-          -- words. Every mode is shown, insert included: a mode indicator that hides the mode you
-          -- are usually in is not an indicator.
-          if not ctx.vimode then
-            return nil
-          end
-          local mark = ({
-            I = " I ", insert = " I ",
-            N = " N ", normal = " N ",
-            R = " R ", replace = " R ",
-            V = " V ", visual = " V ",
-          })[ctx.vimode] or (" " .. ctx.vimode .. " ")
-          local resting = ctx.vimode == "I" or ctx.vimode == "insert"
-          local style = resting and style_status_directory or style_git_branch
-          return { { text = mark, style = style } }
-        end,
-      },
-    }),
+    refresh_ms = 250,
+    -- Three zones, each an ordinary painter request for its own selector.
+    zones = {
+      left   = { view = "status.left" },
+      center = { view = "status.center" },
+      right  = { view = "status.right" },
+    },
+    shrink = { "center", "right", "left" },  -- who gives up width first
+    -- socket  = nil,   -- nil = $HEXE_PAINTER_SOCKET, then
+    --                  --       $XDG_RUNTIME_DIR/hexe/painter.sock
+    command = "pixy serve",  -- hexe starts this when nothing is listening
   },
 
   pop = {
