@@ -1,8 +1,8 @@
 local lule = require("lule")
 
--- Everything lule_colors used to do. `c` is the finished scheme: c.colors (all 256), c.ansi (the
--- sixteen), c.background, c.foreground, c.cursor, c.accent, c.wallpaper, c.theme, c.cache. Lists
--- count from one, so c.colors[1] is colour 0.
+-- `c` is the finished scheme: c.colors (all 256), c.ansi (the sixteen), c.background,
+-- c.foreground, c.cursor, c.accent, c.wallpaper, c.theme, c.cache. Lists count from one, so
+-- c.colors[1] is colour 0.
 
 lule.wallpaper = "~/.wallpaper"
 lule.theme = "dark"

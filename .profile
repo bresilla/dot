@@ -61,9 +61,9 @@ export PIXI_DIR=/pkg/pixi/
 #---------------------------             LULE           --------------------------
 export BAT_THEME="TwoDark"
 export LULE_W="/env/set/.wallpaper"
-# `lule` reads this as a path rather than running it by name, so it points at the copy oslo writes.
-export LULE_S="$HOME/.local/sbin/lule_colors"
-export LULE_C="$HOME/.cache/lule"
+# LULE_C is the config directory - where init.lua and the named schemes live. The cache is LULE_A.
+export LULE_C="$HOME/.config/lule"
+export LULE_A="$HOME/.cache/lule"
 export DSTASK_GIT_REPO=/doc/self/TASKS
 export GUM_CHOOSE_CURSOR_FOREGROUND="1"
 export GUM_CHOOSE_SELECTED_FOREGROUND="9"

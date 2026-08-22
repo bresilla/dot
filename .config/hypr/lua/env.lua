@@ -5,8 +5,8 @@ return function(ctx)
     hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
     hl.env("NVD_BACKEND", "direct")
 
-    hl.env("LULE_S", ctx.home .. "/.local/sbin/lule_colors")
-    hl.env("LULE_C", ctx.home .. "/.cache/lule")
+    hl.env("LULE_C", ctx.home .. "/.config/lule")
+    hl.env("LULE_A", ctx.home .. "/.cache/lule")
     hl.env("LULE_W", "/env/set/.wallpaper")
 
     local function plugin_keywords()
