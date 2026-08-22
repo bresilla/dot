@@ -6,6 +6,7 @@ local function cwd_of(ctx)
 end
 local git = require("pixy.segments.git")
 local system = require("pixy.segments.system")
+local progress = require("pixy.segments.progress")
 
 local style_git = {bg = 1, fg = 0}
 local style_host = {bg = 237, fg = 15, italic = true}
@@ -104,7 +105,11 @@ end
 
 local function clock(ctx)
   return trim(tostring(overridden(ctx, "time", function()
-    return execute({"date", "+%H:%M:%S"}, {timeout_ms = 30, ttl_ms = 250})
+    -- In process, from the time pixy already holds. `date` costs a fork a
+    -- prompt and reads the zone with whatever libc is first on PATH; the nix
+    -- coreutils one carries no zoneinfo under its own TZDIR, so it cannot
+    -- resolve $TZ and quietly answers UTC -- two hours behind here.
+    return os.date("%H:%M:%S", math.floor((tonumber(ctx and ctx.now_ms) or 0) / 1000))
   end) or "")) or "--:--:--"
 end
 
@@ -138,7 +143,7 @@ end
 
 local function prompt_nix()
   if not pixy.host.env("IN_NIX_SHELL") then return nil end
-  return pixy.row({pixy.text("|", {fg = 7}), pixy.text(" ❄ ", style_host)})
+  return pixy.row({pixy.text("|", {fg = 7}), pixy.text(" ❄ ", style_directory)})
 end
 
 local function prompt_sudo(ctx)
@@ -500,6 +505,13 @@ local status_center = {
 }
 
 local status_right = {
+  -- OSC 9;4 as the host reported it: a bar when it knows how far along the
+  -- work is, a sweeping block when it does not, nothing when nothing runs.
+  pixy.segment("progress", function(ctx)
+    local bar = progress.segment({width = 10, bg = 0, label = true}, ctx)
+    if not bar then return nil end
+    return pixy.row({bar, pixy.text(" ", {bg = 0})})
+  end, {priority = 8}),
   pixy.segment("recording", status_recording, {
     priority = 11,
     id = "recording",
