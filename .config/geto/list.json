@@ -88,6 +88,15 @@
                 "default"
             ]
         },
+        "$HOME/.local/bin/cliamp": {
+            "path": "$HOME/.local/bin/cliamp",
+            "url": "https://github.com/bjarneo/cliamp",
+            "provider": "github",
+            "description": "cliamp - Terminal music player inspired by winamp",
+            "tags": [
+                "others"
+            ]
+        },
         "$HOME/.local/bin/clipse": {
             "path": "$HOME/.local/bin/clipse",
             "url": "https://github.com/savedra1/clipse",
@@ -392,6 +401,15 @@
                 "other"
             ]
         },
+        "$HOME/.local/bin/lule": {
+            "path": "$HOME/.local/bin/lule",
+            "url": "https://github.com/termworks/lule",
+            "provider": "github",
+            "description": "ANSI color generator for your terminal",
+            "tags": [
+                "others"
+            ]
+        },
         "$HOME/.local/bin/mdbook": {
             "path": "$HOME/.local/bin/mdbook",
             "url": "https://github.com/rust-lang/mdBook",
@@ -507,6 +525,15 @@
                 "other"
             ]
         },
+        "$HOME/.local/bin/oslo": {
+            "path": "$HOME/.local/bin/oslo",
+            "url": "https://github.com/onix-os/oslo",
+            "provider": "github",
+            "description": "onix shell in lua",
+            "tags": [
+                "default"
+            ]
+        },
         "$HOME/.local/bin/perles": {
             "path": "$HOME/.local/bin/perles",
             "url": "https://github.com/zjrosen/perles",
@@ -530,6 +557,15 @@
             "url": "https://github.com/prefix-dev/pixi",
             "provider": "github",
             "description": "Powerful system-level package manager for Linux, macOS and Windows written in Rust – building on top of the Conda ecosystem.",
+            "tags": [
+                "default"
+            ]
+        },
+        "$HOME/.local/bin/pixy": {
+            "path": "$HOME/.local/bin/pixy",
+            "url": "https://github.com/termworks/pixy",
+            "provider": "github",
+            "description": "prompt and other cool things rendered",
             "tags": [
                 "default"
             ]

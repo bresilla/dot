@@ -121,7 +121,8 @@ end
 local function prompt_hostname(ctx)
   local text = hostname(ctx)
   if not text then return nil end
-  return pixy.text(text .. " ", style_host)
+  local asp = pixy.host.env("SSH_CONNECTION") and "" or " "
+  return pixy.text(asp .. text .. " ", style_host)
 end
 
 local function prompt_distro(ctx)

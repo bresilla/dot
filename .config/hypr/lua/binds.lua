@@ -64,13 +64,13 @@ return function(ctx)
 
     -- Scratchpads are read at a glance rather than worked in, so they get a
     -- larger font than the tiled terminals.
-    local scratchpad_font_scale = 1.2
+    local scratchpad_font_scale = 1.4
 
     -- Scaling the bounds rather than the result keeps the sigmoid curve's shape
     -- intact, so the multiplier applies evenly at every resolution and the
     -- internal-panel cap moves with it.
     local function terminal_font_size(scale)
-        scale = scale or 1
+        scale = scale or 1.4
 
         local monitor = active_monitor()
         local short_edge, long_edge = active_monitor_physical_edges()
@@ -142,20 +142,21 @@ return function(ctx)
     bind_exec(super_meta .. " + F9", ctx.home .. "/.local/sbin/lule_switch")
 
     hl.bind(super .. " + Escape", hl.dsp.window.close())
+
     hl.bind(super .. " + Return", function()
-        hl.exec_cmd(alacritty_cmd())
+        hl.exec_cmd(kitty_cmd())
     end)
     hl.bind(meta .. " + Return", function()
         hl.exec_cmd(kitty_cmd())
     end)
 
     scratchpads.bind(super .. " + Space", "noteing", function()
-        return alacritty_cmd("--title noteing", scratchpad_font_scale)
+        return kitty_cmd("--title noteing", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
     scratchpads.bind(meta .. " + Space", "main", function()
-        return alacritty_cmd("--title main", scratchpad_font_scale)
+        return kitty_cmd("--title main", scratchpad_font_scale)
     end, {
         size = { "monitor_w*0.78", "monitor_h*0.54" },
     })
@@ -204,7 +205,6 @@ return function(ctx)
 
     bind_exec("Print", ctx.home .. "/.local/sbin/capture i")
 
-    bind_exec(menu .. " + Return", "play")
     bind_exec(menu .. " + Space", "mpv_control cycle")
     bind_exec(menu .. " + comma", "mpv_control backwards 10")
     bind_exec(menu .. " + period", "mpv_control forewards 10")
