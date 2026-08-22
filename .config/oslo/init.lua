@@ -172,7 +172,7 @@ end
 -- shell shortcuts: `nav` and `la` are commands. Enter on an empty line matters more than it looks —
 -- at a Lua prompt that is what ends a multi-line block, so running `la` there made a block
 -- impossible to finish.
-oslo.on.on_key(function(k)
+oslo.on.key(function(k)
   if k.language ~= "sh" then
     return
   end
@@ -283,7 +283,7 @@ local function head(colour, word, rest)
     .. (rest and (" " .. rest) or "")
 end
 
-oslo.on.on_report(function(r)
+oslo.on.report(function(r)
   if r.kind ~= "direnv" then
     return
   end

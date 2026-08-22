@@ -538,69 +538,77 @@ for _, segment in ipairs(status_center) do status_bar[#status_bar + 1] = segment
 status_bar[#status_bar + 1] = pixy.segment("gap_right", function() return pixy.spacer() end)
 for _, segment in ipairs(status_right) do status_bar[#status_bar + 1] = segment end
 
-return pixy.config({
-  zones = {
-    ["prompt.left"] = pixy.zone({
-      pixy.segment("ssh", prompt_ssh, {priority = 60}),
-      pixy.segment("hostname", prompt_hostname, {priority = 15}),
-      pixy.segment("distro", prompt_distro, {priority = 10}),
-      pixy.segment("username", prompt_username, {priority = 1}),
-      pixy.segment("direnv", prompt_direnv, {priority = 25}),
-      pixy.segment("nix", prompt_nix, {priority = 24}),
-      pixy.segment("sudo", prompt_sudo, {priority = 6}),
-      pixy.segment("scratch", prompt_scratch, {priority = 35}),
-      pixy.segment("status", prompt_status, {priority = 3}),
-      pixy.segment("container", prompt_container, {priority = 50}),
-      pixy.segment("separator", function() return pixy.text("|", {fg = 7}) end, {priority = 20}),
-      pixy.segment("language", prompt_language, {priority = 3}),
-    }),
-    ["prompt.right"] = pixy.zone({
-      pixy.segment("pod", prompt_pod, {priority = 1}),
-      pixy.segment("directory", prompt_directory, {priority = 2}),
-      pixy.segment("git_branch", prompt_git_branch, {priority = 4}),
-      pixy.segment("git_status", prompt_git_status, {priority = 5}),
-      pixy.segment("vimode", prompt_vimode, {priority = 2}),
-    }),
-    ["status.left"] = pixy.zone(status_left),
-    ["status.center"] = pixy.zone(status_center),
-    ["status.right"] = pixy.zone(status_right),
-    status = pixy.zone(status_bar),
-    overlay = pixy.zone({
-      pixy.segment("sprite", pokemon_sprite),
-    }),
-    ["float.title"] = pixy.zone({
-      pixy.segment("content", function(ctx) return title(ctx, false) end),
-    }),
-    ["container.title"] = pixy.zone({
-      pixy.segment("content", function(ctx) return title(ctx, true) end),
-    }),
-    ["float.frame"] = pixy.zone({
-      pixy.segment("border", function(ctx) return frame(ctx, false) end),
-    }),
-    ["container.frame"] = pixy.zone({
-      pixy.segment("border", function(ctx) return frame(ctx, true) end),
-    }),
-    ["split.vertical"] = pixy.zone({
-      pixy.segment("divider", function(ctx)
-        return pixy.text("│", {fg = value(ctx, "active") == false and 237 or 1})
-      end),
-    }),
-    ["split.horizontal"] = pixy.zone({
-      pixy.segment("divider", function(ctx)
-        return pixy.text("─", {fg = value(ctx, "active") == false and 237 or 1})
-      end),
-    }),
-    ["pop.notify"] = pixy.zone({
-      pixy.segment("message", function(ctx) return popup(ctx, true) end),
-    }),
-    ["pop.confirm"] = pixy.zone({
-      pixy.segment("message", function(ctx) return popup(ctx, false) end),
-    }),
-    ["pop.choose"] = pixy.zone({
-      pixy.segment("choices", chooser),
-    }),
-    ["oslo.direnv"] = pixy.zone({
-      pixy.segment("report", direnv_report),
-    }),
-  },
+pixy.zone("prompt.left", {
+  pixy.segment("ssh", prompt_ssh, {priority = 60}),
+  pixy.segment("hostname", prompt_hostname, {priority = 15}),
+  pixy.segment("distro", prompt_distro, {priority = 10}),
+  pixy.segment("username", prompt_username, {priority = 1}),
+  pixy.segment("direnv", prompt_direnv, {priority = 25}),
+  pixy.segment("nix", prompt_nix, {priority = 24}),
+  pixy.segment("sudo", prompt_sudo, {priority = 6}),
+  pixy.segment("scratch", prompt_scratch, {priority = 35}),
+  pixy.segment("status", prompt_status, {priority = 3}),
+  pixy.segment("container", prompt_container, {priority = 50}),
+  pixy.segment("separator", function() return pixy.text("|", {fg = 7}) end, {priority = 20}),
+  pixy.segment("language", prompt_language, {priority = 3}),
+})
+
+pixy.zone("prompt.right", {
+  pixy.segment("pod", prompt_pod, {priority = 1}),
+  pixy.segment("directory", prompt_directory, {priority = 2}),
+  pixy.segment("git_branch", prompt_git_branch, {priority = 4}),
+  pixy.segment("git_status", prompt_git_status, {priority = 5}),
+  pixy.segment("vimode", prompt_vimode, {priority = 2}),
+})
+
+pixy.zone("status.left", status_left)
+pixy.zone("status.center", status_center)
+pixy.zone("status.right", status_right)
+pixy.zone("status", status_bar)
+pixy.zone("overlay", {
+  pixy.segment("sprite", pokemon_sprite),
+})
+
+pixy.zone("float.title", {
+  pixy.segment("content", function(ctx) return title(ctx, false) end),
+})
+
+pixy.zone("container.title", {
+  pixy.segment("content", function(ctx) return title(ctx, true) end),
+})
+
+pixy.zone("float.frame", {
+  pixy.segment("border", function(ctx) return frame(ctx, false) end),
+})
+
+pixy.zone("container.frame", {
+  pixy.segment("border", function(ctx) return frame(ctx, true) end),
+})
+
+pixy.zone("split.vertical", {
+  pixy.segment("divider", function(ctx)
+    return pixy.text("│", {fg = value(ctx, "active") == false and 237 or 1})
+  end),
+})
+
+pixy.zone("split.horizontal", {
+  pixy.segment("divider", function(ctx)
+    return pixy.text("─", {fg = value(ctx, "active") == false and 237 or 1})
+  end),
+})
+
+pixy.zone("pop.notify", {
+  pixy.segment("message", function(ctx) return popup(ctx, true) end),
+})
+
+pixy.zone("pop.confirm", {
+  pixy.segment("message", function(ctx) return popup(ctx, false) end),
+})
+
+pixy.zone("pop.choose", {
+  pixy.segment("choices", chooser),
+})
+
+pixy.zone("oslo.direnv", {
+  pixy.segment("report", direnv_report),
 })
