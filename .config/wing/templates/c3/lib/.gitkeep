@@ -1,0 +1,3 @@
+This directory is where c3c looks for library dependencies, named by
+`dependency-search-paths` in project.json. c3c refuses to build when it is
+missing, so it ships empty rather than being created on first failure.

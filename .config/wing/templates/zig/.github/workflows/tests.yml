@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mlugg/setup-zig@v2
+      - name: Verify
+        run: |
+          zig fmt --check build.zig src
+          zig build test -Doptimize=ReleaseSafe
+      - name: Build
+        run: zig build -Doptimize=ReleaseSafe
+

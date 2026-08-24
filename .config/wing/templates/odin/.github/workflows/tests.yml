@@ -1,0 +1,22 @@
+name: tests
+
+on:
+  push:
+    branches: ["develop", "main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      # The generated project has no oslo, so CI runs the same commands .make.lua would.
+      - name: Verify
+        run: |
+          nix develop --impure --command bash -c '
+          odin check src
+          odin test src'

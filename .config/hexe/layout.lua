@@ -17,10 +17,14 @@ local function env(extra)
 end
 
 -- Prepended to PATH, in order, ahead of whatever the float inherits.
--- No "~" expansion here — absolute paths only.
+--
+-- No "~" expansion: hexe passes these through as written, so they have to be absolute by the time
+-- they arrive. Built from $HOME rather than spelled out, because a config that ships is read on
+-- machines with a different one.
+local home = os.getenv("HOME") or ""
 local float_path = {
-  "/home/bresilla/.local/bin",
-  "/home/bresilla/.local/share/shell"
+  home .. "/.local/bin",
+  home .. "/.local/share/shell",
 }
 
 hexe.layout("default", {

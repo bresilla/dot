@@ -1,0 +1,25 @@
+name: tests
+
+on:
+  push:
+    branches: ["develop", "main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      # The generated project has no oslo, so CI calls the build system directly. These are the
+      # same commands .make.lua runs.
+      - name: Verify
+        run: |
+          nix develop --impure --command bash -c '
+          export XMAKE_ROOT=y
+          xmake config -y
+          xmake build -y
+          xmake test'

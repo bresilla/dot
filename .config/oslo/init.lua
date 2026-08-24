@@ -217,22 +217,40 @@ oslo.keys["f4"] = function(line)
   return oslo.repair(line.text) or line.text
 end
 
--- Classic `direnv` used to be handed over to the real one from here. It is not any more.
+-- Classic `direnv` is handed back to the real one, per directory.
 --
--- oslo reads `.envrc` itself, against direnv's stdlib reimplemented in Rust, so an `.envrc`
--- project is oslo's like any other: one allow gate, one undo record, one report. What stood here
--- was a hundred lines working around the one sentence that is no longer true — that oslo read
--- `.env.lua` and nothing else — and every one of them was a place for the two to disagree:
+-- oslo read `.envrc` itself for a while, against direnv's stdlib reimplemented in Rust. That is
+-- gone: 1100 lines tracking somebody else's 1.4k lines of bash, so that `use flake` and
+-- `layout python` meant here what they mean there, is a standing bet oslo loses eventually. direnv
+-- is installed, it is good at this, and the two now divide the directories between them.
 --
---   * a feature predicate turning oslo's direnv **off** in any directory with an `.envrc`, which
---     also handed the `direnv` name back to `$PATH` so the hook below could reach the binary;
---   * a `post_change_dir` hook running `env direnv export bash` and sourcing the result, with a
---     note explaining that the predicate and the hook were evaluated in the wrong order relative
---     to each other and had to share a helper to stay in step;
---   * a `$PATH` walk to find out whether direnv was installed at all, because turning oslo's own
---     off on a machine without it left directories with nothing.
+-- **Three lines, and each one is load-bearing.**
 --
--- All of that was the cost of not reading the file. See `oslo.direnv` and `direnv --help`.
+--   * `$PROMPT_COMMAND` is direnv's own bash hook. It is evaluated against the live environment
+--     before every prompt, which is what makes it load on the way in *and* unload on the way out
+--     with nothing of oslo's in the middle.
+--   * `oslo.feature.when` turns oslo's builtin — and `.env.lua` reading — on only where one of
+--     oslo's own files governs.
+--   * `oslo.command.when` shows the real `direnv` binary only where one of direnv's files governs.
+--
+-- **The `type` guard is not decoration.** Both tools answer to the word `direnv`, and in an
+-- `.env.lua` directory oslo's builtin holds it — so an unguarded hook runs `direnv export bash`
+-- against the builtin and prints `export: not a direnv command` on every prompt. `type`
+-- writes a path for a file and `is a shell builtin` for a builtin, and it respects the mask below,
+-- so it is the one question that tells them apart.
+--
+-- **The `DIRENV_DIFF` clause is not either.** direnv has to be *run from outside* a directory to
+-- unload it. Hide the binary the moment you leave and the unload never happens, so the project's
+-- variables stay set for the rest of the session.
+oslo.env.set("PROMPT_COMMAND", 'type direnv 2>/dev/null | grep -q / && eval "$(direnv export bash)"')
+
+oslo.feature.when("direnv", function(dir)
+  return oslo.fs.find_up(".env.lua", dir) ~= nil
+end)
+
+oslo.command.when("direnv", function(dir)
+  return oslo.fs.find_up(".envrc", dir) ~= nil or oslo.env.get("DIRENV_DIFF") ~= nil
+end)
 
 -- What a directory environment says when it loads, unloads, or refuses to.
 --
@@ -435,3 +453,20 @@ if oslo.nix then
     end,
   }
 end
+
+-- Answer other programs. Every shell, because that is what makes it useful: a session manager
+-- asking "what is this pane's environment" wants the shell that is actually there, not the one it
+-- happens to have started, and a shell that only sometimes answers is one nothing can rely on.
+--
+-- **What it costs when nobody asks: a socket file, a descriptor and a thread parked in `accept`.**
+-- oslo binds nothing without this line — the default is silent — so this is a decision rather than
+-- something inherited, and `oslo.live.stop()` takes it back for one shell.
+--
+-- **What it can be asked** is `oslo lua-api --verbs`: the working directory, the session id, and the
+-- exported environment. Nothing on that surface runs a command, which is why turning it on
+-- everywhere is a small decision rather than a large one — a peer can read this shell and change a
+-- variable in it, and cannot make it execute anything.
+--
+-- Reachable only by this user: the socket sits in a 0700 directory under `$XDG_RUNTIME_DIR`, and
+-- the server checks the connecting uid with the kernel rather than believing what the peer says.
+oslo.live.serve()

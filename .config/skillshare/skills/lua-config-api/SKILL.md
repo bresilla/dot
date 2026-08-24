@@ -1,9 +1,29 @@
 ---
 name: lua-config-api
-description: Designs, converts and reviews embedded-Lua configuration APIs in the registration style — settings assigned onto a module table, behaviour registered through repeatable calls, and the config file returning nothing. Use when adding a Lua config layer to a tool, converting a `return tool.setup({...})` table config to registration, reviewing such an API or a config written against one, or writing an init.lua for a tool that reads one. Not for editing third-party configs such as neovim or wezterm, and not for embedding Lua as a scripting or plugin runtime rather than as configuration.
+description: Designs, converts and reviews embedded-Lua APIs for tools you control — both the registration-style config API a tool offers its own init.lua (settings assigned, behaviour registered, nothing returned) and the cross-process API it exposes to other programs over a socket, a spawned process, or one exec per call (client stub, server, exposed subset). Use when adding a Lua config layer, converting a `return tool.setup({...})` config to registration, reviewing such an API or a config written against one, or when implementing the client side (the exposed library another tool requires) and the server side (how a client connects and calls in), including letting a sibling query a tool that has no daemon. Not for editing third-party configs such as neovim or wezterm, and not for embedding Lua as a scripting or plugin runtime rather than as configuration.
 ---
 
-# Registration-style Lua config APIs
+# Embedded-Lua APIs for tools you control
+
+Two jobs, one skill, because a tool that does the second almost always does the first, and the
+second is built out of the first.
+
+| the job | the surface | read |
+|---|---|---|
+| **config** — the API a tool offers its own `init.lua` | large, local, in-process | this file, then [the five rules](references/five-rules.md) |
+| **cross-process** — the API a tool offers *other programs* | small, remote, over a socket or a spawn | [cross-process](references/cross-process.md) |
+
+Work out which is being asked for before writing anything. "Add a Lua config to this tool", "convert
+this `setup({...})`", "review my init.lua" is the first. "Let another tool call into this one",
+"implement the client side and the server side", "expose the Lua API over a socket", "let another
+tool query this one when it has no daemon" is the second.
+
+When both are in play, design the config API first: the exposed surface is a deliberate subset of it,
+so it cannot be chosen until there is something to choose from.
+
+---
+
+# Part 1 — Registration-style config APIs
 
 A configuration API in this style reads:
 
@@ -95,3 +115,71 @@ Check, in this order:
 
 Report what is wrong and why it costs something concrete. Do not report a deviation that
 serves the tool better than the rule would.
+
+---
+
+# Part 2 — Exposing the API to other processes
+
+When one tool must call into another's Lua — a shell and a terminal mux, a painter and the session
+it draws for — read [cross-process](references/cross-process.md) in full before designing it. The
+shape:
+
+```lua
+local tool = require "tool"     -- a plain Lua file the tool ships
+local sh = tool.connect()       -- env var, else the runtime directory
+print(sh.env.get("PATH"))
+```
+
+**Three layers, and only the bottom one is per-language:**
+
+1. **A stream primitive** — `__stream.connect(path)`, `h:send`, `h:recv`, `h:close`. A host native
+   like any other API entry, *not* a VM feature: a VM that cannot load C modules needs no change.
+2. **The client stub** — a plain-Lua file each tool ships, holding framing, encoding, `connect` and
+   the exposed verbs. Pure Lua, so siblings **copy it rather than port it**.
+3. **The server** — dispatches a call by name into **the same Lua function the local API already
+   uses**, so the two can never describe a pane, an environment or a session differently.
+
+**The rules that decide whether it is any good:**
+
+- The exposed surface is a **named, small subset** — never a mirror of the whole API. A small wrong
+  vocabulary is worse than a large right one.
+- **Never restate the surface in a second encoder.** Two field lists drift the moment either is
+  edited.
+- **Settle the reply shape before either server ships.** `{"ok":true,"n":1,"result":[value]}` — a
+  *list* of return values, because a Lua function returns several. Two tools in one family
+  disagreeing here fail **silently**: a client that unpacks reads a bare-value server as having
+  returned nothing at all, so the bug presents as an empty session rather than an error.
+- **Keep the connection open after replying.** A client that holds one connection — the obvious way
+  to write one — otherwise dies on its *second* call with a broken pipe.
+- **Every discovery bug is invisible from inside the tool that owns it.** Sockets in the wrong
+  directory, a lister that only sees its own host, a name that does not match its file: all of them
+  work when the tool talks to itself. Test by having the *sibling* connect, or do not claim it works.
+- The server is **opt-in and lazily bound**. Most processes are never talked to and should have no
+  socket at all.
+- **Bound everything** — connections, request size, response size, timeout, encode depth — and never
+  let a slow peer block the host's main loop.
+- Take peer identity **from the kernel** (`SO_PEERCRED`), never from a number the peer sent.
+- **A socket that runs commands is remote code execution.** Keep `run`-shaped verbs out of the first
+  cut.
+- **Functions cannot cross.** Callbacks make the connection long-lived and bidirectional and bring
+  reentrancy with them — a separate, later layer. Ship calls first.
+- **Not every tool is a server, and that is fine.** Spawning works when the tool's state lives
+  outside the process and fails when the state *is* the process — a fresh process then knows about
+  none of it and answers anyway, which is worse than an error. Same frames over a socket, over a
+  spawned `tool serve --stdio`, or over one exec per request.
+- **Two verbs, because a lifetime is not an implementation detail.** `connect()` is a channel you
+  hold and close; `fetch(where, verb, ...)` is one question with nothing held — a socket if one is
+  listening, else the tool's own one-shot mode: request in argv, wire-shaped reply on stdout. The
+  verb says what the *caller* wanted, so a tool that later grows a daemon breaks no call site.
+- **The one-shot mode prints the WIRE shape, not what the human CLI prints**, and a refused verb is
+  `{"ok":false,...}` with a zero exit. Otherwise every client needs two parsers and a real error
+  arrives as "exited 1".
+- **A one-shot needs a SYNCHRONOUS runner from the host.** A statusbar-style async, cached `exec`
+  answers `pending` first and looks like a flaky peer. A host that must not block — a mux — lends
+  none and says so.
+- **Ship `verbs()` from the first version.** One tool having it and another not is how a family
+  stops being one, and it cannot be retrofitted quietly.
+
+Encoding is a real decision, not a default: JSON is the debuggable interop baseline and loses byte
+strings, the integer/float split and `nil`-in-table; a binary codec keeps them for roughly 200 lines
+per language. Decide from what the subset actually carries, and say which you chose and why.

@@ -1,0 +1,12 @@
+{
+  "name": "{{snake_name}}",
+  "version": "0.1.0",
+  "description": "{{PROJECT_NAME}}",
+  "license": "MIT",
+  "targetType": "executable",
+  "targetName": "{{kebab_name}}",
+  "sourcePaths": ["source"],
+  "importPaths": ["source"],
+  "stringImportPaths": ["."],
+  "dependencies": {}
+}

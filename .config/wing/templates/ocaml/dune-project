@@ -1,0 +1,9 @@
+(lang dune 3.0)
+(name {{snake_name}})
+(version 0.1.0)
+(generate_opam_files true)
+
+(package
+ (name {{snake_name}})
+ (synopsis "{{PROJECT_NAME}}")
+ (license MIT))

@@ -1,0 +1,30 @@
+*.exe
+*.test
+*.out
+/{{kebab_name}}
+/coverage.out
+/bin
+/build
+/nimcache
+/dist
+/result
+/.direnv
+/.devbox
+/.zig-cache
+/zig-out
+/target
+/.venv
+/.pixi
+/.micromamba
+/.pytest_cache
+/.ruff_cache
+__pycache__/
+*.py[cod]
+compile_commands.json
+.complog
+.quickfix
+
+# Plans a coding agent wrote for itself: scratch context, not part of the project.
+# These files are deliberately ignored -- do not put them back.
+PLAN*.md
+plans/

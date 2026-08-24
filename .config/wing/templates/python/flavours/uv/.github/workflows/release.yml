@@ -1,0 +1,116 @@
+name: release
+
+# Any `v*` tag publishes. `make release` cuts one and pushes it, so releasing is a single command
+# with no release to open by hand first -- and a tag that was pushed but never published is exactly
+# the failure this avoids.
+on:
+  push:
+    tags: ["v*"]
+  # So an asset that failed, or went missing, can be rebuilt without cutting another tag.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to build and publish assets for
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # One build serves every machine: a pure-Python wheel has no architecture.
+          - target: py3-none-any
+            runner: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      # Everything is built inside this project's own flake, so what ships was compiled by the
+      # toolchain the dev shell hands a developer. A version pinned in this file as well would be a
+      # second pin, and two pins drift.
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Name the artifact
+        id: meta
+        run: |
+          set -euo pipefail
+          tag='${{ inputs.tag || github.ref_name }}'
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=${tag#v}" >> "$GITHUB_OUTPUT"
+          echo "name={{kebab_name}}-${tag#v}-${{ matrix.target }}" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        # VERSION is the tag without its `v`, exported so a build that stamps its own version has
+        # the one being released rather than whatever the working tree last said.
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          nix develop --impure --command bash -c '
+            set -euo pipefail
+            uv sync
+            rm -rf dist
+            uv build --out-dir dist'
+
+      - name: Package
+        run: |
+          set -euo pipefail
+          stage="out/${{ steps.meta.outputs.name }}"
+          mkdir -p "$stage"
+            cp dist/*.whl dist/*.tar.gz "$stage/"
+          cp README.md LICENSE CHANGELOG.md "$stage/" 2>/dev/null || true
+          tar -czf "${stage}.tar.gz" -C out "${{ steps.meta.outputs.name }}"
+          ( cd out && sha256sum "${{ steps.meta.outputs.name }}.tar.gz" \
+              > "${{ steps.meta.outputs.name }}.sha256" )
+          ls -l out/
+
+      # Downloadable from the run itself, so a dispatch is useful before anything is published.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.name }}
+          path: |
+            out/*.tar.gz
+            out/*.sha256
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: publish
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: One checksum file for every asset
+        run: |
+          set -euo pipefail
+          cd dist
+          cat ./*.sha256 > SHA256SUMS
+          rm -f ./*.sha256
+          sha256sum -c SHA256SUMS
+          ls -l
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag='${{ inputs.tag || github.ref_name }}'
+          repo='${{ github.repository }}'
+          # A tag is the trigger, so on the first run there is no release behind it yet: it is made
+          # here rather than by hand, and reused on a re-run so a rebuilt asset replaces the old one
+          # instead of failing on a name that already exists.
+          gh release view "$tag" --repo "$repo" >/dev/null 2>&1 \
+            || gh release create "$tag" --repo "$repo" --title "$tag" --generate-notes
+          gh release upload "$tag" dist/SHA256SUMS dist/*.tar.gz --clobber --repo "$repo"

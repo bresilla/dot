@@ -1,0 +1,10 @@
+name: {{snake_name}}
+version: 0.1.0
+license: MIT
+description: {{PROJECT_NAME}}
+
+targets:
+  {{kebab_name}}:
+    main: src/main.cr
+
+crystal: ">= 1.0.0"
