@@ -92,6 +92,7 @@ if on_path("pixy") then
   oslo.prompt.left = {
     command = "pixy",
     args = { "render", "prompt.left", "--target=ansi",
+             "--width", "$cols",
              "--set", "status=$status", "--set", "duration_ms=$duration_ms",
              "--set", "jobs=$jobs", "--set", "language=$language",
              "--set", "vimode=$vimode" },
@@ -99,13 +100,49 @@ if on_path("pixy") then
     async = true,
   }
 
+  -- **`every` on the right zone only.** Re-running pixy on a clock is a process spawn per frame,
+  -- so it is paid for exactly where the moving glyph is. The left prompt keeps the default and is
+  -- run when its inputs move, as everything else is.
+  --
+  -- `frame=$frame` is the counter oslo keeps per prompt; pixy is a fresh process each time and has
+  -- no memory of the last one, so the number has to arrive with the arguments. Its `prompt.right`
+  -- zone indexes its own glyph list with it.
   oslo.prompt.right = {
     command = "pixy",
     args = { "render", "prompt.right", "--target=ansi",
              "--set", "status=$status", "--set", "language=$language",
-             "--set", "vimode=$vimode" },
+             "--set", "vimode=$vimode", "--set", "frame=$frame",
+             "--width", "$cols" },
     timeout_ms = 10,
     async = true,
+    every = 150,
+  }
+end
+
+-- **What a finished line leaves behind.** Running a command clears its prompt and puts the command
+-- itself there instead, with a rule under it. The scrollback is then a record of what was *run* —
+-- the half anybody rereads, and the half that survives being pasted into an issue — rather than of
+-- what the prompt looked like at the time, which is a hostname, a branch and a vi mode that stopped
+-- being true the moment the command started.
+--
+-- `rule` is the switch as well as the glyph: empty is off and takes the ordinary ending back. It is
+-- a unit repeated to the width of the terminal, so `"-"` is a solid line across the screen.
+--
+-- **The whole line is pixy's** — rule, brackets, command and the colour of all three, which is what
+-- pixy is for. oslo supplies only what pixy cannot know: `$cols`, `$status` (how the command
+-- *above* ended, empty when there is none) and `$first` (whether this row leads with the rule or
+-- hangs under it). A pixy zone is one line, so a pasted command is asked for a row at a time.
+--
+-- Without pixy, or if it fails or overruns, oslo draws the row itself in `oslo.transcript.style` —
+-- which is what anybody who has not installed pixy gets.
+oslo.transcript.rule = "-"
+if on_path("pixy") then
+  oslo.transcript.command = {
+    command = "pixy",
+    args = { "render", "transcript", "--target=ansi",
+             "--width", "$cols",
+             "--set", "cmd=$command", "--set", "status=$status", "--set", "first=$first" },
+    timeout_ms = 20,
   }
 end
 

@@ -211,6 +211,24 @@ local function prompt_git_status(ctx)
   return pixy.text(" " .. text .. " ", style_git)
 end
 
+-- **The turning glyph.** `frame` is counted by oslo and passed in with `--set frame=$frame`; pixy
+-- is a fresh process every time and has no memory of the last one, so the number has to arrive
+-- from outside. Nothing is drawn when it does not — an oslo without `every` on this prompt, or an
+-- older one that has never heard of `$frame`, simply has no spinner rather than a broken prompt.
+--
+-- **The whole cell, not the top of it.** A braille cell is 4 rows by 2, and the familiar
+-- `⠋ ⠙ ⠹ …` spinner only ever lights the top three rows — so it sits high against a background,
+-- with a visible gap under it, which is what makes it look wrong beside a full-height block. These
+-- eight light seven of the eight dots each, with the gap travelling round the ring, so every frame
+-- fills the cell top to bottom and only the hole moves.
+local SPIN_FRAMES = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }
+
+local function prompt_spinner(ctx)
+  local n = tonumber(value(ctx, "frame"))
+  if not n then return nil end
+  return pixy.text(" " .. SPIN_FRAMES[(math.floor(n) % #SPIN_FRAMES) + 1] .. " ", style_directory)
+end
+
 local function prompt_vimode(ctx)
   if not ctx.values.vimode then return nil end
   local marks = {I = " I ", insert = " I ", N = " N ", normal = " N ", R = " R ", replace = " R ", V = " V ", visual = " V "}
@@ -555,11 +573,71 @@ pixy.zone("prompt.left", {
 })
 
 pixy.zone("prompt.right", {
+  pixy.segment("spinner", prompt_spinner, {priority = 1}),
   pixy.segment("pod", prompt_pod, {priority = 1}),
   pixy.segment("directory", prompt_directory, {priority = 2}),
   pixy.segment("git_branch", prompt_git_branch, {priority = 4}),
   pixy.segment("git_status", prompt_git_status, {priority = 5}),
   pixy.segment("vimode", prompt_vimode, {priority = 2}),
+})
+
+
+-- **The whole line a finished command leaves behind.** oslo clears the prompt when a line runs and
+-- puts this in its place; everything the row shows is drawn here, colours included. oslo supplies
+-- only what pixy cannot know — the width (as `--width`, so `ctx.width`), how the command *above*
+-- ended, and whether this is the first row of the command or one hanging under it.
+--
+--   ---[ 0 ]--------------------------------------[ cargo test --lib ]---
+--
+-- The status is the command *before* this one: a frame is drawn between Enter and the command
+-- starting, so it can never report its own. That is why it sits at the left, directly under the
+-- last line of the output it is closing off.
+--
+-- **Indexed colours, so a palette can retint them.** `fg = 1` is entry 1 rather than a hex value,
+-- which is what lets `OSC 1330` recolour a whole pane's dividers after the fact.
+local style_divider = {fg = 1}
+local style_command = {fg = 15, bold = true}
+local TRANSCRIPT_TAIL = 3
+
+-- **`or ""` is wrong for a context value.** pixy reads `--set cmd=false` as the boolean, and Lua's
+-- `or` treats that as absent — so the command `false` rendered nothing at all and the row silently
+-- fell back to oslo's own drawing. Anything that is not nil is a value, including `false`.
+local function said(ctx, name)
+  local raw = value(ctx, name)
+  if raw == nil then return nil end
+  return trim(tostring(raw))
+end
+
+local function transcript_row(ctx)
+  local cmd = said(ctx, "cmd")
+  if not cmd then return nil end
+  local cols = math.max(1, tonumber(ctx.width) or 80)
+  local status = said(ctx, "status")
+  local first = said(ctx, "first")
+
+  -- A row hanging under the first draws its brackets and nothing else; oslo indents it.
+  if not first then
+    return pixy.row({
+      pixy.text("[ ", style_divider),
+      pixy.text(cmd, style_command),
+      pixy.text(" ]", style_divider),
+    })
+  end
+
+  local tail = string.rep("-", TRANSCRIPT_TAIL)
+  local opened = status ~= nil and (tail .. "[ " .. status .. " ]") or ""
+  local fill = cols - (#cmd + 4) - TRANSCRIPT_TAIL - #opened
+  if fill < 0 then fill = 0 end
+
+  return pixy.row({
+    pixy.text(opened .. string.rep("-", fill) .. "[ ", style_divider),
+    pixy.text(cmd, style_command),
+    pixy.text(" ]" .. tail, style_divider),
+  })
+end
+
+pixy.zone("transcript", {
+  pixy.segment("row", transcript_row, {priority = 1}),
 })
 
 pixy.zone("status.left", status_left)
