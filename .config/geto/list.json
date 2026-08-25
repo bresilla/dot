@@ -75,6 +75,7 @@
             "path": "$HOME/.local/bin/bun",
             "url": "https://github.com/oven-sh/bun",
             "provider": "github",
+            "description": "Incredibly fast JavaScript runtime, bundler, test runner, and package manager – all in one",
             "tags": [
                 "other"
             ]

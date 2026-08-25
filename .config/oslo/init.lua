@@ -177,12 +177,56 @@ oslo.on.key(function(k)
     return
   end
   if k.name == "char" and k.char == " " and k.text == " " then
-    return { text = "nav", submit = true }
+    return { text = "nav", submit = true, erase = true }
   end
   if k.name == "enter" and k.text == "" then
     return { text = "la --git-ignore", submit = true }
   end
 end)
+
+-- Browse with trek, and in a hexe session browse in a float.
+--
+-- `nav` stays the builtin — it is the half that only a builtin can do, because a separate process
+-- cannot reach into its parent and change the working directory. What it draws is swappable, and
+-- this swaps it. Unset `command` and oslo's own browser comes straight back.
+--
+-- **The float is the whole point of the hexe branch.** Run inline, trek takes the terminal and the
+-- shell behind it is gone until you leave. In a float the shell stays on screen, the pane is
+-- destroyed on exit, and `hexe mux float` waits for that — so `nav` still reads the answer and
+-- `cd`s exactly as it does inline. Nothing about the handback changes.
+--
+-- `{answer}` is a file in a 0700 directory oslo makes for the one run; trek writes the directory it
+-- ended in and oslo goes there. `{dir}` is where to start. They substitute *inside* the argument,
+-- which is what carries them through `--command`'s nested line to the trek that finally runs.
+--
+-- **`--pass-env`** hands the pane this shell's environment, so a float lands in the same nix dev
+-- shell and the same `.env.lua` as the terminal it was opened from.
+--
+-- **`--serve`** leaves a socket behind while trek is up, so hexe or this shell can ask it what is
+-- selected — `trek --lua-api` prints the client. That is what previews are built on.
+--
+-- The float is sized as `w,h` in **percent** — hexe stores `width_percent`/`height_percent`, and
+-- the separator is a comma. An `x` between them fails hexe's `parseInt`, which it catches to 0,
+-- which means "default" — so a float asked for `70x60` came up 243 columns wide.
+--
+-- `21,81` is the inline browser's 60x50 cells, measured: percent of the hexe *window*, not of this
+-- shell's pane, so `oslo.term.size()` is the wrong number to compute it from. Percentages are also
+-- the reason the float survives a terminal resize, which cells would not.
+if os.getenv("HEXE_MUX_SOCKET") then
+  oslo.builtin.nav.command = {
+    "hexe", "mux", "float",
+    "--command", "trek --explore --serve --cwd-file {answer} {dir}",
+    "--cwd", "{dir}",
+    "--title", "trek",
+    "--size", "21,81",
+    "--pass-env",
+  }
+else
+  oslo.builtin.nav.command = {
+    "trek", "--explore", "--cwd-file", "{answer}",
+    "--width", "{width}", "--height", "{height}", "{dir}",
+  }
+end
 
 -- A model of what this shell actually does, learned from the commands that have run here and kept
 -- beside the history. `predict` is not in the default source order, so it has to be asked for; it
@@ -470,3 +514,6 @@ end
 -- Reachable only by this user: the socket sits in a 0700 directory under `$XDG_RUNTIME_DIR`, and
 -- the server checks the connecting uid with the kernel rather than believing what the peer says.
 oslo.live.serve()
+print("NAVSIZE=" .. tostring(oslo.builtin.nav.command[9]) .. " N=" .. #oslo.builtin.nav.command)
+print("NAVSIZE=[" .. tostring(oslo.builtin.nav.command[11]) .. "]")
+print("NAVSIZE=[" .. tostring(oslo.builtin.nav.command[11]) .. "] N=" .. #oslo.builtin.nav.command)
