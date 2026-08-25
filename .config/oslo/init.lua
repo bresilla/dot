@@ -514,6 +514,3 @@ end
 -- Reachable only by this user: the socket sits in a 0700 directory under `$XDG_RUNTIME_DIR`, and
 -- the server checks the connecting uid with the kernel rather than believing what the peer says.
 oslo.live.serve()
-print("NAVSIZE=" .. tostring(oslo.builtin.nav.command[9]) .. " N=" .. #oslo.builtin.nav.command)
-print("NAVSIZE=[" .. tostring(oslo.builtin.nav.command[11]) .. "]")
-print("NAVSIZE=[" .. tostring(oslo.builtin.nav.command[11]) .. "] N=" .. #oslo.builtin.nav.command)
