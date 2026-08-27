@@ -146,7 +146,19 @@ hexe.mux = {
   --
 hexe.status = {
   enabled = true,
-  view = "status",
+  -- Three regions, not one.
+  --
+  -- A single flat `view = "status"` makes the painter fake alignment with
+  -- spacers, and two equal spacers put the middle at `left + slack/2` -- so the
+  -- pane list slid sideways by half of every change in the clock or the
+  -- spinner. Zones let hexe place them: the centre is anchored to the bar and a
+  -- neighbour changing width cannot move it.
+  zones = {
+    left   = { view = "status.left" },
+    center = { view = "status.center" },
+    right  = { view = "status.right" },
+  },
+  shrink = { "right", "left", "center" },
   refresh_ms = 250,
   -- socket  = nil,   -- nil = $HEXE_PAINTER_SOCKET, then
   --                  --       $XDG_RUNTIME_DIR/hexe/painter.sock

@@ -112,6 +112,11 @@ if on_path("pixy") then
     args = { "render", "prompt.right", "--target=ansi",
              "--set", "status=$status", "--set", "language=$language",
              "--set", "vimode=$vimode", "--set", "frame=$frame",
+             -- **Told, not guessed.** Without this pixy falls back to `$PWD` — and while a browser
+             -- is open that is deliberately stale: the shell state is held by the browser, so oslo
+             -- moves the kernel's idea of where it is now and finishes `$PWD` at the next safe
+             -- point. `$cwd` is the moved one, which is what makes the prompt follow trek live.
+             "--set", "cwd=$cwd",
              "--width", "$cols" },
     timeout_ms = 10,
     async = true,
@@ -141,7 +146,7 @@ if on_path("pixy") then
     command = "pixy",
     args = { "render", "transcript", "--target=ansi",
              "--width", "$cols",
-             "--set", "cmd=$command", "--set", "status=$status", "--set", "first=$first" },
+             "--set", "cmd=$command", "--set", "first=$first" },
     timeout_ms = 20,
   }
 end
@@ -255,9 +260,14 @@ if os.getenv("HEXE_MUX_SOCKET") then
     "--command", "trek --explore --serve --cwd-file {answer} {dir}",
     "--cwd", "{dir}",
     "--title", "trek",
-    "--size", "21,81",
+    "--size", "30,70",
     "--pass-env",
   }
+  -- **The float draws elsewhere, so the prompt behind it is still worth drawing.** Without this
+  -- `nav` blocks on the float and the prompt sits frozen for the whole visit: the spinner stops,
+  -- and a directory trek moves the shell to — over the control socket, as you walk — is not shown
+  -- until you come back. Only true of the float; the inline branch below takes the terminal.
+  oslo.builtin.nav.detached = true
 else
   oslo.builtin.nav.command = {
     "trek", "--explore", "--cwd-file", "{answer}",

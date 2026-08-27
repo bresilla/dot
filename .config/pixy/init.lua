@@ -109,7 +109,13 @@ local function clock(ctx)
     -- prompt and reads the zone with whatever libc is first on PATH; the nix
     -- coreutils one carries no zoneinfo under its own TZDIR, so it cannot
     -- resolve $TZ and quietly answers UTC -- two hours behind here.
-    return os.date("%H:%M:%S", math.floor((tonumber(ctx and ctx.now_ms) or 0) / 1000))
+    --
+    -- No `now_ms` means now: `os.date` reads the clock itself when it is given
+    -- no time, and a caller that holds one is not the only caller. The zone
+    -- comes from libc either way. It used to fall back to `0`, which is the
+    -- epoch -- a caller without `now_ms` was told the command ran in 1970.
+    local held = tonumber(ctx and ctx.now_ms)
+    return os.date("%H:%M:%S", held and math.floor(held / 1000) or nil)
   end) or "")) or "--:--:--"
 end
 
@@ -608,11 +614,17 @@ local function said(ctx, name)
   return trim(tostring(raw))
 end
 
+-- The clock at the left-hand end, the command at the right.
+--
+-- **Not the exit status, which used to sit on the left.** oslo draws this row when Enter is
+-- pressed, so the command below it has not run: the only status available is the *previous*
+-- command's, and it read as this one's. The clock has no such problem -- the moment the row is
+-- drawn is the moment the command starts -- so it is the one fact the row can honestly carry
+-- about the command it heads.
 local function transcript_row(ctx)
   local cmd = said(ctx, "cmd")
   if not cmd then return nil end
   local cols = math.max(1, tonumber(ctx.width) or 80)
-  local status = said(ctx, "status")
   local first = said(ctx, "first")
 
   -- A row hanging under the first draws its brackets and nothing else; oslo indents it.
@@ -625,7 +637,7 @@ local function transcript_row(ctx)
   end
 
   local tail = string.rep("-", TRANSCRIPT_TAIL)
-  local opened = status ~= nil and (tail .. "[ " .. status .. " ]") or ""
+  local opened = tail .. "[ " .. clock(ctx) .. " ]"
   local fill = cols - (#cmd + 4) - TRANSCRIPT_TAIL - #opened
   if fill < 0 then fill = 0 end
 
