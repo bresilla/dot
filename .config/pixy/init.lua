@@ -7,6 +7,7 @@ end
 local git = require("pixy.segments.git")
 local system = require("pixy.segments.system")
 local progress = require("pixy.segments.progress")
+local animate = require("pixy.animate")
 
 local style_git = {bg = 1, fg = 0}
 local style_host = {bg = 237, fg = 15, italic = true}
@@ -217,10 +218,15 @@ local function prompt_git_status(ctx)
   return pixy.text(" " .. text .. " ", style_git)
 end
 
--- **The turning glyph.** `frame` is counted by oslo and passed in with `--set frame=$frame`; pixy
--- is a fresh process every time and has no memory of the last one, so the number has to arrive
--- from outside. Nothing is drawn when it does not — an oslo without `every` on this prompt, or an
--- older one that has never heard of `$frame`, simply has no spinner rather than a broken prompt.
+-- **The turning glyph, on the clock.** It used to turn on a counter the caller kept and sent as
+-- `--set frame=$frame`, because pixy was a fresh process each time and had no memory of the last
+-- one. That made the caller re-run pixy once per frame purely to move it, and made the animation
+-- impossible to enumerate: a frame number is not a duration, so nothing could say what the next
+-- picture was or when it fell due.
+--
+-- Reading the clock makes the cycle derivable, so the whole of it can be asked for at once (see
+-- `frames_ms`) and the caller animates from that without asking again. A `frame` that is sent
+-- still wins, so a caller that has not moved over keeps the spinner it had.
 --
 -- **The whole cell, not the top of it.** A braille cell is 4 rows by 2, and the familiar
 -- `⠋ ⠙ ⠹ …` spinner only ever lights the top three rows — so it sits high against a background,
@@ -229,10 +235,18 @@ end
 -- fills the cell top to bottom and only the hole moves.
 local SPIN_FRAMES = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }
 
+local SPIN_INTERVAL_MS = 150
+
 local function prompt_spinner(ctx)
   local n = tonumber(value(ctx, "frame"))
-  if not n then return nil end
-  return pixy.text(" " .. SPIN_FRAMES[(math.floor(n) % #SPIN_FRAMES) + 1] .. " ", style_directory)
+  if n then
+    return pixy.text(" " .. SPIN_FRAMES[(math.floor(n) % #SPIN_FRAMES) + 1] .. " ", style_directory)
+  end
+  local glyph, next_frame = animate.frames(SPIN_FRAMES, SPIN_INTERVAL_MS, ctx.now_ms, 0)
+  if not glyph then return nil end
+  local node = pixy.text(" " .. glyph .. " ", style_directory)
+  node.next_frame_ms = next_frame
+  return node
 end
 
 local function prompt_vimode(ctx)

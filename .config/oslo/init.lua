@@ -100,18 +100,24 @@ if on_path("pixy") then
     async = true,
   }
 
-  -- **`every` on the right zone only.** Re-running pixy on a clock is a process spawn per frame,
-  -- so it is paid for exactly where the moving glyph is. The left prompt keeps the default and is
-  -- run when its inputs move, as everything else is.
+  -- **`every` on the right zone only.** It is the zone with the moving glyph; the left prompt keeps
+  -- the default and is run when its inputs move, as everything else is.
   --
-  -- `frame=$frame` is the counter oslo keeps per prompt; pixy is a fresh process each time and has
-  -- no memory of the last one, so the number has to arrive with the arguments. Its `prompt.right`
-  -- zone indexes its own glyph list with it.
+  -- **`frames` is what keeps `every` from costing a process.** `every` alone re-runs pixy on a
+  -- clock — a spawn per frame for as long as the shell is open. But the animation needs nothing
+  -- from outside: the pictures are a function of time, so `--frames-ms $frames_ms` asks for all of
+  -- them at once and oslo plays them back. `every` then only says how often to *redraw*.
+  --
+  -- One spawn per 1200 ms instead of one per 150 ms, for the same glyph turning at the same speed.
+  --
+  -- It is also why `frame=$frame` is gone: a frame *number* cannot say when the next picture falls
+  -- due, so nothing could enumerate the cycle. pixy reads the clock now and reports each frame's
+  -- hold. It still honours a `frame` that is sent, so an older config keeps working.
   oslo.prompt.right = {
     command = "pixy",
     args = { "render", "prompt.right", "--target=ansi",
              "--set", "status=$status", "--set", "language=$language",
-             "--set", "vimode=$vimode", "--set", "frame=$frame",
+             "--set", "vimode=$vimode", "--frames-ms", "$frames_ms",
              -- **Told, not guessed.** Without this pixy falls back to `$PWD` — and while a browser
              -- is open that is deliberately stale: the shell state is held by the browser, so oslo
              -- moves the kernel's idea of where it is now and finishes `$PWD` at the next safe
@@ -121,6 +127,7 @@ if on_path("pixy") then
     timeout_ms = 10,
     async = true,
     every = 150,
+    frames = 1200,
   }
 end
 

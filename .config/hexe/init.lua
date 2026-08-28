@@ -160,9 +160,9 @@ hexe.status = {
   },
   shrink = { "right", "left", "center" },
   refresh_ms = 250,
-  -- socket  = nil,   -- nil = $HEXE_PAINTER_SOCKET, then
-  --                  --       $XDG_RUNTIME_DIR/hexe/painter.sock
-  -- command = nil,   -- optional: hexe starts this if nothing is listening
+  -- The painter, run as hexe's own child: it starts with this frontend,
+  -- answers only it, and exits with it. Unset draws no bar.
+  exec = "pixy serve --stdio",
 }
 
 
