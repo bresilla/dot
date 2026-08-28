@@ -247,6 +247,11 @@ end)
 -- **`--serve`** leaves a socket behind while trek is up, so hexe or this shell can ask it what is
 -- selected — `trek --lua-api` prints the client. That is what previews are built on.
 --
+-- **`--preview-shrink 40`** is what `p` inside trek does to this float: the explorer gives up
+-- forty percent of its width so the preview beside it has room to be read. A list of names needs
+-- much less width than the file it is listing, and the room has to come from somewhere. The two
+-- are anchored to opposite edges with their widths adding to the window, so they never overlap.
+--
 -- The float is sized as `w,h` in **percent** — hexe stores `width_percent`/`height_percent`, and
 -- the separator is a comma. An `x` between them fails hexe's `parseInt`, which it catches to 0,
 -- which means "default" — so a float asked for `70x60` came up 243 columns wide.
@@ -257,7 +262,7 @@ end)
 if os.getenv("HEXE_MUX_SOCKET") then
   oslo.builtin.nav.command = {
     "hexe", "mux", "float",
-    "--command", "trek --explore --serve --cwd-file {answer} {dir}",
+    "--command", "trek --explore --serve --preview-shrink 40 --cwd-file {answer} {dir}",
     "--cwd", "{dir}",
     "--title", "trek",
     "--size", "30,70",

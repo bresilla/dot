@@ -319,11 +319,21 @@ local function status_recording(ctx)
   return pixy.text(active and " REC " or " rec ", style_recording)
 end
 
+-- The padding takes the body's background, not a fixed one.
+--
+-- A space shows only its background, so an edge pinned to `bg = 1` while the
+-- body dimmed left two blocks of the ACTIVE colour framing an inactive title --
+-- reading as decoration that had failed to update rather than as padding. The
+-- whole label is one slab, so it changes as one.
+--
+-- The container title keeps its `bg = 0` edges deliberately: black is the
+-- surrounding colour there, so those spaces are a gap rather than a slab, and
+-- there is nothing for them to fail to match.
 local function title(ctx, container_title)
   local text = trim(tostring(value(ctx, "title") or ""))
   if not text then return nil end
-  local edge = container_title and {bg = 0, fg = 1} or {bg = 1, fg = 1}
   local body = value(ctx, "active") == false and {bg = 237, fg = 250} or style_git
+  local edge = container_title and {bg = 0, fg = 1} or body
   return pixy.row({pixy.text(" ", edge), pixy.text(text, body), pixy.text(" ", edge)})
 end
 
