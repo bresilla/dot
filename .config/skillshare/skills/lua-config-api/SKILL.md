@@ -1,6 +1,6 @@
 ---
 name: lua-config-api
-description: Designs, converts and reviews embedded-Lua APIs for tools you control — both the registration-style config API a tool offers its own init.lua (settings assigned, behaviour registered, nothing returned) and the cross-process API it exposes to other programs over a socket, a spawned process, or one exec per call (client stub, server, exposed subset). Use when adding a Lua config layer, converting a `return tool.setup({...})` config to registration, reviewing such an API or a config written against one, or when implementing the client side (the exposed library another tool requires) and the server side (how a client connects and calls in), including letting a sibling query a tool that has no daemon. Not for editing third-party configs such as neovim or wezterm, and not for embedding Lua as a scripting or plugin runtime rather than as configuration.
+description: Designs, converts and reviews embedded-Lua APIs for tools you control — the registration-style config API a tool offers its own init.lua (settings assigned, behaviour registered, nothing returned), the plugin convention that discovers config fragments somebody else wrote, and the cross-process API it exposes to other programs over a socket, a spawn, or one exec per call. Use when adding a Lua config layer, converting a `return tool.setup({...})` config to registration, reviewing such an API or a config written against one, deciding where plugins live and how they are discovered, ordered and trusted, or implementing the client stub and server for a sibling tool to call in, including one that has no daemon. Not for editing third-party configs such as neovim or wezterm, and not for embedding Lua as a general scripting runtime unrelated to configuring the tool.
 ---
 
 # Embedded-Lua APIs for tools you control
@@ -11,15 +11,23 @@ second is built out of the first.
 | the job | the surface | read |
 |---|---|---|
 | **config** — the API a tool offers its own `init.lua` | large, local, in-process | this file, then [the five rules](references/five-rules.md) |
+| **plugins** — config somebody else wrote, discovered on disk | the config API again, from a directory | [plugins](references/plugins.md) |
 | **cross-process** — the API a tool offers *other programs* | small, remote, over a socket or a spawn | [cross-process](references/cross-process.md) |
 
 Work out which is being asked for before writing anything. "Add a Lua config to this tool", "convert
-this `setup({...})`", "review my init.lua" is the first. "Let another tool call into this one",
-"implement the client side and the server side", "expose the Lua API over a socket", "let another
-tool query this one when it has no daemon" is the second.
+this `setup({...})`", "review my init.lua" is the first. "Where do plugins live", "load fragments
+from a directory", "let a plugin draw / bind a key / add a tab" is the second. "Let another tool call
+into this one", "implement the client side and the server side", "expose the Lua API over a socket",
+"let another tool query this one when it has no daemon" is the third.
 
-When both are in play, design the config API first: the exposed surface is a deliberate subset of it,
-so it cannot be chosen until there is something to choose from.
+When more than one is in play, design the config API first: plugins are that same API arriving from
+elsewhere, and the exposed cross-process surface is a deliberate subset of it, so neither can be
+chosen until there is something to choose from.
+
+**Plugins follow neovim, and a family of tools follows itself.** neovim's model — a runtimepath of
+roots, `plugin/` auto-run and `lua/` required, `after/` last — has survived twenty years of real
+plugins and most people arriving at your tool already know it. Deviating buys nothing and costs
+everyone the transfer. Two siblings that each invent a layout stop being a family.
 
 ---
 

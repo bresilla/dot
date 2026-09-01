@@ -118,6 +118,10 @@ if on_path("pixy") then
     args = { "render", "prompt.right", "--target=ansi",
              "--set", "status=$status", "--set", "language=$language",
              "--set", "vimode=$vimode", "--frames-ms", "$frames_ms",
+             -- The turning glyph is opt-in, so a prompt that never asked for one
+             -- does not grow it. `frame=$frame` used to be the request as well as
+             -- the counter; the counter is gone, the request is not.
+             "--set", "spinner=true",
              -- **Told, not guessed.** Without this pixy falls back to `$PWD` — and while a browser
              -- is open that is deliberately stale: the shell state is held by the browser, so oslo
              -- moves the kernel's idea of where it is now and finishes `$PWD` at the next safe
@@ -157,6 +161,11 @@ if on_path("pixy") then
     timeout_ms = 20,
   }
 end
+
+-- A structured pipeline's rows, drawn as a box. Off by default because a rule is noise when a
+-- table scrolls past between two commands; on here because `df`, `ps` and `ls` are things I read
+-- rather than things I pipe. Numeric columns right-align either way.
+oslo.table.border = "rounded"
 
 -- Aliases used to be sourced from ~/.config/profile/aliases.sh here. They are in the oslo macro
 -- database now — `oslo macros show` — which every shell reads for itself at startup, so there is
@@ -507,6 +516,25 @@ oslo.on.pre_cmd(function(c)
     -- argument here and would be two if it were concatenated in raw.
     return "ls " .. oslo.quote(target)
   end
+end)
+
+-- ---------------------------------------------------------------------------------------------
+-- hexe decides whether this shell may leave
+-- ---------------------------------------------------------------------------------------------
+--
+-- `hexe shell exit-intent` asks the mux and answers with its exit status: 0 to allow, 1 to refuse.
+-- hexe draws the confirmation itself — it is the half that knows whether this is the last pane and
+-- owns the popup — so there is nothing to ask here and nothing to gate on. It waits unbounded,
+-- because the answer is a person deciding.
+--
+-- **This is what `pre-exit` was added for.** Without it the shell had already gone by the time the
+-- mux could object, and saying no meant hexe launching a *replacement* terminal. Returning `false`
+-- keeps the one that is already here.
+--
+-- Outside a session the command exits 0 on every failing path — no pane uuid, no socket, an
+-- unexpected reply — so a shell can never be trapped by a mux that is not there.
+oslo.on.pre_exit(function()
+  return oslo.run{ "hexe", "shell", "exit-intent" }.ok
 end)
 
 -- ---------------------------------------------------------------------------------------------

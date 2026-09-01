@@ -55,7 +55,6 @@ hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.a }, hexe.action.pane.adopt())
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.c }, hexe.action.clipboard.copy())
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.v }, hexe.action.clipboard.request())
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.n }, hexe.action.system.notify())
-hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.k }, hexe.action.overlay.keycast_toggle())
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.o }, hexe.action.pane.select())
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.h }, hexe.action.split.horizontal(), { when = focused_split })
 hexe.key({ hexe.key.ctrl, hexe.key.alt, hexe.key.v }, hexe.action.split.vertical(), { when = focused_split })
@@ -230,13 +229,10 @@ hexe.pop = {
       position = "topright",
       shiny_chance = 0.01,
     },
-    keycast = {
-      enabled = false,
-      position = "bottomright",
-      duration_ms = 2000,
-      max_entries = 8,
-      grouping_timeout_ms = 700,
-    },
+    -- Showing the keys you press is the keycast PLUGIN now, not a widget here.
+    -- `make install` puts it on the runtimepath, where it runs like any other.
+    -- Its position, how many chords it keeps and how long they linger are its
+    -- own settings, at the top of the plugin's own file.
     digits = {
       enabled = false,
       position = "topleft",
