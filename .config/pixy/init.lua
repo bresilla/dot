@@ -4,10 +4,9 @@ local pixy = require("pixy")
 local function cwd_of(ctx)
   return ctx.values.cwd or pixy.host.env("PWD")
 end
-local git = require("pixy.segments.git")
-local system = require("pixy.segments.system")
-local progress = require("pixy.segments.progress")
-local animate = require("pixy.animate")
+local git = pixy.git
+local system = pixy.system
+local progress = pixy.progress
 
 local style_git = {bg = 1, fg = 0}
 local style_host = {bg = 237, fg = 15, italic = true}
@@ -242,11 +241,16 @@ local function prompt_spinner(ctx)
   if n then
     return pixy.text(" " .. SPIN_FRAMES[(math.floor(n) % #SPIN_FRAMES) + 1] .. " ", style_directory)
   end
-  local glyph, next_frame = animate.frames(SPIN_FRAMES, SPIN_INTERVAL_MS, ctx.now_ms, 0)
-  if not glyph then return nil end
-  local node = pixy.text(" " .. glyph .. " ", style_directory)
-  node.next_frame_ms = next_frame
-  return node
+  return pixy.row({
+    pixy.text(" ", style_directory),
+    pixy.spinner({
+      frames = SPIN_FRAMES,
+      interval_ms = SPIN_INTERVAL_MS,
+      started_at_ms = 0,
+      style = style_directory,
+    }),
+    pixy.text(" ", style_directory),
+  })
 end
 
 local function prompt_vimode(ctx)

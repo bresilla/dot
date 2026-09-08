@@ -693,6 +693,15 @@
                 "default"
             ]
         },
+        "$HOME/.local/bin/stella": {
+            "path": "$HOME/.local/bin/stella",
+            "url": "https://github.com/macanderson/stella",
+            "provider": "github",
+            "description": "A coding agent that builds it's own tools and mines it's own skills and always ships with receipts.",
+            "tags": [
+                "other"
+            ]
+        },
         "$HOME/.local/bin/step": {
             "path": "$HOME/.local/bin/step",
             "url": "https://github.com/smallstep/cli",

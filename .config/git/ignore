@@ -66,3 +66,4 @@ PLAN.md
 .codex
 plans/
 flake.lock
+.tmp
