@@ -642,7 +642,7 @@ local function said(ctx, name)
   return trim(tostring(raw))
 end
 
--- The clock at the left-hand end, the command at the right.
+-- The command at the left-hand end, the clock at the right.
 --
 -- **Not the exit status, which used to sit on the left.** oslo draws this row when Enter is
 -- pressed, so the command below it has not run: the only status available is the *previous*
@@ -665,14 +665,14 @@ local function transcript_row(ctx)
   end
 
   local tail = string.rep("-", TRANSCRIPT_TAIL)
-  local opened = tail .. "[ " .. clock(ctx) .. " ]"
-  local fill = cols - (#cmd + 4) - TRANSCRIPT_TAIL - #opened
+  local closed = "[ " .. clock(ctx) .. " ]" .. tail
+  local fill = cols - (#cmd + 4) - TRANSCRIPT_TAIL - #closed
   if fill < 0 then fill = 0 end
 
   return pixy.row({
-    pixy.text(opened .. string.rep("-", fill) .. "[ ", style_divider),
+    pixy.text(tail .. "[ ", style_divider),
     pixy.text(cmd, style_command),
-    pixy.text(" ]" .. tail, style_divider),
+    pixy.text(" ]" .. string.rep("-", fill) .. closed, style_divider),
   })
 end
 
