@@ -10,5 +10,6 @@ in
     kitty.source = link "${checkout}/.config/kitty";
     nvim.source = link "${checkout}/.config/nvim";
     oslo.source = link "${checkout}/.config/oslo";
+    morf.source = link "${checkout}/.config/morf";
   };
 }

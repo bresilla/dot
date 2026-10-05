@@ -1,6 +1,6 @@
 my dotfiles :)
 
-Home Manager can import `nix/home.nix` to link Kitty, Neovim and Oslo from an
+Home Manager can import `nix/home.nix` to link Kitty, Neovim, Oslo and Morf from an
 editable checkout at `~/.dot`. The caller supplies the Home Manager username,
 home directory and state version. Config files remain in their original formats;
 `run_me.sh` is still available for installation on other platforms.
