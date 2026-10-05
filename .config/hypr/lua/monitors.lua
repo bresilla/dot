@@ -1,5 +1,6 @@
 return function(ctx)
     local shell_quote = ctx.util.shell_quote
+    local WORKSPACE_COUNT = 9
 
     local display_presets = {
         laptop = {
@@ -173,7 +174,7 @@ return function(ctx)
     end
 
     local function workspace_in_base_range(workspace_id, base)
-        return workspace_id >= base and workspace_id < base + 10
+        return workspace_id >= base and workspace_id < base + WORKSPACE_COUNT
     end
 
     local function workspace_in_current_range(workspace_id, preset_name)
@@ -202,8 +203,9 @@ return function(ctx)
         end
 
         for preset_name, preset in pairs(display_presets) do
-            if workspace_in_base_range(workspace_id, preset.workspace_base) then
-                return preset_name, preset, preset.workspace_base, workspace_id - preset.workspace_base
+            -- Recognize the old tenth workspace and fold it into the ninth.
+            if workspace_id >= preset.workspace_base and workspace_id < preset.workspace_base + 10 then
+                return preset_name, preset, preset.workspace_base, math.min(workspace_id - preset.workspace_base, WORKSPACE_COUNT - 1)
             end
         end
 
@@ -269,7 +271,7 @@ return function(ctx)
         local preset = display_presets[preset_name]
         local base = assign_workspace_base(preset_name)
 
-        for offset = 0, 9 do
+        for offset = 0, WORKSPACE_COUNT - 1 do
             local index = offset + 1
             local workspace = tostring(base + offset)
 
@@ -311,7 +313,7 @@ return function(ctx)
 
         local current_offset = (current_id or base) - base
 
-        if current_offset < 0 or current_offset > 9 then
+        if current_offset < 0 or current_offset >= WORKSPACE_COUNT then
             local _, _, _, source_offset = workspace_source_for_id(current_id)
 
             if source_offset then
@@ -321,7 +323,7 @@ return function(ctx)
             end
         end
 
-        return base + ((current_offset + delta) % 10)
+        return base + ((current_offset + delta) % WORKSPACE_COUNT)
     end
 
     function ctx.focus_workspace_delta(delta)
@@ -366,7 +368,7 @@ return function(ctx)
 
                 table.insert(commands, focus_monitor_cmd(monitor.name))
 
-                for offset = 0, 9 do
+                for offset = 0, WORKSPACE_COUNT - 1 do
                     table.insert(commands, focus_workspace_cmd(base + offset))
                 end
 

@@ -382,7 +382,7 @@
             "provider": "github",
             "description": "udev input device (joystick) forwarder to remote machine",
             "tags": [
-                "other"
+                "others"
             ]
         },
         "$HOME/.local/bin/just": {

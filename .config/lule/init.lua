@@ -4,7 +4,7 @@ local lule = require("lule")
 -- c.foreground, c.cursor, c.accent, c.wallpaper, c.theme, c.cache. Lists count from one, so
 -- c.colors[1] is colour 0.
 
-lule.wallpaper = "~/.wallpaper"
+lule.wallpaper = "/env/set/.animegen/"
 lule.theme = "dark"
 lule.palette = "pigment"
 lule.contrast = "aa"

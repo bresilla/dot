@@ -1,0 +1,18 @@
+# Taskwarrior configuration shared by the CLI and Caelestia.
+# Keep the database outside the dotfiles repository.
+data.location=~/.local/share/task
+
+# Default terminal report.
+default.command=next
+
+# Dates and calendar.
+dateformat=Y-M-D
+dateformat.report=Y-M-D H:N
+date.iso=on
+weekstart=Monday
+
+# Require confirmation for destructive terminal commands.
+# Caelestia supplies its own per-command confirmation settings.
+confirmation=on
+allow.empty.filter=off
+recurrence.confirmation=prompt

@@ -92,6 +92,7 @@ return function(ctx)
     hl.config({
         debug = {
             disable_logs = true,
+            vfr = true,
         },
 
         input = {
@@ -126,6 +127,19 @@ return function(ctx)
             rounding = ctx.hypr_rounding(),
             blur = {
                 enabled = false,
+                -- Two passes at three. One pass is barely a blur; eight at
+                -- three passes smears everything behind to flat colour and you
+                -- cannot tell what it was. Glass you can still read through
+                -- sits between them, nearer the gentle end — and contrast and
+                -- brightness left near neutral, so the blur softens what is
+                -- behind rather than restyling it.
+                size = 3,
+                passes = 2,
+                -- A little grain, so large blurred areas do not band.
+                noise = 0.02,
+                contrast = 1.0,
+                brightness = 0.95,
+                vibrancy = 0.15,
             },
             shadow = {
                 enabled = false,

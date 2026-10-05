@@ -43,4 +43,11 @@ return function()
     hl.window_rule({ match = { class = ".*matplotlib.*" }, float = true })
     hl.window_rule({ match = { class = ".*opencv.*" }, float = true })
     hl.window_rule({ match = { class = ".*Spotify.*" }, float = true })
+
+    -- Keep the SDL/Flatpak RDP client in the normal tiling layout.
+    hl.window_rule({
+        name = "freerdp_sdl_tile",
+        match = { class = [[^(com\.freerdp\.FreeRDP|sdl-freerdp|sdl-freerdp3)$]] },
+        tile = true,
+    })
 end

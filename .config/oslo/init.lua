@@ -167,6 +167,8 @@ end
 -- rather than things I pipe. Numeric columns right-align either way.
 oslo.table.border = "rounded"
 
+oslo.source(oslo.env.get("HOME") .. "/.external")
+
 -- Aliases used to be sourced from ~/.config/profile/aliases.sh here. They are in the oslo macro
 -- database now — `oslo macros show` — which every shell reads for itself at startup, so there is
 -- nothing to source and a change reaches the terminal beside this one before its next prompt.

@@ -121,7 +121,7 @@ return function(ctx)
         return cmd
     end
 
-    bind_exec(super .. " + L", "hyprlock")
+    bind_exec(super .. " + L", "/usr/bin/morf lock")
 
     bind_exec(super_meta .. " + P", "doas chvt 2")
     scratchpads.bind(super_meta .. " + Backspace", "ask", function()
@@ -129,16 +129,13 @@ return function(ctx)
     end, {
         size = { "monitor_h*0.8", "monitor_h*0.8" },
     })
-    scratchpads.bind(super_meta .. " + Space", "browsy", function()
-        return kitty_cmd("--title browsy -e browsy", scratchpad_font_scale)
-    end, {
-        size = { "monitor_w*0.6", "monitor_h*0.2" },
-    })
-    scratchpads.bind(super_meta .. " + Return", "appy", function()
-        return kitty_cmd("--title appy -e appy", scratchpad_font_scale)
-    end, {
-        size = { "monitor_w*0.6", "monitor_h*0.2" },
-    })
+    -- browsy and appy, as morf's launcher (the kitty scratchpads they
+    -- were are in binds.lua.bak-launcher).
+    bind_exec(super_meta .. " + Space", "/usr/bin/morf ipc call launcher web")
+    bind_exec(super_meta .. " + Return", "/usr/bin/morf ipc call launcher apps")
+    -- morf's on-screen keyboard (it also comes up by itself when a text
+    -- field wants input and no keyboard is attached).
+    bind_exec(super_meta .. " + K", "/usr/bin/morf ipc call keyboard toggle")
     bind_exec(super_meta .. " + F9", ctx.home .. "/.local/sbin/lule_switch")
 
     hl.bind(super .. " + Escape", hl.dsp.window.close())
@@ -203,7 +200,7 @@ return function(ctx)
     bind_exec("XF86MonBrightnessDown", ctx.home .. "/.local/sbin/bright -2")
     bind_exec("XF86MonBrightnessUp", ctx.home .. "/.local/sbin/bright +2")
 
-    bind_exec("Print", ctx.home .. "/.local/sbin/capture i")
+    bind_exec("Print", "/usr/bin/morf ipc call capture open")
 
     bind_exec(menu .. " + Space", "mpv_control cycle")
     bind_exec(menu .. " + comma", "mpv_control backwards 10")
