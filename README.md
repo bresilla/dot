@@ -1,7 +1,11 @@
 my dotfiles :)
 
-Home Manager can import `nix/home.nix` to link Kitty, Neovim, Oslo, Pixy and Morf from an
-editable checkout at `~/.dot`. The caller supplies the Home Manager username,
+Home Manager imports `nix/home.nix` to link every entry in `.config` and every
+home dotfile in this repository from the editable checkout at `~/.dot`.
+Repository metadata and `.config` itself are excluded from the home-level links.
+It also creates `.zshenv` with the same settings as `run_me.sh` and adds the user
+binary and script directories to PATH. Newly committed configs are included
+automatically. The caller supplies the Home Manager username,
 home directory and state version. Config files remain in their original formats;
 `run_me.sh` is still available for installation on other platforms.
 ```
