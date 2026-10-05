@@ -12,6 +12,9 @@ M.results = morf.list_model({})
 -- How tall each kind of row is, with the gap under it: the results view
 -- lists them virtualised by these, and its build sets its own.
 M.row_heights = { header = 32, hero = 118, row = 52 }
+-- Bumped once the view has set its own heights, so the rows found before
+-- it was built are found again at those.
+local heights_set = morf.signal("caelestia.launcher.heights", 0)
 M.count = morf.signal("caelestia.launcher.count", 0)
 M.mode = morf.signal("caelestia.launcher.mode", "apps")
 -- The row whose actions are listed instead of the results (Tab, Ctrl+K),
@@ -24,24 +27,13 @@ M.wall_count = morf.signal("caelestia.launcher.walls", 0)
 local function max_shown() return config.get("launcher.max_shown") end
 
 local by_key = {}
-local section_of -- below
 
 --- The full row behind a model entry.
 local function row_of(entry) return entry and by_key[entry.key] end
 
--- Which section a row belongs under: the providers name theirs; apps,
--- commands and the fallbacks are named here.
-section_of = function(row, q)
-  if row.section then return row.section end
-  if tostring(row.id):match("^fallback:") then return "Use “" .. q .. "” with…" end
-  if row.kind == "app" then return q == "" and "Suggestions" or "Applications" end
-  if row.kind == "action" or row.kind == "scheme" or row.kind == "variant" then return "Commands" end
-  if row.id == "address" then return "Open" end
-  return "Results"
-end
-
 -- The results follow the query.
 morf.effect("caelestia.launcher.search", function()
+  heights_set:get()
   local q = M.query:get()
   local menus = require("menus")
   local found, mode
@@ -77,18 +69,11 @@ morf.effect("caelestia.launcher.search", function()
     return
   end
   local out = {}
-  local last_section
   local shown = 0
   for i = 1, #found do
     local row = found[i]
     local hero = row.id == "answer" or row.kind == "calc"
     if not hero and shown >= max_shown() then break end
-    local section = not hero and section_of(row, q) or nil
-    if section and section ~= last_section then
-      out[#out + 1] = { key = "header:" .. section .. ":" .. #out, kind = "header", name = section,
-        height = M.row_heights.header }
-    end
-    last_section = section or last_section
     local key = row.kind .. ":" .. row.id
     -- A model row is plain data; the row itself (an action's function
     -- among it) stays in Lua, by key.
@@ -152,8 +137,15 @@ local choice = require("lib.kit.control").headless("Collection", {
 })
 M.choice = choice
 local function move(delta)
+  -- The carousel steps by itself: the Collection can keep the list's
+  -- orientation across an empty search, and a wallpaper has no headings
+  -- to skip anyway.
+  if wide() then
+    local count = M.wall_count:get()
+    if count > 0 then M.selected:set(math.max(1, math.min(count, M.selected:get() + delta))) end
+    return
+  end
   local back, forth = "Up", "Down"
-  if wide() then back, forth = "Left", "Right" end
   for _ = 1, math.abs(delta) do
     if not choice.key(delta > 0 and forth or back) then break end
   end
@@ -223,6 +215,7 @@ end
 M.mode_name = mode_name
 M.opened = morf.signal("caelestia.launcher.opened", false)
 view = require("themes").view("launcher").build(M)
+heights_set:set(1)
 M.width = view.width
 M.drawer = drawer.new {
   name = "launcher", edge = "center", width = view.width, height = view.height,

@@ -512,7 +512,7 @@ return function(ctx)
         local profile = choose_display_profile(present)
 
         reset_workspace_assignments()
-        hl.monitor({ output = "", mode = "preferred", position = "auto", scale = "auto" })
+        hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
 
         if profile then
             apply_horizontal_profile(profile, present, configured)
