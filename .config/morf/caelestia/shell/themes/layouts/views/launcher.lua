@@ -31,7 +31,7 @@ local CHIPS = {
 
 function V.build(M)
   local row_of = M.row_of
-  local WIDTH, WIDE = 620, 1180
+  local WIDTH, WIDE = require("responsive").fit(620, 8), 1180
   local PAD = 10
   local SEARCH = 50
   local HEAD = 30
@@ -466,7 +466,9 @@ function V.build(M)
     id = "launcher-legend",
     x = function() return width() + 10 end, y = 0, width = LEGEND_W, height = #CHIPS * 22 + 20,
     opacity = function()
-      return (legend_due:get() and M.opened:get() and not wide() and M.acting:get() == "") and 1 or 0
+      -- And only where there is room beside the panel for it.
+      local room = (require("responsive").desk_width() - width()) / 2 >= LEGEND_W + 16
+      return (room and legend_due:get() and M.opened:get() and not wide() and M.acting:get() == "") and 1 or 0
     end,
     behavior = { opacity = { duration = theme.duration.normal } },
     ui.Rect {

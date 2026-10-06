@@ -4,46 +4,59 @@ local ui=require("morf.ui")
 local theme=require("theme")
 local kit=require("kit")
 local rows=require("themes.layouts.rows")
+local P=require("themes.layouts.page")
 local C=theme.color
 local V={WIDTH=430,RADIUS=15}
+--- The Theme page: dark or light, and Lule one page in.
+function V.theme_page(model,w,h)
+  local config=require("config")
+  local function dark() return config.get("theme.mode")~="light" end
+  local inner=P.inner(w)
+  return P.page {id="settings-theme-scroll",width=w,height=h,
+    P.section {id="settings-theme",width=w,title="Appearance",
+      P.row {id="settings-theme-mode",width=inner,icon=function() return dark() and "dark_mode" or "light_mode" end,
+        title="Dark mode",
+        subtitle=function() return dark() and "The shell in dark colours" or "The shell in light colours" end,
+        trailing=P.switch {id="utilities-toggle-theme-mode",name="Dark mode",on=dark,
+          on_toggled=function(on) config.set("theme.mode",on and "dark" or "light") end}},
+      P.row {id="settings-theme-lule",width=inner,icon="palette",title="Lule",
+        subtitle="Wallpaper, colours, the shell's theme and font",trailing=P.chevron(),
+        on_clicked=function() model.request("theme/lule") end},
+    },
+  }
+end
+
 function V.focus_page(model,w,h)
-  local rows={width=w,gap=12}
+  local inner=P.inner(w)
+  local section={id="settings-focus",width=w,title="Interruptions"}
   for _,control in ipairs(model.focus) do
     local function on() return control.on()==true end
-    local card={id="settings-focus-"..control.id,width=w,height=88,
-      kit.card {anchors={fill=true},radius=20,color=function() return C.surfaceContainer end},
-      kit.icon(control.icon,24,function() return on() and kit.ink("accent")() or kit.ink("lo")() end,
-        {x=16,anchors={vertical_center=true}}),
-      ui.Column {x=56,anchors={vertical_center=true},gap=4,
-        kit.heading {id="settings-focus-title-"..control.id,scope="settings.focus",level="section",
-          text=control.name,width=w-166,font_size=14,elide="right"},
-        kit.subtitle {width=w-166,font_size=12,wrap=true,
-          text=function()
-            if control.id=="awake" then return on() and control.status() or "Allow the screen to sleep" end
-            if control.id=="ringer" then return "Notification sounds and vibration" end
-            return on() and "Notifications stay in history" or "Show notification popups"
-          end},
-      },
-    }
+    local trailing
     if control.id=="ringer" then
-      card[#card+1]=kit.pill {id="utilities-toggle-ringer",anchors={right=true,right_margin=12,vertical_center=true},
-        width=96,height=36,label=control.status,on_clicked=function() control.set() end}
+      trailing=P.button {id="utilities-toggle-ringer",label=control.status,on_clicked=function() control.set() end}
     else
-      card[#card+1]=kit.switch {id="utilities-toggle-"..control.id,accessible_name=control.name,
-        anchors={right=true,right_margin=16,vertical_center=true},on=on,on_toggled=control.set}
+      trailing=P.switch {id="utilities-toggle-"..control.id,name=control.name,on=on,on_toggled=control.set}
     end
-    rows[#rows+1]=ui.Item(card)
+    section[#section+1]=P.row {id="settings-focus-"..control.id,width=inner,icon=control.icon,on=on,
+      title=control.name,trailing=trailing,
+      subtitle=function()
+        if control.id=="awake" then return on() and control.status() or "Allow the screen to sleep" end
+        if control.id=="ringer" then return "Notification sounds and vibration" end
+        return on() and "Notifications stay in history" or "Show notification popups"
+      end}
   end
-  return (kit.scroll({id="settings-focus-scroll",width=w,height=h,clip=true,ui.Column(rows)}))
+  return P.page {id="settings-focus-scroll",width=w,height=h,P.section(section)}
 end
 function V.build(model,w,h)
 local M={TOGGLES=model.TOGGLES,DETAILS=model.DETAILS,detail=model.detail,RADIUS=V.RADIUS}
-local CARD_W,GAP=math.min(408,w),12
+-- A side panel's cards are 408 wide; a sheet's (a phone's quick settings)
+-- take its width.
+local CARD_W,GAP=w,P.GAP
 local overview_viewport, overview_viewport_node, overview_viewport_t, overview_viewport_ctl
 local TILE_H,TILE_GAP=60,8
-local TILE_W=(CARD_W-24-TILE_GAP)/2
+local TILE_W=(CARD_W-2*P.PAD-TILE_GAP)/2
 local TILE_ROWS=math.ceil(#M.TOGGLES/2)
-local TILES_H=24+TILE_ROWS*TILE_H+(TILE_ROWS-1)*TILE_GAP
+local TILES_H=2*P.PAD+TILE_ROWS*TILE_H+(TILE_ROWS-1)*TILE_GAP
 local function tile(t)
   local area, more
   local function on() return t.on() == true end
@@ -101,8 +114,8 @@ local function toggles()
   end
   return kit.card {
     id = "utilities-toggles",
-    width = CARD_W, height = TILES_H, radius = M.RADIUS,
-    ui.Column { x = 12, y = 12, gap = TILE_GAP, table.unpack(rows) },
+    width = CARD_W, height = TILES_H, radius = kit.round(P.RADIUS),
+    ui.Column { x = P.PAD, y = P.PAD, gap = TILE_GAP, table.unpack(rows) },
   }
 end
 
@@ -114,21 +127,40 @@ end
 -- track's start and the value at its end. The level rides a spring; the
 -- handle narrows while held. They read and set what the OSD does.
 local SLIDER_H = 44
-local SLIDERS_H = 16 + SLIDER_H + 12 + SLIDER_H + 16
+local SLIDERS_H = 2 * P.PAD + 3 * SLIDER_H + 2 * 4
 
-local function slider(id, value, set, icon, name)
-  return kit.slider { id = id, accessible_name = name, width = CARD_W - 32, value = value, set = set, icon = icon }
+-- The shell's scale: -1 (half) to 1 (twice) along the slider, 0 -- the
+-- compositor's own -- in its middle, in steps of 0.05.
+local function scale_now()
+  local v = tonumber(require("config").get("appearance.zoom")) or 0
+  return (math.max(-1, math.min(1, v)) + 1) / 2
+end
+local function scale_set(position)
+  local v = math.max(0, math.min(1, position)) * 2 - 1
+  v = math.floor(v / 0.05 + 0.5) * 0.05
+  if math.abs(v) < 1e-6 then v = 0 end
+  require("config").set("appearance.zoom", v)
+end
+local function scale_reading(position)
+  local v = math.floor((position * 2 - 1) * 100 + 0.5)
+  return v == 0 and "0" or ("%+d%%"):format(v)
+end
+
+local function slider(id, value, set, icon, name, reading)
+  return kit.slider { id = id, accessible_name = name, width = CARD_W - 2 * P.PAD, value = value, set = set, icon = icon,
+    reading = reading }
 end
 
 local function sliders()
   local osd = model.levels
   return kit.card {
     id = "utilities-sliders",
-    width = CARD_W, height = SLIDERS_H, radius = M.RADIUS,
+    width = CARD_W, height = SLIDERS_H, radius = kit.round(P.RADIUS),
     ui.Column {
-      x = 16, y = 12, gap = 4,
+      x = P.PAD, y = P.PAD, gap = 4,
       slider("utilities-volume", function() return (osd.volume()) end, osd.set_volume, osd.volume_icon, "Volume"),
       slider("utilities-brightness", function() return (osd.brightness()) end, osd.set_brightness, osd.brightness_icon, "Brightness"),
+      slider("utilities-scale", scale_now, scale_set, "zoom_in", "Scale", scale_reading),
     },
   }
 end
@@ -144,19 +176,18 @@ local capture_button = kit.pill {
     model.capture()
   end,
 }
-local heading = kit.heading {id="settings-title",text="Controls",scope="settings.overview",width=CARD_W,height=30}
-local cards = { heading, sliders(), capture_button, toggles() }
+local cards = { sliders(), capture_button, toggles() }
 
 --- The page's height: the cards and their gaps.
 function M.height()
-  return 3 * GAP + 30 + SLIDERS_H + 40 + TILES_H
+  return 2 * GAP + SLIDERS_H + 40 + TILES_H
 end
 
 
 --- The Settings page of the right panel: the cards, top down, and the
 --- detail pages (Network, Bluetooth, Sound) beside them, which slide in
---- over them as a tile's ">" opens one.
-local DETAIL_HEAD = 52
+--- over them as a tile's ">" opens one. The panel's frame draws the head:
+--- "Settings", or a detail's name with the way back (`M.head`).
 local SWITCH = { duration = theme.duration.normal, easing = theme.ease.emphasized_decel }
 function M.page(w, h)
   overview_viewport_node, overview_viewport, overview_viewport_t, overview_viewport_ctl = kit.scroll({id="settings-overview-scroll",width=w,height=h,clip=true,
@@ -165,37 +196,33 @@ function M.page(w, h)
     id = "utilities", width = w, height = h, clip = true,
     overview_viewport_node,
   }
-  local dh = function() return h() - DETAIL_HEAD end
   local stack = {}
   local names = {}
   for _, d in ipairs(M.DETAILS) do
     names[d.key] = d.name
     stack[#stack + 1] = ui.Item {
       id = "settings-detail-" .. d.key,
-      y = DETAIL_HEAD, width = w, height = dh,
+      width = w, height = h,
       visible = function() return M.detail:get() == d.key end,
       opacity=function() return M.detail:get()==d.key and 1 or 0 end,
       translate_x=function() return M.detail:get()==d.key and 0 or 20 end,
       behavior={opacity={duration=theme.duration.small},translate_x=SWITCH},
-      model.page_content(d.key, w, dh),
+      model.page_content(d.key, w, h),
     }
   end
-  local back = kit.action {
-    id = "settings-back", accessible_name = "Back",
-    width = 40, height = 40, y = 2, cursor = "pointer",
-    on_clicked = model.back,
-    kit.icon("arrow_back", 22, kit.ink("hi"), { anchors = { center_in = true } }),
+  M.head = {
+    title = function() return names[M.detail:get()] or "Settings" end,
+    subtitle = function() return M.detail:get() ~= "" and model.breadcrumb() or "" end,
+    back = model.back, back_id = "settings-back",
+    can_back = function() return M.detail:get() ~= "" end,
+    -- Read in afresh as the overview or a detail comes on show.
+    active = function()
+      local key = M.detail:get()
+      return require("presentation").active(key == "" and "settings.overview" or "settings." .. key)()
+    end,
   }
-  kit.hover(back, function(hovered) return hovered and C.onSurface:alpha(0.08) or C.onSurface:alpha(0) end, 20)
   local detail = ui.Item {
     id = "settings-detail", width = w, height = h,
-    back,
-    kit.heading { id = "settings-detail-heading", scope = "settings.detail",
-      x = 50, y = 20, width=w-54,elide="right",
-      text = function() return names[M.detail:get()] or "" end,
-      font_size = theme.size.large, font_weight = 500,
-    },
-    kit.subtitle {id="settings-breadcrumb",x=50,y=2,width=w-54,font_size=10,elide="right",text=model.breadcrumb},
     table.unpack(stack),
   }
   -- The last detail shown stays drawn while it slides away. The pages are
@@ -220,6 +247,6 @@ morf.effect("material.settings.shown",function()
   for _, handle in ipairs(running) do handle:stop() end
   running=kit.bud(cards,model.opened:get())
 end,{owner=node})
-return {node=node,height=M.height}
+return {node=node,height=M.height,head=M.head}
 end
 return V

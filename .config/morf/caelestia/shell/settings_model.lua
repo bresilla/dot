@@ -415,16 +415,26 @@ do
       kept[#kept + 1] = t
     end
   end
+  -- The theme: the tile switches dark and light; its page has that, and
+  -- Lule (wallpaper, colours, the shell's theme and font) one page in.
+  local function dark() return config.get("theme.mode") ~= "light" end
+  kept[#kept + 1] = { id = "theme", name = "Theme", detail = "theme",
+    icon = function() return dark() and "dark_mode" or "light_mode" end,
+    on = dark,
+    set = function() config.set("theme.mode", dark() and "light" or "dark") end,
+    status = function() return dark() and "Dark" or "Light" end }
   M.TOGGLES = kept
 end
 
 M.opened = morf.signal("caelestia.settings.opened", false)
 M.displayed = require("themes.session").keep("caelestia.settings.displayed", "")
+
 M.DETAILS = {
   {key="network",name="Network"}, {key="bluetooth",name="Bluetooth"},
   {key="sound",name="Sound"}, {key="microphone",name="Microphone"},
   {key="power",name="Power"}, {key="bar",name="Bar"}, {key="wired",name="Wired"},
   {key="mesh",name="Mesh"}, {key="tunnel",name="Tunnel"}, {key="focus",name="Focus"},
+  {key="theme",name="Theme"}, {key="theme/lule",name="Lule",parent="theme"},
   {key="sound/equalizer",name="Equalizer",parent="sound"},
   {key="sound/equalizer/audiogram",name="Audiogram",parent="sound/equalizer"},
 }

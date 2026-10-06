@@ -22,12 +22,16 @@ local V = {}
 local SIGNALS = { logout = "info", shutdown = "alert", hibernate = "accent", reboot = "warn" }
 
 function V.build(M)
-  local WIDTH, PAD, GAP = 300, 12, 8
+  -- Upright (a phone) it takes most of the width, and taller rows: a
+  -- finger, not a pointer.
+  local responsive = require("responsive")
+  local TOUCH = responsive.portrait()
+  local WIDTH, PAD, GAP = TOUCH and responsive.fit(560, 24) or 300, 12, 8
   local RW = WIDTH - 2 * PAD
   local LABEL_H = L.lh(L.role_size("label"))
   local NAME = math.floor(L.role_size("title") * 1.15)
   local NAME_H = L.lh(NAME)
-  local ROW_H = math.max(54, 6 + NAME_H + LABEL_H + 8)
+  local ROW_H = math.max(TOUCH and 72 or 54, 6 + NAME_H + LABEL_H + 8)
   local TITLE_H = L.heading_h(L.role_size("section"))
   local TITLE_Y = 12
   local HEAD_H = TITLE_Y + TITLE_H + 8

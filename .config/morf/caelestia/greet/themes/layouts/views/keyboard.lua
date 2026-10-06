@@ -5,7 +5,7 @@ local osk = require("lib.util.osk")
 local C = theme.color
 local V = {}
 function V.build(model)
-  local W, PAD = 1060, 12
+  local W, PAD = require("responsive").fit(1060, 0), 12
   -- The theme styles the keys: its colours, and its own key face where it
   -- has one (lib.osk's default face otherwise).
   local look = kit.keyboard_look {

@@ -63,6 +63,27 @@ morf.effect("caelestia.scheme", function()
   config.get("theme.mode")
 end)
 
+-- ------------------------------------------------------------------ scale --
+
+-- The scale slider (quick settings): everything drawn bigger or smaller,
+-- from -1 (half) through 0 (the compositor's own scale) to 1 (twice). The
+-- windows follow at once; once the slider rests, the shell is built again
+-- in place (no teardown: what is open stays open) so every layout -- a
+-- panel's four fifths, a phone's column -- is worked out for the new size.
+local function zoom()
+  -- (A stand-in configuration, a test's, may have no `get`.)
+  local v = config.get and tonumber(config.get("appearance.zoom")) or 0
+  return math.max(-1, math.min(1, v))
+end
+local zoom_first, zoom_settle = true, nil
+morf.effect("caelestia.scale", function()
+  local v = zoom()
+  if morf.density then morf.density(v ~= 0 and { zoom = 2 ^ v } or nil) end
+  if zoom_first then zoom_first = false return end
+  if zoom_settle then zoom_settle:cancel() end
+  zoom_settle = morf.timer(300, function() zoom_settle = nil morf.reload() end, false)
+end)
+
 -- ---------------------------------------------------------------- drawers --
 
 local launcher = require("launcher")
@@ -95,7 +116,10 @@ local bar = require("bar")
 morf.effect("caelestia.keyboard.focus", function()
   local exclusive = launcher.drawer.open:get() or session.drawer.open:get()
     or (polkit.drawer.open:get() and polkit.pending:get()) or keyring.drawer.open:get() or capture.editor.active:get()
-  local editor_open = leftbar.drawer.open:get() or (dashboard.drawer.open:get() and dashboard.tab:get() == dashboard.LULE_TAB)
+  -- Typed into on a click: the planner, the terminal, Lule's page.
+  local editor_open = leftbar.drawer.open:get()
+    or (dashboard.drawer.open:get() and dashboard.tab:get() == dashboard.TERMINAL_TAB)
+    or (sidebar.drawer.open:get() and require("utilities").displayed:get() == "theme/lule")
   morf.surface.keyboard_focus = exclusive and "exclusive" or editor_open and "on_demand" or "none"
 end)
 
@@ -111,7 +135,17 @@ local overlays={
   -- A press on the desk shuts what is open: each drawer's close policy
   -- (shell/drawer.lua), not catchers here.
 }
-local triggers={
+local triggers=require("responsive").portrait() and {
+  -- A phone: the top edge brings quick settings down, the bottom one the
+  -- dashboard up; the side edges are left to the workspace gestures, and
+  -- the planner and the assistant wait for theirs.
+  require("hover").edge {
+    name = "sidebar", drawer = sidebar.drawer, edge = "top",
+    length = function() local _, _, w = bar.desk() return w - 2 * (theme.BORDER + theme.ROUNDING) end,
+    setting = "sidebar.hover",
+  },
+  dashboard.edge_trigger(),
+} or {
   dashboard.edge_trigger(),
   -- The bottom edge opens the tabbed assistant workspace.
   require("hover").edge {
@@ -210,6 +244,21 @@ ipc.launcher = function(how)
   return verb(launcher.drawer)(how)
 end
 ipc.dashboard = verb(dashboard.drawer)
+-- Builds the shell again from its files, in place.
+ipc.reload = function() morf.reload() return true end
+-- The scale, as the slider sets it: `scale -0.25` (smaller), `scale 0`
+-- (the compositor's), `scale 0.5` (bigger), or nothing to ask.
+ipc.scale = function(value)
+  if value ~= nil then config.set("appearance.zoom", math.max(-1, math.min(1, tonumber(value) or 0))) end
+  return config.get("appearance.zoom")
+end
+-- The screen as the shell sees it: its size in the shell's pixels, the
+-- scale it is drawn at, and what the compositor and the panel say.
+ipc.screen = function()
+  local s = morf.screens[1] or {}
+  return { width = s.width, height = s.height, scale = s.density_scale,
+    logical_width = s.logical_width, pixel_width = s.pixel_width }
+end
 ipc["dashboard-history"] = function(output)
   local name = (morf.screens[1] or {}).name
   if output and output ~= name then return end
@@ -333,8 +382,11 @@ end
 -- existing terminal/accent diagnostics used by colour-tool integrations.
 ipc.lule = function(how)
   if how then
-    if here() and how ~= "close" then dashboard.tab:set(dashboard.LULE_TAB) end
-    return verb(dashboard.drawer)(how)
+    if here() and how ~= "close" then
+      sidebar.select("settings")
+      require("utilities").detail:set("theme/lule")
+    end
+    return verb(sidebar.drawer)(how)
   end
   local tty = require("terminal_colors").tty
   return tty and tty.path or "", theme.lule.accent:hex(), theme.color.primary:hex()

@@ -25,29 +25,38 @@ local L = require("themes.layouts.parts")
 local S = L.SIZE
 local M = {}
 
--- The page: at most 1400 x 760, less on a screen without the room (the
--- drawer's frame, padding, tabs and seams around it).
-do
-  local sw, sh = L.screen()
-  M.WIDTH = math.max(960, math.min(1400, sw - 2 * theme.BORDER - 2 * 16 - 2 * 40))
-  M.HEIGHT = math.max(560, math.min(760, sh - 2 * theme.BORDER - 68 - 2 * 16 - 40))
-end
-local GAP = 12
-local SIDE_W = M.WIDTH >= 1300 and 300 or 264
-local MAIN_W = M.WIDTH - SIDE_W - GAP
-local TITLE_Y = 12
-local TOP = TITLE_Y + L.title_h() + 8            -- under the title row
-local INNER = MAIN_W - 40
-local LW = INNER >= 1000 and 250 or 220          -- the gauges
-local RW = INNER >= 1000 and 258 or 220          -- the readouts
-local LX = 20
-local MX = LX + LW + 22
-local MW = INNER - LW - RW - 40                   -- the charts
-local RX = MX + MW + 18
-local BOTTOM = M.HEIGHT - 20
-local COL_H = BOTTOM - TOP
+-- The page: the dashboard's (responsive.dashboard -- every tab the same
+-- width, the page scrolling in the one height), in the page template's
+-- tiles (themes/layouts/page.lua): the devices and the resource mix down
+-- the left, then for the picked device its gauges, its charts, and its
+-- readings over its details, each a captioned card. Where the charts would
+-- be too narrow the readings and details go under them; on a phone
+-- (`responsive.compact()`) every tile is the page's width, one under the
+-- other.
+local P = require("themes.layouts.page")
+local responsive = require("responsive")
+local COMPACT = responsive.compact()
+local GAP = P.GAP
+local PAD = P.PAD
+local COMPACT_COL = 560                           -- a stacked tile's inner height
+local VIEW_H
+M.WIDTH, VIEW_H = responsive.dashboard("performance")
+local W = M.WIDTH
+local H = COMPACT and COMPACT_COL + P.CAPTION_H + 2 * PAD or math.max(560, VIEW_H)
+local SIDE_T = COMPACT and W or (W >= 1100 and 280 or 256)
+local MAIN_W = COMPACT and W or W - SIDE_T - GAP
+local LT = COMPACT and W or 220                   -- the gauges' tile
+local RT = COMPACT and W or 290                   -- the readings' tile
+-- Three across when the charts keep a useful width; else the readings and
+-- details under the gauges and charts.
+local ACROSS = not COMPACT and MAIN_W - LT - RT - 2 * GAP >= 320
+local MT = COMPACT and W or ACROSS and MAIN_W - LT - RT - 2 * GAP or MAIN_W - LT - GAP
+local COL_H = H - P.CAPTION_H - 2 * PAD           -- a tile's inner height
+local LW = LT - 2 * PAD                           -- the gauges
+local MW = MT - 2 * PAD                           -- the charts
+local RW = RT - 2 * PAD                           -- the readouts (across)
 local ROW_H = 48
-local RADAR_H = M.HEIGHT >= 700 and 214 or 184
+local RADAR_T = 236                               -- the resource mix's tile
 
 local function pct(v) return ("%d%%"):format(math.floor((tonumber(v) or 0) + .5)) end
 
@@ -78,20 +87,19 @@ function M.build(model)
   --- subtitle }, `channels` ({ label, value }) and their title.
   local STATUS_H = 40
   local TRIPLET_H = 74
-  local FLEX = COL_H - (L.CAPTION_H + 6) - 12 - 10 - 14 - 12 - TRIPLET_H - 12 - STATUS_H - 8
+  local FLEX = COL_H - 12 - 10 - 14 - 12 - TRIPLET_H - 12 - STATUS_H - 8
   -- The channel meters keep a useful height (CHAN_MIN: their caption and
   -- labels and a 40 px column); the ring gives way to them on a short page.
   local CHAN_MIN = 8 + 2 * (L.lh(S.micro) + 6) + 40
   local MINI = math.min(104, math.floor((LW - 30) / 2), math.floor(FLEX * 0.24))
   local RING = math.max(120, math.min(236, LW - 10, math.floor(FLEX * 0.56), FLEX - MINI - CHAN_MIN))
   local CHAN_H = FLEX - RING - MINI
+  local captions = {}
   local function left_column(kind, spec)
+    captions[kind] = spec.ring.caption
     local up = live(kind)
-    local nodes = { x = LX, y = TOP, width = LW, height = COL_H }
+    local nodes = { width = LW, height = COL_H, visible = on(kind) }
     local y = 0
-    nodes[#nodes + 1] = L.caption { width = LW, text = spec.ring.caption or "Primary load",
-      note = kit.code(kind, "SET #.##") }
-    y = L.CAPTION_H + 6
     nodes[#nodes + 1] = kit.ring {
       id = "performance-ring-" .. kind, x = math.floor((LW - RING) / 2), y = y, size = RING,
       value = function() return up() and spec.ring.value() or 0 end,
@@ -112,7 +120,10 @@ function M.build(model)
       size = 8, vertical = true, color = kit.stroke("idle") })
     y = y + MINI + 14 + 12
     nodes[#nodes + 1] = kit.triplet { y = y, width = LW, series = spec.triplet.series, top = spec.triplet.top,
-      format = spec.triplet.format, title = spec.triplet.title, font_size = spec.triplet.font_size }
+      format = spec.triplet.format, title = spec.triplet.title,
+      -- (A narrow tile's three readings a size down, so they are not cut.)
+      font_size = math.min(spec.triplet.font_size or 99, LW < 230 and 13 or 99) < 99
+        and math.min(spec.triplet.font_size or 99, LW < 230 and 13 or 99) or nil }
     y = y + TRIPLET_H + 12
     local chans = spec.channels
     if chans and CHAN_H >= 56 then
@@ -134,9 +145,12 @@ function M.build(model)
         box[#box + 1] = kit.vmeter { x = x, y = lh + 6, width = mw, height = mh,
           value = function() return up() and c.value() or 0 end,
           color = kit.level(function() return c.value() * 100 end) }
+        -- Each label in its own slot (cut short there), every other one
+        -- where the slots are too narrow for any.
         if slot >= 18 or i % 2 == 1 then
-          box[#box + 1] = L.label { x = x0 + (i - 1) * slot - 8, y = CHAN_H - 8 - lh - 3, width = slot + 16,
-            horizontal_alignment = "center", text = c.label, font_size = S.micro }
+          local lw = slot >= 18 and slot or 2 * slot
+          box[#box + 1] = L.label { x = x0 + (i - 1) * slot + (slot - lw) / 2, y = CHAN_H - 8 - lh - 3, width = lw,
+            horizontal_alignment = "center", elide = "right", text = c.label, font_size = S.micro }
         end
       end
       nodes[#nodes + 1] = ui.Item(box)
@@ -147,33 +161,41 @@ function M.build(model)
   end
 
   local STAT_H, STAT_GAP = 56, 10
-  local function right_column(kind)
+  --- The picked device's readings: its stats two to a row.
+  local function readings(kind, width)
     local stats = model.readouts[kind].stats
-    local cw = math.floor((RW - 10) / 2)
-    local cells = { y = L.CAPTION_H + 6, width = RW, height = math.ceil(#stats / 2) * (STAT_H + STAT_GAP) }
+    local cw = math.floor((width - 10) / 2)
+    local cells = { width = width, height = math.ceil(#stats / 2) * (STAT_H + STAT_GAP) - STAT_GAP, visible = on(kind) }
     for i, row in ipairs(stats) do
       cells[#cells + 1] = kit.stat { x = ((i - 1) % 2) * (cw + 10), y = math.floor((i - 1) / 2) * (STAT_H + STAT_GAP),
         width = cw, height = STAT_H, label = row.label, value = row.value, mark = row.mark,
         color = row.mark == "dashed" and kit.signal("info") or nil }
     end
-    local fy = cells.y + cells.height + 8
+    return ui.Item(cells)
+  end
+  --- What it is: label / value lines.
+  local function details(kind, width, height, rows_max)
     local facts = model.readouts[kind].facts
-    local row_h = math.max(16, math.min(20, math.floor((COL_H - fy - L.CAPTION_H - 6) / math.max(1, #facts))))
-    return ui.Item {
-      x = RX, y = TOP, width = RW, height = COL_H, clip = true,
-      L.caption { width = RW, text = "Readings", note = kit.code("ro" .. kind, "##-BIT USAW") },
-      ui.Item(cells),
-      L.caption { y = fy, width = RW, text = "Details", note = kit.code("dr" .. kind, "CP-##/CP-##") },
-      ui.Item { y = fy + L.CAPTION_H + 6, kit.facts(facts, RW, row_h, math.floor(RW * .52)) },
-    }
+    local row_h = math.max(16, math.min(22, math.floor(height / math.max(1, rows_max))))
+    return ui.Item { width = width, height = height, visible = on(kind), clip = true,
+      kit.facts(facts, width, row_h, math.floor(width * .52)) }
   end
 
-  local function page(kind, title, subtitle, contents)
-    table.insert(contents, 1, L.title_row { x = 20, y = TITLE_Y, width = INNER, id = "performance-title-" .. kind,
-      active = live(kind), title = title, subtitle = subtitle, key = "perf" .. kind })
-    contents.visible = on(kind)
-    contents.width, contents.height = MAIN_W, M.HEIGHT
-    return L.item(contents)
+  -- Each device's gauges, charts and title, as `page` registers them; the
+  -- tiles below hold them all and show the picked one's.
+  local KINDS = { "cpu", "memory", "drive", "net", "gpu", "fan" }
+  local parts = {}
+  --- The device on show (its kind).
+  local function current()
+    for _, k in ipairs(KINDS) do if on(k)() then return k end end
+    return "cpu"
+  end
+  local function page(kind, title, subtitle, contents, caption)
+    local box = { width = MW, height = COL_H, visible = on(kind) }
+    for i = 2, #contents do box[#box + 1] = contents[i] end
+    local middle = { ui.Item(box) }
+    parts[kind] = { left = contents[1], middle = middle, title = title, subtitle = subtitle,
+      caption = caption or captions[kind] }
   end
 
   -- A load's state in plain words; the theme may say it its own way.
@@ -232,7 +254,7 @@ function M.build(model)
   local CHART_Y = grid_bottom + 10
   local SPEC_H = COL_H >= 600 and 70 or 52
   local cpu_chart_h = COL_H - CHART_Y - CH - 18 - (CH + SPEC_H)
-  local cpu_page = page("cpu", "CPU", function() return model.cpu_name(info.model) end, {
+  page("cpu", "CPU", function() return model.cpu_name(info.model) end, {
     left_column("cpu", {
       ring = { caption = "Processor load", value = function() return (cpu().usage or 0) / 100 end, label = "Load" },
       minis = {
@@ -252,7 +274,7 @@ function M.build(model)
       end)(),
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       L.caption { id = "performance-utilization-title", width = MW, text = ("Cores  ·  %d threads"):format(threads),
         note = function() return pct(cpu().usage) .. " avg" end },
       ui.Item(cells),
@@ -267,17 +289,7 @@ function M.build(model)
           color = kit.stroke("idle") }),
       },
     },
-    right_column("cpu"),
   })
-  if theme.motion.value_flash then
-    theme.motion.value_flash(cpu_page, "performance-cpu", {
-      x = MAIN_W - 12, y = TOP, height = 32,
-      active = live("cpu"),
-      read = function() return cpu().usage end,
-      changed = function(before, now) return (before < 70 and now >= 70) or math.abs(now - before) >= 20 end,
-    })
-  end
-
   -- ------------------------------------------------------------- memory --
   local function composition()
     local m = memory()
@@ -297,7 +309,7 @@ function M.build(model)
       L.label { text = label },
     }
   end
-  local memory_page = page("memory", "Memory", function() return size_text(memory().total) end, {
+  page("memory", "Memory", function() return size_text(memory().total) end, {
     left_column("memory", {
       ring = { caption = "Memory in use", value = function() return (memory().percent or 0) / 100 end, label = "Used" },
       minis = {
@@ -319,7 +331,7 @@ function M.build(model)
       },
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       chart { id = "performance-memory-graph", caption = "Memory usage  ·  " .. minutes("memory"),
         scale = function() return size_text(memory().total) end, width = MW - 10, height = mem_chart_h, top = 100,
         hatch = true, first = function() return history("memory") end },
@@ -341,17 +353,7 @@ function M.build(model)
         },
       },
     },
-    right_column("memory"),
   })
-  if theme.motion.value_flash then
-    theme.motion.value_flash(memory_page, "performance-memory", {
-      x = MAIN_W - 12, y = TOP, height = 32,
-      active = live("memory"),
-      read = function() return memory().percent end,
-      changed = function(before, now) return (before < 85 and now >= 85) or math.abs(now - before) >= 15 end,
-    })
-  end
-
   -- -------------------------------------------------------------- drive --
   local drive_ref, the_drive, units, unit = model.drive_ref, model.the_drive, model.units, model.unit
   local function drive_peak()
@@ -363,7 +365,7 @@ function M.build(model)
   local drive_chart_h = math.min(150, math.floor((COL_H - 2 * CH - 32 - 120) / 2))
   local units_y = 2 * (CH + drive_chart_h + 16)
   local UNIT_H = 30
-  local drive_page = page("drive", function()
+  page("drive", function()
     local d = the_drive()
     return ("%s (%s)"):format(d.kind or "Drive", d.name or "")
   end, function() return the_drive().model or "" end, {
@@ -385,7 +387,7 @@ function M.build(model)
       },
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       chart { id = "performance-drive-active", caption = "Active time  ·  " .. minutes("drives"),
         scale = function() return "100%" end, width = MW - 10, height = drive_chart_h, top = 100, hatch = true,
         first = function() return history("disk:" .. drive_ref() .. ":busy") end },
@@ -427,7 +429,6 @@ function M.build(model)
         })),
       },
     },
-    right_column("drive"),
   })
 
   -- ------------------------------------------------------------ network --
@@ -447,7 +448,7 @@ function M.build(model)
       return out
     end
   end
-  local net_page = page("net", function() return the_iface().wireless and "Wi-Fi" or "Ethernet" end,
+  page("net", function() return the_iface().wireless and "Wi-Fi" or "Ethernet" end,
     function() return net_ref() end, {
     left_column("net", {
       ring = { caption = "Link throughput",
@@ -473,7 +474,7 @@ function M.build(model)
       },
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       chart { id = "performance-net-throughput", caption = "Receive / send  ·  " .. minutes("network"),
         scale = rate_text, width = MW - 10, height = net_chart_h, floor = 1024, hatch = true,
         first = function() return history("rx:" .. net_ref()) end,
@@ -487,7 +488,6 @@ function M.build(model)
         kit.spectrum { width = MW, height = TRAFFIC_H - 4, gap = 2, values = traffic("rx:") },
       },
     },
-    right_column("net"),
   })
 
   -- ---------------------------------------------------------------- gpu --
@@ -496,7 +496,7 @@ function M.build(model)
   local gpu_busy_h = math.floor((COL_H - 3 * CH - 32) * .46)
   local gpu_small_h = math.floor((COL_H - 3 * CH - 32 - gpu_busy_h) / 2)
   local DIAL = math.min(180, math.floor(COL_H * .32))
-  local gpu_page = page("gpu", function() return "GPU " .. gpu_index() end, function() return the_card().model or "" end, {
+  page("gpu", function() return "GPU " .. gpu_index() end, function() return the_card().model or "" end, {
     left_column("gpu", {
       ring = { caption = "Engine load", value = function() return asleep() and 0 or (the_card().busy or 0) / 100 end,
         text = function() return asleep() and "Off" or pct(the_card().busy) end, label = "Busy" },
@@ -523,14 +523,14 @@ function M.build(model)
       },
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       visible = function() return not asleep() and not the_card().vram_total end,
       chart { id = "performance-gpu-graph", caption = "Utilization  ·  " .. minutes("gpu"), scale = function() return "100%" end,
         width = MW - 10, height = COL_H - CH - 18, top = 100, hatch = true,
         first = function() return history("gpu:" .. gpu_ref()) end },
     },
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       visible = function() return not asleep() and the_card().vram_total ~= nil end,
       chart { id = "performance-gpu-busy", caption = "Utilization  ·  " .. minutes("gpu"), scale = function() return "100%" end,
         width = MW - 10, height = gpu_busy_h, top = 100, hatch = true,
@@ -545,7 +545,7 @@ function M.build(model)
         first = function() return history("gpumem:" .. gpu_ref()) end, color = kit.signal("info") },
     },
     L.item {
-      x = MX, y = TOP, width = MW, height = COL_H, visible = asleep,
+      width = MW, height = COL_H, visible = asleep,
       kit.panel { width = MW, height = COL_H },
       kit.decor("hatch", { x = 1, y = 1, width = MW - 2, height = COL_H - 2, spacing = 14, weight = 1,
         color = kit.stroke("faint") }),
@@ -561,7 +561,6 @@ function M.build(model)
         kit.chip { text = L.term("gpu.asleep", "Asleep"), width = 64, color = kit.signal("info") },
       },
     },
-    right_column("gpu"),
   })
 
   -- ---------------------------------------------------------------- fan --
@@ -571,7 +570,7 @@ function M.build(model)
     if f.max and f.max > 0 then return f.max end
     return peak_of(history(fan_ref()), 1000) * 1.15
   end
-  local fan_page = page("fan", function() return "Fan " .. (fan_ref():gsub("^fan", "")) end,
+  page("fan", function() return "Fan " .. (fan_ref():gsub("^fan", "")) end,
     function() return the_fan().label or "" end, {
     left_column("fan", {
       ring = { caption = "Rotor speed", value = function() return (the_fan().rpm or 0) / math.max(1, fan_top()) end,
@@ -591,12 +590,11 @@ function M.build(model)
       },
     }),
     ui.Item {
-      x = MX, y = TOP, width = MW, height = COL_H,
+      width = MW, height = COL_H,
       chart { id = "performance-fan-graph", caption = "Speed  ·  " .. minutes("fans"),
         scale = function(top) return ("%d RPM"):format(math.floor(top)) end, width = MW - 10, height = COL_H - CH - 18,
         top = fan_top, hatch = true, first = function() return history(fan_ref()) end },
     },
-    right_column("fan"),
   })
 
   -- ------------------------------------------------------------ the list --
@@ -623,7 +621,7 @@ function M.build(model)
     return ICON[row.kind] or "developer_board"
   end
   local settle = { duration = theme.duration.large, easing = theme.ease.emphasized_decel }
-  local RW_ = SIDE_W - 24
+  local RW_ = SIDE_T - 2 * PAD
   local function device_row(row)
     local W = RW_
     local function picked() return selected:get() == row.key end
@@ -680,12 +678,14 @@ function M.build(model)
     local function f(v) return .06 + .94 * math.max(0, math.min(1, v / 100)) end
     return { f(cpu().usage or 0), f(m.percent or 0), f(100 * (s.used or 0) / math.max(1, s.total or 1)), f(gpu), f(disk), f(net) }
   end
+  -- ---------------------------------------------------------- the tiles --
+  local function get(v) if type(v) == "function" then return v() end return v end
   local lh = L.lh(S.micro)
-  local RS = RADAR_H - (L.CAPTION_H + 6) - 2 * (lh + 4) - lh - 8
+  local _, RADAR_IN = P.tile_inner(SIDE_T, RADAR_T)
+  local RS = RADAR_IN - 2 * (lh + 4)
   local axes = { "CPU", "Mem", "Swap", "GPU", "Disk", "Net" }
-  local ry = L.CAPTION_H + 6 + lh + 4
-  local radar = { x = 12, y = M.HEIGHT - RADAR_H - 12, width = RW_, height = RADAR_H,
-    L.caption { width = RW_, text = "Resource mix", note = function() return pct(cpu().usage) .. " CPU" end },
+  local ry = lh + 4
+  local radar = { width = RW_, height = RADAR_IN,
     kit.radar { x = math.floor((RW_ - RS) / 2), y = ry, size = RS, values = mix },
   }
   for k, name in ipairs(axes) do
@@ -695,35 +695,102 @@ function M.build(model)
     radar[#radar + 1] = L.label { x = cx - 22, y = cy - lh / 2, width = 44, horizontal_alignment = "center", text = name,
       font_size = S.micro, color = kit.ink("hi") }
   end
-  radar[#radar + 1] = L.code("mix", "CMS DIAG CONTROL  ·  ##.##", { x = 0, y = RADAR_H - lh, width = RW_ })
+  local mix_tile = P.tile { id = "performance-mix", title = "Resource mix", width = SIDE_T, height = RADAR_T,
+    note = function() return pct(cpu().usage) .. " CPU" end, ui.Item(radar) }
 
-  local LIST_Y = TITLE_Y + L.heading_h(S.title) + 8
-  local side = L.card {
-    id = "performance-devices", key = "perf-devices", header = false,
-    width = SIDE_W, height = M.HEIGHT,
-    L.heading { id = "performance-devices-title", active = opened, x = 12, y = TITLE_Y, width = RW_ - 130, text = "Devices" },
-    L.label { anchors = { right = true, right_margin = 12 }, y = TITLE_Y + math.floor((L.heading_h(S.title) - L.lh(S.label)) / 2),
-      width = 120, horizontal_alignment = "right",
-      text = function() local n = list.devices:len() return ("%d device%s"):format(n, n == 1 and "" or "s") end },
-    L.rule { x = 12, y = LIST_Y - 4, width = RW_ },
-    -- Whole rows only: the list is a number of rows tall and scrolls.
+  -- The devices: whole rows only, the list a number of rows tall and
+  -- scrolled; on a phone a few of them.
+  local LIST_ROWS = 4
+  local function rows_h(room) return math.max(1, math.floor((room + 3) / (ROW_H + 3))) * (ROW_H + 3) - 3 end
+  local DEV_T = COMPACT and rows_h(LIST_ROWS * (ROW_H + 3)) + P.CAPTION_H + 2 * PAD or H - RADAR_T - GAP
+  local _, DEV_IN = P.tile_inner(SIDE_T, DEV_T)
+  local devices_tile = P.tile { id = "performance-devices-list", caption_id = "performance-devices-title",
+    title = "Devices", width = SIDE_T, height = DEV_T,
+    note = function() local n = list.devices:len() return ("%d device%s"):format(n, n == 1 and "" or "s") end,
     (kit.scroll({
-      x = 12, y = LIST_Y, width = RW_, clip = true,
-      height = math.floor((M.HEIGHT - LIST_Y - RADAR_H - 28 + 3) / (ROW_H + 3)) * (ROW_H + 3) - 3,
+      width = RW_, height = rows_h(DEV_IN), clip = true,
       ui.Repeater { as = "column", gap = 3, width = RW_, model = list.devices, delegate = device_row },
-    })),
-    ui.Item(radar),
-  }
+    })) }
+  local side = ui.Column { id = "performance-devices", width = SIDE_T, height = DEV_T + GAP + RADAR_T, gap = GAP,
+    devices_tile, mix_tile }
 
-  local main = L.card {
-    id = "performance-main", key = "perf-main", header = false,
-    width = MAIN_W, height = M.HEIGHT,
-    cpu_page, memory_page, drive_page, net_page, gpu_page, fan_page,
-  }
+  -- The picked device: its gauges, its charts (titled with its name), its
+  -- readings and details.
+  local function each(f)
+    local out = {}
+    for _, k in ipairs(KINDS) do local n = f(k, parts[k]) if n then out[#out + 1] = n end end
+    return table.unpack(out)
+  end
+  local load_tile = P.tile { id = "performance-load", width = LT, height = H,
+    title = function() return parts[current()].caption or "Load" end,
+    each(function(_, part) return part.left end) }
+  local middles = {}
+  for _, k in ipairs(KINDS) do
+    for _, node in ipairs(parts[k].middle) do middles[#middles + 1] = node end
+  end
+  local chart_tile = P.tile { id = "performance-charts", caption_id = "performance-title", width = MT, height = H,
+    title = function() return get(parts[current()].title) or "" end,
+    note = function() return get(parts[current()].subtitle) or "" end,
+    table.unpack(middles) }
 
+  local stat_rows, fact_rows = 1, 1
+  for _, k in ipairs(KINDS) do
+    stat_rows = math.max(stat_rows, math.ceil(#model.readouts[k].stats / 2))
+    fact_rows = math.max(fact_rows, #model.readouts[k].facts)
+  end
+  local READ_IN = stat_rows * (STAT_H + STAT_GAP) - STAT_GAP
+  local read_w = ACROSS and RT or COMPACT and W or P.cols(MAIN_W, 2)
+  local details_w = ACROSS and RT or COMPACT and W or select(2, P.cols(MAIN_W, 2))
+  local READ_T = READ_IN + P.CAPTION_H + 2 * PAD
+  -- Across: the details take the column's rest; under, the readings' height
+  -- (or what the facts need, if more); on a phone what the facts need.
+  local DETAILS_T = ACROSS and H - READ_T - GAP
+    or math.max(COMPACT and 0 or READ_T, fact_rows * 20 + P.CAPTION_H + 2 * PAD)
+  if not ACROSS and not COMPACT then READ_T = math.max(READ_T, DETAILS_T) DETAILS_T = READ_T end
+  local _, DETAILS_IN = P.tile_inner(details_w, DETAILS_T)
+  local readings_tile = P.tile { id = "performance-readings", title = "Readings", width = read_w, height = READ_T,
+    each(function(k) return readings(k, read_w - 2 * PAD) end) }
+  local details_tile = P.tile { id = "performance-details", title = "Details", width = details_w, height = DETAILS_T,
+    each(function(k) return details(k, details_w - 2 * PAD, DETAILS_IN, fact_rows) end) }
+
+  local main
+  if COMPACT then
+    main = ui.Column { id = "performance-main", width = W, gap = GAP,
+      load_tile, chart_tile, readings_tile, details_tile }
+    main.height = H + GAP + H + GAP + READ_T + GAP + DETAILS_T
+  elseif ACROSS then
+    main = ui.Row { id = "performance-main", width = MAIN_W, height = H, gap = GAP,
+      load_tile, chart_tile,
+      ui.Column { width = RT, height = H, gap = GAP, readings_tile, details_tile } }
+  else
+    main = ui.Column { id = "performance-main", width = MAIN_W, height = H + GAP + READ_T, gap = GAP,
+      ui.Row { width = MAIN_W, height = H, gap = GAP, load_tile, chart_tile },
+      ui.Row { width = MAIN_W, height = READ_T, gap = GAP, readings_tile, details_tile } }
+  end
+
+  -- A change worth seeing flashes by the chart tile's caption.
+  if theme.motion.value_flash then
+    theme.motion.value_flash(chart_tile, "performance-cpu", {
+      x = MT - 12, y = 0, height = 32, active = live("cpu"),
+      read = function() return cpu().usage end,
+      changed = function(before, now) return (before < 70 and now >= 70) or math.abs(now - before) >= 20 end,
+    })
+    theme.motion.value_flash(chart_tile, "performance-memory", {
+      x = MT - 12, y = 0, height = 32, active = live("memory"),
+      read = function() return memory().percent end,
+      changed = function(before, now) return (before < 85 and now >= 85) or math.abs(now - before) >= 15 end,
+    })
+  end
+
+  if COMPACT then
+    M.HEIGHT = side.height + GAP + main.height
+    return { page = ui.Column { id = "dashboard-performance", width = W, height = M.HEIGHT, gap = GAP,
+      side, main } }
+  end
+  M.HEIGHT = math.max(side.height, main.height)
   return { page = ui.Row {
     id = "dashboard-performance",
-    width = M.WIDTH, height = M.HEIGHT, gap = GAP,
+    width = W, height = M.HEIGHT, gap = GAP,
     side, main,
   } }
 end

@@ -295,7 +295,11 @@ return function(theme, M)
           if hx() > W - 64 then return hx() - GAP - 10 - 40 end
           return W - 14 - 40
         end,
-        text = function() return ("%d"):format(math.floor(clamp01(t.position) * 100 + 0.5)) end,
+        -- `reading(position)`: what it says instead of its percent.
+        text = function()
+          if spec.reading then return spec.reading(clamp01(t.position)) end
+          return ("%d"):format(math.floor(clamp01(t.position) * 100 + 0.5))
+        end,
         font_size = H >= 40 and theme.size.normal or theme.size.small,
         color = function() return hx() > W - 64 and C().onPrimary or C().onSurfaceVariant end,
         behavior = { x = motion } }
@@ -509,7 +513,9 @@ return function(theme, M)
       end,
       item = function(i, entry, s)
         local name = spec.item_id and spec.item_id(i, entry) or ("tab-" .. i)
-        labels[i] = M.text { text = entry.name, font_size = growing and theme.size.normal + 1 or theme.size.small,
+        -- `icons_only` (a phone's row): no label, the icon centred.
+        labels[i] = M.text { text = spec.icons_only and "" or entry.name,
+          font_size = growing and theme.size.normal + 1 or theme.size.small,
           color = function() return s.current() and C().primary or C().onSurface end,
           behavior = { color = { duration = theme.duration.small } } }
         if i == #list then follow() end
@@ -520,7 +526,8 @@ return function(theme, M)
             border_width = function() return t.visual_focus and s.current() and 2 or 0 end,
             border_color = function() return C().secondary end,
             behavior = { color = { duration = theme.duration.small } } },
-          ui.Column { anchors = { horizontal_center = true }, y = growing and 8 or 6, gap = growing and 4 or 3,
+          ui.Column { anchors = { horizontal_center = true },
+            y = spec.icons_only and math.floor((H - 8 - 28) / 2) or growing and 8 or 6, gap = growing and 4 or 3,
             align = "center",
             -- Every icon in the same box, so the labels share one baseline
             -- whatever an icon_build draws.

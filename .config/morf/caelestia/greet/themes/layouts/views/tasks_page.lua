@@ -1,76 +1,84 @@
--- Taskwarrior tasks, with a full editor inside the left drawer.
+-- Taskwarrior tasks, with a full editor inside the left drawer, in the page
+-- template (themes/layouts/page.lua).
 local morf = require("morf")
 local ui = require("morf.ui")
 local theme = require("theme")
 local kit = require("kit")
 local widgets = require("planner_widgets")
 local R = require("themes.layouts.rows")
+local P = require("themes.layouts.page")
 local C = theme.color
 local M = {}
+local function get(v) if type(v) == "function" then return v() end return v end
+
 function M.build(model, w, h)
-  local PAD, inner = 16, w - 32
+  local inner = P.inner(w)
   local editing, deleting, query, filter, rows = model.editing, model.deleting, model.query, model.filter, model.rows
   local inputs = {}
+
+  -- -------------------------------------------------------------- browse --
   local search = widgets.field("tasks-search", "Find a task", "Search tasks, projects or tags", inner,
     function(text) query:set(text) end, nil, model.close)
-  local filters = { gap = 6 }
+  local filters = { width = inner }
   for _, name in ipairs { "Open", "Today", "Active" } do
-    filters[#filters + 1] = widgets.button("tasks-filter-" .. name:lower(), name, nil, (inner - 12) / 3,
-      function() model.set_filter(name) end, function() return filter:get() == name end)
+    filters[#filters + 1] = { id = "tasks-filter-" .. name:lower(), label = name,
+      on_clicked = function() model.set_filter(name) end, selected = function() return filter:get() == name end }
   end
+  -- Refresh at its label's width, a new task the rest of the row.
+  local refresh = P.button { id = "tasks-refresh", label = "Refresh", icon = "refresh", on_clicked = model.refresh }
+  local add = P.button { id = "tasks-add", label = "New task", icon = "add", tone = "primary",
+    width = function() return w - (refresh.layout_width or 0) - 8 end, on_clicked = function() model.edit() end }
+
+  -- A task: the circle that finishes it, and the rest of the row opens it.
   local task_list = ui.Repeater {
-    as = "column", gap = 8, width = inner, model = rows,
+    as = "column", gap = P.ROW_GAP, width = inner, model = rows,
     delegate = function(row)
-      local done = kit.action { id = "task-done-" .. row.uuid, x = 8, y = 12, width = 38, height = 38, cursor = "pointer",
-          on_clicked = function() model.complete(row.uuid) end,
-          kit.icon("radio_button_unchecked", 23, function() return row.overdue and C.error or C.primary end,
-            { anchors = { center_in = true } }) }
-      kit.hover(done, function(hovered) return hovered and C.onSurface:alpha(0.08) or C.onSurface:alpha(0) end, R.round(38))
-      return kit.card { id = "task-row-" .. row.uuid, width = inner, height = 100,
-        color = function() return C.surfaceContainerHigh end,
-        done,
-        kit.action { id = "task-edit-" .. row.uuid, x = 52, y = 12, width = inner - 64, height = 78, cursor = "pointer",
+      local done = kit.action { id = "task-done-" .. row.uuid, x = 4, width = 40, height = 40, cursor = "pointer",
+        anchors = { vertical_center = true }, accessible_name = "Done",
+        on_clicked = function() model.complete(row.uuid) end,
+        kit.icon("radio_button_unchecked", 22, function() return row.overdue and C.error or C.primary end,
+          { anchors = { center_in = true } }) }
+      kit.hover(done, function(hovered) return hovered and C.onSurface:alpha(0.08) or C.onSurface:alpha(0) end, R.round(40))
+      local function line(text, color)
+        return kit.text { text = text, width = inner - 64, elide = "right", font_size = require("themes.layouts.parts").SIZE.body, color = color or kit.ink("lo") }
+      end
+      return ui.Item { id = "task-row-" .. row.uuid, width = inner, height = P.ROW_H + 12,
+        kit.action { id = "task-edit-" .. row.uuid, x = 50, width = inner - 50, height = P.ROW_H + 12, cursor = "pointer",
           on_clicked = function() model.edit(row.uuid) end,
-          kit.menu_label { text = row.description, width = inner - 64, height = 25, elide = "right", font_weight = 600 },
-          widgets.subtitle(row.detail, { y = 30, width = inner - 64, elide = "right" }),
-          widgets.subtitle(row.date, { y = 54, width = inner - 64, elide = "right",
-            color = function() return row.overdue and C.error or C.onSurfaceVariant end }),
-        },
+          ui.Column { anchors = { vertical_center = true }, gap = 2,
+            kit.text { text = row.description, width = inner - 64, elide = "right",
+              font_size = theme.size.normal, font_weight = 500, color = kit.ink("hi") },
+            line(row.detail),
+            line(row.date, function() return row.overdue and C.error or C.onSurfaceVariant end),
+          } },
+        done,
       }
     end,
   }
-  local browse = ui.Item { width = w, height = h, visible = function() return not editing:get() end,
-    ui.Column { x = PAD, y = PAD, width = inner, gap = 12,
-      ui.Item { width = inner, height = 52,
-        kit.heading { id = "tasks-title", scope = "leftbar.tasks", visible = function() return not editing:get() end, text = "Make room for today.", font_size = 23, font_weight = 700 },
-        widgets.subtitle(function() return tostring(model.count:get()) .. " open tasks · Taskwarrior" end, { id = "tasks-subtitle", y = 31 }),
-      },
-      ui.Row { gap = 8,
-        widgets.button("tasks-add", "New task", "add", inner - 104, function() model.edit() end, function() return true end),
-        widgets.button("tasks-refresh", "Refresh", "refresh", 96, model.refresh),
-      },
-      search, ui.Row(filters),
-      (kit.scroll({ id = "tasks-list", width = inner, height = function() return math.max(100, h() - 310) end, clip = true,
-        task_list,
-        ui.Column { width = inner, gap = 8, visible = function() return rows:len() == 0 end,
-          kit.icon("task_alt", 40, function() return C.primary end),
-          kit.heading { id = "tasks-empty-title", scope = "leftbar.tasks", level = "section",
-            visible = function() return not editing:get() and rows:len() == 0 end,
-            text = function() return model.loaded:get() and "A little breathing room." or "Your tasks, right here." end,
-            font_size = theme.size.large },
-          widgets.message(function() return model.busy:get() and "Loading tasks…" or "Add a task, or choose another view." end, inner),
-        },
-      })),
-    },
+  local empty = P.empty { id = "tasks-empty", width = w, icon = "task_alt",
+    title = function() return model.loaded:get() and "A little breathing room." or "Your tasks, right here." end,
+    text = function() return model.busy:get() and "Loading tasks…" or "Add a task, or choose another view." end }
+  empty.visible = function() return rows:len() == 0 end
+  local list = P.section { id = "tasks-open", width = w,
+    title = function() return filter:get() .. " tasks" end,
+    note = function() return tostring(model.count:get()) .. " · Taskwarrior" end,
+    visible = function() return rows:len() > 0 end,
+    task_list }
+  local browse = P.page { id = "tasks-list", width = w, height = h,
+    ui.Row { gap = 8, align = "center", add, refresh },
+    P.section { id = "tasks-find", width = w, search, P.buttons(filters) },
+    list, empty,
   }
+  browse.visible = function() return not editing:get() end
 
-  local fields = { gap = 12, width = inner }
-  local specs = model.FIELDS
+  -- -------------------------------------------------------------- editor --
+  local fields = { id = "tasks-editor", caption_id = "task-editor-title", width = w,
+    title = function() return model.selected:get() ~= "" and "Edit task" or "New task" end }
   -- A date is typed (a Taskwarrior expression or a date and time) or chosen
   -- from the kit's date picker beside it, which keeps the time typed.
   local DATES = { scheduled = true, due = true, wait = true, ["until"] = true }
   local pickers = require("lib.kit.composites")
-  for _, spec in ipairs(specs) do
+  for _, spec in ipairs(model.FIELDS) do
     local name = spec[1]
     local dated = DATES[name]
     local node, input = widgets.field("task-" .. name, spec[2], spec[3], dated and inner - 46 or inner,
@@ -89,29 +97,35 @@ function M.build(model, w, h)
     fields[#fields + 1], inputs[name] = node, input
   end
   fields[#fields + 1] = widgets.message(model.help, inner, 60)
-  local actions = ui.Row { gap = 6, visible = function() return editing:get() and model.selected:get() ~= "" end,
-    widgets.button("task-complete", "Done", "check", 88, model.finish),
-    widgets.button("task-start", function() return model.running() and "Stop" or "Start" end, "timer", 88, model.start_stop),
-    widgets.button("task-delete", function() return deleting:get() and "Confirm delete" or "Delete" end, "delete", inner - 188, model.delete),
+  local actions = P.buttons { width = w,
+    { id = "task-complete", label = "Done", icon = "check", on_clicked = model.finish },
+    { id = "task-start", label = function() return model.running() and "Stop" or "Start" end, icon = "timer",
+      on_clicked = model.start_stop },
+    { id = "task-delete", label = function() return deleting:get() and "Confirm" or "Delete" end, icon = "delete",
+      on_clicked = model.delete },
   }
-  fields[#fields + 1] = actions
-  local editor = ui.Item { width = w, height = h, visible = function() return editing:get() end,
-    ui.Item { x = PAD, y = PAD, width = inner, height = 40,
-      kit.heading { id = "task-editor-title", scope = "leftbar.tasks", visible = function() return editing:get() end, text = function() return model.selected:get() ~= "" and "Edit task" or "New task" end, font_size = 24, font_weight = 700 },
-      ui.Item { anchors = { right = true }, width = 76, height = 36,
-        widgets.button("task-cancel", "Back", "arrow_back", 76, model.cancel) },
-    },
-    (kit.scroll({ id = "task-editor-scroll", x = PAD, y = 70, width = inner,
-      height = function() return math.max(100, h() - 182) end, clip = true, ui.Column(fields) })),
-    ui.Item { x = PAD, y = function() return h() - 100 end, width = inner, height = 40,
-      widgets.button("task-save", function() return model.busy:get() and "Saving…" or "Save task" end,
-        "check", inner, model.save, function() return true end) },
+  actions.visible = function() return editing:get() and model.selected:get() ~= "" end
+  -- Back and Save at the top, where they are whatever the editor's length.
+  local save = P.button { id = "task-save", label = function() return model.busy:get() and "Saving…" or "Save task" end,
+    icon = "check", tone = "primary", on_clicked = model.save }
+  local bar = ui.Item { width = w, height = P.BUTTON_H,
+    P.button { id = "task-cancel", label = "Back", icon = "arrow_back", on_clicked = model.cancel },
+    ui.Item { anchors = { right = true }, width = function() return save.width end, height = P.BUTTON_H, save } }
+  local editor = ui.Item { width = w, height = h,
+    bar,
+    ui.Item { y = P.BUTTON_H + P.GAP, width = w, height = function() return get(h) - P.BUTTON_H - P.GAP end,
+      P.page { id = "task-editor-scroll", width = w, height = function() return get(h) - P.BUTTON_H - P.GAP end,
+        P.section(fields),
+        actions,
+      } },
   }
-  local root = kit.card { id = "tasks-page", width = w, height = h, browse, editor,
-    kit.subtitle { id = "tasks-error", x = PAD, y = function() return h() - 50 end,
-      width = inner, height = 44, wrap = true, text = function() return model.error:get() end,
-      font_size = theme.size.small, color = function() return C.error end },
-  }
+  editor.visible = function() return editing:get() end
+
+  local failure = kit.subtitle { id = "tasks-error", y = function() return get(h) - 48 end,
+    width = w, height = 44, wrap = true, text = function() return model.error:get() end,
+    font_size = theme.size.small, color = function() return C.error end }
+  failure.visible = function() return (model.error:get() or "") ~= "" end
+  local root = ui.Item { id = "tasks-page", width = w, height = h, browse, editor, failure }
   local previous
   morf.effect("material.tasks.editor", function()
     local revision = model.editor_revision:get()

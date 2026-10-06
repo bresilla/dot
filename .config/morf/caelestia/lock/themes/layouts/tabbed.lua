@@ -78,9 +78,12 @@ function M.new(spec)
     behavior = theme.motion.page_wipe and {} or { translate_x = SWITCH },
     table.unpack(pages),
   }
+  -- `tabs_at = "bottom"`: the row under the pages (a drawer from the bottom
+  -- edge has it by the edge, under the thumb).
+  local below = spec.tabs_at == "bottom"
   local strip = ui.Item {
     id = spec.id .. "-pages",
-    x = PAD, y = TABS_H + PAD, width = page_w, height = page_h,
+    x = PAD, y = below and PAD or TABS_H + PAD, width = page_w, height = page_h,
     clip = true,
     track,
   }
@@ -129,8 +132,9 @@ function M.new(spec)
     -- Behind everything, so the whole panel takes the pointer.
     ui.MouseArea { anchors = { fill = true }, z = -1 },
     -- The tab row is the theme's (every kit has `tabs`, the kit contract).
-    kit.tabs {id=spec.id,accessible_name=spec.title or ({sidebar="Sidebar",leftbar="Planner",bottom="Tools"})[spec.id] or spec.id,
-      tabs=tabs,tab=tab,width=W,pad=PAD,height=TABS_H},
+    ui.Item { width = W, height = TABS_H, y = below and function() return spec.height() - TABS_H end or 0,
+      kit.tabs {id=spec.id,accessible_name=spec.title or ({sidebar="Sidebar",leftbar="Planner",bottom="Tools"})[spec.id] or spec.id,
+        tabs=tabs,tab=tab,width=W,pad=PAD,height=TABS_H,icons_only=spec.icons_only} },
     strip,
   }
   panel.pages = pages

@@ -15,6 +15,22 @@ local PAD, GAP = 16, 12
 -- or a tab comes in, fuse into one another while they move, and pull apart
 -- as they settle.
 local LAYERS = { {}, {}, {}, {}, {}, {} }
+-- On a phone (a desk narrower than the overview) the overview is one
+-- column the desk's width: the cards stretched across it, a row each.
+local responsive = require("responsive")
+local COMPACT = responsive.compact()
+-- A phone's dashboard is the whole desk: every tab the same size, its page
+-- scrolled in it, the tabs (icons alone) along the bottom by the edge it
+-- rose from.
+-- On a phone every tab is the one size, scrolled in it; on a desk each
+-- tab has its own (responsive.dashboard), and the drawer eases between them.
+local CW, VIEW_H = responsive.dashboard()
+local PANEL_W = COMPACT and responsive.desk_width() - 2 * theme.BORDER or nil
+-- The tabs by the edge it comes from: the bottom one, on a phone.
+local TABS_BELOW = COMPACT and responsive.portrait()
+-- Four fifths of the desk: the fifth above it is to tap it shut.
+local TABS_H = 68            -- icons, labels, indicator and hairline
+local PANEL_H = COMPACT and math.floor((responsive.desk_height() - 2 * theme.BORDER) * 0.8) or nil
 local subpages, PAGE = {}, {{840,439}}
 for i=2,6 do
   kit.collect(LAYERS[i])
@@ -22,13 +38,13 @@ for i=2,6 do
   subpages[i], PAGE[i] = page.page, {page.WIDTH,page.HEIGHT}
 end
 kit.collect(LAYERS[1])
-local TABS_H = 68            -- icons, labels, indicator and hairline
 local ROW1, ROW2 = 132, 295
 
 M.tab = model.tab
 
 --- The panel's size on tab `i`.
 function M.size(i)
+  if COMPACT then return PANEL_W, PANEL_H end
   local p = PAGE[i] or PAGE[1]
   return p[1] + 2 * PAD, TABS_H + PAD + p[2] + PAD - 1
 end
@@ -51,8 +67,11 @@ local TABS = model.tabs
 -- growing row), and names its tabs after their labels:
 -- `dashboard-tab-<name>`.
 local function tabs()
-  return kit.tabs { id = "dashboard", accessible_name = "Dashboard", tabs = TABS, tab = M.tab,
-    width = width, height = TABS_H, pad = PAD, ids = "name", growing = true, reorderable = true }
+  local row = kit.tabs { id = "dashboard", accessible_name = "Dashboard", tabs = TABS, tab = M.tab,
+    width = width, height = TABS_H, pad = PAD, ids = "name", growing = true, reorderable = true,
+    icons_only = COMPACT }
+  if not TABS_BELOW then return row end
+  return ui.Item { y = PANEL_H - TABS_H, width = PANEL_W, height = TABS_H, row }
 end
 
 -- ---------------------------------------------------------------- cards --
@@ -62,6 +81,25 @@ local cards = require("themes.layouts.views.dashboard_overview_cards")(model, RO
 -- -------------------------------------------------------------- the panel --
 
 local function dashboard_tab()
+  if cards.page then
+    local w = COMPACT and CW or (responsive.dashboard("overview"))
+    local node, h = cards.page(w)
+    PAGE[1] = { w, h }
+    return node
+  end
+  if COMPACT then
+    local side = 130
+    local rings_h, media_h = 150, 260
+    PAGE[1] = { CW, ROW1 + GAP + ROW1 + GAP + ROW2 + GAP + rings_h + GAP + media_h }
+    return ui.Column {
+      gap = GAP,
+      cards.user(CW),
+      cards.weather(CW),
+      ui.Row { gap = GAP, cards.clock(side), cards.calendar(CW - side - GAP) },
+      cards.resources(CW, rings_h),
+      cards.media(CW, media_h),
+    }
+  end
   return ui.Row {
     gap = GAP,
     ui.Column {
@@ -81,6 +119,29 @@ local pages = {
   subpages[5],
   subpages[6],
 }
+if COMPACT then
+  -- On a phone every page scrolls in the one view the dashboard has; while
+  -- it runs on below, a dashed line along the view's foot says so.
+  for i, page in ipairs(pages) do
+    local content_h = (PAGE[i] or PAGE[1])[2]
+    local node, _, t = kit.scroll({ id = "dashboard-scroll-" .. i, width = CW, height = VIEW_H, clip = true,
+      ui.Item { width = CW, height = content_h, page } })
+    local more = ui.Path {
+      id = "dashboard-more-" .. i, x = 0, y = VIEW_H - 2, width = CW, height = 2, view_box = { 0, 0, CW, 2 },
+      d = ("M0 1 H%g"):format(CW), fill_color = "transparent", stroke_width = 2, dash = { 10, 8 },
+      stroke_color = function() return theme.color.onSurfaceVariant end,
+      opacity = function() return (content_h > VIEW_H + 4 and (t.position_y or 0) < 0.99) and 0.8 or 0 end,
+      behavior = { opacity = { duration = theme.duration.small } },
+    }
+    -- A phone's tabs are icons alone: the page says its name.
+    local P = require("themes.layouts.page")
+    local top = P.HEADER_H + P.GAP
+    pages[i] = ui.Item { width = CW, height = VIEW_H + top,
+      P.header { id = "dashboard-head-" .. i, width = CW, title = TABS[i].name },
+      ui.Item { y = top, width = CW, height = VIEW_H, node, more } }
+    PAGE[i] = { CW, VIEW_H + top }
+  end
+end
 kit.collect(nil)
 
 -- ----------------------------------------------------------------- liquid --
@@ -142,7 +203,8 @@ end
 -- follows the drawer as it moves.
 local strip = ui.Item {
   id = "dashboard-pages",
-  anchors = { fill = true, left_margin = PAD, right_margin = PAD, top_margin = TABS_H + PAD, bottom_margin = PAD - 1 },
+  anchors = TABS_BELOW and { fill = true, left_margin = PAD, right_margin = PAD, top_margin = PAD, bottom_margin = TABS_H + PAD }
+    or { fill = true, left_margin = PAD, right_margin = PAD, top_margin = TABS_H + PAD, bottom_margin = PAD - 1 },
   clip = true,
 }
 local displayed = model.displayed

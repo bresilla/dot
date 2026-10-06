@@ -50,7 +50,13 @@ return function(S, theme, M, hud)
     props.color = props.color or function() return C.onSurfaceVariant end
     return M.text(props)
   end
-  local function pct(t) return function() return ("%03d"):format(math.floor(clamp01(t.position) * 100 + 0.5)) end end
+  -- A level's reading: its percent, or what `spec.reading(position)` says.
+  local function pct(t, spec)
+    return function()
+      if spec and spec.reading then return spec.reading(clamp01(t.position)) end
+      return ("%03d"):format(math.floor(clamp01(t.position) * 100 + 0.5))
+    end
+  end
   local function trim(v) local s = ("%.2f"):format(v) s = s:gsub("0+$", ""):gsub("%.$", "") return s end
   local function hz(v)
     if v >= 1000 then return trim(v / 1000) .. "K HZ" end
@@ -213,7 +219,7 @@ return function(S, theme, M, hud)
     ui.reparent(ruler(cx + bw / 2 + 4, top, bottom - top, 6, function() return C.primary:alpha(.32) end, true),
       slots.background)
     slots.value_label = readout { x = 0, width = W, y = H - 20, horizontal_alignment = "center", color = ink(t),
-      text = pct(t) }
+      text = pct(t, spec) }
     slots.second_handle = brackets(t)
     return full(slots)
   end
@@ -272,8 +278,10 @@ return function(S, theme, M, hud)
       { x = 2, y = by + bh / 2 - 11, width = 22, height = 22, horizontal_alignment = "center",
         vertical_alignment = "center", rotation = spin and function() return clamp01(t.position) * 90 end or nil,
         behavior = spin and { rotation = quick } or nil })
-    slots.value_label = readout { x = W - 42, width = 42, y = by + bh / 2 - 9, horizontal_alignment = "right",
-      color = ink(t), text = pct(t) }
+    -- `reading(position)`: what the level says instead of its percent.
+    local said = pct(t, spec)
+    slots.value_label = readout { x = W - 52, width = 52, y = by + bh / 2 - 9, horizontal_alignment = "right",
+      color = ink(t), text = said }
     slots.second_handle = brackets(t)
     return full(slots)
   end
@@ -339,7 +347,7 @@ return function(S, theme, M, hud)
     local function p() return clamp01(t.position) end
     local back = ui.Item { width = W, height = H,
       path(Sz, Sz, { d = arc(c, c, r0, 0, 360), stroke_width = 1, stroke_color = function() return C.primary:alpha(.24) end,
-        dash = { math.pi * 2 * r0 / 40 - 3, 3 } }),
+        dash = { math.max(0.5, math.pi * 2 * r0 / 40 - 3), 3 } }),
       path(Sz, Sz, { d = morf.geometry.ticks(c, c, r1 - 2, r1, { from = from_a, sweep = sweep, count = 28, major = 3,
         major_r0 = r1 - 5 }), stroke_width = 1, stroke_color = function() return C.primary:alpha(.6) end }),
       ui.Rect { x = c - r3, y = c - r3, width = 2 * r3, height = 2 * r3, radius = r3,
@@ -528,7 +536,7 @@ return function(S, theme, M, hud)
       background = ui.Item { width = W, height = H },
       fill = cells,
       value_label = readout { x = W - 42, width = 42, y = (H - 18) / 2, horizontal_alignment = "right", color = ink(t),
-        text = pct(t) },
+        text = pct(t, spec) },
       second_handle = brackets(t),
     }
   end
@@ -554,7 +562,7 @@ return function(S, theme, M, hud)
       end, 22, function() return C.primary end, { x = 12, y = H / 2 - 12, width = 24, height = 24,
         horizontal_alignment = "center", vertical_alignment = "center" }),
       value_label = readout { x = W - 46, width = 34, y = H / 2 - 9, horizontal_alignment = "right",
-        color = function() return C.onSurface end, text = pct(t) },
+        color = function() return C.onSurface end, text = pct(t, spec) },
     }
   end
 end

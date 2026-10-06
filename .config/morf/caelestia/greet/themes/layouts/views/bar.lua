@@ -18,11 +18,17 @@ end
 
 function V.build(model)
   local ITEM = 34
+  -- A phone's status bar: the time at the left and the status at the right,
+  -- one size, unframed.
+  local PHONE = require("responsive").portrait()
+  local GLYPH = PHONE and 18 or 20
 
   -- The logo: the author's mark, in the theme's colour. A click opens the
   -- launcher.
   local mark = require("logo")
   local function logo(suffix)
+    -- A phone has no room for it, and the launcher has its own way in.
+    if require("responsive").portrait() then return ui.Item { id = "bar-logo" .. suffix, width = 0, height = 0 } end
     return button("bar-logo" .. suffix, ITEM, model.toggle_launcher, ui.Item {
       anchors = { center_in = true }, width = 24, height = 24,
       ui.Path {
@@ -98,7 +104,7 @@ function V.build(model)
   local function status(id, icon_fn)
     return ui.Item {
       id = id, width = ITEM - 6, height = ITEM - 6,
-      kit.icon(icon_fn, 20, function() return C.onSurface end, { anchors = { center_in = true }, fill = true }),
+      kit.icon(icon_fn, GLYPH, function() return C.onSurface end, { anchors = { center_in = true }, fill = true }),
     }
   end
   local function tail(vertical)
@@ -137,6 +143,18 @@ function V.build(model)
     end
     -- One segment, one click: all of it opens the quick settings.
     local row = (vertical and ui.Column or ui.Row)(nodes)
+    if PHONE and not vertical then
+      local plain = ui.MouseArea {
+        id = "bar-status" .. v, cursor = "pointer",
+        width = function() return (row.layout_width or 160) + 8 end, height = ITEM,
+        on_clicked = model.open_settings,
+        ui.Item { anchors = { center_in = true },
+          width = function() return row.layout_width or 0 end,
+          height = function() return row.layout_height or 0 end,
+          row },
+      }
+      return plain, row
+    end
     local area
     area = kit.action {
       id = "bar-status" .. v, cursor = "pointer",
@@ -159,6 +177,12 @@ function V.build(model)
   -- The date and the time, in the middle; a click opens the dashboard, and
   -- another shuts it.
   local stamp = model.stamp
+  -- The time alone, at the left, the status glyphs' size; nothing to press.
+  local function phone_clock()
+    return ui.Item { id = "bar-clock", width = 60, height = ITEM,
+      kit.text { anchors = { vertical_center = true }, text = function() return stamp:get()[1] end,
+        font_size = GLYPH, font_weight = 700 } }
+  end
   local function clock(vertical)
     local area
     area = kit.action {
@@ -196,7 +220,8 @@ function V.build(model)
   end
   -- Well in from the frame's corners.
   local PAD = 34
-  local head_h = ui.Row { gap = 10, align = "center", logo(""), windows("row") }
+  local head_h = PHONE and ui.Row { gap = 10, align = "center", phone_clock(), windows("row") }
+    or ui.Row { gap = 10, align = "center", logo(""), windows("row") }
   local tail_h, row_h = tail(false)
   local head_v = ui.Column { gap = 8, align = "center", logo("-v"), windows("column") }
   local tail_v, row_v = tail(true)
@@ -211,7 +236,7 @@ function V.build(model)
       visible = function() return not model.vertical() end,
       anchors = { fill = true },
       ui.Item { x = PAD, width = 1, anchors = { vertical_center = true }, height = ITEM, head_h },
-      ui.Item { anchors = { center_in = true }, width = 190, height = ITEM, clock(false) },
+      (not PHONE) and ui.Item { anchors = { center_in = true }, width = 190, height = ITEM, clock(false) } or nil,
       ui.Item {
         anchors = { right = true, right_margin = PAD, vertical_center = true }, height = ITEM,
         width = function() return (row_h.layout_width or 160) + 16 end,

@@ -7,10 +7,10 @@ local M = { tab = state.tab, opened = state.opened, displayed = state.displayed 
 M.tabs = {
   { key = "overview", name = "Dashboard", icon = "dashboard" },
   { key = "media", name = "Media", icon = "queue_music" },
-  { key = "performance", name = "Performance", icon = "speed" },
+  { key = "performance", name = "Perf", icon = "speed" },
   { key = "battery", name = "Battery", icon = "battery_charging_full" },
   { key = "weather", name = "Weather", icon = "cloud" },
-  { key = "lule", name = "Lule", icon_build = require("lule_icon").build },
+  { key = "terminal", name = "Terminal", icon = "terminal" },
 }
 M.month_offset = require("themes.session").keep("caelestia.dashboard.month", 0)
 function M.month(offset, today)
@@ -116,9 +116,7 @@ end
 local pages = {}
 function M.page(index)
   if pages[index] then return pages[index] end
-  if index == 6 then
-    pages[index] = require("lule_page")
-  else pages[index] = require("dashboard_" .. M.tabs[index].key) end
+  pages[index] = require("dashboard_" .. M.tabs[index].key)
   return pages[index]
 end
 function M.desk_size()

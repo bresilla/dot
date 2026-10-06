@@ -33,6 +33,11 @@ function M.build()
   }
   M.shape=visual.shape
   if M.shown:get()~="" then visual.show("") hold() end
+  -- Upright (a phone) there are no resting pills on the edge: the levels
+  -- show only while one is changing.
+  if require("responsive").portrait() then
+    visual.node.visible=function() return M.shown:get()~="" end
+  end
   return visual.node
 end
 function M.geometry() return visual and visual.geometry() end

@@ -2,10 +2,15 @@
 -- a list of installed families, each previewed in itself), a page of
 -- families at a time, in a popup card.
 local morf, ui = require("morf"), require("morf.ui")
-return function(state)
+-- `page_w`: the Lule page's width; on a narrow one the popup fits it and
+-- opens just above the Font button (`above`, its y on the page).
+return function(state, page_w, above)
   local kit, theme = require("kit"), require("theme")
   local C, fonts = theme.color, require("themes.fonts")
-  local W, SIZE = 434, 5
+  local narrow = page_w and page_w < 600
+  local W, SIZE = narrow and math.min(434, page_w - 24) or 434, 5
+  local POP_X = narrow and math.floor((page_w - W) / 2) or 510
+  local POP_Y = narrow and above and math.max(8, above - 330 - 8) or 130
   -- The page in sight; a short last page keeps its rows' places, empty.
   local function page()
     local rows, out = fonts.rows:get(), {}
@@ -28,11 +33,11 @@ return function(state)
   local function button(id, label, width, action)
     return kit.pill { id = id, label = label, width = width, height = 30, on_clicked = action }
   end
-  local popup = kit.card { id = "lule-font-popup", x = 510, y = 130, width = W, height = 330, radius = 16,
+  local popup = kit.card { id = "lule-font-popup", x = POP_X, y = POP_Y, width = W, height = 330, radius = 16,
     ui.MouseArea { anchors = { fill = true }, on_clicked = function() end },
     picker,
     ui.Row { x = 12, y = 288, gap = 8,
-      button("lule-font-default", "Theme default", 138, function() fonts.choose("") end),
+      button("lule-font-default", "Theme default", narrow and 112 or 138, function() fonts.choose("") end),
       button("lule-font-prev", "Back", 64, function() fonts.step(-1, SIZE) end),
       button("lule-font-next", "More", 64, function() fonts.step(1, SIZE) end),
       kit.subtitle { width = 100, y = 8, font_size = 11, horizontal_alignment = "right",

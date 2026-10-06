@@ -15,7 +15,7 @@ return function(theme, kit)
     local color = spec.color or function() return C.primary end
     local n = math.max(6, math.floor(W / 7))
     local gap = 2
-    local seg = (W - gap * (n - 1)) / n
+    local seg = math.max(0.5, (W - gap * (n - 1)) / n)
     local d = ("M0 %g H%g"):format(H / 2, W)
     local function lit() return math.floor(clamp(spec.value()) * n + .5) / n end
     return ui.Item { id = spec.id, x = spec.x, y = spec.y, anchors = spec.anchors, width = W, height = H,

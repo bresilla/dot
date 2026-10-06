@@ -35,7 +35,8 @@ local screen = morf.screens[1]
 local W = (screen and screen.width) or 1920
 local H = (screen and screen.height) or 1080
 -- Everything in proportion to a 1080p screen.
-local S = math.max(0.75, math.min(2.4, math.min(W / 1920, H / 1080)))
+-- A phone's design is the upright 1080 x 1920 one.
+local S = math.max(0.75, math.min(2.4, H > W and math.min(W / 1080, H / 1920) or math.min(W / 1920, H / 1080)))
 local function s(n) return math.floor(n * S + 0.5) end
 
 morf.surface.width = W

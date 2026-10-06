@@ -16,12 +16,14 @@ local builders={
   mesh=function(w,h) return require("net_pages").vpn_page("mesh",w,h,M.displayed) end,
   tunnel=function(w,h) return require("net_pages").vpn_page("tunnel",w,h,M.displayed) end,
   focus=function(w,h) return view.focus_page(M,w,h) end,
+  theme=function(w,h) return view.theme_page(M,w,h) end,
+  ["theme/lule"]=function(w,h) return require("lule_page").build(w,h) end,
 }
 function M.page_content(key,w,h) return assert(builders[key],"Unknown Settings page: "..key)(w,h) end
 local visual
 function M.page(w,h)
   visual=view.build(M,w,h)
-  return visual.node
+  return visual.node,visual.head
 end
 function M.height() return visual and visual.height and visual.height() or 0 end
 function M.shown(open)

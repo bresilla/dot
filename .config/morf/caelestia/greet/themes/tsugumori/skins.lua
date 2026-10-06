@@ -330,7 +330,11 @@ return function(theme, M, hud)
       value_label = spec.label ~= false and M.text { id = id .. "-value", x = W - 46, y = by + math.floor((band - 18) / 2),
         width = 46, height = 18, horizontal_alignment = "right", font_size = 12,
         color = function() return engaged() and C.primary or C.onSurfaceVariant end,
-        text = function() return ("%03d"):format(math.floor(clamp01(t.position) * 100 + .5)) end } or nil,
+        -- `spec.reading(position)`: what it says instead of its percent.
+        text = function()
+          if spec.reading then return spec.reading(clamp01(t.position)) end
+          return ("%03d"):format(math.floor(clamp01(t.position) * 100 + .5))
+        end } or nil,
       second_handle = feedback(t, spec.id),
     }
   end
@@ -527,10 +531,12 @@ return function(theme, M, hud)
               width = function() return selected() and math.max(0, width() - 2) or 0 end,
               color = function() return C.primary end,
               behavior = { width = { duration = 220, easing = { x1 = 0.76, y1 = 0, x2 = 0.24, y2 = 1 } } } } },
-          M.section_label { text = ("%02d"):format(i), x = 9, y = 14, color = ink },
-          ui.Rect { x = 27, y = 10, width = 1, height = 20, color = function() return ink():alpha(0.35) end },
+          -- `icons_only` (a phone's row): the icon alone, centred.
+          M.section_label { text = ("%02d"):format(i), x = 9, y = 14, color = ink, visible = not spec.icons_only },
+          ui.Rect { x = 27, y = 10, width = 1, height = 20, color = function() return ink():alpha(0.35) end,
+            visible = not spec.icons_only },
           ui.Item { id = name .. "-label", x = 34, y = 12, height = 18, clip = true,
-            width = text_w, visible = function() return text_w() > 0 end, strip },
+            width = text_w, visible = function() return not spec.icons_only and text_w() > 0 end, strip },
           hud().corners { length = 6, weight = 2, color = function() return C.primary end,
             visible = function() return t.visual_focus and selected() end },
         }
@@ -550,7 +556,8 @@ return function(theme, M, hud)
           local icon_id = name .. "-icon"
           local icon = entry.icon_build and entry.icon_build(selected, icon_id, ink)
             or M.icon(entry.icon, 18, ink, { id = icon_id, fill = selected })
-          icon.anchors = { right = true, right_margin = 9, vertical_center = true }
+          icon.anchors = spec.icons_only and { center_in = true }
+            or { right = true, right_margin = 9, vertical_center = true }
           ui.reparent(icon, look)
         end
         local was, running = false, nil

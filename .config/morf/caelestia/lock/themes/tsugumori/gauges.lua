@@ -52,7 +52,7 @@ return function(theme, kit)
     local node = { id = spec.id, x = spec.x, y = spec.y, anchors = spec.anchors, width = s, height = s,
       -- Outer ring in segments, the ruler inside it.
       path { d = arc(c, c, r0, 0, 360), stroke_color = line("quiet", color), stroke_width = 2,
-        dash = { math.pi * 2 * r0 / 48 - 3, 3 } },
+        dash = { math.max(0.5, math.pi * 2 * r0 / 48 - 3), 3 } },
       path { d = table.concat(ticks), stroke_color = line("mark", color), stroke_width = 1 },
       -- Track, then the value: a wide faint stroke under the arc makes its
       -- glow, the arc itself on top.

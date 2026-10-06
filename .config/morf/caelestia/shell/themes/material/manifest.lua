@@ -35,6 +35,7 @@ return {
     dashboard_performance = "themes.layouts.views.dashboard_performance",
     dashboard_battery = "themes.layouts.views.dashboard_battery",
     dashboard_weather = "themes.layouts.views.dashboard_weather",
+    dashboard_terminal = "themes.layouts.views.dashboard_terminal",
     sound_page = "themes.layouts.views.sound_page",
     equalizer_page = "themes.layouts.views.equalizer_page",
     net_pages = "themes.layouts.views.net_pages",

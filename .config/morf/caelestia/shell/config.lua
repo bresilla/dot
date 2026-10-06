@@ -28,6 +28,9 @@ return settings.open {
     appearance = {
       -- A font file every label is set in ("" for the installed faces).
       font_file = "",
+      -- How big everything is drawn, from -1 (half the size) through 0 (the
+      -- compositor's own scale) to 1 (twice it): the scale slider.
+      zoom = 0,
     },
     wallpaper = {
       -- A picture to paint under everything; "" reads the path the
@@ -52,6 +55,14 @@ return settings.open {
     sidebar = {
       -- Opens when the pointer reaches the middle of the right edge.
       hover = true,
+    },
+    -- Which pages each edge's panel holds (shell/pages.lua): a desk's right
+    -- and left panels, and a phone's sheet from the top. A page moves by
+    -- moving its key.
+    panels = {
+      right = { "settings", "notifications" },
+      left = { "tasks", "calendar" },
+      top = { "settings", "notifications", "tasks", "calendar", "assistant", "drop" },
     },
     leftbar = {
       -- Opens when the pointer reaches the left edge above the rail.

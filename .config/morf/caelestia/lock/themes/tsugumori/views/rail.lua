@@ -1,6 +1,8 @@
 -- Simple workspace markers matching the right-edge level pills.
 -- The active marker slides between slots; a switch reveals the HUD card.
--- Geometry keeps the level pills on the right edge aligned.
+-- Geometry keeps the level pills on the right edge aligned. Upright (a
+-- phone, `model.bottom`) the markers run along the bottom edge and the card
+-- rises out of it.
 local morf = require("morf")
 local ui = require("morf.ui")
 local theme = require("theme")
@@ -40,7 +42,11 @@ function V.geometry(model)
   local w, h = model.desk_size()
   local item, gap = 14, 10
   local track = model.count * item + (model.count - 1) * gap
-  return { w = w, h = h, item = item, gap = gap, top = math.floor((h - track) / 2),
+  -- `top`: where the markers start along their edge (down the left one, or
+  -- across the bottom one from the desk's left).
+  local along = model.bottom and w or h
+  local from = model.bottom and model.start() or 0
+  return { w = w, h = h, item = item, gap = gap, top = from + math.floor((along - track) / 2),
     pill_x = theme.LEFT / 2 - 3, bud_x = theme.LEFT + 8 }
 end
 
@@ -56,22 +62,35 @@ function V.build(model)
     anchors = { fill = true }, visible = model.enabled }
 
   -- Slots.
+  -- A marker: across its edge 6 wide, along it `item` long, at `centre`.
+  local B = model.bottom
+  local function marker(props, centre)
+    if B then
+      props.y = function() return model.edge() - theme.BORDER / 2 - 3 end
+      props.height = 6
+      props.width = function() return geometry().item end
+      props.x = function() return centre() - geometry().item / 2 end
+    else
+      props.x = function() return geometry().pill_x end
+      props.width = 6
+      props.height = function() return geometry().item end
+      props.y = function() return centre() - geometry().item / 2 end
+    end
+    return ui.Rect(props)
+  end
   for i = 1, model.count do
     local function id() return model.base(model.active()) + i - 1 end
-    ui.reparent(ui.Rect { id = "rail-pill-" .. i, x = function() return geometry().pill_x end, width = 6,
-      height = function() return geometry().item end,
-      y = function() return center(id()) - geometry().item / 2 end,
+    ui.reparent(marker({ id = "rail-pill-" .. i,
       color = function() return C.primary end,
       opacity = function() return model.occupied(id()) and .65 or .28 end,
-      behavior = { opacity = { duration = 180 } } }, root)
+      behavior = { opacity = { duration = 180 } } }, function() return center(id()) end), root)
   end
 
   -- The active marker has the same shape as every workspace slot.
-  ui.reparent(ui.Rect { id = "rail-selector", x = function() return geometry().pill_x end, width = 6,
-    height = function() return geometry().item end,
-    y = function() return center(model.active()) - geometry().item / 2 end,
+  ui.reparent(marker({ id = "rail-selector",
     color = function() return C.primary end,
-    behavior = { y = { duration = 380, easing = "out_cubic" } } }, root)
+    behavior = { x = { duration = 380, easing = "out_cubic" }, y = { duration = 380, easing = "out_cubic" } } },
+    function() return center(model.active()) end), root)
 
   -- -------------------------------------------------------------- card --
   local digits = ui.Text { id = "rail-value", x = 12, y = 26, height = 36, font_size = 32,
@@ -88,9 +107,13 @@ function V.build(model)
         return model.occupied(id()) and C.primary:alpha(.4) or C.primary:alpha(.08)
       end }, meter)
   end
-  local card = ui.Item { id = "rail-swell", x = -W - 12, width = W, height = H, visible = false, opacity = 0,
-    y = function() return math.max(12, math.min(geometry().h - H - 12, center(model.active()) - H / 2)) end,
-    behavior = { y = { duration = 380, easing = "out_cubic" } },
+  -- Where the card hides, past its edge, and where it stands out of it.
+  local function hidden() return B and model.edge() + 12 or -W - 12 end
+  local function out() return B and model.edge() - theme.BORDER - 8 - H or geometry().bud_x end
+  local slide = B and "y" or "x"
+  local card = ui.Item { id = "rail-swell", width = W, height = H, visible = false, opacity = 0,
+    -- It follows the active marker along its edge.
+    behavior = B and { x = { duration = 380, easing = "out_cubic" } } or { y = { duration = 380, easing = "out_cubic" } },
     stretch = kit.STRETCH,
     ui.Rect { width = W, height = H, color = "transparent", border_width = 1, border_color = P.line("quiet") },
     P.brackets { width = W, height = H, length = 8, color = P.line("hot") },
@@ -119,11 +142,22 @@ function V.build(model)
     P.hatch { x = 104, y = 52, width = W - 116, height = 8, spacing = 5, weight = 1.5, color = P.line("mark") },
     meter,
   }
+  -- Along its edge it follows the active marker, kept on the screen.
+  local function beside()
+    local g = geometry()
+    local span, size = B and g.w or g.h, B and W or H
+    local from = B and model.start() or 0
+    return math.max(from + 12, math.min(from + span - size - 12, center(model.active()) - size / 2))
+  end
+  if B then card.x, card.y = beside, hidden() else card.x, card.y = hidden(), beside end
   local shape = ui.SdfShape { id = "rail-swell-background", shape = "box", radius = 0,
     operation = "smooth_union", blend = 6, track = card, opacity = 0 }
   ui.reparent(card, root)
-  kit.ride("rail", root, model.leftbar.drawer,
-    function() return theme.SIDE_W + theme.STRIP / 2 + theme.LEFT / 2 end)
+  -- The left panel opening carries a left-edge rail out with it.
+  if not B then
+    kit.ride("rail", root, model.leftbar.drawer,
+      function() return theme.SIDE_W + theme.STRIP / 2 + theme.LEFT / 2 end)
+  end
 
   local motion, hide
   local function cancel()
@@ -134,11 +168,11 @@ function V.build(model)
     cancel() shown:set(false)
     if immediate then
       card.visible, card.opacity, shape.opacity = false, 0, 0
-      card.x = -W - 12
+      card[slide] = hidden()
       return
     end
     motion = morf.animation.play { { parallel = {
-      { node = card, property = "x", to = -W - 12, duration = 260, easing = "in_out_quint" },
+      { node = card, property = slide, to = hidden(), duration = 260, easing = "in_out_quint" },
       { node = card, property = "opacity", to = 0, duration = 180 },
       { node = shape, property = "opacity", to = 0, duration = 180 },
     } }, on_finished = function(reason) if reason == "completed" then card.visible = false end end }
@@ -146,7 +180,7 @@ function V.build(model)
   local function pop()
     cancel() shown:set(true) card.visible = true
     motion = morf.animation.play { { parallel = {
-      { node = card, property = "x", to = geometry().bud_x, duration = 340, easing = "out_expo" },
+      { node = card, property = slide, to = out(), duration = 340, easing = "out_expo" },
       { node = card, property = "opacity", to = 1, duration = 180 },
       { node = shape, property = "opacity", to = 1, duration = 180 },
       { node = digits, property = "translate_y", from = -8, to = 0, duration = 280, easing = "out_cubic" },

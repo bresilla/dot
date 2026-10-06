@@ -38,7 +38,14 @@ function M.new()
       status = tab.key == "assistant" and "Not connected" or "Not connected yet",
       active = function() return model.opened:get() and model.displayed:get() == i end }
   end
-  function model.page(key, w, h) return require(key).build(contexts[key], w, h) end
+  -- In the one frame every panel page has (themes/layouts/page.lua).
+  function model.page(key, w, h)
+    local ctx = contexts[key]
+    local page = require("pages").all[key]
+    return (require("themes.layouts.page").frame { id = "page-" .. key, width = w, height = h, title = ctx.title,
+      titled = require("responsive").compact(), title_id = page and page.title_id, active = ctx.active,
+      build = function(bw, bh) return require(key).build(ctx, bw, bh) end })
+  end
   morf.effect("caelestia.bottom.presentation", function()
     for _, tab in ipairs(model.tabs) do
       require("presentation").set("bottom." .. tab.key, contexts[tab.key].active())

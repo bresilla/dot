@@ -2,12 +2,10 @@
 -- theme owns the drawer dimensions, tab strip, pages and transitions.
 local morf = require("morf")
 local ui = require("morf.ui")
-local model = require("side_panel_model").new {
-  id = "leftbar", edge = "left", tabs = {
-    { key = "tasks", name = "Tasks", icon = "checklist", build = require("tasks_page").build },
-    { key = "calendar", name = "Calendar", icon = "calendar_month", build = require("calendar_page").build },
-  },
-}
+-- Its pages are the `panels.left` setting's (shell/pages.lua).
+local tabs, bind = require("pages").tabs("left")
+local model = require("side_panel_model").new { id = "leftbar", edge = "left", tabs = tabs }
+bind(model)
 local view = require("themes").view("side_panel").build(model)
 local M = { TABS = model.tabs, panel = model, WIDTH = view.width }
 M.height = view.height

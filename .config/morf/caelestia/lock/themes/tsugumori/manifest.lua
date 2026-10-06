@@ -22,6 +22,7 @@ return {
     graphs = "themes.layouts.views.graphs",
     dashboard_battery = "themes.layouts.views.dashboard_battery",
     dashboard_weather = "themes.layouts.views.dashboard_weather",
+    dashboard_terminal = "themes.layouts.views.dashboard_terminal",
     dashboard = "themes.layouts.views.dashboard",
     notification_history = "themes.layouts.views.notification_history",
     rail = "themes.tsugumori.views.rail",

@@ -1,20 +1,18 @@
--- A month and the selected day's Taskwarrior agenda. Work-calendar events
--- can be added here later; no account or meeting data is invented.
+-- A month and the selected day's Taskwarrior agenda, in the page template
+-- (themes/layouts/page.lua): the month in one card with its buttons, the
+-- day's tasks in the next, the work calendar in the last. Work-calendar
+-- events can be added here later; no account or meeting data is invented.
 local morf = require("morf")
 local ui = require("morf.ui")
 local kit = require("kit")
 local theme = require("theme")
+local P = require("themes.layouts.page")
 local widgets = require("planner_widgets")
 local C = theme.color
 local M = {}
 
 function M.build(model, w, h)
-  local viewport, viewport_node, viewport_t, viewport_ctl
-  local function heading(props)
-    props.viewport = function() return viewport end
-    return kit.heading(props)
-  end
-  local inner = w - 32
+  local inner = P.inner(w)
   local days, agenda = model.days, model.agenda
   -- The month: the kit's calendar (a day grid the arrows walk, months that
   -- slide), on the model's month and day, a dot on each day with tasks.
@@ -34,50 +32,47 @@ function M.build(model, w, h)
     for i = 1, days:len() do local day = days:get(i) out[day.key] = day.count end
     counts:set(out)
   end, { owner = month })
-  viewport_node, viewport, viewport_t, viewport_ctl = kit.scroll({ id = "planner-scroll", anchors = { fill = true, margins = 16 }, clip = true,
-      ui.Column { width = inner, gap = 16,
-        ui.Item { width = inner, height = 48,
-          heading { id = "planner-title", scope = "leftbar.calendar", text = "A day at a time.", font_size = 24, font_weight = 700 },
-          widgets.subtitle("Your plans, with space for what comes next.", { id = "planner-subtitle", y = 31 }),
-        },
-        month,
-        ui.Row { gap = 8,
-          widgets.button("planner-today", "Today", "today", 100, model.today),
-          widgets.button("planner-add", "Plan a task", "add", inner - 108, model.plan, function() return true end),
-        },
-        kit.surface { width = inner, height = 1, color = kit.stroke("quiet") },
-        ui.Column { gap = 5,
-          heading { id = "planner-day-title", scope = "leftbar.calendar", level = "section", text = model.day_title, font_size = theme.size.large, font_weight = 600 },
-          widgets.subtitle(function() return tostring(agenda:len()) .. " tasks planned" end),
-        },
-        ui.Repeater { as = "column", gap = 8, width = inner, model = agenda,
-          delegate = function(item)
-            return kit.action { id = "planner-task-" .. item.uuid, width = inner, height = 78, cursor = "pointer",
-              on_clicked = function() model.edit(item.uuid) end,
-              kit.card { anchors = { fill = true }, radius = 16, color = function() return C.surfaceContainerHigh end },
-              kit.surface { x = 0, y = 16, width = 3, height = 46, radius = 1.5, color = kit.signal("accent") },
-              widgets.label(item.time, { x = 14, y = 17, width = 54, elide = "right", color = kit.ink("accent") }),
-              kit.menu_label { x = 72, y = 14, width = inner - 88, elide = "right", text = item.description, font_weight = 600 },
-              widgets.subtitle(item.kind .. (item.project ~= "" and (" · " .. item.project) or ""),
-                { x = 72, y = 43, width = inner - 88, elide = "right" }),
-            }
-          end,
-        },
-        ui.Column { width = inner, gap = 10, visible = function() return agenda:len() == 0 end,
-          kit.icon("event_available", 42, kit.ink("accent")),
-          heading { id = "planner-empty-title", scope = "leftbar.calendar", level = "section", visible = function() return agenda:len() == 0 end, text = "Nothing planned yet", font_size = theme.size.large },
-          widgets.message("Tasks scheduled or due on this day will appear here.", inner),
-        },
-        kit.card { width = inner, height = 88, radius = 18, color = function() return C.surfaceContainerHigh end,
-          kit.icon("calendar_month", 24, kit.ink("lo"), { x = 16, y = 18 }),
-          heading { id = "planner-work-title", scope = "leftbar.calendar", level = "section", x = 54, y = 16, text = "Work calendar", font_weight = 600 },
-          kit.subtitle { x = 54, y = 39, width = inner - 70, height = 48, wrap = true,
-            text = "Not connected yet. Meetings will appear here once an account is connected.",
-            font_size = theme.size.small, color = kit.ink("lo") },
-        },
-        widgets.message(function() return model.error:get() end, inner, 64),
-      },
-    })
-  return kit.card { id = "planner-calendar", width = w, height = h, viewport_node }
+
+  -- Today at its label's width, planning the rest of the row.
+  local today = P.button { id = "planner-today", label = "Today", icon = "today", on_clicked = model.today }
+  local plan = P.button { id = "planner-add", label = "Plan a task", icon = "add", tone = "primary",
+    width = function() return inner - (today.layout_width or 0) - 8 end, on_clicked = model.plan }
+
+  local day = { id = "planner-day", caption_id = "planner-day-title", width = w, title = model.day_title,
+    note = function() return tostring(agenda:len()) .. " planned" end,
+    ui.Repeater { as = "column", gap = P.ROW_GAP, width = inner, model = agenda,
+      delegate = function(item)
+        return P.row { id = "planner-task-" .. item.uuid, width = inner, icon = "event",
+          title = item.description,
+          subtitle = (function()
+            local parts = {}
+            for _, part in ipairs { item.time or "", item.kind or "", item.project or "" } do
+              if part ~= "" then parts[#parts + 1] = part end
+            end
+            return table.concat(parts, " · ")
+          end)(),
+          trailing = P.chevron(), on_clicked = function() model.edit(item.uuid) end }
+      end },
+    P.row { id = "planner-empty", width = inner, icon = "event_available", on = function() return false end,
+      title = "Nothing planned yet", subtitle = "Tasks due or scheduled that day show here.",
+      visible = function() return agenda:len() == 0 end },
+  }
+
+  local failure = widgets.message(function() return model.error:get() end, w, 64)
+  failure.visible = function() return (model.error:get() or "") ~= "" end
+
+  local page = P.page { id = "planner-scroll", width = w, height = h,
+    P.section { id = "planner-month", width = w,
+      month,
+      ui.Row { gap = 8, align = "center", today, plan },
+    },
+    P.section(day),
+    P.section { id = "planner-work", caption_id = "planner-work-title", width = w, title = "Work calendar",
+      P.row { id = "planner-work-row", width = inner, icon = "calendar_month", on = function() return false end,
+        title = "Not connected", subtitle = "Connect an account to see meetings." },
+    },
+    failure,
+  }
+  return ui.Item { id = "planner-calendar", width = w, height = h, page }
 end
 return M
