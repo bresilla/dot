@@ -66,6 +66,7 @@ function M.build(state, width)
   local left = COMPACT and w or math.floor((w - GAP) * 0.60)
   local right = COMPACT and w or w - left - GAP
   local li, ri, ci = P.inner(left), P.inner(right), P.inner(w)
+  local function generating() return state.source:get() == "generate" end
 
   -- -------------------------------------------------------- wallpaper --
   local PV = math.max(160, math.min(260, math.floor(li * 0.45)))
@@ -99,7 +100,7 @@ function M.build(state, width)
     end }
   -- The folder's images over the preview while browsing.
   local library = kit.card { id = "lule-browser", width = li, height = PV, radius = kit.round(P.RADIUS),
-    color = function() return C.surfaceContainerHigh end, visible = function() return state.browsing:get() end,
+    color = function() return C.surfaceContainerHigh end, visible = function() return not generating() and state.browsing:get() end,
     ui.Column { x = 8, y = 8, width = list_w, gap = 8,
       small(function() return #state.files:get() == 0 and "No images in this folder"
         or #state.files:get() .. " wallpapers · Choose a preview" end, { width = list_w, elide = "middle" }),
@@ -116,6 +117,7 @@ function M.build(state, width)
   local function step(id, icon, name, by, side)
     local b = kit.named(button { id = id, label = "", icon = icon, width = BH, on_clicked = function() state.step(by) end }, name)
     b.anchors = { [side] = true, [side .. "_margin"] = 10, vertical_center = true }
+    b.visible = function() return not generating() end
     return b
   end
   local preview = ui.Item { width = li, height = PV,
@@ -145,8 +147,8 @@ function M.build(state, width)
       end },
   }
   local field_node, field
-  local use_folder = button { id = "lule-use-folder", label = "Use folder",
-    on_clicked = function() state.set_folder(field.text) end }
+  local use_folder = button { id = "lule-use-folder", label = "Use path",
+    on_clicked = function() state.select(field.text) end }
   use_folder.anchors = { right = true, vertical_center = true }
   local function folder_w()
     local bw = use_folder.width
@@ -159,7 +161,7 @@ function M.build(state, width)
     color = function() return C.onSurface end, placeholder_color = function() return C.onSurfaceVariant end,
     caret_color = function() return C.primary end, selection_color = function() return C.primary:alpha(0.25) end,
     on_text_changed = function(value) if state.folder_draft then state.folder_draft:set(value) end end,
-    on_accepted = function(value) state.set_folder(value) end,
+    on_accepted = function(value) state.select(value) end,
     on_escape = state.escape })
   morf.effect("caelestia.lule.folder-field", function() field.text = (state.folder_draft and state.folder_draft:get()) or state.folder:get() end)
   local folder_row = ui.Item { width = li, height = BH,
@@ -177,19 +179,44 @@ function M.build(state, width)
   }
   local random = { id = "lule-random-apply", label = "Random & apply", icon = "auto_awesome", tone = "primary",
     on_clicked = state.random_apply }
-  local wallpaper_items = PV + 22 + BH + BH + 3 * ROW
-  local wall = { id = "lule-wallpaper", caption_id = "lule-wallpaper-heading", width = left, title = "Wallpaper",
-    preview, name_row, folder_row }
+  local files = { width = li, gap = ROW, visible = function() return not generating() end, folder_row }
   if SPLIT then
-    wall[#wall + 1] = bar(li, actions)
+    files[#files + 1] = bar(li, actions)
     random.width = li
-    wall[#wall + 1] = button(random)
-    wallpaper_items = wallpaper_items + BH + ROW
+    files[#files + 1] = button(random)
   else
     actions[3] = random
-    wall[#wall + 1] = bar(li, actions)
+    files[#files + 1] = bar(li, actions)
   end
-  local wallpaper = P.section(wall)
+  local function entry(id, signal, placeholder, width)
+    local node, handle = kit.text_field("entry", { id = id, x = 10, y = 3, width = width - 20, height = 30,
+      font_family = theme.font, font_size = 12, placeholder = placeholder,
+      color = function() return C.onSurface end, placeholder_color = function() return C.onSurfaceVariant end,
+      caret_color = function() return C.primary end, selection_color = function() return C.primary:alpha(0.25) end,
+      on_text_changed = function(value) if not busy() then signal:set(value) end end, on_escape = state.escape })
+    morf.effect("caelestia." .. id .. ".field", function() handle.text = signal:get() end)
+    return kit.surface { width = width, height = BH, radius = kit.round(10),
+      color = function() return C.surfaceContainerHighest end, node }
+  end
+  local generator = ui.Column { width = li, gap = ROW, visible = generating,
+    entry("lule-logo", state.logo, "SVG or PNG logo path", li),
+    ui.Row { width = li, gap = 10, align = "center",
+      small("Logo size (%)", { width = 112 }), entry("lule-logo-size", state.logo_size, "40", 74) },
+    bar(li, {
+      { id = "lule-generate", label = "Preview", on_clicked = function() state.generate(false) end },
+      { id = "lule-generate-apply", label = "Generate & apply", tone = "primary", on_clicked = function() state.generate(true) end },
+    }),
+  }
+  local source = bar(li, {
+    { id = "lule-source-files", label = "File / folder", group = "lule-source",
+      selected = function() return not generating() end, on_clicked = function() state.set_source("files") end },
+    { id = "lule-source-generate", label = "Generate", group = "lule-source",
+      selected = generating, on_clicked = function() state.set_source("generate") end },
+  })
+  local source_h = 3 * BH + 2 * ROW
+  local wallpaper_items = BH + PV + 22 + source_h + 3 * ROW
+  local wallpaper = P.section { id = "lule-wallpaper", caption_id = "lule-wallpaper-heading", width = left, title = "Wallpaper",
+    source, preview, name_row, ui.Item { width = li, height = source_h, ui.Column(files), generator } }
   local WALL_H = section_h(wallpaper_items)
 
   -- ----------------------------------------------------------- colours --

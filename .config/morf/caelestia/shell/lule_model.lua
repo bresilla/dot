@@ -5,9 +5,9 @@ function M.new(studio)
   studio=studio or require("lule_studio")
   local model={key="lule",appearance=require("themes.switcher")}
   for _,key in ipairs {"scheme","selected","mode","method","busy","active","message","failed",
-    "folder","folder_draft","files","page","browsing","preview","preview_error"} do model[key]=studio[key] end
+    "folder","folder_draft","files","page","browsing","preview","preview_error","source","logo","logo_size"} do model[key]=studio[key] end
   local function ready() return model.active:get() and not model.busy:get() and not model.appearance.busy:get() end
-  for _,key in ipairs {"set_folder","select","shuffle","random_apply","step","browse","apply"} do
+  for _,key in ipairs {"set_folder","select","shuffle","random_apply","step","browse","apply","set_source","generate"} do
     model[key]=function(...) if not ready() then return false end return studio[key](...) end
   end
   function model.copy(value) if model.active:get() then return studio.copy(value) end end

@@ -25,8 +25,56 @@ M.page = require("themes.session").keep("caelestia.lule.page", 1)
 M.browsing = require("themes.session").keep("caelestia.lule.browsing", false)
 M.preview = require("themes.session").keep("caelestia.lule.preview", "")
 M.preview_error = require("themes.session").keep("caelestia.lule.preview_error", "")
+M.source = require("themes.session").keep("caelestia.lule.source", config.get("lule.source"))
+M.logo = require("themes.session").keep("caelestia.lule.logo", config.get("lule.logo"))
+M.logo_size = require("themes.session").keep("caelestia.lule.logo-size", tostring(config.get("lule.logo_size")))
 local pictures = { png = true, jpg = true, jpeg = true, webp = true, bmp = true, gif = true, avif = true }
 local function message(text, failed) M.failed:set(failed or false) M.message:set(text) end
+function M.set_source(value)
+  if M.busy:get() or (value ~= "files" and value ~= "generate") then return false end
+  config.set("lule.source", value)
+  M.source:set(value) M.browsing:set(false)
+  message(value == "generate" and "Generate a preview, then apply it when you like it." or "Choose an image or a wallpaper folder.")
+  return true
+end
+
+function M.generate(apply)
+  if M.busy:get() then return false end
+  local dry = morf.env("CAELESTIA_DRY_RUN")
+  if dry and dry ~= "" and dry ~= "0" then message("Generating wallpapers is disabled in this preview.", true) return false end
+  local logo, size = expand(M.logo:get()), tonumber(M.logo_size:get())
+  if not morf.fs.is_file(logo) then message("Choose an existing SVG or PNG logo.", true) return false end
+  local extension = (logo:match("%.([^./]+)$") or ""):lower()
+  if extension ~= "svg" and extension ~= "png" then message("The logo must be an SVG or PNG image.", true) return false end
+  if not size or size <= 0 or size > 100 then message("Enter a logo size between 1 and 100 percent.", true) return false end
+  local folder = (morf.env("XDG_DATA_HOME") or (morf.fs.home() .. "/.local/share")) .. "/lule/wallpapers"
+  local made, err = morf.fs.mkdir(folder, { parents = true })
+  if not made then message(tostring(err or "Cannot create the generated wallpaper folder."), true) return false end
+  local path = folder .. "/" .. morf.encoding.uuid() .. ".png"
+  local screen = (morf.screens or {})[1] or {}
+  local width, height = screen.width or 1920, screen.height or 1080
+  local scale = math.min(1, 4096 / math.max(width, height))
+  width, height = math.max(64, math.floor(width * scale)), math.max(64, math.floor(height * scale))
+  local argv = { "lule", "wallpaper", "--logo=" .. logo, "--size=" .. size,
+    "--width=" .. width, "--height=" .. height, "--output=" .. path }
+  M.busy:set(true) message("Generating a wallpaper…")
+  config.set("lule.logo", M.logo:get()) config.set("lule.logo_size", size)
+  local ok, child, why = pcall(morf.run, argv, { timeout_ms = 120000, max_output = 65536 }, function(result)
+    M.busy:set(false)
+    if result.ok and morf.fs.is_file(path) then
+      M.selected:set(path) M.browsing:set(false)
+      message("Generated preview · Apply to change your wallpaper and colors.")
+      if apply then M.apply() end
+    else
+      local detail = result.error or result.stderr or ""
+      detail = detail:gsub("\27%[[%d;]*m", ""):match("^%s*(.-)%s*$")
+      message(result.timed_out and "Wallpaper generation timed out. Try again."
+        or (detail ~= "" and detail:sub(1, 260) or "Lule did not produce a wallpaper. Check that it supports the wallpaper command."), true)
+    end
+  end)
+  if not ok or not child then M.busy:set(false) message(tostring(not ok and child or why or "Could not start Lule."), true) return false end
+  return true
+end
 function M.scan(path)
   path = expand(path or "")
   if not morf.fs.is_dir(path) then message("That wallpaper folder does not exist.", true) return false end
@@ -148,6 +196,7 @@ local scanned = false
 local restoring = require("themes.session").restoring
 morf.effect("caelestia.lule.open", function()
   if not M.active:get() then scanned = false return end
+  if M.source:get() == "generate" then return end
   local folder = config.get("lule.folder")
   if folder == "" then folder = morf.env("LULE_W") or "" end
   if folder == "" then folder = (M.selected:get():match("^(.*)/") or (morf.fs.home() .. "/Pictures/Wallpapers")) end

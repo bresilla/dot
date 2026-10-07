@@ -75,6 +75,9 @@ return settings.open {
     lule = {
       -- Empty follows LULE_W, then the current wallpaper's directory.
       folder = "",
+      source = "generate",
+      logo = "~/.dot/.bresilla/logo.svg",
+      logo_size = 40,
     },
     capture = {
       -- Where screenshots and recordings go, both.
