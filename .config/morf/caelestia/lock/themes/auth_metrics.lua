@@ -3,6 +3,10 @@
 -- shrinking text and keyboard targets until they are unusable.
 return function(width, height, keyboard)
   local onscreen = height > width or not keyboard
+  -- Density already shrank the available logical viewport. Compute the base
+  -- fit in compositor units, otherwise auto-fit would undo the user's zoom.
+  local zoom = require("themes.ui_scale").factor()
+  width, height = width * zoom, height * zoom
   -- Upright (a phone) the design is the 1080 x 1920 one.
   local fit = height > width and math.min(width / 1080, height / 1920) or math.min(width / 1920, height / 1080)
   local scale = math.min(2.4, math.max(.75, fit))

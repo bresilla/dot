@@ -78,7 +78,8 @@ end
 local zoom_first, zoom_settle = true, nil
 morf.effect("caelestia.scale", function()
   local v = zoom()
-  if morf.density then morf.density(v ~= 0 and { zoom = 2 ^ v } or nil) end
+  if require("themes.ui_scale").compositor then require("themes.ui_scale").apply()
+  elseif morf.density then morf.density(v ~= 0 and { zoom = 2 ^ v } or nil) end
   if zoom_first then zoom_first = false return end
   if zoom_settle then zoom_settle:cancel() end
   zoom_settle = morf.timer(300, function() zoom_settle = nil morf.reload() end, false)
