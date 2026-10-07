@@ -109,18 +109,64 @@ end
 function M.attach(root)
   if attached[root] or not phone() then return end
   attached[root] = true
-  require("keyboard_gestures").attach(root, "bottom", function() return not blocked() end)
-  if M.continuous then root.on_edge_panned = M.edge_pan
-  else root.on_edge_swiped = M.swipe end
+  local preview=require("workspace_gesture").new(root)
+  M.workspace_preview=preview.state
+  local mode,last_y,last_time,velocity,drawer
+  local function single(phase,dx,dy)
+    if phase=="begin" then
+      mode,drawer=nil,nil
+      last_y,last_time,velocity=0,morf.time.now_ms(),0
+      return
+    end
+    if phase=="cancel" then
+      if mode=="workspace" then preview.cancel()
+      elseif drawer then drawer.end_drag(0,true) end
+      mode,drawer=nil,nil
+      return
+    end
+    if phase=="update" then
+      if not mode and math.max(math.abs(dx),math.abs(dy))>=8 then
+        if math.abs(dx)>math.abs(dy)*1.2 then
+          close_other_panels(nil)
+          preview.begin() mode="workspace"
+        elseif -dy>math.abs(dx)*1.2 then
+          drawer=require("dashboard").drawer
+          close_other_panels(drawer)
+          drawer.begin_drag() mode="dashboard"
+        elseif dy>math.abs(dx)*1.2 then mode="ignored" end
+      end
+      if mode=="workspace" then preview.update(dx)
+      elseif drawer then drawer.drag_by(dy) end
+      local now=morf.time.now_ms()
+      if now>last_time then velocity=(dy-last_y)*1000/(now-last_time) end
+      last_y,last_time=dy,now
+    elseif phase=="end" then
+      if mode=="workspace" then preview.update(dx) preview.finish(false)
+      elseif drawer then
+        if morf.time.now_ms()-last_time>100 then velocity=0 end
+        drawer.drag_by(dy) drawer.end_drag(velocity,false)
+      end
+      mode,drawer=nil,nil
+    end
+  end
+  local gestures=require("keyboard_gestures")
+  local contacts=gestures.contacts("bottom",function() return not blocked() end,single)
+  -- The bottom strip owns its raw contacts so a second finger can cancel
+  -- an in-progress panel/workspace pull before choosing the keyboard.
+  if M.continuous then root.on_edge_panned=function(edge,...)
+    if edge=="top" then return M.edge_pan(edge,...) end
+    return false
+  end
+  else root.on_edge_swiped=function(edge) if edge=="top" then M.swipe(edge) end end end
   -- Under the existing controls: tapping the bar/rail still reaches them.
   -- An Item, rather than a fullscreen MouseArea, leaves apps interactive.
   ui.reparent(ui.Item {
     id = "phone-gesture-edges", anchors = { fill = true }, z = -1,
     ui.MouseArea { id = "phone-gesture-top", height = EDGE,
       anchors = { top = true, left = true, right = true } },
-    ui.MouseArea { id = "phone-gesture-bottom", height = EDGE,
-      anchors = { bottom = true, left = true, right = true } },
   }, root)
+  ui.reparent(gestures.area(contacts,{id="phone-gesture-bottom",height=EDGE,z=200,
+    anchors={bottom=true,left=true,right=true}}),root)
 end
 
 return M

@@ -17,16 +17,19 @@ function V.build(model)
     press = function() return C.secondaryContainer end,
     font = theme.font, radius = theme.key_radius, icons = theme.icon_font,
   }
+  local gestures=require("keyboard_gestures")
+  local contacts=gestures.contacts("keyboard")
   local kb = osk.new {
     prefix = "caelestia.osk", action = kit.action, width = W - 2 * PAD,
     mode = "full", numbers = false, send = model.send, active = model.active,
-    look = look, key_face = look.key_face,
+    look = look, key_face = look.key_face, touch = contacts,
   }
   -- The theme's own marks round the keys (none in a theme without them).
   local marks = kit.decor("corners", { anchors = { fill = true }, length = 8, inset = 3, color = kit.stroke("mark") })
   local function height() return kb.height() + 2 * PAD end
-  return {width = W, height = height, keys = kb,
-    content = ui.Item {width = W, height = height,
-      ui.Item {x = PAD, y = PAD, width = W - 2 * PAD, height = kb.height, kb.node}, marks}}
+  local content = ui.Item {width = W, height = height,
+    gestures.area(contacts,{anchors={fill=true},z=-1}),
+    ui.Item {x = PAD, y = PAD, width = W - 2 * PAD, height = kb.height, kb.node}, marks}
+  return {width = W, height = height, keys = kb, content = content}
 end
 return V
