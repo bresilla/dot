@@ -13,7 +13,6 @@ local main_output = ctx.main_output
 local text = ctx.text
 local icon = ctx.icon
 local C = ctx.C
-local WALLPAPER = ctx.WALLPAPER
 local stage = ctx.stage
 local pull = ctx.pull
 local busy = ctx.busy
@@ -172,22 +171,7 @@ return function(W, H, NAME)
     },
   }
 
-  -- The desk under it: the wallpaper, blurred and dimmed.
-  local backdrop = skin.backdrop and skin.backdrop(W,H,s,"lock") or ui.Item {
-    anchors = { fill = true },
-    opacity = function() return (stage:get() == "rest" or stage:get() == "sheet") and 1 or 0 end,
-    behavior = { opacity = { duration = 420, easing = "out_cubic" } },
-    ui.Rect { anchors = { fill = true }, color = function() return C.surface end },
-    WALLPAPER ~= "" and ui.Image {
-      anchors = { fill = true }, fill_mode = "preserve_aspect_crop", source = WALLPAPER,
-    } or ui.Item {},
-    ui.Rect {
-      anchors = { fill = true }, backdrop_blur = s(28),
-      -- One tint, whatever the stage: a tint that changed with the sheet
-      -- repainted every screen, blur and all.
-      color = function() return C.surface:alpha(skin.wallpaper_tint or 0.4) end,
-    },
-  }
+  local backdrop=require("themes.auth_backdrop")(ctx,s,"lock")
 
   -- ------------------------------------------------------------ at rest --
 

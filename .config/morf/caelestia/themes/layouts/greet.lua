@@ -182,36 +182,7 @@ local band = ui.Item {
   },
 }
 
--- No wallpaper for the greeter's user: the screen behind the frame is a
--- deep surface with caelestia's shapes drifting across it.
-local backdrop
-if skin.backdrop then
-  backdrop = skin.backdrop(W, H, s,"greet")
-else
-  local DRIFT = {
-    { "cookie9", 0.08, 0.14, 180, 0 }, { "clover4", 0.82, 0.12, 150, 30 }, { "pentagon", 0.14, 0.74, 200, 8 },
-    { "cookie12", 0.86, 0.72, 220, 0 }, { "gem", 0.30, 0.40, 110, -12 }, { "flower", 0.68, 0.44, 130, 0 },
-    { "sunny", 0.50, 0.86, 120, 0 }, { "pill", 0.44, 0.10, 140, 25 },
-  }
-  local drift = { anchors = { fill = true } }
-  for i, d in ipairs(DRIFT) do
-    local size = s(d[4])
-    drift[#drift + 1] = ui.Path {
-      x = math.floor(W * d[2] - size / 2), y = function() return math.floor(content_height() * d[3] - size / 2) end,
-      width = size, height = size, view_box = { 0, 0, 100, 100 },
-      d = shapes.path(d[1], { segments = false }), rotation = d[5],
-      fill_color = function() return C.primary:alpha(0.05) end,
-      loop = { rotation = { from = d[5], to = d[5] + (i % 2 == 0 and 360 or -360), duration = 90000 + i * 9000,
-        loops = 1, hold = true } },
-    }
-  end
-  backdrop = ui.Item {
-    anchors = { fill = true },
-    ui.Rect { anchors = { fill = true }, color = function() return C.surfaceContainerLowest end },
-    ui.Item(drift),
-  }
-
-end
+local backdrop=require("themes.auth_backdrop")(ctx,s,"greet")
 
 -- ---------------------------------------------------------------- pieces --
 

@@ -9,7 +9,10 @@ export LULE_C="${LULE_C:-${XDG_CONFIG_HOME:-$HOME/.config}/lule}"
 export LULE_A="${LULE_A:-${XDG_CACHE_HOME:-$HOME/.cache}/lule}"
 folder="${XDG_DATA_HOME:-$HOME/.local/share}/lule/wallpapers"
 image=''
-if [[ "$mode" == restore && -f "$LULE_A/wallpaper" ]]; then
+if [[ "$mode" == restore ]] && command -v morf-wallpaper >/dev/null 2>&1; then
+    image="$(morf-wallpaper adopt)" || image=''
+fi
+if [[ "$mode" == restore && -z "$image" && -f "$LULE_A/wallpaper" ]]; then
     image="$(cat "$LULE_A/wallpaper")"
 fi
 if [[ ! -f "$image" ]]; then

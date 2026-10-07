@@ -54,9 +54,11 @@ local visual = require("themes").current
 local C, palette = require("themes.auth_palette")("lock")
 local FONT, ICONS = visual.tokens.auth_font or visual.tokens.font, visual.tokens.icon_font
 local text, icon = require("themes.typography")(visual.tokens, C, s)
-local tool = palette:get()
-local WALLPAPER = tool and tool.wallpaper or ""
-if WALLPAPER ~= "" and not morf.fs.exists(WALLPAPER) then WALLPAPER = "" end
+local function WALLPAPER()
+  local tool=palette:get()
+  local path=morf.env("CAELESTIA_WALLPAPER") or (tool and tool.wallpaper) or ""
+  return path~="" and morf.fs.exists(path) and path or ""
+end
 
 -- ------------------------------------------------------------------ state --
 

@@ -49,7 +49,9 @@ M.current:set(resolve())
 -- lule changing its picture changes this one.
 morf.effect("caelestia.wallpaper.follow", function()
   lule_scheme:get()
-  M.current:set(resolve())
+  local path=resolve()
+  M.current:set(path)
+  require("themes.wallpaper_handoff").publish(path,lule.path())
 end)
 
 --- Sets the picture (and the setting), and the scheme follows it.
