@@ -62,7 +62,7 @@ local config = settings.open {
     panels = {
       right = { "settings", "notifications" },
       left = { "tasks", "calendar" },
-      top = { "settings", "notifications", "tasks", "calendar", "assistant", "drop" },
+      top = { "notifications", "tasks", "calendar", "assistant", "drop", "settings" },
     },
     leftbar = {
       -- Opens when the pointer reaches the left edge above the rail.

@@ -20,6 +20,11 @@ local M = {}
 M.all = {}
 
 local groups = 0
+-- Every drawer can be typed into with the shared keyboard. Its exact
+-- bounds are an outside-dismiss exception, including drawers constructed
+-- before the keyboard itself. The Item is placed in the keyboard below;
+-- it takes no input or focus and disappears with that panel.
+local keyboard_input = ui.Item { anchors = { fill = true } }
 
 --- `spec`: `name`, `edge` ("top", "bottom", "left" or "right"), `width`,
 --- `height` (numbers or bindings), `content` (a node, laid out in the
@@ -77,6 +82,7 @@ function M.new(spec)
   props[#props + 1] = spec.content
   local panel = ui.Item(props)
   d.panel = panel
+  if spec.name == "keyboard" then ui.reparent(keyboard_input, panel) end
 
   --- How far the panel moves to be out of sight: its size and the seam, so
   --- not even the fillet of its far edge dents the frame.
@@ -157,6 +163,7 @@ function M.new(spec)
     require("lib.kit.popup").track(panel, {
       open = function() return d.open:get() end,
       close_policy = spec.close_policy, modal = spec.modal,
+      except = { keyboard_input },
       on_close = function(reason) if spec.on_dismiss then spec.on_dismiss(reason) else d.set(false) end end,
     })
   end

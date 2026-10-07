@@ -28,14 +28,23 @@ local function close_other_panels(keep)
   end
 end
 
-function M.swipe(edge)
+local function top_page(x)
+  local width=(morf.screens[1] or {}).width or morf.surface.width
+  return (tonumber(x) or 0)>=width/2 and "settings" or "notifications"
+end
+
+local function select_top(sidebar,x)
+  local page=top_page(x)
+  sidebar.select(page)
+  if page=="settings" then require("utilities").request("") end
+end
+
+function M.swipe(edge,x)
   if not phone() or blocked() then return end
   if edge == "top" then
     local sidebar = require("sidebar")
-    -- The first pull shows notifications; another pull opens quick settings.
-    local settings = sidebar.drawer.open:get() and sidebar.showing("notifications")
     close_other_panels(sidebar.drawer)
-    sidebar.select(settings and "settings" or "notifications")
+    select_top(sidebar,x)
     sidebar.drawer.set(true)
   elseif edge == "bottom" then
     local dashboard = require("dashboard").drawer
@@ -86,7 +95,7 @@ function M.pan(spec)
 end
 
 local edge_drawer
-function M.edge_pan(edge,phase,dx,dy,vx,vy)
+function M.edge_pan(edge,phase,dx,dy,vx,vy,start_x)
   if phase == "begin" then
     if not phone() or blocked() then return false end
     local inward = ({top=dy,bottom=-dy,left=dx,right=-dx})[edge]
@@ -94,8 +103,9 @@ function M.edge_pan(edge,phase,dx,dy,vx,vy)
     if edge == "left" or edge == "right" then return false end
     if edge == "top" then
       local sidebar=require("sidebar")
-      local settings=sidebar.drawer.open:get() and sidebar.showing("notifications")
-      sidebar.select(settings and "settings" or "notifications")
+      -- Choose from where the finger landed, even if it crosses the middle
+      -- during the pull. Repeated pulls from the same side keep that page.
+      select_top(sidebar,start_x)
       edge_drawer=sidebar.drawer
     else edge_drawer=require("dashboard").drawer end
     close_other_panels(edge_drawer)
