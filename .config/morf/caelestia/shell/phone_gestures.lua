@@ -119,6 +119,11 @@ end
 function M.attach(root)
   if attached[root] or not phone() then return end
   attached[root] = true
+  if morf.env("CAELESTIA_GESTURE_DRIVER")=="lisgd" then
+    require("lisgd_gestures").attach(root,{phone=phone,blocked=blocked,
+      swipe=M.swipe,close_panels=close_other_panels})
+    return
+  end
   local preview=require("workspace_gesture").new(root)
   M.workspace_preview=preview.state
   local mode,last_y,last_time,velocity,drawer

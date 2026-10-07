@@ -30,7 +30,8 @@
 --             hold a key for its alternates (accents, the digit above it)
 --   dev       laid out for code: Esc before the q-row, Tab and Del about
 --             the a-row, and Ctrl, Alt, Super, space, arrows and Enter along
---             the bottom (digits and symbols on a long press) -- the
+--             the bottom. Each letter offers two symbols on a long press,
+--             with the first selected by default (digits on the top row). The
 --             modifiers stick for one key, twice to lock
 --   letters   letters only
 --   numbers   a number pad
@@ -162,6 +163,26 @@ local ALTS = {
 local function ch(char, w) return c(char, ALTS[char], w) end
 
 local function row(chars) local out = {} for i = 1, #chars do out[#out + 1] = ch(chars:sub(i, i)) end return out end
+-- Dev stays on one page. Hold for the first symbol, or slide to the second;
+-- the ordinary keyboard keeps its longer accented-character menus.
+local DEV_ALTS = {
+  q = { "1", "!" }, w = { "2", "@" }, e = { "3", "#" }, r = { "4", "$" }, t = { "5", "%" },
+  y = { "6", "^" }, u = { "7", "&" }, i = { "8", "*" }, o = { "9", "(" }, p = { "0", ")" },
+  a = { "@", "&" }, s = { "#", "|" }, d = { ":", ";" }, f = { "\\", "`" }, g = { "-", "_" },
+  h = { "+", "=" }, j = { "'", "\"" }, k = { "(", "{" }, l = { ")", "}" },
+  z = { "[", "]" }, x = { "<", ">" }, c = { "=", "!" }, v = { "$", "%" },
+  b = { ".", "," }, n = { "~", "^" }, m = { "/", "?" },
+}
+local function dev_row(chars)
+  local out = {}
+  for i = 1, #chars do
+    local char = chars:sub(i, i)
+    local key = c(char, DEV_ALTS[char])
+    key.dual_hints = true
+    out[#out + 1] = key
+  end
+  return out
+end
 local function with(list, ...) for _, v in ipairs({ ... }) do list[#list + 1] = v end return list end
 local function front(list, ...) local out = { ... } for _, v in ipairs(list) do out[#out + 1] = v end return out end
 
@@ -198,14 +219,13 @@ PAGES.symbols2 = {
 -- top, Tab before the a-row, and the modifiers and arrows along the bottom
 -- where the thumbs are.
 PAGES.dev = {
-  front(row("qwertyuiop"), k("esc", "escape", 1, { dim = true })),
-  with(front(row("asdfghjkl"), k("tab", "tab", 1, { dim = true, icon = "keyboard_tab" })),
+  front(dev_row("qwertyuiop"), k("esc", "escape", 1, { dim = true })),
+  with(front(dev_row("asdfghjkl"), k("tab", "tab", 1, { dim = true, icon = "keyboard_tab" })),
     k("del", "delete", 1, { rep = true, dim = true })),
-  front(with(row("zxcvbnm"), k("⌫", "backspace", 2, { rep = true, dim = true, icon = "backspace" })),
+  front(with(dev_row("zxcvbnm"), k("⌫", "backspace", 2, { rep = true, dim = true, icon = "backspace" })),
     a("⇧", "shift", 2, { dim = true, icon = "shift" })),
   { a("ctrl", "mod:ctrl", 1.2, { dim = true }), a("alt", "mod:alt", 1.2, { dim = true }),
-    a("super", "mod:super", 1.2, { dim = true }),
-    a("?123", "page:symbols", 1.2, { dim = true }), SPACE(2),
+    a("sup", "mod:super", 1.2, { dim = true }), SPACE(3.2),
     k("←", "left", 0.75, { rep = true, dim = true, icon = "arrow_back" }),
     k("↓", "down", 0.75, { rep = true, dim = true, icon = "arrow_downward" }),
     k("↑", "up", 0.75, { rep = true, dim = true, icon = "arrow_upward" }),
@@ -214,7 +234,7 @@ PAGES.dev = {
 }
 PAGES.dev_keys = {
   k("esc", "escape", 1, { dim = true }), k("tab", "tab", 1, { dim = true, icon = "keyboard_tab" }),
-  a("ctrl", "mod:ctrl", 1, { dim = true }), a("alt", "mod:alt", 1, { dim = true }), a("super", "mod:super", 1, { dim = true }),
+  a("ctrl", "mod:ctrl", 1, { dim = true }), a("alt", "mod:alt", 1, { dim = true }), a("sup", "mod:super", 1, { dim = true }),
   k("←", "left", 1, { rep = true, dim = true, icon = "arrow_back" }),
   k("↓", "down", 1, { rep = true, dim = true, icon = "arrow_downward" }),
   k("↑", "up", 1, { rep = true, dim = true, icon = "arrow_upward" }),
@@ -390,6 +410,8 @@ function osk.new(options)
       if spec.action and spec.action:match("^mod:") then return mods[spec.action:sub(5)]:get() ~= "off" end
       return false
     end
+    -- Reserve a separate line for the paired hints on compact dev keys.
+    local face_label=spec.dual_hints and function() return "" end or label
     local function cancel_timers()
       if long_timer then long_timer:cancel() long_timer = nil end
       if repeat_timer then repeat_timer:cancel() repeat_timer = nil end
@@ -480,8 +502,9 @@ function osk.new(options)
         if not was_repeat then commit() end
       end,
       KEY_FACE and KEY_FACE {
-        id = id, width = w, height = KH, kind = spec.kind, label = label,
-        hint = spec.alts and spec.alts[1], down = function() return down:get() end,
+        id = id, width = w, height = KH, kind = spec.kind, label = face_label,
+        hint = not spec.dual_hints and spec.alts and spec.alts[1] or nil,
+        down = function() return down:get() end,
         lit = lit, accent = spec.accent, dim = spec.dim, mirror = spec.mirror,
         icon = spec.icon and function()
           if spec.action == "shift" then return shift:get() == "lock" and "keyboard_capslock" or "shift" end
@@ -508,7 +531,7 @@ function osk.new(options)
           end,
           color = function() return (spec.accent or lit()) and ON_ACCENT() or TEXT() end,
         } or ui.Text {
-          anchors = { center_in = true }, text = label, font_family = FONT,
+          anchors = { center_in = true }, text = face_label, font_family = FONT,
           font_size = (spec.kind == "char" or #spec.label <= 2) and LABEL or math.floor(LABEL * 0.72),
           color = function() return (spec.accent or lit()) and ON_ACCENT() or TEXT() end,
         },
@@ -528,8 +551,28 @@ function osk.new(options)
       alts.list:set({})
       if touch then touch.cancel(id) end
     end
-    -- The long press's first offer, small in the corner.
+    -- Dev shows both choices; draw these here so every theme agrees on them.
     local hint = spec.alts and spec.alts[1]
+    if spec.dual_hints then
+      return ui.Item {
+        x = 0, y = 0, width = W, height = 0,
+        area,
+        ui.Item {
+          x = x, y = body_top + y + SMALL + 3, width = w, height = KH - SMALL - 3,
+          ui.Text { anchors = { center_in = true }, text = label, font_family = FONT,
+            font_size = LABEL, color = function() return TEXT() end },
+        },
+        ui.Text {
+          id = id .. ".hint.primary", x = x + 4, y = body_top + y + 3,
+          text = hint, font_family = FONT, font_size = SMALL, color = function() return DIM() end,
+        },
+        ui.Text {
+          id = id .. ".hint.secondary", x = x + w - SMALL - 4, y = body_top + y + 3,
+          text = spec.alts[2], font_family = FONT, font_size = SMALL, color = function() return DIM() end,
+        },
+      }
+    end
+    -- The ordinary keyboard shows the first long-press offer in the corner.
     if hint and not KEY_FACE then
       return ui.Item {
         x = 0, y = 0, width = W, height = 0,
