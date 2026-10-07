@@ -26,6 +26,7 @@ local morf = require("morf")
 local accounts = require("lib.services.accounts")
 local sessions = require("lib.services.sessions")
 local auth = require("lib.util.auth")
+require("themes.ui_scale").apply()
 
 -- `-- preview`: as if a pattern were set, for pictures and tests.
 local PREVIEW = morf.operands[1] == "preview"

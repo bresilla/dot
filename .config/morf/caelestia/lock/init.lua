@@ -22,6 +22,7 @@
 local morf = require("morf")
 local accounts = require("lib.services.accounts")
 local auth = require("lib.util.auth")
+require("themes.ui_scale").apply()
 
 local HELD = morf.operands[1] ~= "window"
 -- A fingerprint stack to listen on (tools/pam/readers.sh), said in the hint.
@@ -36,8 +37,7 @@ local W = (screen and screen.width) or 1920
 local H = (screen and screen.height) or 1080
 -- Everything in proportion to a 1080p screen.
 -- A phone's design is the upright 1080 x 1920 one.
-local S = math.max(0.75, math.min(2.4, H > W and math.min(W / 1080, H / 1920) or math.min(W / 1920, H / 1080)))
-local function s(n) return math.floor(n * S + 0.5) end
+local s = require("themes.auth_metrics")(W, H, true)
 
 morf.surface.width = W
 morf.surface.height = H

@@ -13,7 +13,7 @@ end
 
 local path = (morf.env and morf.env("CAELESTIA_SETTINGS")) or morf.state_path("caelestia.json")
 
-return settings.open {
+local config = settings.open {
   path = path,
   defaults = {
     theme = {
@@ -161,3 +161,5 @@ return settings.open {
     },
   },
 }
+
+return require("themes.ui_scale").link(config)

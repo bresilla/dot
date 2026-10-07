@@ -10,7 +10,6 @@ M.continuous = pcall(function() probe.on_panned = function() end end)
 ui.destroy(probe)
 local attached = {}
 local EDGE = 20 -- Matches the runtime's on_edge_swiped recognition zone.
-local compositor_workspaces = morf.env("CAELESTIA_WORKSPACE_GESTURES") == "compositor"
 
 local function phone() return require("responsive").portrait() end
 
@@ -42,10 +41,6 @@ function M.swipe(edge)
     local dashboard = require("dashboard").drawer
     close_other_panels(dashboard)
     dashboard.set(true)
-  elseif edge == "left" or edge == "right" then
-    if compositor_workspaces then return end
-    close_other_panels()
-    require("services").workspace.step(edge == "left" and -1 or 1)
   end
 end
 
@@ -96,7 +91,7 @@ function M.edge_pan(edge,phase,dx,dy,vx,vy)
     if not phone() or blocked() then return false end
     local inward = ({top=dy,bottom=-dy,left=dx,right=-dx})[edge]
     if not inward or inward <= 0 then return false end
-    if edge == "left" or edge == "right" then return not compositor_workspaces end
+    if edge == "left" or edge == "right" then return false end
     if edge == "top" then
       local sidebar=require("sidebar")
       local settings=sidebar.drawer.open:get() and sidebar.showing("notifications")
@@ -105,8 +100,6 @@ function M.edge_pan(edge,phase,dx,dy,vx,vy)
     else edge_drawer=require("dashboard").drawer end
     close_other_panels(edge_drawer)
     return edge_drawer.begin_drag()
-  elseif edge == "left" or edge == "right" then
-    if phase == "end" and (edge=="left" and dx or -dx) >= 80 then M.swipe(edge) end
   elseif edge_drawer then
     if phase == "update" then edge_drawer.drag_by(dy)
     else edge_drawer.end_drag(vy,phase=="cancel") edge_drawer=nil end
@@ -116,6 +109,7 @@ end
 function M.attach(root)
   if attached[root] or not phone() then return end
   attached[root] = true
+  require("keyboard_gestures").attach(root, "bottom", function() return not blocked() end)
   if M.continuous then root.on_edge_panned = M.edge_pan
   else root.on_edge_swiped = M.swipe end
   -- Under the existing controls: tapping the bar/rail still reaches them.
@@ -126,10 +120,6 @@ function M.attach(root)
       anchors = { top = true, left = true, right = true } },
     ui.MouseArea { id = "phone-gesture-bottom", height = EDGE,
       anchors = { bottom = true, left = true, right = true } },
-    not compositor_workspaces and ui.MouseArea { id = "phone-gesture-left", width = EDGE,
-      anchors = { left = true, top = true, bottom = true, top_margin = EDGE, bottom_margin = EDGE } } or nil,
-    not compositor_workspaces and ui.MouseArea { id = "phone-gesture-right", width = EDGE,
-      anchors = { right = true, top = true, bottom = true, top_margin = EDGE, bottom_margin = EDGE } } or nil,
   }, root)
 end
 
