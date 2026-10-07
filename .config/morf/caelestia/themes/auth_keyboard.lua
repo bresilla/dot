@@ -58,9 +58,19 @@ function M.new(ctx)
     if not is_sheet then kb.keys.cancel() end
     was_sheet=is_sheet
   end,{owner=panel})
+  local function reserved() return not embedded and active() and kb.height()+ctx.border or 0 end
+  local function content_height() return math.max(1,H-reserved()) end
   return {node=panel,edge=edge,keys=kb.keys,active=active,show=show,hide=model.hide,embedded=embedded,
     height=function() return active() and kb.height()+12 or 0 end,
-    reserved=function() return not embedded and active() and kb.height()+12 or 0 end,
+    reserved=reserved,content_height=content_height,
+    -- The whole authentication screen shares this reduced viewport: its
+    -- frame, wallpaper, clock, account controls and sheet move together.
+    -- The opaque lock root and the keyboard retain the full output size.
+    content=function(children)
+      children.id=ctx.prefix.."-content"
+      children.width,children.height,children.clip=W,content_height,true
+      return ui.Item(children)
+    end,
     inline_height=function() return embedded and active() and kb.height()+12 or 0 end,
     surface=function(props) return shared.area(surface,props) end}
 end

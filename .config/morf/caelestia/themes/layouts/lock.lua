@@ -89,13 +89,13 @@ return function(W, H, NAME)
       elseif event.key=="escape" then escape() end
     end,
   }
-  local kb_h=kb.reserved
+  local content_height=kb.content_height
   -- The sheet: the account, the pill, a line for what PAM says; the keyboard
   -- under them on a phone.
   local function content_h()
     return s(28) + AV + s(12) + s(30) + s(20) + entry_h() + s(10) + s(24) + chip_h() + s(24) + kb.inline_height()
   end
-  local function sheet_h() return math.min(content_h(), math.max(1,H-2*BORDER-s(16)-kb_h())) end
+  local function sheet_h() return math.min(content_h(), math.max(1,content_height()-2*BORDER-s(16))) end
 
   -- The swell's height as it stands: a bud at rest, the sheet up, a swipe
   -- in between.
@@ -110,7 +110,7 @@ return function(W, H, NAME)
   local function swell_h()
     local st = stage:get()
     if st == "closed" or st == "opening" or not main() then return BORDER end
-    return BORDER + BUD_H + (sheet_h()+kb_h() - BUD_H) * up()
+    return BORDER + BUD_H + (sheet_h() - BUD_H) * up()
   end
   local function swell_w()
     local st = stage:get()
@@ -129,7 +129,7 @@ return function(W, H, NAME)
   local frame = ui.Sdf {
     anchors = { fill = true },
     ui.SdfShape {
-      shape = "box", x = 0, y = 0, width = W, height = H,
+      shape = "box", x = 0, y = 0, width = W, height = content_height,
       fill_color = function() return C.surface end,
     },
     -- The opening in the frame: shut while the lock comes in and goes.
@@ -138,7 +138,7 @@ return function(W, H, NAME)
       x = function() return stage:get() == "closed" and 0 or BORDER end,
       y = function() return stage:get() == "closed" and 0 or BORDER end,
       width = function() return stage:get() == "closed" and W or W - 2 * BORDER end,
-      height = function() return stage:get() == "closed" and H or H - 2 * BORDER end,
+      height = function() return stage:get() == "closed" and content_height() or content_height() - 2 * BORDER end,
       behavior = { x = SETTLE, y = SETTLE, width = SETTLE, height = SETTLE },
     },
   }
@@ -146,10 +146,10 @@ return function(W, H, NAME)
   -- The swell has a field of its own, in a band along the bottom edge: the
   -- frame above stays still, and a swell growing redraws the band alone,
   -- not the whole screen every frame (a 4K screen of field was the lag).
-  local function band_h() return math.min(H, sheet_h() + kb_h() + s(90)) end
+  local function band_h() return math.min(content_height(), sheet_h() + s(90)) end
   local band = ui.Item {
     x = 0, width = W,
-    y = function() return H - band_h() end,
+    y = function() return content_height() - band_h() end,
     height = band_h,
     ui.Sdf {
       anchors = { fill = true },
@@ -291,13 +291,13 @@ return function(W, H, NAME)
     anchors = { horizontal_center = true }, gap = s(6), align = "center",
     y = function()
       if stage:get() == "sheet" and main() then
-        return math.max(s(40), math.floor((H - BORDER - kb_h() - sheet_h()) / 2 - geometry.clock_sheet_offset))
+        return math.max(s(40), math.floor((content_height() - BORDER - sheet_h()) / 2 - geometry.clock_sheet_offset))
       end
       return CLOCK_Y
     end,
     scale = function() return (stage:get() == "sheet" and main()) and 0.72 or 1 end,
     opacity = function()
-      return resting() and (not main() or stage:get() ~= "sheet" or H - sheet_h() - kb_h() > s(220)) and 1 or 0
+      return resting() and (not main() or stage:get() ~= "sheet" or content_height() - sheet_h() > s(220)) and 1 or 0
     end,
     behavior = { y = GROW, scale = GROW, opacity = { duration = 320 } },
     (skin.clock or text) {
@@ -317,7 +317,7 @@ return function(W, H, NAME)
   -- Where the way in is: a chevron bobbing over the bud, and what to do.
   local hint = ui.Column {
     anchors = { horizontal_center = true },
-    y = H - BORDER - BUD_H - s(74), gap = s(2), align = "center",
+    y = function() return content_height() - BORDER - BUD_H - s(74) end, gap = s(2), align = "center",
     opacity = function() return (not SHORT and main() and stage:get() == "rest" and pull:get() < 0.1) and 1 or 0 end,
     behavior = { opacity = { duration = 260 } },
     icon("keyboard_arrow_up", s(30), function() return C.onSurfaceVariant end, {
@@ -468,7 +468,7 @@ return function(W, H, NAME)
   local sheet = ui.Item {
     id = "lock-sheet",
     x = math.floor((W - SW) / 2), width = SW,
-    y = function() return H - BORDER - kb_h() - sheet_h() end,
+    y = function() return content_height() - BORDER - sheet_h() end,
     height = sheet_h,
     opacity = function() return stage:get() == "sheet" and 1 or 0 end,
     translate_y = function() return stage:get() == "sheet" and 0 or s(60) end,
@@ -490,13 +490,12 @@ return function(W, H, NAME)
     anchors = { fill = true },
     clip=true,
     color = C.surface:alpha(1),
-    backdrop,
-    skin.chrome and skin.chrome(W, H, s, "lock") or ui.Item {},
-    frame,
-    band,
-    glance,
-    hint,
-    sheet, not kb.embedded and kb.node or ui.Item {}, kb.edge,
+    kb.content {
+      backdrop,
+      skin.chrome and skin.chrome(W, H, s, "lock") or ui.Item {},
+      frame,band,glance,hint,sheet,
+    },
+    not kb.embedded and kb.node or ui.Item {}, kb.edge,
     -- Under everything that can be clicked: a click or a swipe up opens the
     -- sheet, and the keys go where they belong.
     kb.surface {

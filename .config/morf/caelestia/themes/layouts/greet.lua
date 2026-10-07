@@ -105,11 +105,11 @@ local kb=require("themes.auth_keyboard").new {
     elseif event.key=="escape" then escape() end
   end,
 }
-local kb_h=kb.reserved
+local content_height=kb.content_height
 local function content_h()
   return s(28) + AV + s(12) + s(30) + s(20) + entry_h() + s(14) + s(40) + s(10) + s(24) + chip_h() + s(24) + kb.inline_height()
 end
-local function sheet_h() return math.min(content_h(),math.max(1,H-2*BORDER-s(16)-FOOTER-kb_h())) end
+local function sheet_h() return math.min(content_h(),math.max(1,content_height()-2*BORDER-s(16)-FOOTER)) end
 
 local BUD_W, BUD_H = s(132), s(16)
 local function up()
@@ -122,7 +122,7 @@ end
 local function swell_h()
   local st = stage:get()
   if st == "closed" or st == "leaving" or not main() then return BORDER end
-  return BORDER + BUD_H + (sheet_h()+kb_h()+FOOTER - BUD_H) * up()
+  return BORDER + BUD_H + (sheet_h()+FOOTER - BUD_H) * up()
 end
 local function swell_w()
   local st = stage:get()
@@ -138,7 +138,7 @@ local function showing() return stage:get() == "rest" or stage:get() == "sheet" 
 local frame = ui.Sdf {
   anchors = { fill = true },
   ui.SdfShape {
-    shape = "box", x = 0, y = 0, width = W, height = H,
+    shape = "box", x = 0, y = 0, width = W, height = content_height,
     fill_color = function() return C.surface end,
   },
   ui.SdfShape {
@@ -146,7 +146,7 @@ local frame = ui.Sdf {
     x = function() return stage:get() == "closed" and 0 or BORDER end,
     y = function() return stage:get() == "closed" and 0 or BORDER end,
     width = function() return stage:get() == "closed" and W or W - 2 * BORDER end,
-    height = function() return stage:get() == "closed" and H or H - 2 * BORDER end,
+    height = function() return stage:get() == "closed" and content_height() or content_height() - 2 * BORDER end,
     behavior = { x = SETTLE, y = SETTLE, width = SETTLE, height = SETTLE },
   },
 }
@@ -154,10 +154,10 @@ local frame = ui.Sdf {
 -- The swell has a field of its own, in a band along the bottom edge: the
 -- frame above stays still, and a swell growing redraws the band alone,
 -- not the whole screen every frame (a 4K screen of field was the lag).
-local function band_h() return math.min(H, sheet_h() + kb_h() + s(90)) end
+local function band_h() return math.min(content_height(), sheet_h() + s(90)) end
 local band = ui.Item {
   x = 0, width = W,
-  y = function() return H - band_h() end,
+  y = function() return content_height() - band_h() end,
   height = band_h,
   ui.Sdf {
     anchors = { fill = true },
@@ -198,7 +198,7 @@ else
   for i, d in ipairs(DRIFT) do
     local size = s(d[4])
     drift[#drift + 1] = ui.Path {
-      x = math.floor(W * d[2] - size / 2), y = math.floor(H * d[3] - size / 2),
+      x = math.floor(W * d[2] - size / 2), y = function() return math.floor(content_height() * d[3] - size / 2) end,
       width = size, height = size, view_box = { 0, 0, 100, 100 },
       d = shapes.path(d[1], { segments = false }), rotation = d[5],
       fill_color = function() return C.primary:alpha(0.05) end,
@@ -325,12 +325,12 @@ local glance = ui.Column {
   anchors = { horizontal_center = true }, gap = s(6), align = "center",
   y = function()
     if main() and stage:get() == "sheet" then
-      return math.max(s(40), math.floor((H - BORDER - sheet_h() - kb_h()) / 2 - geometry.clock_sheet_offset))
+      return math.max(s(40), math.floor((content_height() - BORDER - sheet_h()) / 2 - geometry.clock_sheet_offset))
     end
     return CLOCK_Y
   end,
   scale = function() return main() and stage:get() == "sheet" and 0.72 or 1 end,
-  opacity = function() return showing() and (not main() or stage:get()~="sheet" or H-sheet_h()-kb_h()>s(220)) and 1 or 0 end,
+  opacity = function() return showing() and (not main() or stage:get()~="sheet" or content_height()-sheet_h()>s(220)) and 1 or 0 end,
   behavior = { y = GROW, scale = GROW, opacity = { duration = 320 } },
   (skin.clock or text) { id = "greet-clock", text = function() return clock:get() end,
     font_size = geometry.clock_size, font_weight = skin.clock_weight or 600, color = C.primary },
@@ -344,9 +344,9 @@ local choosing = ui.Item {
   width = math.min(W-s(64), #people*(PEOPLE_AV+s(40))+(#people-1)*s(28)),
   clip = true,
   height = PEOPLE_AV + s(44),
-  y = math.max(s(12),math.min(
-    SHORT and H-BORDER-s(64)-PEOPLE_AV-s(44) or CLOCK_Y + (PORTRAIT and s(210) or s(250)),
-    H-BORDER-s(64)-PEOPLE_AV-s(44))),
+  y = function() return math.max(s(12),math.min(
+    SHORT and content_height()-BORDER-s(64)-PEOPLE_AV-s(44) or CLOCK_Y + (PORTRAIT and s(210) or s(250)),
+    content_height()-BORDER-s(64)-PEOPLE_AV-s(44))) end,
   -- Account selection and login share the monitor currently under the pointer.
   opacity = function() return main() and stage:get() == "rest" and 1 or 0 end,
   visible = main,
@@ -365,7 +365,7 @@ end
 local hint = ui.Column {
   visible = main,
   anchors = { horizontal_center = true },
-  y = H - BORDER - BUD_H - s(74), gap = s(2), align = "center",
+  y = function() return content_height() - BORDER - BUD_H - s(74) end, gap = s(2), align = "center",
   opacity = function() return (not SHORT and stage:get() == "rest" and pull:get() < 0.1) and 1 or 0 end,
   behavior = { opacity = { duration = 260 } },
   icon("keyboard_arrow_up", s(30), function() return C.onSurfaceVariant end, {
@@ -549,7 +549,7 @@ end,{owner=viewport})
 local sheet = ui.Item {
   id = "greet-sheet",
   x = math.floor((W - SW) / 2), width = SW,
-  y = function() return H - BORDER - FOOTER - kb_h() - sheet_h() end,
+  y = function() return content_height() - BORDER - FOOTER - sheet_h() end,
   height = sheet_h,
   opacity = function() return stage:get() == "sheet" and 1 or 0 end,
   translate_y = function() return stage:get() == "sheet" and 0 or s(60) end,
@@ -567,16 +567,12 @@ if skin.sheet then skin.sheet(sheet, {role="greet", width=SW, scale=s,
 local root = ui.Item {
   anchors = { fill = true },
   clip=true,
-  backdrop,
-  skin.chrome and skin.chrome(W, H, s, "greet") or ui.Item {},
-  frame,
-  band,
-  glance,
-  choosing,
-  hint,
-  sheet, not kb.embedded and kb.node or ui.Item {}, kb.edge,
-  power_row,
-  host_label,
+  kb.content {
+    backdrop,
+    skin.chrome and skin.chrome(W, H, s, "greet") or ui.Item {},
+    frame,band,glance,choosing,hint,sheet,power_row,host_label,
+  },
+  not kb.embedded and kb.node or ui.Item {}, kb.edge,
   kb.surface {
     id = "greet-open",
     anchors = { fill = true }, z = -1,
