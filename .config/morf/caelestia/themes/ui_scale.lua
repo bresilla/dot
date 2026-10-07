@@ -35,7 +35,7 @@ function M.set(value)
   if M.compositor then
     local hypr = require("lib.integrations.hyprland")
     if hypr.available() then
-      hypr.eval(("bresilla_set_display_scale(%.2f, %q)"):format(preference.scale, preference.output))
+      hypr.eval(("hl.monitor({output=%q, scale=%.2f})"):format(preference.output, preference.scale))
     end
   end
   return true
@@ -51,8 +51,15 @@ function M.link(config)
   if not saved then
     local legacy = config.path and read(config.path)
     legacy = legacy and legacy.appearance and legacy.appearance.zoom
-    local ok, err = M.set(valid(legacy) and legacy or default)
-    if not ok then morf.log("warn", "Could not save shared UI scale: " .. tostring(err)) end
+    local value = valid(legacy) and legacy or default
+    if morf.env("CAELESTIA_DRY_RUN") == "1" then
+      -- The launcher's validation uses a synthetic HEADLESS-1 output.
+      -- It must not save that name as the real display's preference.
+      zoom:set(value)
+    else
+      local ok, err = M.set(value)
+      if not ok then morf.log("warn", "Could not save shared UI scale: " .. tostring(err)) end
+    end
   end
   local get, set, reset = config.get, config.set, config.reset
   config.get = function(key) if key == "appearance.zoom" then return M.get() end return get(key) end

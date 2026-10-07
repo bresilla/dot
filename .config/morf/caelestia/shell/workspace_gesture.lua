@@ -10,13 +10,30 @@ function M.new(root)
   local pages,shots={},{}
   local generation=0
   local animation
-  local viewport=ui.Item {id="phone-workspace-preview",z=100,clip=true,
+  -- Keep the real shell frame, rail and its decorations above the preview.
+  local viewport=ui.Item {id="phone-workspace-preview",z=-1,clip=true,
     x=function() return select(1,require("bar").desk()) end,
     y=function() return select(2,require("bar").desk()) end,
     width=function() return select(3,require("bar").desk()) end,
     height=function() return select(4,require("bar").desk()) end,
     visible=function() return state.active end}
   ui.reparent(viewport,root)
+  local style=morf.state {border=0,rounding=0,active="#ffffff",inactive="#808080"}
+  local function refresh_style()
+    if not hypr.options then return end
+    hypr.options({"general:border_size","decoration:rounding","general:col.active_border",
+      "general:col.inactive_border"},function(options)
+      if not options then return end
+      style.border=math.max(0,tonumber((options["general:border_size"] or {}).int) or 0)
+      style.rounding=math.max(0,tonumber((options["decoration:rounding"] or {}).int) or 0)
+      for _,kind in ipairs {"active","inactive"} do
+        local gradient=(options["general:col."..kind.."_border"] or {}).gradient or ""
+        local argb=gradient:match("^%s*(%x%x%x%x%x%x%x%x)")
+        if argb then style[kind]="#"..argb:sub(3)..argb:sub(1,2) end
+      end
+    end)
+  end
+  refresh_style()
   local function width() return math.max(1,(select(3,require("bar").desk()))) end
   local function release(source)
     if source and source~="" and morf.screencopy then pcall(morf.screencopy.release,source) end
@@ -81,14 +98,23 @@ function M.new(root)
         and (position==0 or id~=state.from) then
         count=count+1
         local source=morf.signal("phone.workspace.shot."..generation.."."..position.."."..i,"")
+        local decorated=not c.fullscreen or c.fullscreen==0
+        local function border() return decorated and style.border*ratio or 0 end
+        local function rounding() return decorated and style.rounding*ratio or 0 end
+        local cw,ch=math.max(1,c.width*ratio),math.max(1,c.height*ratio)
         local card=ui.Item {id="phone-workspace-window-"..position.."-"..i,z=1,
-          width=math.max(1,c.width*ratio),height=math.max(1,c.height*ratio),
-          x=(c.x-mx)*ratio-dx,y=(c.y-my)*ratio-dy,clip=true,
-          ui.Rect {anchors={fill=true},color=function() return C.surfaceContainer end},
-          ui.Text {anchors={center_in=true},width=math.max(1,c.width*ratio-24),
-            text=c.title~="" and c.title or c.class,elide="right",horizontal_alignment="center",
-            font_family=require("theme").font,color=function() return C.onSurface end},
-          ui.Image {anchors={fill=true},fill_mode="stretch",source=function() return source:get() end},
+          width=cw,height=ch,x=(c.x-mx)*ratio-dx,y=(c.y-my)*ratio-dy,
+          ui.Rect {id="phone-workspace-border-"..position.."-"..i,
+            x=function() return -border() end,y=function() return -border() end,
+            width=function() return cw+2*border() end,height=function() return ch+2*border() end,
+            radius=function() return rounding()+border() end,
+            color=function() return c.active and style.active or style.inactive end},
+          ui.ClipRect {anchors={fill=true},radius=rounding,color=function() return C.surfaceContainer end,
+            ui.Text {anchors={center_in=true},width=math.max(1,cw-24),
+              text=c.title~="" and c.title or c.class,elide="right",horizontal_alignment="center",
+              font_family=require("theme").font,color=function() return C.onSurface end},
+            ui.Image {anchors={fill=true},fill_mode="stretch",source=function() return source:get() end},
+          },
         }
         ui.reparent(card,node)
         local identifier=toplevel(c)
@@ -103,6 +129,7 @@ function M.new(root)
   local g={state=state}
   function g.begin()
     clear()
+    refresh_style()
     state.from=services.workspace.active()
     state.target=state.from state.offset=0
     previous_id,next_id=neighbor(state.from,-1),neighbor(state.from,1)
