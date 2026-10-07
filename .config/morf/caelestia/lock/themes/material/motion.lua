@@ -65,7 +65,7 @@ return function(theme)
     }
   end
 
-    return move
+    return move, function() if running then running:stop() running=nil end end
   end
 function M.entries(entries, coming, opts)
     if require("themes.session").restoring then

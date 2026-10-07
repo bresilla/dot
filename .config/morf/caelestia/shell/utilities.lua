@@ -5,6 +5,7 @@ local view=require("themes").view("utilities")
 M.WIDTH,M.RADIUS=view.WIDTH,view.RADIUS
 local builders={
   network=function(w,h) return require("connectivity").network_page(w,h) end,
+  mobile=function(w,h) return require("connectivity").mobile_page(w,h) end,
   bluetooth=function(w,h) return require("connectivity").bluetooth_page(w,h) end,
   sound=function(w,h) return require("sound_page").output_page(w,h) end,
   ["sound/equalizer"]=function(w,h) return require("equalizer_page").page(w,h) end,

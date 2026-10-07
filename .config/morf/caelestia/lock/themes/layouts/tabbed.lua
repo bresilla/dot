@@ -29,6 +29,8 @@ M.PAD = 11
 local SWITCH = { duration = theme.duration.normal, easing = theme.ease.emphasized_decel }
 
 function M.new(spec)
+  local phone=require("responsive").portrait()
+  local page_wipe=theme.motion.page_wipe and not phone
   local W, PAD, TABS_H = spec.width, spec.pad or M.PAD, M.TABS_H
   local tabs = spec.tabs
   local tab = spec.tab or require("themes.session").keep("caelestia." .. spec.id .. ".tab", 1)
@@ -66,16 +68,17 @@ function M.new(spec)
     pages[i] = ui.Item {
       id = spec.id .. "-page-" .. t.key,
       width = page_w, height = page_h,
-      x=theme.motion.page_wipe and (i-1)*(page_w+2*PAD) or nil,
-      visible=function() return not theme.motion.page_wipe or display:get()==i end,
+      x=page_wipe and (i-1)*(page_w+2*PAD) or nil,
+      visible=function() return not page_wipe or display:get()==i end,
       t.build(page_w, page_h),
     }
   end
-  local track = (theme.motion.page_wipe and ui.Item or ui.Row) {
-    width=theme.motion.page_wipe and #tabs*(page_w+2*PAD) or nil,height=page_h,
-    gap = not theme.motion.page_wipe and 2 * PAD or nil,
-    translate_x = function() return -(display:get() - 1) * (page_w + 2 * PAD) end,
-    behavior = theme.motion.page_wipe and {} or { translate_x = SWITCH },
+  local track = (page_wipe and ui.Item or ui.Row) {
+    id=spec.id.."-page-track",
+    width=page_wipe and #tabs*(page_w+2*PAD) or nil,height=page_h,
+    gap = not page_wipe and 2 * PAD or nil,
+    translate_x = phone and -(tab:get()-1)*(page_w+2*PAD) or function() return -(display:get() - 1) * (page_w + 2 * PAD) end,
+    behavior = (page_wipe or phone) and {} or { translate_x = SWITCH },
     table.unpack(pages),
   }
   -- `tabs_at = "bottom"`: the row under the pages (a drawer from the bottom
@@ -88,7 +91,7 @@ function M.new(spec)
     track,
   }
 
-  local wipe = theme.motion.page_wipe and theme.motion.page_wipe(strip, function() return page_w end, spec.id)
+  local wipe = page_wipe and theme.motion.page_wipe(strip, function() return page_w end, spec.id)
   local function present(index)
     display:set(index)
     if spec.on_present then spec.on_present(index) end
@@ -127,8 +130,19 @@ function M.new(spec)
     else running = kit.bud({ pages[tab:get()] }, open, { from = 0.97 }) end
   end
 
+  local pager=phone and require("pager_drag").new {
+    id=spec.id,track=track,tab=tab,count=#tabs,offset=function(i) return (i-1)*(page_w+2*PAD) end,
+    prepare=function()
+      if running then for _,h in ipairs(running) do h:stop() end running=nil end
+      for _,page in ipairs(pages) do page.opacity,page.scale=1,1 end
+    end,
+  }
   panel.content = ui.Item {
     anchors = { fill = true },
+    on_panned = require("phone_gestures").pan {drawer=spec.id,dismiss=spec.dismiss,pager=pager},
+    on_swiped = require("phone_gestures").panel {
+      tab = tab, count = #tabs, close = spec.close, dismiss = spec.dismiss,
+    },
     -- Behind everything, so the whole panel takes the pointer.
     ui.MouseArea { anchors = { fill = true }, z = -1 },
     -- The tab row is the theme's (every kit has `tabs`, the kit contract).

@@ -33,7 +33,7 @@ function M.new(ctx)
   local function mobile_icon()
     local m = services.modem
     -- No modem: the bars crossed out, so the place is always there.
-    if not m then return "signal_cellular_nodata" end
+    if not (m and m.state.available) then return "signal_cellular_nodata" end
     local s = m.state
     if s.locked then return "signal_cellular_connected_no_internet_0_bar" end
     if not s.registered then return "signal_cellular_off" end
@@ -70,7 +70,7 @@ function M.new(ctx)
     model.reading:set {network_icon=network_icon(),mobile_icon=mobile_icon(),battery_icon=battery_icon(),
       battery=b~=nil,percentage=b and ("%d%%"):format(math.floor((b.percentage or 0)+.5)) or "",
       tor=t~=nil and t.on(),ring=mode~="sound",ring_icon=require("lib.util.ringer").icon(mode),
-      technology=m and m.state.technology or ""}
+      technology=m and m.state.available and m.state.technology or ""}
   end)
   morf.effect("caelestia.bar.windows",function()
     if not model.on() then return end

@@ -26,7 +26,8 @@ function V.build(model)
   end
   local panel = require("kit").tabbed {
     id = model.id, width = page_width(), height = height, tabs = tabs,
-    tab = model.tab, publish = false, on_present = model.present, icons_only = top,
+    tab = model.tab, publish = false,
+    close = function() require(model.id).drawer.set(false) end, dismiss = top and "up" or nil, on_present = model.present, icons_only = top,
   }
   morf.effect("material." .. model.id .. ".shown", function() panel.shown(model.opened:get()) end)
   local content = panel.content

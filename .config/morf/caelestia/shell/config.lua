@@ -110,8 +110,8 @@ return settings.open {
     },
     -- The bar along an edge (bar.lua) -- not `bar`, the reference's settings.
     edgebar = {
-      -- "on", "off", or "auto": up on a narrow screen (a phone), down on a
-      -- desk. The quick settings' Bar tile sets it.
+      -- "on", "off", or "auto": up on narrow or portrait screens (a phone),
+      -- down on a wide desk. The quick settings' Bar tile sets it.
       enabled = "auto",
       -- top, bottom, left or right.
       side = "top",

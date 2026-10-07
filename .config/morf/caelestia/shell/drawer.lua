@@ -89,7 +89,7 @@ function M.new(spec)
   local floating = spec.edge == "center"
   if not floating then panel[axis] = d.open:get() and 0 or tucked() end
 
-  local move = theme.motion.drawer {
+  local move, stop_motion = theme.motion.drawer {
     panel = panel, spec = spec, drawer = d,
     axis = axis, floating = floating, tucked = tucked,
   }
@@ -100,7 +100,7 @@ function M.new(spec)
     require("presentation").set(spec.name, now)
     if now == was then return end
     was = now
-    move(now)
+    if not d.manual then move(now) end
   end, { owner = panel })
 
   -- Its background in the frame's field: square on the frame's side (the
@@ -138,10 +138,18 @@ function M.new(spec)
   function d.set(on)
     local switcher = package.loaded["themes.switcher"]
     if not authentication and switcher and switcher.busy:get() then return end
+    local manual = d.manual
+    if manual and d.interrupt_drag then d.interrupt_drag() end
+    local same = d.open:get() == (on and true or false)
     d.open:set(on and true or false)
+    if manual and same then move(on) end
   end
   function d.toggle() d.set(not d.open:get()) end
   function d.is_open() return d.open:get() end
+
+  require("drawer_drag").attach(d, {
+    content=spec.content, axis=axis, tucked=tucked, floating=floating,
+  }, stop_motion)
 
   -- While open it is a kit Popup where it stands: the overlay layer shuts
   -- it on a press outside or Escape, by its policy -- no catcher of its own.

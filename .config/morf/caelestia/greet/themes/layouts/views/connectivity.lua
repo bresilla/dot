@@ -135,6 +135,44 @@ local function bluetooth_page(model, w, h)
   } }
 end
 
+local function mobile_page(model,w,h)
+  local inner=P.inner(w)
+  return ui.Item {id="mobile-page",width=w,height=h,
+    P.page {id="mobile-scroll",width=w,height=h,active=model.active,
+      P.section {id="mobile-radio",width=w,title="Mobile data",visible=model.available,
+        P.row {id="mobile-enabled",width=inner,icon="signal_cellular_alt",title="Enabled",on=model.enabled,
+          subtitle=model.status,
+          trailing=P.switch {id="mobile-data",name="Mobile data",on=model.enabled,
+            on_toggled=function(on) if model.can_toggle() then model.set_enabled(on) end end}},
+        P.row {id="mobile-carrier",width=inner,icon="cell_tower",title=model.carrier,
+          subtitle=model.signal,on=function() return false end},
+      },
+      P.section {id="mobile-connections",width=w,title="Connections",visible=model.available,
+        list(w,"mobile-row-",function() return #model.list() end,function(i,rw)
+          local function row() return model.list()[i] or {} end
+          local function connected() return (row().active or "")~="" end
+          return P.row {id="mobile-profile-"..i,width=rw,icon="sim_card",title=function() return row().name or "" end,
+            on=connected,subtitle=function()
+              local r=row()
+              local state=({activated="Connected",activating="Connecting…",deactivating="Disconnecting…"})[r.state] or "Disconnected"
+              return state.." · "..((r.apn or "")~="" and ("APN: "..r.apn) or r.auto_apn and "Automatic APN" or "Provider APN")
+            end,
+            trailing=P.button {id="mobile-connect-"..i,
+              label=function() return connected() and "Disconnect" or "Connect" end,
+              visible=function() return not model.pending:get() and (connected() or model.can_connect()) end,
+              on_clicked=function() model.choose(row()) end}}
+        end,"No saved mobile connections"),
+        action(w,{id="mobile-setup",icon="add",label="Set up automatically",
+          visible=function() return #model.list()==0 and model.can_connect() end,
+          on_clicked=model.setup}),
+        status("mobile-status",model,w),
+        kit.subtitle {width=inner,wrap=true,font_size=P.SUB,text=model.note,color=kit.ink("lo")},
+      },
+      missing(w,"signal_cellular_nodata","No modem","No mobile modem is available. This page updates when one is detected.",model.available),
+    },
+  }
+end
+
 --- The id of the row that shows `row` of `model`'s list.
 function M.row_id(model, row)
   for i, r in ipairs(model.list()) do
@@ -145,6 +183,7 @@ function M.row_id(model, row)
 end
 
 function M.build(model, w, h)
+  if model.key=="mobile" then return mobile_page(model,w,h) end
   return model.wireless and network_page(model, w, h) or bluetooth_page(model, w, h)
 end
 return M

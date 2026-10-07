@@ -139,7 +139,7 @@ return function(theme)
       return ctx.floating and (panel.width + 2) or ctx.tucked()
     end
     local running, lock_motion, generation = nil, nil, 0
-    return function(opening)
+    local function move(opening)
       generation = generation + 1
       local own = generation
       local hidden = not panel.visible
@@ -218,6 +218,12 @@ return function(theme)
           end}
         end)
       end
+    end
+    return move, function()
+      generation = generation + 1
+      if running then running:stop() running=nil end
+      if lock_motion then lock_motion:stop() lock_motion=nil end
+      for _, node in ipairs {curtain,glow,flash,corner_a,corner_b,pip} do node.visible=false end
     end
   end
   return M

@@ -117,18 +117,19 @@ local power = quiet_connect("upower")
 -- The services themselves, for the popouts (nil when absent).
 M.net, M.bt, M.upower = net, bt, power
 
--- A phone's modem (lib/modem.lua), nil off a phone; and the ring mode
--- (lib/ringer.lua): feedbackd's profile on a phone, the shell's own
+-- Keep the modem observer even before ModemManager or its hardware appears.
+-- The ring mode (lib/ringer.lua): feedbackd's profile on a phone, the shell's own
 -- setting elsewhere.
 do
   local ok, modem = pcall(require, "lib.services.modem")
   local mobile = ok and select(2, pcall(modem.connect)) or nil
-  if type(mobile) == "table" and mobile.state and mobile.state.available then M.modem = mobile end
+  if type(mobile) == "table" and mobile.state then M.modem = mobile end
   -- CAELESTIA_FAKE_MODEM=1: a stand-in, to see a phone's parts on a laptop.
   local fake = morf.env and morf.env("CAELESTIA_FAKE_MODEM")
-  if fake and fake ~= "" and fake ~= "0" and not M.modem then
+  if fake and fake ~= "" and fake ~= "0" and not (M.modem and M.modem.state.available) then
     local state = morf.state { available = true, signal = 72, technology = "5G", operator = "Vodafone NL",
-      registered = true, connected = true, enabled = true, locked = false, data = true, path = "/fake" }
+      registered = true, connected = true, enabled = true, locked = false, data = true,
+      sim_present = true, roaming = false, path = "/fake" }
     M.modem = { state = state, set_data = function(on) state.data = on == true end }
   end
 end

@@ -181,6 +181,7 @@ local frame_view=require("themes").view("frame")
 local frame_root=frame_view.build {desk=bar.desk,bar=bar.build(),drawers=drawer.all,
   rail={node=rail_node,shape=rail.shape},levels={node=levels_node,shape=levels.shape},
   overlays=overlays,triggers=triggers}
+require("phone_gestures").attach(frame_root)
 -- The shell's window, to a screen reader.
 frame_root.accessible_name = "Caelestia"
 ui.reparent(capture.editor.node,frame_root)

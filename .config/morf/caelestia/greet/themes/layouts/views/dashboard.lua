@@ -28,6 +28,7 @@ local CW, VIEW_H = responsive.dashboard()
 local PANEL_W = COMPACT and responsive.desk_width() - 2 * theme.BORDER or nil
 -- The tabs by the edge it comes from: the bottom one, on a phone.
 local TABS_BELOW = COMPACT and responsive.portrait()
+local PHONE=responsive.portrait()
 -- Four fifths of the desk: the fifth above it is to tap it shut.
 local TABS_H = 68            -- icons, labels, indicator and hairline
 local PANEL_H = COMPACT and math.floor((responsive.desk_height() - 2 * theme.BORDER) * 0.8) or nil
@@ -119,6 +120,7 @@ local pages = {
   subpages[5],
   subpages[6],
 }
+local scroll_positions = {}
 if COMPACT then
   -- On a phone every page scrolls in the one view the dashboard has; while
   -- it runs on below, a dashed line along the view's foot says so.
@@ -126,6 +128,7 @@ if COMPACT then
     local content_h = (PAGE[i] or PAGE[1])[2]
     local node, _, t = kit.scroll({ id = "dashboard-scroll-" .. i, width = CW, height = VIEW_H, clip = true,
       ui.Item { width = CW, height = content_h, page } })
+    scroll_positions[i] = t
     local more = ui.Path {
       id = "dashboard-more-" .. i, x = 0, y = VIEW_H - 2, width = CW, height = 2, view_box = { 0, 0, CW, 2 },
       d = ("M0 1 H%g"):format(CW), fill_color = "transparent", stroke_width = 2, dash = { 10, 8 },
@@ -209,15 +212,27 @@ local strip = ui.Item {
 }
 local displayed = model.displayed
 local track = ui.Row {
+  id="dashboard-page-track",
   gap = PAD * 2,
 
-  translate_x = function() return -offset(displayed:get()) end,
-  behavior = theme.motion.page_wipe and {} or { translate_x = SWITCH },
+  translate_x = PHONE and -offset(M.tab:get()) or function() return -offset(displayed:get()) end,
+  behavior = (theme.motion.page_wipe or PHONE) and {} or { translate_x = SWITCH },
   table.unpack(pages),
 }
 for _, f in ipairs(cards_fields) do ui.reparent(f, strip) end
 ui.reparent(track, strip)
-local page_wipe = theme.motion.page_wipe and theme.motion.page_wipe(strip, function() return width()-PAD*2 end, "dashboard")
+local page_wipe = not PHONE and theme.motion.page_wipe and theme.motion.page_wipe(strip, function() return width()-PAD*2 end, "dashboard")
+local pager=PHONE and require("pager_drag").new {
+  id="dashboard",track=track,tab=M.tab,count=#TABS,offset=offset,
+  prepare=function()
+    for _,handles in pairs(running) do for _,h in ipairs(handles) do h:stop() end end
+    running={}
+    for _,entries in ipairs(LAYERS) do for _,entry in ipairs(entries) do
+      entry.node.opacity,entry.node.scale=1,1
+      if entry.shape then entry.shape.opacity=1 end
+    end end
+  end,
+}
 
 -- Behind everything on the panel, so the panel is in the surface's input
 -- region: the pointer is seen anywhere on it, and `contains_pointer` with it.
@@ -225,6 +240,19 @@ local background = ui.MouseArea { anchors = { fill = true }, z = -1 }
 
 local content = ui.Item {
   anchors = { fill = true },
+  on_panned = require("phone_gestures").pan { drawer="dashboard", dismiss="down", pager=pager,
+    can_dismiss=function()
+      local position=scroll_positions[M.tab:get()]
+      return not position or (position.position_y or 0)<=0
+    end,
+  },
+  on_swiped = require("phone_gestures").panel {
+    tab = M.tab, count = #TABS, dismiss = "down", close = function() require("dashboard").drawer.set(false) end,
+    can_dismiss = function()
+      local position = scroll_positions[M.tab:get()]
+      return not position or (position.position_y or 0) <= 0
+    end,
+  },
   background,
   tabs(),
   strip,

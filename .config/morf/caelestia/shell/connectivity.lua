@@ -10,6 +10,9 @@ local function page(kind,w,h)
 end
 function M.network_page(w,h) return page("network",w,h) end
 function M.bluetooth_page(w,h) return page("bluetooth",w,h) end
+function M.mobile_page(w,h)
+  return view.build(require("mobile_model").new(presentation.active("settings.mobile")),w,h)
+end
 function M.networks() return instances.network and instances.network.list() or {} end
 function M.devices() return instances.bluetooth and instances.bluetooth.list() or {} end
 return M
