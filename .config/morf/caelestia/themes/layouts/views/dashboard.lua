@@ -122,7 +122,7 @@ local pages = {
   subpages[5],
   subpages[6],
 }
-local scroll_positions = {}
+local scroll_positions, scroll_viewports = {}, {}
 if COMPACT then
   -- On a phone every page scrolls in the one view the dashboard has; while
   -- it runs on below, a dashed line along the view's foot says so.
@@ -142,9 +142,11 @@ if COMPACT then
     -- A phone's tabs are icons alone: the page says its name.
     local P = require("themes.layouts.page")
     local top = P.HEADER_H + P.GAP
+    scroll_viewports[i] = ui.Item { id="dashboard-viewport-"..i,
+      y=top,width=CW,height=view_height,clip=true,node,more }
     pages[i] = ui.Item { width = CW, height = function() return view_height()+top end,
       P.header { id = "dashboard-head-" .. i, width = CW, title = TABS[i].name },
-      ui.Item { y = top, width = CW, height = view_height, node, more } }
+      scroll_viewports[i] }
     PAGE[i] = { CW, VIEW_H + top }
   end
 end
@@ -176,7 +178,13 @@ for i, list in ipairs(LAYERS) do
       behavior = { blend = { duration = 360, easing = theme.ease.standard } },
     }
     for _, entry in ipairs(list) do field[#field + 1] = entry.shape end
-    cards_fields[#cards_fields + 1] = ui.Sdf(field)
+    local node=ui.Sdf(field)
+    if scroll_viewports[i] then
+      -- Tracked card backgrounds follow the scrolled content too. Clip
+      -- them to its viewport so they cannot paint behind the fixed title.
+      node.z=-1
+      ui.reparent(node,scroll_viewports[i])
+    else cards_fields[#cards_fields + 1]=node end
   end
 end
 
