@@ -4,15 +4,15 @@ local lule = require("lule")
 -- c.foreground, c.cursor, c.accent, c.wallpaper, c.theme, c.cache. Lists count from one, so
 -- c.colors[1] is colour 0.
 
-lule.wallpaper = "/env/set/.animegen/"
+local home = lule.env("HOME") or "~"
+lule.wallpaper = home .. "/.local/share/lule/wallpapers"
 lule.theme = "dark"
 lule.palette = "pigment"
 lule.contrast = "aa"
 
-local home = lule.env("HOME") or "~"
 local wal = home .. "/.cache/wal"
 local logo = home .. "/.config/bresilla.svg"
-local remote = "tron.netbird:" .. home .. "/.cache/"
+local remote = lule.env("LULE_SYNC_TARGET")
 
 local esc = string.char(27)
 
@@ -197,10 +197,11 @@ local function recolour_logo(c)
 end
 
 local function reload_desktop(c)
-  lule.run('hyprctl hyprpaper wallpaper ",' .. c.wallpaper .. ',"')
+  local function quote(value) return "'" .. value:gsub("'", "'\\''") .. "'" end
+  lule.run('hyprctl hyprpaper wallpaper ' .. quote(',' .. c.wallpaper .. ','))
   -- Neither is worth waiting for: one repaints an editor, the other crosses the network.
   lule.spawn("zedtheme")
-  lule.spawn("scp -r " .. wal .. " " .. remote)
+  if remote and remote ~= "" then lule.spawn("scp -r " .. quote(wal) .. " " .. quote(remote)) end
 end
 
 -- --- what runs, in this order -------------------------------------------------------------------

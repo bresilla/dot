@@ -7,7 +7,7 @@ return function(ctx)
 
     hl.env("LULE_C", ctx.home .. "/.config/lule")
     hl.env("LULE_A", ctx.home .. "/.cache/lule")
-    hl.env("LULE_W", "/env/set/.wallpaper")
+    hl.env("LULE_W", ctx.home .. "/.local/share/lule/wallpapers")
 
     local function plugin_keywords()
         local extra_border_size = ctx.hypr_extra_border_size and ctx.hypr_extra_border_size() or 1
