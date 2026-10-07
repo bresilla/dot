@@ -137,18 +137,20 @@ local function scale_now()
 end
 local function scale_set(position)
   local v = math.max(0, math.min(1, position)) * 2 - 1
-  v = math.floor(v / 0.05 + 0.5) * 0.05
+  if not require("themes.ui_scale").compositor then v = math.floor(v / 0.05 + 0.5) * 0.05 end
   if math.abs(v) < 1e-6 then v = 0 end
   require("config").set("appearance.zoom", v)
 end
 local function scale_reading(position)
+  local scale = require("themes.ui_scale")
+  if scale.compositor then return ("%.2f×"):format(scale.display_scale(position * 2 - 1)) end
   local v = math.floor((position * 2 - 1) * 100 + 0.5)
   return v == 0 and "0" or ("%+d%%"):format(v)
 end
 
 local function slider(id, value, set, icon, name, reading)
   return kit.slider { id = id, accessible_name = name, width = CARD_W - 2 * P.PAD, value = value, set = set, icon = icon,
-    reading = reading }
+    reading = reading, live = id ~= "utilities-scale" or not require("themes.ui_scale").compositor }
 end
 
 local function sliders()
@@ -160,7 +162,8 @@ local function sliders()
       x = P.PAD, y = P.PAD, gap = 4,
       slider("utilities-volume", function() return (osd.volume()) end, osd.set_volume, osd.volume_icon, "Volume"),
       slider("utilities-brightness", function() return (osd.brightness()) end, osd.set_brightness, osd.brightness_icon, "Brightness"),
-      slider("utilities-scale", scale_now, scale_set, "zoom_in", "Scale", scale_reading),
+      slider("utilities-scale", scale_now, scale_set, "zoom_in",
+        require("themes.ui_scale").compositor and "Display scale" or "Scale", scale_reading),
     },
   }
 end

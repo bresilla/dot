@@ -3,6 +3,11 @@
 -- shrinking text and keyboard targets until they are unusable.
 return function(width, height, keyboard)
   local onscreen = height > width or not keyboard
+  if require("themes.ui_scale").compositor then
+    -- Hyprland already scales these logical pixels. Auto-fitting a 1080p
+    -- design to the smaller logical viewport would shrink them back down.
+    return function(value) return math.max(1, math.floor(value + .5)) end, onscreen
+  end
   -- Density already shrank the available logical viewport. Compute the base
   -- fit in compositor units, otherwise auto-fit would undo the user's zoom.
   local zoom = require("themes.ui_scale").factor()

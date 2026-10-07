@@ -16,8 +16,7 @@ function V.build(model)
   end
   local function page_width()
     if not top then return theme.SIDE_W end
-    local w = model.desk_size()
-    return w - 2 * theme.BORDER - 2 * theme.ROUNDING
+    return require("responsive").sheet_width()
   end
   local tabs = {}
   for i, tab in ipairs(model.tabs) do

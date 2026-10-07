@@ -25,7 +25,8 @@ local COMPACT = responsive.compact()
 -- On a phone every tab is the one size, scrolled in it; on a desk each
 -- tab has its own (responsive.dashboard), and the drawer eases between them.
 local CW, VIEW_H = responsive.dashboard()
-local PANEL_W = COMPACT and responsive.desk_width() - 2 * theme.BORDER or nil
+local PANEL_W = COMPACT and (responsive.portrait() and responsive.sheet_width()
+  or responsive.desk_width() - 2 * theme.BORDER) or nil
 -- The tabs by the edge it comes from: the bottom one, on a phone.
 local TABS_BELOW = COMPACT and responsive.portrait()
 local PHONE=responsive.portrait()

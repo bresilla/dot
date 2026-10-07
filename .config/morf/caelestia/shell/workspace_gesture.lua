@@ -70,14 +70,19 @@ function M.new(root)
   local function page(id,position,queue)
     local C=require("theme").color
     local w,h=width(),select(4,require("bar").desk())
+    local dx,dy=select(1,require("bar").desk()),select(2,require("bar").desk())
+    local screen=(morf.screens or {})[1]
+    local sw,sh=screen and screen.width or w,screen and screen.height or h
     local node=ui.Item {id="phone-workspace-page-"..position,width=w,height=h,clip=true,
       x=function() return position*w+state.offset end,
       ui.Rect {anchors={fill=true},z=-2,color=function() return C.surface end},
-      ui.Image {anchors={fill=true},z=-1,fill_mode="preserve_aspect_crop",
+      -- The real wallpaper covers the entire output, including the area
+      -- behind the bar. Preserve that crop and origin inside this viewport.
+      ui.Image {id="phone-workspace-wallpaper-"..position,x=-dx,y=-dy,width=sw,height=sh,
+        z=-1,fill_mode="preserve_aspect_crop",
         source=function() return require("wallpaper").current:get() end},
     }
     ui.reparent(node,viewport) pages[#pages+1]=node
-    local dx,dy=select(1,require("bar").desk()),select(2,require("bar").desk())
     local mx,my,ratio=0,0,1
     local monitors=hypr.state.monitors
     for i=1,monitors:len() do
@@ -86,7 +91,6 @@ function M.new(root)
         mx,my=row.x,row.y
         -- Fullscreen surfaces request width=0 (automatic). The screen
         -- reports the actual size, including Morf's current density.
-        local screen=(morf.screens or {})[1]
         ratio=((screen and screen.width) or row.width/row.scale)/math.max(1,row.width/row.scale)
       end
     end

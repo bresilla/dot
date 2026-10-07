@@ -30,8 +30,14 @@ end
 
 --- How wide a dashboard page is on a phone: the desk inside the frame,
 --- less the drawer's padding.
+function M.sheet_width()
+  local theme = require("theme")
+  return math.max(1, M.desk_width() - 2 * theme.BORDER - 2 * theme.ROUNDING)
+end
+
 function M.page_width()
-  return M.desk_width() - 2 * require("theme").BORDER - 2 * 16
+  local panel = M.portrait() and M.sheet_width() or M.desk_width() - 2 * require("theme").BORDER
+  return math.max(1, panel - 2 * 16)
 end
 
 --- How tall: the desk inside the frame, less the tabs and the padding.
