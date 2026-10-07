@@ -198,6 +198,13 @@ end
 
 local function reload_desktop(c)
   local function quote(value) return "'" .. value:gsub("'", "'\\''") .. "'" end
+  -- Hyprpaper reads this stable path on startup, before Lule restores colors.
+  -- Keep the selection in state rather than depending on an IPC call at login.
+  local state = home .. "/.local/state/lule"
+  lule.mkdir(state)
+  if lule.run("ln -sfn -- " .. quote(c.wallpaper) .. " " .. quote(state .. "/wallpaper")) ~= 0 then
+    error("Could not save the wallpaper for the next login")
+  end
   lule.run('hyprctl hyprpaper wallpaper ' .. quote(',' .. c.wallpaper .. ','))
   -- Neither is worth waiting for: one repaints an editor, the other crosses the network.
   lule.spawn("zedtheme")
