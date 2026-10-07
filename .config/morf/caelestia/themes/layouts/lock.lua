@@ -69,10 +69,16 @@ return function(W, H, NAME)
   }
   local function entry_h() return method:get() == "pattern" and pad.height() or FIELD_H end
   local function chip_h() return has_pattern() and s(44) or 0 end
+  local function dismiss()
+    if not main() or busy:get() or stage:get()~="sheet" then return end
+    clear()
+    escape()
+  end
   local kb=require("themes.auth_keyboard").new {
     prefix="lock",output=NAME,width=W,height=H,border=BORDER,embedded_width=FIELD_W,
     main=main,keyboard_attached=ctx.keyboard_attached,busy=busy,stage=stage,method=method,pull=pull,
     claim=function() main_output:set(NAME) end,open_sheet=open_sheet,clear=clear,escape=escape,action=skin.action,
+    on_hide=dismiss,
     look=(skin.keyboard_look or function(v) return v end) {
       panel=function() return C.surfaceContainer end,
       key=function() return C.surfaceContainerHighest end,key_dim=function() return C.surfaceContainerHigh end,
@@ -398,8 +404,17 @@ return function(W, H, NAME)
   -- offer the same deliberate reveal on a laptop without a touchscreen.
   local pointer_from_rest=false
   local scroll_distance,scroll_time=0,0
+  local function contains(node,x,y)
+    return x>=node.layout_x and x<node.layout_x+node.layout_width
+      and y>=node.layout_y and y<node.layout_y+node.layout_height
+  end
   local reveal=kb.surface {
     id="lock-open",anchors={fill=true},z=-1,on_key_pressed=key,
+    on_clicked=function(x,y,_,_,button)
+      if button and button~="left" then return end
+      if stage:get()=="sheet" and not contains(sheet,x,y)
+        and not (kb.active() and contains(kb.node,x,y)) then dismiss() end
+    end,
     on_pressed=function(_,_,_,_,button)
       pointer_from_rest=button=="left" and stage:get()=="rest" and not busy:get()
       if pointer_from_rest then main_output:set(NAME) end

@@ -22,7 +22,10 @@ function M.new(ctx)
     shown:set(true)
   end
   local model={active=active,allowed=ready,height=function() return H end,
-    show=show,hide=function() shown:set(false) kb.keys.cancel() end,
+    show=show,hide=function()
+      shown:set(false) kb.keys.cancel()
+      if ctx.on_hide then ctx.on_hide() end
+    end,
     mode=function() return kb.keys.mode:get() end,
     cancel=function() if kb then kb.keys.cancel() end end}
   local contacts=shared.contacts("keyboard",model)

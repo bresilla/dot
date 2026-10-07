@@ -29,7 +29,7 @@
 --   full      letters, the number row (hideable), two pages of symbols;
 --             hold a key for its alternates (accents, the digit above it)
 --   dev       laid out for code: Esc before the q-row, Tab and Del about
---             the a-row, and Ctrl, Alt, space, the arrows and Enter along
+--             the a-row, and Ctrl, Alt, Super, space, arrows and Enter along
 --             the bottom (digits and symbols on a long press) -- the
 --             modifiers stick for one key, twice to lock
 --   letters   letters only
@@ -204,7 +204,8 @@ PAGES.dev = {
   front(with(row("zxcvbnm"), k("⌫", "backspace", 2, { rep = true, dim = true, icon = "backspace" })),
     a("⇧", "shift", 2, { dim = true, icon = "shift" })),
   { a("ctrl", "mod:ctrl", 1.2, { dim = true }), a("alt", "mod:alt", 1.2, { dim = true }),
-    a("?123", "page:symbols", 1.2, { dim = true }), SPACE(3.2),
+    a("super", "mod:super", 1.2, { dim = true }),
+    a("?123", "page:symbols", 1.2, { dim = true }), SPACE(2),
     k("←", "left", 0.75, { rep = true, dim = true, icon = "arrow_back" }),
     k("↓", "down", 0.75, { rep = true, dim = true, icon = "arrow_downward" }),
     k("↑", "up", 0.75, { rep = true, dim = true, icon = "arrow_upward" }),
