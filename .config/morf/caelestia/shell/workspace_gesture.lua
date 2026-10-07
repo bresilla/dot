@@ -125,9 +125,6 @@ function M.new(root)
         if identifier then queue[#queue+1]={identifier=identifier,source=source} end
       end
     end
-    ui.reparent(ui.Text {id="phone-workspace-label-"..position,x=16,y=16,z=2,
-      text=("Workspace %d"):format(id),font_family=require("theme").font,font_size=18,
-      color=function() return C.onSurface end},node)
   end
   local next_id,previous_id
   local g={state=state}
