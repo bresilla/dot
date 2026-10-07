@@ -1,12 +1,12 @@
 -- caelestia's lock screen, in two stages -- a phone's, and a desk's too.
 --
 -- At rest it is a thing to look at: the time, large, the date and the
--- weather under it, whatever is playing as a row with its controls, and a
--- small swell on the frame's bottom edge saying where the way in is. A key,
--- a click or a swipe up and that swell rises into the unlock sheet -- one
+-- weather above it, whatever is playing as a row with its controls, and a
+-- small swell on the frame's bottom edge saying where the way in is. An
+-- upward swipe or drag reveals the unlock sheet -- one
 -- liquid surface with the frame -- carrying the account in its cookie, the
 -- pill for the password and whatever PAM has to say (a face being looked
--- for, a finger). The first key typed is already the password's. Escape on
+-- for, a finger). Keys only enter the password after that reveal. Escape on
 -- an empty field, or a while with nothing typed, and the sheet sinks back.
 -- On a phone (a screen taller than wide, or no keyboard attached) the sheet
 -- carries the on-screen keyboard. The right password and all of it sinks
@@ -249,12 +249,9 @@ local function key(keysym, typed_text)
         if st ~= "rest" and st ~= "sheet" then return end
         if busy:get() then return end
         if keysym == ESCAPE then escape() return end
-        -- Any other key at rest opens the way in. A character is the
-        -- password's first; space, Return and the rest only wake it.
-        if st == "rest" then
-          open_sheet()
-          if not (typed_text and typed_text ~= "" and typed_text:byte(1) > 32) then return end
-        end
+        -- Wake keys, lock-chord modifiers and incidental typing must leave
+        -- the clock visible. Only an intentional upward gesture reveals it.
+        if st == "rest" then return end
         if keysym == RETURN or keysym == KP_ENTER then
           submit()
         elseif keysym == BACKSPACE then

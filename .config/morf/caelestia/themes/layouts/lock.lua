@@ -52,7 +52,6 @@ return function(W, H, NAME)
   local geometry=require("themes.auth_layout")(W,H,s)
   local BORDER = geometry.border
   local ROUND = geometry.round
-  local PORTRAIT = H > W
   local SHORT = geometry.short
   -- The on-screen keyboard: on a phone, or wherever no keyboard is attached.
 
@@ -181,18 +180,19 @@ return function(W, H, NAME)
   end
   local function resting() return stage:get() == "rest" or stage:get() == "sheet" end
 
-  -- The weather, beside the date, where it can be had.
-  local weather = {}
+  -- A compact row above the clock, centered independently from the date.
+  local weather
   do
     if desktop.weather_available() then
       local now_w = desktop.weather
-      weather = {
+      weather = ui.Row {
+        id="lock-weather",gap=s(8),align="center",
+        visible=function() return now_w().temperature~=nil end,
         icon(desktop.weather_symbol, s(26),
-          function() return C.onSurfaceVariant end,
-          { visible = function() return now_w().temperature ~= nil end }),
+          function() return C.onSurfaceVariant end),
         text {
+          id="lock-weather-temperature",
           font_size = s(22), color = function() return C.onSurfaceVariant end,
-          visible = function() return now_w().temperature ~= nil end,
           text = function()
             local n = now_w()
             return n.temperature and ("%d°"):format(math.floor(n.temperature + 0.5)) or ""
@@ -282,16 +282,13 @@ return function(W, H, NAME)
       return resting() and (not main() or stage:get() ~= "sheet" or content_height() - sheet_h() > s(220)) and 1 or 0
     end,
     behavior = { y = GROW, scale = GROW, opacity = { duration = 320 } },
+    weather or ui.Item {visible=false},
     (skin.clock or text) {
       id = "lock-clock", text = function() return clock:get() end,
       font_size = geometry.clock_size, font_weight = skin.clock_weight or 600, color = C.primary,
     },
-    ui.Row((function()
-      local row = { gap = s(10), align = "center",
-        text { text = function() return day:get() end, width=math.max(1,W-s(160)),elide="right",horizontal_alignment="center",font_size = s(22), color = C.onSurfaceVariant } }
-      for _, node in ipairs(weather) do row[#row + 1] = node end
-      return row
-    end)()),
+    text {id="lock-date",text=function() return day:get() end,width=math.max(1,W-s(64)),
+      elide="right",horizontal_alignment="center",font_size=s(22),color=C.onSurfaceVariant},
     ui.Item { width = 1, height = s(34) },
     media_row or ui.Item { width = 1, height = 1 },
   }
@@ -311,7 +308,7 @@ return function(W, H, NAME)
     }),
     text {
       text = (FINGER and "Touch the sensor, or " or "")
-        .. ((PORTRAIT or not ctx.keyboard_attached()) and (FINGER and "swipe up" or "Swipe up") or (FINGER and "type" or "Type or click"))
+        .. (FINGER and "swipe up" or "Swipe up")
         .. " to unlock",
       font_size = s(14), color = function() return C.onSurfaceVariant end,
     },
@@ -397,6 +394,41 @@ return function(W, H, NAME)
 
   -- ------------------------------------------------------------ the screen --
 
+  -- Touch uses the shared recognizer. Mouse drags and touchpad scrolling
+  -- offer the same deliberate reveal on a laptop without a touchscreen.
+  local pointer_from_rest=false
+  local scroll_distance,scroll_time=0,0
+  local reveal=kb.surface {
+    id="lock-open",anchors={fill=true},z=-1,on_key_pressed=key,
+    on_pressed=function(_,_,_,_,button)
+      pointer_from_rest=button=="left" and stage:get()=="rest" and not busy:get()
+      if pointer_from_rest then main_output:set(NAME) end
+    end,
+    on_drag_finished=function(_,_,dx,dy)
+      if pointer_from_rest and not busy:get() and dy < -48 and -dy > math.abs(dx)*1.2 then open_sheet() end
+      pointer_from_rest=false
+      pull:set(0)
+    end,
+    on_wheel=function(_,_,px,py,sx,sy)
+      if stage:get()~="rest" or busy:get() then scroll_distance=0 return end
+      px,py=px or 0,py or 0
+      if py==0 then px,py=(sx or 0)*40,(sy or 0)*40 end
+      if py>=0 or math.abs(py)<=math.abs(px)*1.2 then scroll_distance=0 return end
+      local now=morf.time.now_ms()
+      if now-scroll_time>400 then scroll_distance=0 end
+      scroll_time=now
+      scroll_distance=scroll_distance-py
+      if scroll_distance>=48 then
+        scroll_distance=0 main_output:set(NAME) open_sheet()
+      end
+    end,
+  }
+  reveal.on_dragged=function(_,_,dx,dy)
+    if pointer_from_rest and stage:get()=="rest" then
+      pull:set(math.abs(dy)>math.abs(dx)*1.2 and math.min(1,math.max(0,-dy)/360) or 0)
+    end
+  end
+
   -- Opaque from the first frame: a lock that let the desk show through for
   -- a moment would not be a lock, and morf will not hold one that could.
   local root = ui.Rect {
@@ -409,14 +441,7 @@ return function(W, H, NAME)
       frame,band,glance,hint,sheet,
     },
     not kb.embedded and kb.node or ui.Item {}, kb.edge,
-    -- Under everything that can be clicked: a click or a swipe up opens the
-    -- sheet, and the keys go where they belong.
-    kb.surface {
-      id = "lock-open",
-      anchors = { fill = true }, z = -1,
-      on_clicked = function() main_output:set(NAME) open_sheet() end,
-      on_key_pressed = key,
-    },
+    reveal,
   }
 
   -- contains_pointer includes the password field, keyboard and other children;
