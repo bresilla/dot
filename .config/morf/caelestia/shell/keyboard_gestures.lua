@@ -13,8 +13,7 @@ function M.contacts(region,allowed,single)
       local kb=package.loaded.keyboard
       if kb and kb.keys then kb.keys.cancel() end
     end,
-    height=function() return ((morf.screens or {})[1] or {}).height or morf.surface.height end,
-    before_show=function() for _,drawer in ipairs(require("drawer").all) do drawer.set(false) end end,
+    height=function() return (((morf.screens or {})[1] or {}).height or morf.surface.height)-shared.inset:get() end,
   },single)
 end
 return M

@@ -24,7 +24,7 @@ end
 
 local function close_other_panels(keep)
   for _, drawer in ipairs(require("drawer").all) do
-    if drawer ~= keep then drawer.set(false) end
+    if drawer ~= keep and drawer.name~="keyboard" then drawer.set(false) end
   end
 end
 
@@ -166,7 +166,9 @@ function M.attach(root)
       anchors = { top = true, left = true, right = true } },
   }, root)
   ui.reparent(gestures.area(contacts,{id="phone-gesture-bottom",height=EDGE,z=200,
-    anchors={bottom=true,left=true,right=true}}),root)
+    anchors={left=true,right=true},
+    y=function() return ((morf.screens[1] or {}).height or morf.surface.height)
+      -require("themes.keyboard").inset:get()-EDGE end}),root)
 end
 
 return M

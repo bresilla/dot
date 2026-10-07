@@ -37,6 +37,12 @@ M.drawer = require("drawer").new {
   name = "keyboard", edge = view.edge or "bottom", width = view.width,
   height = view.height, content = view.content, props = view.props,
 }
+-- It belongs to the physical bottom edge, outside the shrinking desktop.
+M.drawer.docked = true
+morf.effect("caelestia.keyboard.reserve",function()
+  require("themes.keyboard").inset:set(M.drawer.open:get()
+    and math.ceil(view.height()+require("theme").BORDER) or 0)
+end)
 
 local asked = false
 function M.set(on)

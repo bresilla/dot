@@ -50,8 +50,10 @@ end
 
 function M.build(ctx)
   -- The strip and the terminal fill the tile's inner box.
-  local W, H = P.tile_inner(M.WIDTH, M.HEIGHT)
-  local area = ui.Item { x = 0, y = STRIP + 8, width = W, height = H - STRIP - 8, clip = true }
+  local function height() local _,h=require("responsive").dashboard("terminal") return math.max(1,h) end
+  local W = P.tile_inner(M.WIDTH, M.HEIGHT)
+  local area = ui.Item { x = 0, y = STRIP + 8, width = W,
+    height = function() local _,h=P.tile_inner(M.WIDTH,height()) return math.max(1,h-STRIP-8) end,clip = true }
   -- Eight places; a place is a tab while it holds a terminal.
   local sessions = {}
   local titles, live = {}, {}
@@ -148,7 +150,7 @@ function M.build(ctx)
     kit.text { text = "No terminal open", color = function() return C.onSurfaceVariant end },
   }
 
-  return { page = P.tile { id = "dashboard-terminal", width = M.WIDTH, height = M.HEIGHT, title = "Terminal",
+  return { page = P.tile { id = "dashboard-terminal", width = M.WIDTH, height = height, title = "Terminal",
     note = function()
       local n = 0
       for i = 1, MAX do if live[i]:get() then n = n + 1 end end

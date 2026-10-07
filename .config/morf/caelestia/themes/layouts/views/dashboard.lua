@@ -32,7 +32,8 @@ local TABS_BELOW = COMPACT and responsive.portrait()
 local PHONE=responsive.portrait()
 -- Four fifths of the desk: the fifth above it is to tap it shut.
 local TABS_H = 68            -- icons, labels, indicator and hairline
-local PANEL_H = COMPACT and math.floor((responsive.desk_height() - 2 * theme.BORDER) * 0.8) or nil
+local function panel_height() return math.floor((responsive.desk_height() - 2 * theme.BORDER) * 0.8) end
+local function view_height() local _,h=responsive.dashboard() return math.max(1,h) end
 local subpages, PAGE = {}, {{840,439}}
 for i=2,6 do
   kit.collect(LAYERS[i])
@@ -46,7 +47,7 @@ M.tab = model.tab
 
 --- The panel's size on tab `i`.
 function M.size(i)
-  if COMPACT then return PANEL_W, PANEL_H end
+  if COMPACT then return PANEL_W, panel_height() end
   local p = PAGE[i] or PAGE[1]
   return p[1] + 2 * PAD, TABS_H + PAD + p[2] + PAD - 1
 end
@@ -73,7 +74,7 @@ local function tabs()
     width = width, height = TABS_H, pad = PAD, ids = "name", growing = true, reorderable = true,
     icons_only = COMPACT }
   if not TABS_BELOW then return row end
-  return ui.Item { y = PANEL_H - TABS_H, width = PANEL_W, height = TABS_H, row }
+  return ui.Item { y = function() return panel_height()-TABS_H end, width = PANEL_W, height = TABS_H, row }
 end
 
 -- ---------------------------------------------------------------- cards --
@@ -126,23 +127,24 @@ if COMPACT then
   -- On a phone every page scrolls in the one view the dashboard has; while
   -- it runs on below, a dashed line along the view's foot says so.
   for i, page in ipairs(pages) do
-    local content_h = (PAGE[i] or PAGE[1])[2]
-    local node, _, t = kit.scroll({ id = "dashboard-scroll-" .. i, width = CW, height = VIEW_H, clip = true,
+    local initial_h = (PAGE[i] or PAGE[1])[2]
+    local function content_h() return i==6 and view_height() or initial_h end
+    local node, _, t = kit.scroll({ id = "dashboard-scroll-" .. i, width = CW, height = view_height, clip = true,
       ui.Item { width = CW, height = content_h, page } })
     scroll_positions[i] = t
     local more = ui.Path {
-      id = "dashboard-more-" .. i, x = 0, y = VIEW_H - 2, width = CW, height = 2, view_box = { 0, 0, CW, 2 },
+      id = "dashboard-more-" .. i, x = 0, y = function() return view_height()-2 end, width = CW, height = 2, view_box = { 0, 0, CW, 2 },
       d = ("M0 1 H%g"):format(CW), fill_color = "transparent", stroke_width = 2, dash = { 10, 8 },
       stroke_color = function() return theme.color.onSurfaceVariant end,
-      opacity = function() return (content_h > VIEW_H + 4 and (t.position_y or 0) < 0.99) and 0.8 or 0 end,
+      opacity = function() return (content_h() > view_height() + 4 and (t.position_y or 0) < 0.99) and 0.8 or 0 end,
       behavior = { opacity = { duration = theme.duration.small } },
     }
     -- A phone's tabs are icons alone: the page says its name.
     local P = require("themes.layouts.page")
     local top = P.HEADER_H + P.GAP
-    pages[i] = ui.Item { width = CW, height = VIEW_H + top,
+    pages[i] = ui.Item { width = CW, height = function() return view_height()+top end,
       P.header { id = "dashboard-head-" .. i, width = CW, title = TABS[i].name },
-      ui.Item { y = top, width = CW, height = VIEW_H, node, more } }
+      ui.Item { y = top, width = CW, height = view_height, node, more } }
     PAGE[i] = { CW, VIEW_H + top }
   end
 end

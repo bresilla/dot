@@ -3,6 +3,9 @@
 local morf=require("morf")
 local ui=require("morf.ui")
 local M={PAD=12,MAX_WIDTH=1060}
+-- The desktop reads this without loading the keyboard controller recursively.
+-- Authentication has its own scene, and uses the same panel height directly.
+M.inset=morf.signal("caelestia.keyboard.inset",0)
 
 function M.contacts(region,model,single)
   return require("themes.touch_contacts").new {

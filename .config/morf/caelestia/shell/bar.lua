@@ -2,6 +2,7 @@
 -- dimensions and layout; bar_model owns shared service readings and actions.
 local morf = require("morf")
 local config = require("config")
+local keyboard_space = require("themes.keyboard").inset
 
 local view = require("themes").view("bar")
 local M = {}
@@ -36,13 +37,20 @@ function M.vertical() return M.side() == "left" or M.side() == "right" end
 
 --- What the bar takes from each side of the screen: `{ left, top, right,
 --- bottom }`, all zero while it is down.
-function M.insets()
+local function bar_insets()
   local out = { left = 0, top = 0, right = 0, bottom = 0 }
   if M.on() then out[M.side()] = M.vertical() and M.WIDE or M.THICK end
   return out
 end
 
---- The desk: the screen less the bar. `x, y, width, height`.
+function M.insets()
+  -- One work area for application windows, drawers and workspace markers.
+  local out=bar_insets()
+  out.bottom=out.bottom+keyboard_space:get()
+  return out
+end
+
+--- The desk: the screen less the bar and keyboard. `x, y, width, height`.
 function M.desk()
   local w, h = screen()
   local i = M.insets()
@@ -55,7 +63,9 @@ function M.set_side(side) config.set("edgebar.side", side) end
 
 function M.build()
   local model = require("bar_model").new {
-    on=M.on, side=M.side, vertical=M.vertical, screen=screen, insets=M.insets,
+    on=M.on, side=M.side, vertical=M.vertical,
+    screen=function() local w,h=screen() return w,h-keyboard_space:get() end,
+    insets=bar_insets,
   }
   return view.build(model)
 end
