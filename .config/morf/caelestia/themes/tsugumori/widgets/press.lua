@@ -28,7 +28,6 @@ return function(S, theme, M, hud)
   end
   local function H(t) return (t.height and t.height > 0) and t.height or 32 end
   local function W(t) return (t.width and t.width > 0) and t.width or 32 end
-  local function dim(t) return function() return t.enabled == false and 0.4 or 1 end end
   local function alert() return M.signal("alert")() end
   local function with(kind, props, ...)
     for i = 1, select("#", ...) do
@@ -173,7 +172,7 @@ return function(S, theme, M, hud)
       translate_x = o.sink and function() return t.down and o.sink or 0 end or nil,
       translate_y = o.sink and function() return t.down and o.sink or 0 end or nil,
       behavior = { color = quick, border_color = quick, translate_x = quick, translate_y = quick } }
-    local ground = { anchors = { fill = true }, opacity = dim(t) }
+    local ground = { anchors = { fill = true } }
     for _, node in ipairs(o.under or {}) do ground[#ground + 1] = node end
     ground[#ground + 1] = plate
     for _, node in ipairs(o.over or {}) do ground[#ground + 1] = node end
@@ -276,7 +275,7 @@ return function(S, theme, M, hud)
     local function ink() return C.primary end
     local text = M.text { text = spec.label or "", font_size = FS, color = ink }
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t) },
+      background = ui.Item { anchors = { fill = true } },
       content = ui.Row { anchors = { center_in = true }, gap = 4, align = "center",
         ui.Item { width = function() return text.layout_width or 0 end, height = 20, text,
           ui.Path { anchors = { left = true, right = true, bottom = true }, height = 2, view_box = { 0, 0, w, 2 },
@@ -458,7 +457,6 @@ return function(S, theme, M, hud)
       or legend(t, spec, ink)
     return full {
       background = ui.Item { anchors = { fill = true, left_margin = (pos == "middle" or pos == "last") and -1 or 0 },
-        opacity = dim(t),
         ui.Rect { anchors = { fill = true },
           color = function() return t.checked and C.primary:alpha(.16) or C.surfaceContainerHigh end,
           border_width = 1, border_color = function() return t.checked and stroke(C, "focus") or stroke(C, "idle") end,
@@ -480,7 +478,6 @@ return function(S, theme, M, hud)
     local function ink() return t.checked and C.onPrimary or C.onSurface end
     return full {
       background = ui.Item { anchors = { fill = true, left_margin = (pos == "middle" or pos == "last") and -1 or 0 },
-        opacity = dim(t),
         ui.Rect { anchors = { fill = true }, color = function() return t.checked and C.primary or C.surfaceContainerHigh end,
           border_width = 1, border_color = function() return t.checked and C.primary or stroke(C, "idle") end,
           behavior = { color = quick } } },
@@ -550,7 +547,7 @@ return function(S, theme, M, hud)
   --- A tag: a small lit block with its caption in caps and a notch.
   function S.tag(t, spec)
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true }, color = function() return C.primary end },
         ui.Rect { anchors = { left = true, vertical_center = true, left_margin = 4 }, width = 3, height = 8,
           color = function() return C.onPrimary end } },
@@ -639,7 +636,7 @@ return function(S, theme, M, hud)
   --- presses down onto.
   function S.keycap(t, spec)
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true }, color = function() return C.outline end },
         ui.Rect { anchors = { left = true, right = true, top = true },
           height = function() return math.max(0, H(t) - (t.down and 1 or 3)) end,
@@ -662,7 +659,7 @@ return function(S, theme, M, hud)
   function S.fab(t, spec)
     local function ink() return C.onPrimary end
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         scale = function() return t.down and .94 or 1 end, behavior = { scale = quick },
         ui.Rect { anchors = { fill = true }, translate_x = 3, translate_y = 3,
           color = function() return C.primary:alpha(.3) end },
@@ -695,7 +692,7 @@ return function(S, theme, M, hud)
   function S.speed_dial_item(t, spec)
     local function d() return math.min(H(t), 48) - 4 end
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { right = true, vertical_center = true }, width = d, height = d,
           color = function() return t.down and C.primary:mix(C.onPrimary, .15) or C.primaryContainer end,
           border_width = 1, border_color = function() return t.hovered and C.primary or stroke(C, "hover") end,
@@ -781,7 +778,7 @@ return function(S, theme, M, hud)
       was = holding
     end, { owner = dial })
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true }, color = function() return C.surfaceContainer end },
         ui.Item { anchors = { fill = true }, clip = true, mover },
         ui.Rect { anchors = { fill = true }, color = "transparent", border_width = 1,

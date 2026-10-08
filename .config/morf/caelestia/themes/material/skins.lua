@@ -28,12 +28,6 @@ return function(theme, M)
     local color = spec.color or function() return C().primaryContainer end
     local ink = spec.ink or function() return C().onPrimaryContainer end
     local h = function() return t.height > 0 and t.height or 32 end
-    local measure=M.text {text=spec.label,font_size=theme.size.normal,opacity=0}
-    local function width() return get(spec.width) or (measure.layout_width or 0)+24+(spec.icon and 26 or 0) end
-    local function label_width()
-      local available=math.max(0,width()-24-(spec.icon and 26 or 0))
-      return math.min(measure.layout_width or 0,available)
-    end
     return {
       background = ui.Rect { anchors = { fill = true },
         radius = function() return h() / 2 end,
@@ -43,12 +37,14 @@ return function(theme, M)
           return t.hovered and c:mix(ink(), 0.08) or c
         end,
         behavior = { color = { duration = theme.duration.small } } },
-      content = ui.Item { anchors = { center_in = true },width=width,height=h,clip = true,
-        ui.Item {width=1,height=1,clip=true,measure},
-        ui.Row { anchors = { center_in = true }, gap = 8, align = "center",
-          spec.icon and M.icon(spec.icon, 18, ink) or nil,
-          M.text { id=spec.id and spec.id.."-label",text = spec.label, width=label_width,elide="right",
-            font_size = theme.size.normal, color = ink } } },
+      content=require("lib.kit.caption").make {width=spec.width,height=h,gap=8,
+        before=spec.icon and {M.icon(spec.icon,18,ink)} or {},
+        measure=M.text {text=spec.label or "",font_size=theme.size.normal,opacity=0},
+        label_visible=function() local s=get(spec.label) return s~=nil and s~=false and s~="" end,
+        label=function(w)
+          return M.text {id=spec.id and spec.id.."-label",text=spec.label or "",width=w,elide="right",
+            font_size=theme.size.normal,color=ink}
+        end},
       indicator = ring(t, function() return h() / 2 end),
     }
   end
@@ -723,6 +719,8 @@ return function(theme, M)
       error(looks, 0)
     end
   end
+
+  require("lib.kit.press_style").install(S,0.45)
 
   return S
 end

@@ -901,5 +901,7 @@ return function(theme, M)
     end
   end
 
+  require("lib.kit.press_style").install(S,0.5)
+
   return S
 end

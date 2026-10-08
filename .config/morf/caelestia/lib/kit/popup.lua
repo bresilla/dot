@@ -121,19 +121,18 @@ local function build_content(widget, spec, close)
   local measures={width=1,height=1,clip=true}
   if spec.buttons then
     local actions={}
+    local ready=morf.signal("kit.popup.actions."..tostring(actions),false)
+    local caption=require("lib.kit.caption")
     local has_theme,theme=pcall(require,"theme")
     theme=(themed and theme_kit.theme) or (has_theme and type(theme)=="table" and theme) or {}
-    local menu=theme.typography and theme.typography.menu
-    local font_size=menu or (theme.size and theme.size.normal) or 14
-    for i,b in ipairs(spec.buttons) do
-      local caption=function() local s=tostring(get(b.label) or "") return menu and s:upper() or s end
-      local measure=text {text=caption,font_size=font_size,font_weight=500,opacity=0}
-      measures[#measures+1]=measure
-      actions[i]={spec=b,measure=measure}
-    end
+    local font_size=theme.size and theme.size.normal or 14
+    for i,b in ipairs(spec.buttons) do actions[i]={spec=b} end
     local function visible(action) return get(action.spec.visible)~=false end
     local function desired(action)
-      return math.max(1,get(action.spec.width) or math.max(96,(action.measure.layout_width or 0)+32+(action.spec.icon and 26 or 0)))
+      ready:get()
+      local content=action.control and action.control.slots().content
+      local fallback=action.measure and (action.measure.layout_width or 0)+32+(action.spec.icon and 26 or 0) or 0
+      return math.max(1,get(action.spec.width) or math.max(96,caption.preferred_width(content) or fallback))
     end
     local function height(action) return math.max(1,get(action.spec.height) or 34) end
     local function total()
@@ -164,14 +163,24 @@ local function build_content(widget, spec, close)
       local clicked = b.on_clicked
       -- A destructive choice (Discard, Reset) or the suggested one is
       -- drawn as such by the theme.
-      local make = (b.destructive and kit.destructive) or (b.suggested and kit.suggested) or kit.push
-      row[#row + 1] = make { id = b.id or (spec.id and (spec.id .. "-button-" .. i)) or nil,
+      local kind=b.destructive and "destructive" or b.suggested and "suggested" or "push"
+      local node,_,ctl=control.make("Press",kind,{widget=kind,
+        id = b.id or (spec.id and (spec.id .. "-button-" .. i)) or nil,
         label=b.label,icon=b.icon,enabled=b.enabled,visible=b.visible,accessible_name=b.accessible_name,
         width=function() return stacked() and inner() or desired(action) end,height=b.height or 34,
         x=function() return stacked() and 0 or inner()-total()+offset() end,
         y=function() return stacked() and offset() or (row_height()-height(action))/2 end,
-        on_clicked = function() if clicked then clicked() end close("activated") end }
+        on_clicked = function() if clicked then clicked() end close("activated") end })
+      action.control=ctl
+      -- Third-party skins may draw captions without the shared helper.
+      -- Keep a text measurement for those; built-in skins need no duplicate.
+      if not caption.preferred_width(ctl.slots().content) then
+        action.measure=text {text=b.label or "",font_size=font_size,font_weight=500,opacity=0}
+        measures[#measures+1]=action.measure
+      end
+      row[#row+1]=node
     end
+    ready:set(true)
     -- End-aligned when there is room; full-width rows on narrow dialogs.
     column[#column + 1] = ui.Item(row)
   end

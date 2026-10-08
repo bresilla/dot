@@ -25,7 +25,6 @@ return function(S, theme, M)
   end
   local function H(t) return (t.height and t.height > 0) and t.height or 40 end
   local function W(t) return (t.width and t.width > 0) and t.width or 40 end
-  local function dim(t) return function() return t.enabled == false and 0.38 or 1 end end
   local function with(kind, props, ...)
     for i = 1, select("#", ...) do
       local child = select(i, ...)
@@ -104,7 +103,7 @@ return function(S, theme, M)
     local sc, sb, sy
     if o.level then sc, sb, sy = shadow(t, o.level, o.hover_level) end
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = radius, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = radius,
         color = layer(t, o.container, ink),
         border_width = o.outline and (o.outline_width or 1) or 0,
         border_color = o.outline,
@@ -178,7 +177,7 @@ return function(S, theme, M)
   --- A link: the primary, underlined under the pointer, no container.
   function S.link(t, spec)
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = 8, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = 8,
         color = function() return C().primary:alpha(t.down and 0.10 or 0) end, behavior = { color = fade() } },
       content = M.text { anchors = { fill = true, left_margin = 4, right_margin = 4 }, text = spec.label or "",
         font_size = theme.size.normal, font_weight = 500, color = function() return C().primary end,
@@ -324,7 +323,6 @@ return function(S, theme, M)
       or content(t, spec, ink)
     return full {
       background = ui.Rect { anchors = { fill = true, left_margin = outer_l and 0 or 1, right_margin = outer_r and 0 or 1 },
-        opacity = dim(t),
         top_left_radius = corner(outer_l), bottom_left_radius = corner(outer_l),
         top_right_radius = corner(outer_r), bottom_right_radius = corner(outer_r),
         color = layer(t, function() return t.checked and C().secondaryContainer or C().surfaceContainerHigh end, ink),
@@ -349,7 +347,7 @@ return function(S, theme, M)
     local function ink() return t.checked and C().onSecondaryContainer or C().onSurface end
     return full {
       background = ui.Rect { anchors = { fill = true, left_margin = (pos == "middle" or pos == "last") and -1 or 0 },
-        opacity = dim(t), top_left_radius = l, bottom_left_radius = l, top_right_radius = r, bottom_right_radius = r,
+        top_left_radius = l, bottom_left_radius = l, top_right_radius = r, bottom_right_radius = r,
         color = layer(t, function() return t.checked and C().secondaryContainer or C().surface end, ink),
         border_width = 1, border_color = function() return C().outline end,
         behavior = { color = fade() } },
@@ -503,7 +501,7 @@ return function(S, theme, M)
   function S.keycap(t, spec)
     local function lip() return t.down and 1 or 3 end
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true }, radius = 8, color = function() return C().outlineVariant end },
         ui.Rect { anchors = { left = true, right = true, top = true }, radius = 8,
           height = function() return math.max(0, H(t) - lip()) end,
@@ -527,7 +525,7 @@ return function(S, theme, M)
     local function ink() return C().onPrimaryContainer end
     local sc, sb, sy = shadow(t, 2, 3)
     return full {
-      background = ui.Sdf { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Sdf { anchors = { fill = true },
         shadow_color = sc, shadow_blur = sb, shadow_offset_y = sy,
         behavior = { shadow_blur = fade(), shadow_offset_y = fade() },
         M.sdf_shape { anchors = { fill = true }, shape = function() return t.down and "cookie9" or "square" end,
@@ -618,7 +616,7 @@ return function(S, theme, M)
     end, { owner = dial })
     local function ink() return done:get() and on_container() or C().onSurface end
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = radius, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = radius,
         color = layer(t, function() return C().surfaceContainerHighest end, function() return C().onSurface end),
         behavior = { radius = bounce(), color = fade() },
         ui.ClipRect { anchors = { fill = true }, radius = radius, color = "transparent",

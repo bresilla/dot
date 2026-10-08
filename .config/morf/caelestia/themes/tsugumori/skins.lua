@@ -733,5 +733,7 @@ return function(theme, M, hud)
     end
   end
 
+  require("lib.kit.press_style").install(S,0.45)
+
   return S
 end

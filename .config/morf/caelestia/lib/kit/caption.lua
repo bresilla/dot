@@ -2,7 +2,14 @@
 -- adornments; this keeps the caption between those adornments as it resizes.
 local ui=require("morf.ui")
 local M={}
+local preferred=setmetatable({}, {__mode="k"})
 local function get(v) if type(v)=="function" then return v() end return v end
+
+-- Layouts can ask how wide the themed caption wants to be, including its
+-- adornments, even while the displayed caption is constrained and elided.
+function M.preferred_width(node)
+  return preferred[node] and preferred[node]() or nil
+end
 
 function M.make(spec)
   local gap=spec.gap or 8
@@ -18,8 +25,9 @@ function M.make(spec)
     end
     return width+math.max(0,n-1)*gap
   end
-  local function natural() return spec.measure and (spec.measure.layout_width or 0) or 0 end
-  local function width() return math.max(1e-3,get(spec.width) or natural()+extras()+left+right) end
+  local function natural() return has_label() and spec.measure and (spec.measure.layout_width or 0) or 0 end
+  local function wanted() return natural()+extras()+left+right end
+  local function width() return math.max(1e-3,get(spec.width) or wanted()) end
   local function label_width() return math.max(1e-3,math.min(natural(),width()-left-right-extras())) end
   local row={gap=gap,align="center",anchors={vertical_center=true}}
   for _,node in ipairs(before) do row[#row+1]=node end
@@ -33,8 +41,10 @@ function M.make(spec)
   row.x=function()
     return left+(spec.align=="start" and 0 or math.max(0,(width()-left-right-(row.layout_width or 0))/2))
   end
-  return ui.Item {anchors={center_in=true},width=width,height=spec.height,clip=true,row,
+  local node=ui.Item {anchors={center_in=true},width=width,height=spec.height,clip=true,row,
     spec.measure and ui.Item {width=1,height=1,clip=true,spec.measure} or nil}
+  preferred[node]=wanted
+  return node
 end
 
 return M

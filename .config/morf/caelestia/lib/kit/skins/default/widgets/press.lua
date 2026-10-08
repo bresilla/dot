@@ -27,7 +27,6 @@ return function(S, theme, M)
   end
   local function H(t) return (t.height and t.height > 0) and t.height or theme.control_height end
   local function W(t) return (t.width and t.width > 0) and t.width or theme.control_height end
-  local function dim(t) return function() return t.enabled == false and 0.5 or 1 end end
   -- A node of `kind` with `props` and the children given, nils skipped.
   local function with(kind, props, ...)
     for i = 1, select("#", ...) do
@@ -92,7 +91,6 @@ return function(S, theme, M)
         radius = not o.corners and radius or nil,
         top_left_radius = o.corners and o.corners[1] or nil, bottom_left_radius = o.corners and o.corners[1] or nil,
         top_right_radius = o.corners and o.corners[2] or nil, bottom_right_radius = o.corners and o.corners[2] or nil,
-        opacity = dim(t),
         border_width = o.border or function() return P().strong and 1 or 0 end,
         border_color = o.edge or function() return P().border end,
         shadow_color = o.shadow and function()
@@ -194,7 +192,7 @@ return function(S, theme, M)
     local function d() return math.max(22, math.min(W(t), H(t)) - 14) end
     return full {
       background = ui.Rect { anchors = { center_in = true }, width = d, height = d,
-        radius = function() return d() / 2 end, opacity = dim(t),
+        radius = function() return d() / 2 end,
         color = function()
           local p = P()
           if t.down then return p.ink:alpha(p.wash.checked + 0.06) end
@@ -214,7 +212,6 @@ return function(S, theme, M)
     local radius = o.round and function() return math.min(W(t), H(t)) / 2 end or R.small
     return full {
       background = ui.Rect { anchors = { fill = true }, radius = radius, color = o.ground or flat_ground(t),
-        opacity = dim(t),
         border_width = o.border or function() local p = P() return (p.strong and t.hovered) and 1 or 0 end,
         border_color = o.edge or function() return P().border end,
         behavior = { color = quick() } },
@@ -395,7 +392,7 @@ return function(S, theme, M)
       spec.subtitle and M.text { text = spec.subtitle, font_size = theme.size.small, color = sub, elide = "right",
         width = function() return math.max(0, W(t) - 70) end } or nil }
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = radius, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = radius,
         color = function()
           local p = P()
           local c = on() and p.accent or p.ink:alpha(p.wash.button)
@@ -418,7 +415,7 @@ return function(S, theme, M)
     local function ink() return P().ink end
     local function words() return math.max(0, W(t) - 112) end
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = R.large, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = R.large,
         color = layered(function() return P().card end, t),
         border_width = function() local p = P() return (p.strong and 2) or (p.dark and 0) or 1 end,
         border_color = function() return P().border end,
@@ -448,7 +445,7 @@ return function(S, theme, M)
     local left = spec.icon and 48 or 14
     local function words() return math.max(0, W(t) - left - 40) end
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true }, radius = R.small, color = flat_ground(t), behavior = { color = quick() } },
         ui.Rect { anchors = { left = true, right = true, bottom = true, left_margin = left }, height = 1,
           color = function() local p = P() return p.strong and p.border or p.border:alpha(0.8) end } },
@@ -508,7 +505,7 @@ return function(S, theme, M)
     local inner = (glyph and not spec.label) and M.icon(glyph, 18, ink, { anchors = { center_in = true } })
       or content(t,spec, ink, { size = theme.size.normal })
     return full {
-      background = ui.Item { anchors = { fill = true }, opacity = dim(t),
+      background = ui.Item { anchors = { fill = true },
         ui.Rect { anchors = { fill = true },
           top_left_radius = l, bottom_left_radius = l, top_right_radius = r, bottom_right_radius = r,
           color = function() local p = P() return p.ink:alpha(p.dark and 0.08 or 0.06) end,
@@ -563,7 +560,7 @@ return function(S, theme, M)
     local function d() return math.min(H(t), 48) - 4 end
     return full {
       background = ui.Rect { anchors = { right = true, vertical_center = true }, width = d, height = d,
-        radius = function() return d() / 2 end, opacity = dim(t),
+        radius = function() return d() / 2 end,
         color = layered(function() return P().raised end, t),
         border_width = function() local p = P() return (p.strong or not p.dark) and 1 or 0 end,
         border_color = function() local p = P() return p.strong and p.border or p.shade:alpha(0.5) end,
@@ -637,7 +634,7 @@ return function(S, theme, M)
     end, { owner = dial })
     local function ink() return P().ink end
     return full {
-      background = ui.Rect { anchors = { fill = true }, radius = R.small, opacity = dim(t),
+      background = ui.Rect { anchors = { fill = true }, radius = R.small,
         color = function()
           local p = P()
           if t.down then return p.ink:alpha(p.wash.checked) end

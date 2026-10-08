@@ -403,7 +403,7 @@ function M.make(archetype, widget, spec, extra)
   build()
   skin.track(root, build)
   return root, t, { id = id, send = send, configure = function(field, v) apply(native.configure(id, field, value(v))) end,
-    slots = function() return slots end, builders = function() return builders end }
+    slots = function() generation:get() return slots end, builders = function() return builders end }
 end
 
 --- An archetype with no node: its state and keys for a view that draws its
