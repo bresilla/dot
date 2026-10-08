@@ -73,18 +73,24 @@ return function(S, theme, M)
   local function label(t, spec, o)
     o = o or {}
     if not spec.label then return nil, function() return false end end
-    local l = sides(spec.inset)
+    local l,_,r = sides(spec.inset)
     local size = SIZE()
     local lh = math.ceil(size * 1.3)
     local function up() return o.always or t.focused or not t.empty or spec.tags ~= nil end
     local function rest() return math.floor((box(t, spec) - lh) / 2) end
     local floated = o.outlined and -math.floor(lh * 0.75 / 2) or 7
+    -- The outline notch follows the actual label, including after a font
+    -- change, rather than the entire available text box.
+    local measure=o.outlined and M.text {text=spec.label,font_size=size,height=lh,opacity=0} or nil
     local node = M.text { text = spec.label, x = l, height = lh, font_size = size, vertical_alignment = "center",
+      width=function() return math.max(1e-3,math.min(t.width-l-r,measure and (measure.layout_width or 0) or t.width)) end,
+      elide="right",
       transform_origin_x = 0, transform_origin_y = 0, z = 8, y = rest,
       translate_y = function() return up() and (floated - rest()) or 0 end,
       scale = function() return up() and 0.75 or 1 end,
       color = tone(t),
-      behavior = { translate_y = grow(), scale = grow(), color = quick() } }
+      behavior = { translate_y = grow(), scale = grow(), color = quick() },
+      measure and ui.Item {width=1,height=1,clip=true,measure} or nil }
     return node, up
   end
 
@@ -128,15 +134,18 @@ return function(S, theme, M)
     local l = sides(spec.inset)
     local function ink() local c = C() return bad(t) and c.error or c.onSurfaceVariant end
     local node = ui.Item { anchors = { left = true, right = true, bottom = true }, height = FOOT }
-    if spec.supporting then
-      ui.reparent(M.text { text = spec.supporting, x = l, anchors = { bottom = true }, height = 18,
-        font_size = theme.size.small - 1, color = ink, behavior = { color = quick() } }, node)
-    end
+    local counter
     if spec.max_length then
-      ui.reparent(M.text { anchors = { right = true, bottom = true, right_margin = 16,
+      counter=M.text { anchors = { right = true, bottom = true, right_margin = 16,
           bottom_margin = spec.supporting and 0 or 4 }, height = 18,
         font_size = theme.size.small - 1, color = ink,
-        text = function() return ("%d/%d"):format(t.length or 0, spec.max_length) end }, node)
+        text = function() return ("%d/%d"):format(t.length or 0, spec.max_length) end }
+      ui.reparent(counter,node)
+    end
+    if spec.supporting then
+      ui.reparent(M.text {text=spec.supporting,x=l,anchors={bottom=true},height=18,
+        width=function() return math.max(1e-3,t.width-l-16-(counter and (counter.layout_width or 0)+8 or 0)) end,
+        elide="right",font_size=theme.size.small-1,color=ink,behavior={color=quick()}},node)
     end
     return node
   end

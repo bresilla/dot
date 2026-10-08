@@ -15,13 +15,15 @@ function S.hatch_d(w, h, gap)
   return cache[key]
 end
 
---- A hatched box: `width`, `height` (numbers), `gap` (6), `weight`
+--- A hatched box: `width`, `height` (numbers or bindings), `gap` (6), `weight`
 --- (stroke, 2), `color`; any other node properties pass through.
 function S.box(spec)
   local w, h = spec.width, spec.height
+  local function get(v) return type(v)=="function" and v() or v end
   local gap, weight = spec.gap or 6, spec.weight or 2
   return ui.Path { id = spec.id, x = spec.x, y = spec.y, anchors = spec.anchors, width = w, height = h,
-    opacity = spec.opacity, view_box = { 0, 0, w, h }, d = S.hatch_d(w, h, gap), fill_color = "transparent",
+    opacity = spec.opacity, view_box = function() return {0,0,get(w),get(h)} end,
+    d = function() return S.hatch_d(get(w),get(h),gap) end, fill_color = "transparent",
     stroke_color = spec.color, stroke_width = weight, stroke_cap = "butt" }
 end
 

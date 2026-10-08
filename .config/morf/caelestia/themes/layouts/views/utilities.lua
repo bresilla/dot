@@ -54,8 +54,9 @@ local M={TOGGLES=model.TOGGLES,DETAILS=model.DETAILS,detail=model.detail,RADIUS=
 local CARD_W,GAP=w,P.GAP
 local overview_viewport, overview_viewport_node, overview_viewport_t, overview_viewport_ctl
 local TILE_H,TILE_GAP=60,8
-local TILE_W=(CARD_W-2*P.PAD-TILE_GAP)/2
-local TILE_ROWS=math.ceil(#M.TOGGLES/2)
+local TILE_COLUMNS=CARD_W-2*P.PAD>=2*176+TILE_GAP and 2 or 1
+local TILE_W=(CARD_W-2*P.PAD-(TILE_COLUMNS-1)*TILE_GAP)/TILE_COLUMNS
+local TILE_ROWS=math.ceil(#M.TOGGLES/TILE_COLUMNS)
 local TILES_H=2*P.PAD+TILE_ROWS*TILE_H+(TILE_ROWS-1)*TILE_GAP
 local function tile(t)
   local area, more
@@ -64,6 +65,7 @@ local function tile(t)
   local function sub() return on() and fg():alpha(0.8) or C.onSurfaceVariant end
   area = kit.action {
     id = "utilities-toggle-" .. t.id,
+    accessible_name = t.name or t.id,
     width = TILE_W, height = TILE_H, cursor = "pointer",
     on_clicked = function() t.set(not on()) end,
     kit.icon(t.icon, 22, fg, { x = 16, anchors = { vertical_center = true }, fill = t.fill or on }),
@@ -71,11 +73,11 @@ local function tile(t)
       x = 48, anchors = { vertical_center = true }, gap = 0,
       kit.heading { id = "settings-tile-title-" .. t.id, scope = "settings.overview", level = "caption",
         viewport=function() return overview_viewport end,
-        width = TILE_W - 48 - (t.detail and 36 or 12), elide = "right",
+        width = TILE_W - 48 - (t.detail and 46 or 12), elide = "right",
         text = t.name or t.id, font_size = theme.size.normal, font_weight = 500, color = fg, ink = fg,
       },
       kit.subtitle {
-        width = TILE_W - 48 - (t.detail and 36 or 12), elide = "right",
+        width = TILE_W - 48 - (t.detail and 46 or 12), elide = "right",
         text = function()
           local s = t.status and t.status()
           if s and s ~= "" then return s end
@@ -93,8 +95,9 @@ local function tile(t)
   if t.detail then
     more = kit.action {
       id = "utilities-more-" .. t.id,
-      anchors = { right = true, top = true, bottom = true, top_margin = 10, bottom_margin = 10, right_margin = 6 },
-      width = 30, cursor = "pointer",
+      accessible_name = "Open " .. (t.name or t.id),
+      anchors = { right = true, top = true, bottom = true, top_margin = 8, bottom_margin = 8, right_margin = 6 },
+      width = 40, cursor = "pointer",
       on_clicked = function() M.detail:set(t.detail) end,
       kit.icon("chevron_right", 22, fg, { anchors = { center_in = true } }),
     }
@@ -106,10 +109,10 @@ end
 
 local function toggles()
   local rows = {}
-  for i = 1, #M.TOGGLES, 2 do
+  for i = 1, #M.TOGGLES, TILE_COLUMNS do
     local row = { gap = TILE_GAP }
     row[#row + 1] = tile(M.TOGGLES[i])
-    if M.TOGGLES[i + 1] then row[#row + 1] = tile(M.TOGGLES[i + 1]) end
+    if TILE_COLUMNS==2 and M.TOGGLES[i + 1] then row[#row + 1] = tile(M.TOGGLES[i + 1]) end
     rows[#rows + 1] = ui.Row(row)
   end
   return kit.card {
@@ -126,9 +129,6 @@ end
 -- colour up to a slim handle with a gap either side, the icon inside the
 -- track's start and the value at its end. The level rides a spring; the
 -- handle narrows while held. They read and set what the OSD does.
-local SLIDER_H = 44
-local SLIDERS_H = 2 * P.PAD + 3 * SLIDER_H + 2 * 4
-
 -- The shell's scale: -1 (half) to 1 (twice) along the slider, 0 -- the
 -- compositor's own -- in its middle, in steps of 0.05.
 local function scale_now()
@@ -155,16 +155,17 @@ end
 
 local function sliders()
   local osd = model.levels
+  local column=ui.Column {
+    x = P.PAD, y = P.PAD, gap = 4,
+    slider("utilities-volume", function() return (osd.volume()) end, osd.set_volume, osd.volume_icon, "Volume"),
+    slider("utilities-brightness", function() return (osd.brightness()) end, osd.set_brightness, osd.brightness_icon, "Brightness"),
+    slider("utilities-scale", scale_now, scale_set, "zoom_in",
+      require("themes.ui_scale").compositor and "Display scale" or "Scale", scale_reading),
+  }
   return kit.card {
     id = "utilities-sliders",
-    width = CARD_W, height = SLIDERS_H, radius = kit.round(P.RADIUS),
-    ui.Column {
-      x = P.PAD, y = P.PAD, gap = 4,
-      slider("utilities-volume", function() return (osd.volume()) end, osd.set_volume, osd.volume_icon, "Volume"),
-      slider("utilities-brightness", function() return (osd.brightness()) end, osd.set_brightness, osd.brightness_icon, "Brightness"),
-      slider("utilities-scale", scale_now, scale_set, "zoom_in",
-        require("themes.ui_scale").compositor and "Display scale" or "Scale", scale_reading),
-    },
+    width = CARD_W, height = function() return (column.layout_height or 0)+2*P.PAD end,
+    radius = kit.round(P.RADIUS), column,
   }
 end
 
@@ -183,7 +184,7 @@ local cards = { sliders(), capture_button, toggles() }
 
 --- The page's height: the cards and their gaps.
 function M.height()
-  return 2 * GAP + SLIDERS_H + 40 + TILES_H
+  return 2 * GAP + (cards[1].layout_height or 0) + (cards[2].layout_height or 0) + TILES_H
 end
 
 

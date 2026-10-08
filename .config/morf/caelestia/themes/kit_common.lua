@@ -10,6 +10,31 @@ function M.clamp01(v)
   return v < 0 and 0 or v > 1 and 1 or v
 end
 
+--- Keep a range's moving pieces together. Values received from a service
+--- ease; a held control follows the hand immediately. Each target supplies
+--- a node and numeric property bindings; the theme supplies its own timing.
+function M.follow_range(state,owner,targets,motion)
+  local running,initial=nil,true
+  morf.effect("range.follow."..tostring(owner),function()
+    local direct=state.down or state.dragging
+    local timing=M.get(motion)
+    local steps={}
+    for _,target in ipairs(targets) do
+      for property,binding in pairs(target.values) do
+        steps[#steps+1]={node=target.node,property=property,to=binding(),
+          duration=timing.duration,easing=timing.easing}
+      end
+    end
+    if running then running:stop() running=nil end
+    if initial or direct then
+      for _,step in ipairs(steps) do step.node[step.property]=step.to end
+    else
+      running=morf.animation.play {{parallel=steps}}
+    end
+    initial=false
+  end,{owner=owner})
+end
+
 --- Bytes in binary units, one decimal under ten: "1.1", "MiB". `unit`
 --- forces one.
 function M.bytes(n, unit)

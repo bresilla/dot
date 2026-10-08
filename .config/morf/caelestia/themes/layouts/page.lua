@@ -77,6 +77,8 @@ function P.button(spec)
     return tone == "primary"
   end
   local pill = kit.pill { id = spec.id, label = label, icon = spec.icon, width = width, height = spec.height or P.BUTTON_H,
+    enabled = spec.enabled, accessible_name = spec.accessible_name,
+    opacity = function() return get(spec.enabled)==false and .45 or 1 end,
     checkable = spec.group ~= nil or nil, group = spec.group, checked = spec.group and spec.selected or nil,
     on_clicked = spec.on_clicked,
     color = spec.color or function()
@@ -98,10 +100,12 @@ function P.buttons(spec)
   local items = children(spec)
   local n = math.max(1, #items)
   local gap = 8
-  local each = function() return math.floor((get(spec.width) - gap * (n - 1)) / n) end
-  local row = { gap = gap, align = "center" }
+  local row = { id = spec.id, gap = gap, align = "center" }
   for i, item in ipairs(items) do
-    item.width = each
+    item.width = function()
+      local total=math.max(0,get(spec.width)-gap*(n-1))
+      return math.floor(total*i/n)-math.floor(total*(i-1)/n)
+    end
     row[i] = P.button(item)
   end
   return ui.Row(row)
@@ -109,7 +113,8 @@ end
 
 --- The theme's switch, at a row's right.
 function P.switch(spec)
-  return kit.switch { id = spec.id, accessible_name = spec.name, on = spec.on, on_toggled = spec.on_toggled }
+  return kit.switch { id = spec.id, accessible_name = spec.name, enabled = spec.enabled,
+    on = spec.on, on_toggled = spec.on_toggled }
 end
 
 --- An arrow at a row's right: the row opens something.

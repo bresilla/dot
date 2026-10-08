@@ -78,12 +78,14 @@ return function(S, theme, M, hud)
   --- lifted to a caption at the top once focused or holding text.
   local function label(t, spec, always)
     if not spec.label then return nil end
-    local l = sides(spec.inset)
+    local l,_,r = sides(spec.inset)
     local size = theme.typography.menu + 1
     local lh = math.ceil(size * 1.4)
     local function up() return always or t.focused or not t.empty or spec.tags ~= nil end
     local function rest() return math.floor((box(t, spec) - lh) / 2) end
-    return M.text { text = tostring(spec.label):upper(), x = l, height = lh, font_size = size, font_weight = 500,
+    return M.text { text = function() return tostring(get(spec.label) or ""):upper() end,
+      x = l, height = lh, font_size = size, font_weight = 500,
+      width=function() return math.max(1e-3,t.width-l-r) end,elide="right",
       letter_spacing = 0.8, vertical_alignment = "center", transform_origin_x = 0, transform_origin_y = 0, z = 8,
       y = rest,
       translate_y = function() return up() and (5 - rest()) or 0 end,
@@ -105,15 +107,18 @@ return function(S, theme, M, hud)
     local l = sides(spec.inset)
     local function ink() return bad(t) and alert() or C.onSurfaceVariant end
     local node = ui.Item { anchors = { left = true, right = true, bottom = true }, height = FOOT }
-    if spec.supporting then
-      ui.reparent(M.text { text = spec.supporting, x = l, anchors = { bottom = true }, height = 18,
-        font_size = theme.typography.menu, color = ink, behavior = { color = quick } }, node)
-    end
+    local counter
     if spec.max_length then
-      ui.reparent(M.text { anchors = { right = true, bottom = true, right_margin = 10,
+      counter=M.text { anchors = { right = true, bottom = true, right_margin = 10,
           bottom_margin = spec.supporting and 0 or 4 }, height = 18,
         font_size = theme.typography.menu, color = ink,
-        text = function() return ("%03d/%03d"):format(t.length or 0, spec.max_length) end }, node)
+        text = function() return ("%03d/%03d"):format(t.length or 0, spec.max_length) end }
+      ui.reparent(counter,node)
+    end
+    if spec.supporting then
+      ui.reparent(M.text {text=spec.supporting,x=l,anchors={bottom=true},height=18,
+        width=function() return math.max(1e-3,t.width-l-10-(counter and (counter.layout_width or 0)+8 or 0)) end,
+        elide="right",font_size=theme.typography.menu,color=ink,behavior={color=quick}},node)
     end
     return node
   end
