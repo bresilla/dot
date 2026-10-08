@@ -98,13 +98,20 @@ end
 --- specs in the array part (each P.button's, `width` left out).
 function P.buttons(spec)
   local items = children(spec)
-  local n = math.max(1, #items)
   local gap = 8
   local row = { id = spec.id, gap = gap, align = "center" }
   for i, item in ipairs(items) do
     item.width = function()
+      local n, position=0,0
+      for j, candidate in ipairs(items) do
+        if get(candidate.visible)~=false then
+          n=n+1
+          if j<=i then position=position+1 end
+        end
+      end
+      if get(item.visible)==false or n==0 then return 1e-3 end
       local total=math.max(0,get(spec.width)-gap*(n-1))
-      return math.floor(total*i/n)-math.floor(total*(i-1)/n)
+      return math.max(1e-3,math.floor(total*position/n)-math.floor(total*(position-1)/n))
     end
     row[i] = P.button(item)
   end
@@ -140,13 +147,13 @@ function P.row(spec)
   local trailing = spec.trailing
   local function trailing_w() return trailing and ((trailing.layout_width or 0) > 0 and trailing.layout_width or get(trailing.width) or 0) or 0 end
   local text_x = spec.icon and 50 or 14
-  local text_w = function() return math.max(0, get(w) - text_x - (trailing and trailing_w() + 28 or 14)) end
+  local text_w = function() return math.max(1e-3, get(w) - text_x - (trailing and trailing_w() + 28 or 14)) end
   local lit = spec.on or function() return true end
   local body = {
     id = spec.id, width = w, height = h,
     spec.icon and kit.icon(spec.icon, 22, function() return lit() and kit.ink("accent")() or kit.ink("lo")() end,
       { x = 14, anchors = { vertical_center = true } }) or nil,
-    ui.Column { x = text_x, anchors = { vertical_center = true }, gap = 2,
+    ui.Column { x = text_x, width=text_w,clip=true,anchors = { vertical_center = true }, gap = 2,
       kit.text { id = spec.id and spec.id .. "-title", text = spec.title, width = text_w, elide = "right",
         font_size = theme.size.normal, font_weight = 500, color = kit.ink("hi") },
       spec.subtitle and kit.text { id = spec.id and spec.id .. "-subtitle", text = spec.subtitle, width = text_w,
@@ -257,6 +264,21 @@ end
 
 P.HEADER_H = L.heading_h(TITLE) + L.lh(SUB) + 2
 
+--- Reserve only the lines and controls that are actually shown. Reading
+--- the same metrics here and in the frame keeps its body flush below it.
+function P.header_height(spec)
+  spec=spec or {}
+  local note=get(spec.subtitle)
+  local height=L.heading_h(TITLE)+(note and note~="" and L.lh(SUB)+2 or 0)
+  if spec.back and (spec.can_back==nil or get(spec.can_back)) then height=math.max(height,40) end
+  for _,action in ipairs(children(spec.actions or {})) do
+    if get(action.visible)~=false then
+      height=math.max(height,action.layout_height or get(action.height) or 0)
+    end
+  end
+  return height
+end
+
 --- A page's head: `id`, `width`, `title` (string or fn), `subtitle`,
 --- `back` (fn: an arrow at its left that calls it -- a page one level in),
 --- `can_back` (fn: whether the arrow is there; always, without it),
@@ -272,7 +294,7 @@ function P.header(spec)
   end
   local can_back = spec.can_back or function() return spec.back ~= nil end
   local function lead() return can_back() and 44 or 0 end
-  local function text_w() return math.max(0, get(w) - lead() - (row and (row.layout_width or 0) + 12 or 0)) end
+  local function text_w() return math.max(1e-3, get(w) - lead() - (row and (row.layout_width or 0) + 12 or 0)) end
   local back
   if spec.back then
     back = kit.action { id = spec.back_id or (spec.id and spec.id .. "-back"), accessible_name = "Back", width = 40, height = 40,
@@ -280,13 +302,14 @@ function P.header(spec)
       kit.icon("arrow_back", 22, kit.ink("hi"), { anchors = { center_in = true } }) }
     kit.hover(back, function(hovered) return hovered and C.onSurface:alpha(0.08) or C.onSurface:alpha(0) end, 20)
   end
-  local text = ui.Column { x = lead, behavior = { x = { duration = theme.duration.small } }, anchors = { vertical_center = true }, gap = 0,
+  local text = ui.Column { x = lead, width=text_w,clip=true,behavior = { x = { duration = theme.duration.small } }, anchors = { vertical_center = true }, gap = 2,
     L.heading { id = spec.title_id or (spec.id and spec.id .. "-title"), scope = spec.scope, level = "title", text = spec.title,
       width = text_w, elide = "right", active = spec.active },
     spec.subtitle and kit.text { id = spec.id and spec.id .. "-subtitle", text = spec.subtitle, font_size = SUB,
+      visible=function() local note=get(spec.subtitle) return note~=nil and note~=false and note~="" end,
       color = kit.ink("lo"), width = text_w, height = L.lh(SUB), elide = "right" } or nil,
   }
-  return L.item { id = spec.id, width = w, height = P.HEADER_H, back, text, row }
+  return L.item { id = spec.id, width = w, height = function() return P.header_height(spec) end, back, text, row }
 end
 
 -- ----------------------------------------------------------------- frame --
@@ -300,13 +323,17 @@ end
 function P.frame(spec)
   local w = spec.width
   local head
+  -- Body builders may evaluate their height before returning the header's
+  -- callbacks. A signal lets those first bindings follow the final header
+  -- too, rather than keeping the space calculated during construction.
+  local header_space=morf.signal("page.frame.header."..tostring(spec),0)
   -- The head is there where the tabs do not name the page (a phone's, icons
   -- alone: `titled`), and on a page one level in, for its way back.
   local function shown()
     if get(spec.titled) then return true end
     return head ~= nil and head.can_back ~= nil and head.can_back() == true
   end
-  local function top() return shown() and P.HEADER_H + P.GAP or 0 end
+  local function top() return header_space:get() end
   local function body_h() return math.max(0, get(spec.height) - top()) end
   local body
   body, head = spec.build(w, body_h)
@@ -315,10 +342,14 @@ function P.frame(spec)
     title_id = head.title_id or spec.title_id, scope = spec.scope, subtitle = head.subtitle, back = head.back,
     can_back = head.can_back, back_id = head.back_id, actions = head.actions, active = head.active or spec.active }
   header.visible = shown
-  return ui.Item { id = spec.id, width = w, height = spec.height,
+  local frame=ui.Item { id = spec.id, width = w, height = spec.height,
     header,
     ui.Item { y = top, width = w, height = body_h, body },
   }
+  morf.effect("page.frame.header."..tostring(frame),function()
+    header_space:set(shown() and P.header_height(head)+P.GAP or 0)
+  end,{owner=frame})
+  return frame
 end
 
 -- ------------------------------------------------------------------ page --

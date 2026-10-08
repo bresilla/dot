@@ -141,7 +141,7 @@ if COMPACT then
     }
     -- A phone's tabs are icons alone: the page says its name.
     local P = require("themes.layouts.page")
-    local top = P.HEADER_H + P.GAP
+    local top = P.header_height() + P.GAP
     scroll_viewports[i] = ui.Item { id="dashboard-viewport-"..i,
       y=top,width=CW,height=view_height,clip=true,node,more }
     pages[i] = ui.Item { width = CW, height = function() return view_height()+top end,

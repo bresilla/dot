@@ -381,23 +381,23 @@ return function(theme, M)
   --- `spec`: `width`, `bar_height`, `icon`, `label` (false hides it),
   --- `orientation`.
   local function slider(t, spec)
-    local W = spec.width or 200
-    local H = spec.height or ((spec.bar_height or 24) + 8)
+    local function W() return get(spec.width) or 200 end
+    local function H() return get(spec.height) or ((get(spec.bar_height) or 24) + 8) end
     local TR, K = 4, 20
     local vertical = spec.orientation == "vertical" or spec.widget == "vertical_slider" or spec.widget == "fader"
     if vertical then
-      local VW = spec.width or 30
-      local VH = spec.height or 160
-      local travel = VH - K
-      local function hy() return K / 2 + travel * (1 - clamp01(t.visual_position)) end
-      local cx = VW / 2
+      local function VW() return get(spec.width) or 30 end
+      local function VH() return get(spec.height) or 160 end
+      local function travel() return math.max(0,VH()-K) end
+      local function hy() return K / 2 + travel() * clamp01(t.visual_position) end
+      local function cx() return VW()/2 end
       return {
         track = ui.Item { x = 0, y = K / 2, width = VW, height = travel },
-        background = ui.Rect { x = cx - TR / 2, y = K / 2, width = TR, height = travel, radius = TR / 2,
+        background = ui.Rect { x = function() return cx()-TR/2 end, y = K / 2, width = TR, height = travel, radius = TR / 2,
           color = function() return P().track end },
-        fill = ui.Rect { x = cx - TR / 2, width = TR, radius = TR / 2, color = function() return P().accent end,
-          y = hy, height = function() return math.max(0, VH - K / 2 - hy()) end },
-        handle = ui.Rect { x = cx - K / 2, width = K, height = K, radius = K / 2,
+        fill = ui.Rect { x = function() return cx()-TR/2 end, width = TR, radius = TR / 2, color = function() return P().accent end,
+          y = hy, height = function() return math.max(0, VH() - K / 2 - hy()) end },
+        handle = ui.Rect { x = function() return cx()-K/2 end, width = K, height = K, radius = K / 2,
           y = function() return hy() - K / 2 end, color = function() return P().knob end,
           border_width = 1, border_color = function() local p = P() return p.strong and p.ink or p.shade:alpha(0.45) end },
         second_handle = ring(t, R.small),
@@ -405,28 +405,29 @@ return function(theme, M)
     end
     local left = spec.icon and 28 or 0
     local right = spec.label ~= false and 44 or 0
-    local x0, travel = left + K / 2, math.max(1, W - left - right - K)
-    local cy = math.floor(H / 2)
-    local function hx() return x0 + travel * clamp01(t.visual_position) end
+    local x0 = left + K / 2
+    local function travel() return math.max(1,W()-left-right-K) end
+    local function cy() return math.floor(H()/2) end
+    local function hx() return x0 + travel() * clamp01(t.visual_position) end
     local slots = {
       track = ui.Item { x = x0, y = 0, width = travel, height = H },
-      background = ui.Rect { x = x0 - TR / 2, y = cy - TR / 2, width = travel + TR, height = TR, radius = TR / 2,
+      background = ui.Rect { x = x0 - TR / 2, y = function() return cy()-TR/2 end, width = function() return travel()+TR end, height = TR, radius = TR / 2,
         color = function() return P().track end },
-      fill = ui.Rect { id = spec.id and spec.id .. "-level", x = x0 - TR / 2, y = cy - TR / 2, height = TR, radius = TR / 2,
+      fill = ui.Rect { id = spec.id and spec.id .. "-level", x = x0 - TR / 2, y = function() return cy()-TR/2 end, height = TR, radius = TR / 2,
         width = function() return math.max(0, hx() - x0 + TR) end,
         color = function() return P().accent end },
-      handle = ui.Rect { id = spec.id and spec.id .. "-handle", y = cy - K / 2, width = K, height = K, radius = K / 2,
+      handle = ui.Rect { id = spec.id and spec.id .. "-handle", y = function() return cy()-K/2 end, width = K, height = K, radius = K / 2,
         x = function() return hx() - K / 2 end,
         color = function() local p = P() return t.down and p.knob:mix(p.ink, 0.08) or p.knob end,
         border_width = 1, border_color = function() local p = P() return p.strong and p.ink or p.shade:alpha(p.dark and 0.6 or 0.45) end },
       second_handle = ring(t, R.small),
     }
     if spec.icon then
-      slots.ticks = M.icon(spec.icon, 18, function() return P().ink end, { x = 2, y = cy - 11 })
+      slots.ticks = M.icon(spec.icon, 18, function() return P().ink end, { x = 2, y = function() return cy()-11 end })
     end
     if spec.label ~= false then
-      slots.value_label = M.text { id = spec.id and spec.id .. "-value", x = W - 40, width = 40,
-        horizontal_alignment = "right", y = cy - 10, height = 20,
+      slots.value_label = M.text { id = spec.id and spec.id .. "-value", x = function() return W()-40 end, width = 40,
+        horizontal_alignment = "right", y = function() return cy()-10 end, height = 20,
         text = function() return ("%d"):format(math.floor(clamp01(t.position) * 100 + 0.5)) end,
         font_size = theme.size.small, color = function() return P().ink_dim end }
     end
@@ -436,23 +437,44 @@ return function(theme, M)
   --- The media position: a thin trough, the accent played part and a
   --- knob; a drag follows at once, the player's ticks ease over a second.
   local function seek_bar(t, spec)
-    local W, H, TR, K = spec.width or 200, 34, 4, 14
+    local H, TR, K = 34, 4, 14
+    local function W() return get(spec.width) or 200 end
     local function at() return clamp01(t.visual_position) end
-    local motion = function() return (t.dragging or theme.reduced) and { duration = 0 } or { duration = 1000, easing = "linear" } end
-    local travel = W - K
-    return {
+    local function travel() return math.max(0,W()-K) end
+    local function fill_width() return at()*travel()+TR end
+    local function handle_x() return at()*travel() end
+    local slots = {
       track = ui.Item { x = K / 2, width = travel, height = H },
-      background = ui.Rect { x = K / 2 - TR / 2, y = H / 2 - TR / 2, width = travel + TR, height = TR, radius = TR / 2,
+      background = ui.Rect { x = K / 2 - TR / 2, y = H / 2 - TR / 2, width = function() return travel()+TR end, height = TR, radius = TR / 2,
         color = function() return P().track end },
       fill = ui.Rect { x = K / 2 - TR / 2, y = H / 2 - TR / 2, height = TR, radius = TR / 2,
-        width = function() return at() * travel + TR end, behavior = { width = motion() },
+        width = fill_width(),
         color = function() local p = P() return (get(spec.active) == false) and p.ink_dim or p.accent end },
       handle = ui.Rect { id = "media-progress-handle", y = H / 2 - K / 2, width = K, height = K, radius = K / 2,
-        x = function() return at() * travel end, behavior = { x = motion() },
+        x = handle_x(),
         color = function() return P().knob end,
         border_width = 1, border_color = function() local p = P() return p.strong and p.ink or p.shade:alpha(0.45) end },
       second_handle = ring(t, R.small),
     }
+    local running,initial,previous=nil,true,at()
+    morf.effect("default.seek."..tostring(slots.handle),function()
+      local position=at()
+      local direct=initial or theme.reduced or t.down or t.dragging
+      local flowing=get(spec.playing)==true and position>previous and position-previous<.03
+      local x,width=handle_x(),fill_width()
+      if running then running:stop() running=nil end
+      if direct then slots.handle.x,slots.fill.width=x,width
+      else
+        local duration=flowing and 1000 or theme.duration.small
+        local easing=flowing and "linear" or theme.ease.standard
+        running=morf.animation.play {{parallel={
+          {node=slots.handle,property="x",to=x,duration=duration,easing=easing},
+          {node=slots.fill,property="width",to=width,duration=duration,easing=easing},
+        }}}
+      end
+      initial,previous=false,position
+    end,{owner=slots.handle})
+    return slots
   end
 
   --- An overlay scroll bar: a slim pill the length of the view's share,

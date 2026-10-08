@@ -127,8 +127,8 @@ end
 -- The output's volume and the screen's brightness, as Material 3
 -- expressive sliders: a tall rounded track, the active part in the primary
 -- colour up to a slim handle with a gap either side, the icon inside the
--- track's start and the value at its end. The level rides a spring; the
--- handle narrows while held. They read and set what the OSD does.
+-- track's start and the value at its end. The handle follows the hand
+-- directly while held. They read and set what the OSD does.
 -- The shell's scale: -1 (half) to 1 (twice) along the slider, 0 -- the
 -- compositor's own -- in its middle, in steps of 0.05.
 local function scale_now()

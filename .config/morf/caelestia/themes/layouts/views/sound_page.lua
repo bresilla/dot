@@ -119,7 +119,7 @@ local function output_section()
         visible = function() local s = sink() return s ~= nil and (s.channels or 0) > 1 end,
         expanded = function() return channels_open:get() end,
         on_toggled = function(open) if open ~= channels_open:get() then channels_open:set(open) end end,
-        content = ui.Column { gap = 0, table.unpack(channels) },
+        content = ui.Column { gap = P.ROW_GAP, table.unpack(channels) },
       })),
     },
     P.row { id = "sound-equalizer", width = INNER, icon = "equalizer", title = "Equalizer",

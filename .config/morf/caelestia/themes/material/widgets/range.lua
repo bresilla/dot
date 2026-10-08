@@ -1,7 +1,7 @@
 -- Material's looks for the Range widgets beyond the plain slider
 -- (skins.lua draws it, the media rail and the scroll bar), in M3's
--- manner: a thick rounded track split by a gap round a tall thin handle,
--- inner corners squared off, stop indicators, a value bubble while held;
+-- manner: balanced rounded tracks split by a gap round a stable handle,
+-- stop indicators and a value bubble while held;
 -- knobs are an expressive cookie that turns inside a thick arc of travel
 -- (a static shape turned by `rotation`, the arc a static path trimmed).
 -- The behaviour is the archetype's (crates/morf-kit/src/range.rs).
@@ -56,24 +56,27 @@ return function(S, theme, M)
   -- ------------------------------------------------------------ tracks --
 
   local TH, GAP, HW, HH = 16, 6, 4, 44
-  --- A segment of track from `a` to `b` (bindings; px along x), rounded
-  --- outside, squared off where it meets the handle's gap.
-  local function piece(a, b, cy, th, round_left, round_right, color, id)
-    local r, inner = th / 2, 2
-    return ui.Rect { id = id, y = cy - th / 2, height = th, color = color,
-      x = function() return a() end, width = function() return math.max(0, b() - a()) end,
-      visible = function() return b() - a() > 0.5 end,
-      top_left_radius = round_left and r or inner, bottom_left_radius = round_left and r or inner,
-      top_right_radius = round_right and r or inner, bottom_right_radius = round_right and r or inner,
-      behavior = { x = travel(), width = travel() } }
+  -- All moving pieces use the same timing, and follow input immediately
+  -- while held. That keeps the handle, its gap and the fill together.
+  local function moving(t,props,values,build)
+    for name,binding in pairs(values) do props[name]=binding() end
+    local node=(build or ui.Rect)(props)
+    require("themes.kit_common").follow_range(t,node,{{node=node,values=values}},motion)
+    return node
   end
-  local function grip(t) return function() return t.down and 2 or HW end end
+  --- A short segment shrinks toward a circle instead of becoming a tall
+  --- sliver. Its ends and centre line match the main volume slider.
+  local function piece(t,a,b,cy,th,color,id)
+    local function width() return math.max(0,b()-a()) end
+    local function height() return math.min(th,width()) end
+    return moving(t,{id=id,color=color,radius=th/2,visible=function() return width()>.5 end},
+      {x=a,width=width,height=height,y=function() return cy-height()/2 end})
+  end
   --- The tall thin handle at `hx` (a binding).
   local function bar(t, hx, cy, id, h)
     h = h or HH
-    return ui.Rect { id = id, y = cy - h / 2, height = h, radius = 2,
-      x = function() return hx() - grip(t)() / 2 end, width = grip(t),
-      color = function() return C().primary end, behavior = { x = travel(), width = { duration = 150 } } }
+    return moving(t,{id=id,y=cy-h/2,height=h,radius=2,width=HW,
+      color=function() return C().primary end},{x=function() return hx()-HW/2 end})
   end
   --- M3's value bubble over the handle while it is held.
   local function bubble(t, hx, cy, text)
@@ -94,14 +97,14 @@ return function(S, theme, M)
     local slots = {
       track = ui.Item { x = x0, y = cy - HH / 2, width = span, height = HH },
       background = ui.Item { width = o.W, height = o.H,
-        piece(function() return t.mirrored and lo() or hx() + HW / 2 + GAP end,
-          function() return t.mirrored and hx() - HW / 2 - GAP or right end, cy, o.th or TH, t.mirrored, not t.mirrored,
+        piece(t,function() return t.mirrored and lo() or hx() + HW / 2 + GAP end,
+          function() return t.mirrored and hx() - HW / 2 - GAP or right end, cy, o.th or TH,
           function() return C().secondaryContainer end),
         ui.Rect { y = cy - 2, width = 4, height = 4, radius = 2, x = function() return t.mirrored and left + 6 or right - 10 end,
           color = function() return C().primary end,
           visible = function() return math.abs(hx() - (t.mirrored and left or right)) > 18 end } },
-      fill = piece(function() return t.mirrored and hx() + HW / 2 + GAP or left end,
-        function() return t.mirrored and right or hx() - HW / 2 - GAP end, cy, o.th or TH, not t.mirrored, t.mirrored,
+      fill = piece(t,function() return t.mirrored and hx() + HW / 2 + GAP or left end,
+        function() return t.mirrored and right or hx() - HW / 2 - GAP end, cy, o.th or TH,
         function() return C().primary end),
       handle = bar(t, hx, cy, nil, o.hh),
     }
@@ -182,10 +185,10 @@ return function(S, theme, M)
     return full {
       track = ui.Item { x = x0, y = cy - HH / 2, width = span, height = HH },
       background = ui.Item { width = W, height = H,
-        piece(function() return 0 end, function() return lo() - HW / 2 - GAP end, cy, TH, true, false, inactive),
-        piece(function() return hi() + HW / 2 + GAP end, function() return W end, cy, TH, false, true, inactive) },
-      fill = piece(function() return lo() + HW / 2 + GAP end, function() return hi() - HW / 2 - GAP end, cy, TH,
-        false, false, function() return C().primary end),
+        piece(t,function() return 0 end, function() return lo() - HW / 2 - GAP end, cy, TH, inactive),
+        piece(t,function() return hi() + HW / 2 + GAP end, function() return W end, cy, TH, inactive) },
+      fill = piece(t,function() return lo() + HW / 2 + GAP end, function() return hi() - HW / 2 - GAP end, cy, TH,
+        function() return C().primary end),
       handle = bar(t, ax, cy, nil, 40),
       second_handle = bar(t, bx, cy, nil, 40),
       value_label = readout { x = 0, width = W, y = 0, horizontal_alignment = "right",
@@ -198,27 +201,23 @@ return function(S, theme, M)
   local function vtrack(t, W, top, bottom, cx, hw)
     local y0, span = top + HW / 2, bottom - top - HW
     local function hy() return y0 + span * clamp01(t.visual_position) end
-    local function vpiece(a, b, round_top, round_bottom, color)
-      local r = TH / 2
-      return ui.Rect { x = cx - TH / 2, width = TH, color = color,
-        y = function() return a() end, height = function() return math.max(0, b() - a()) end,
-        visible = function() return b() - a() > 0.5 end,
-        top_left_radius = round_top and r or 2, top_right_radius = round_top and r or 2,
-        bottom_left_radius = round_bottom and r or 2, bottom_right_radius = round_bottom and r or 2,
-        behavior = { y = travel(), height = travel() } }
+    local function vpiece(a,b,color)
+      local function height() return math.max(0,b()-a()) end
+      local function width() return math.min(TH,height()) end
+      return moving(t,{color=color,radius=TH/2,visible=function() return height()>.5 end},
+        {y=a,height=height,width=width,x=function() return cx-width()/2 end})
     end
     return {
       track = ui.Item { x = 0, y = y0, width = W, height = span },
       background = ui.Item {
-        vpiece(function() return top end, function() return hy() - HW / 2 - GAP end, true, false,
+        vpiece(function() return top end, function() return hy() - HW / 2 - GAP end,
           function() return C().secondaryContainer end),
         ui.Rect { x = cx - 2, y = top + 6, width = 4, height = 4, radius = 2, color = function() return C().primary end,
           visible = function() return hy() - top > 18 end } },
-      fill = vpiece(function() return hy() + HW / 2 + GAP end, function() return bottom end, false, true,
+      fill = vpiece(function() return hy() + HW / 2 + GAP end, function() return bottom end,
         function() return C().primary end),
-      handle = ui.Rect { x = cx - hw / 2, width = hw, radius = 2, color = function() return C().primary end,
-        height = grip(t), y = function() return hy() - grip(t)() / 2 end,
-        behavior = { y = travel(), height = { duration = 150 } } },
+      handle=moving(t,{x=cx-hw/2,width=hw,radius=2,height=HW,color=function() return C().primary end},
+        {y=function() return hy()-HW/2 end}),
     }, hy
   end
 
@@ -267,11 +266,11 @@ return function(S, theme, M)
     slots.ticks = marks
     -- The cap: the handle grows a pill either side of its line.
     ui.destroy(slots.handle, true)
-    slots.handle = ui.Item { x = cx - 22, width = 44, height = 20, y = function() return hy() - 10 end,
-      behavior = { y = travel() },
+    slots.handle = moving(t,{ x = cx - 22, width = 44, height = 20,
       ui.Rect { anchors = { fill = true }, radius = 10, color = function() return C().primary end,
         scale = function() return t.down and 0.92 or 1 end, behavior = { scale = squish() },
-        ui.Rect { x = 10, y = 9, width = 24, height = 2, radius = 1, color = function() return C().onPrimary end } } }
+        ui.Rect { x = 10, y = 9, width = 24, height = 2, radius = 1, color = function() return C().onPrimary end } } },
+      {y=function() return hy()-10 end},ui.Item)
     slots.value_label = readout { x = 0, width = W, y = H - 20, horizontal_alignment = "center",
       text = function() return db(clamp01(t.position)) end }
     slots.second_handle = ring(t, 12)
@@ -498,20 +497,20 @@ return function(S, theme, M)
       track = ui.Item { width = W, height = H },
       background = ui.Item { width = W, height = H,
         path(W, H, { d = table.concat(ruler, " "), stroke_width = 1, stroke_color = function() return C().outlineVariant end }),
-        piece(function() return t.mirrored and 0 or hx() + HW / 2 + GAP end,
-          function() return t.mirrored and hx() - HW / 2 - GAP or W end, cy, TH, t.mirrored, not t.mirrored,
+        piece(t,function() return t.mirrored and 0 or hx() + HW / 2 + GAP end,
+          function() return t.mirrored and hx() - HW / 2 - GAP or W end, cy, TH,
           function() return C().secondaryContainer end) },
-      fill = piece(function() return t.mirrored and hx() + HW / 2 + GAP or 0 end,
-        function() return t.mirrored and W or hx() - HW / 2 - GAP end, cy, TH, not t.mirrored, t.mirrored,
+      fill = piece(t,function() return t.mirrored and hx() + HW / 2 + GAP or 0 end,
+        function() return t.mirrored and W or hx() - HW / 2 - GAP end, cy, TH,
         function() return C().primary end),
-      handle = ui.Rect { y = FH + 2, height = H - FH - 2, radius = 2, x = function() return hx() - grip(t)() / 2 end,
-        width = grip(t), color = function() return C().primary end, behavior = { x = travel() } },
-      value_label = ui.Rect { y = 0, width = FW, height = FH, radius = FH / 2,
-        x = function() return math.max(0, math.min(W - FW, hx() - FW / 2)) end, behavior = { x = travel() },
+      handle=moving(t,{y=FH+2,height=H-FH-2,radius=2,width=HW,color=function() return C().primary end},
+        {x=function() return hx()-HW/2 end}),
+      value_label = moving(t,{ y = 0, width = FW, height = FH, radius = FH / 2,
         color = function() return C().inverseSurface end,
         readout { anchors = { fill = true }, height = FH, horizontal_alignment = "center",
           color = function() return C().inverseOnSurface end,
           text = function() return clock(clamp01(t.position) * total) end } },
+        {x=function() return math.max(0,math.min(W-FW,hx()-FW/2)) end}),
       second_handle = ring(t, 12),
     }
   end
