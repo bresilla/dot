@@ -458,6 +458,8 @@ return function(W, H, NAME)
     not kb.embedded and kb.node or ui.Item {}, kb.edge,
     reveal,
   }
+  require("themes.phone_wake").attach(root,{prefix="lock",output=NAME,width=W,height=H,
+    rest=function() clear() if stage:get()=="sheet" then escape() end pull:set(0) end})
 
   -- contains_pointer includes the password field, keyboard and other children;
   -- hovering a child must not be mistaken for leaving this monitor.

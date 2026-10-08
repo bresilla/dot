@@ -477,6 +477,8 @@ local root = ui.Item {
     on_key_pressed = key,
   },
 }
+require("themes.phone_wake").attach(root,{prefix="greet",output=OUTPUT,width=W,height=H,
+  rest=function() clear() if stage:get()=="sheet" then escape() end pull:set(0) end})
 if ctx.claim then
   morf.effect("greet.pointer."..OUTPUT,function() if root.contains_pointer then ctx.claim() end end,{owner=root})
 end
