@@ -67,25 +67,25 @@ return function(S, theme, M)
   --- trailing icon; centred.
   local function content(t, spec, ink, o)
     o = o or {}
-    local lead = o.lead ~= nil and o.lead or spec.icon
+    local lead=o.lead
+    if lead==nil then lead=spec.icon end
     local label = o.label ~= nil and o.label or spec.label
     local gap, glyph = o.gap or 8, o.glyph or 18
     local has_label = label and label ~= ""
-    local extras = (lead and glyph or 0) + (o.trail and (o.trail_size or 18) or 0)
-      + (lead and has_label and gap or 0) + (o.trail and (has_label or lead) and gap or 0)
     local measure=M.text {text=label or "",font_size=o.size or theme.size.normal,
       font_weight=o.weight or 500,opacity=0}
-    local function width() return get(spec.width) or (measure.layout_width or 0)+extras+24 end
-    local function label_width()
-      return math.max(1e-3,math.min(measure.layout_width or 0,width()-extras-24))
-    end
-    local row=with(ui.Row, { anchors = { center_in = true }, gap = gap, align = "center" },
-      lead and M.icon(lead, o.glyph or 18, o.lead_ink or ink, { fill = o.lead_fill }) or nil,
-      has_label and M.text { text = label, width=label_width,elide="right",font_size = o.size or theme.size.normal,
-        font_weight = o.weight or 500, color = ink } or nil,
-      o.trail and M.icon(o.trail, o.trail_size or 18, o.trail_ink or ink) or nil)
-    return ui.Item {anchors={center_in=true},width=width,height=function() return H(t) end,clip=true,
-      ui.Item {width=1,height=1,clip=true,measure},row}
+    local before,after={},{}
+    if o.pre then before[#before+1]=o.pre end
+    if lead then before[#before+1]=M.icon(lead,glyph,o.lead_ink or ink,{fill=o.lead_fill}) end
+    if o.trail then after[#after+1]=M.icon(o.trail,o.trail_size or 18,o.trail_ink or ink) end
+    if o.post then after[#after+1]=o.post end
+    return require("lib.kit.caption").make {width=spec.width,height=function() return H(t) end,
+      gap=gap,measure=measure,before=before,after=after,
+      label_visible=function() local s=get(label) return s~=nil and s~="" end,
+      label=has_label and function(w)
+        return M.text {text=label,width=w,elide="right",font_size=o.size or theme.size.normal,
+          font_weight=o.weight or 500,color=ink}
+      end or nil}
   end
 
   --- A button: `container` (fn, nil for none), `ink`, `outline` (fn),
@@ -247,11 +247,10 @@ return function(S, theme, M)
   --- turns over on a spring; open, it is the secondary container, squared.
   function S.disclosure_button(t, spec)
     local function ink() return t.checked and C().onSecondaryContainer or C().onSurfaceVariant end
-    local row = with(ui.Row, { anchors = { center_in = true }, gap = 6, align = "center" },
-      spec.label and M.text { text = spec.label, font_size = theme.size.normal, font_weight = 500, color = ink } or nil,
+    local row=content(t,spec,ink,{lead=false,gap=6,post=
       ui.Item { width = 20, height = 20, rotation = function() return t.checked and 180 or 0 end,
         behavior = { rotation = M.spring(420, 18) },
-        M.icon("expand_more", 20, ink, { anchors = { center_in = true } }) })
+        M.icon("expand_more", 20, ink, { anchors = { center_in = true } }) }})
     return button(t, spec, {
       container = function() return t.checked and C().secondaryContainer or C().surfaceContainerHigh end,
       ink = ink, selected = function(h) return h * 0.3 end, content = row })
@@ -264,13 +263,11 @@ return function(S, theme, M)
   function S.copy(t, spec)
     local copied = morf.signal("caelestia.copy." .. tostring({}), false)
     local function ink() return copied:get() and C().onPrimaryContainer or C().onSecondaryContainer end
-    local row = with(ui.Row, { anchors = { center_in = true }, gap = 8, align = "center" },
-      ui.Item { width = 18, height = 18, scale = function() return copied:get() and 1.15 or 1 end,
+    local row=content(t,spec,ink,{lead=false,label=spec.label and function() return copied:get() and "Copied" or get(spec.label) end,
+      pre=ui.Item { width = 18, height = 18, scale = function() return copied:get() and 1.15 or 1 end,
         behavior = { scale = M.spring(520, 12) },
-        M.icon(function() return copied:get() and "check" or (spec.icon or "content_copy") end, 18, ink,
-          { anchors = { center_in = true } }) },
-      spec.label and M.text { text = function() return copied:get() and "Copied" or spec.label end,
-        font_size = theme.size.normal, font_weight = 500, color = ink } or nil)
+        M.icon(function() return copied:get() and "check" or (get(spec.icon) or "content_copy") end, 18, ink,
+          { anchors = { center_in = true } }) }})
     local was, timer = false, nil
     morf.effect("caelestia.copy.watch." .. tostring(row), function()
       local down = t.down
@@ -290,9 +287,7 @@ return function(S, theme, M)
   --- shape morphing as it turns) before its label.
   function S.loading(t, spec)
     local function ink() return C().onPrimaryContainer end
-    local row = with(ui.Row, { anchors = { center_in = true }, gap = 10, align = "center" },
-      M.loading(22, ink),
-      spec.label and M.text { text = spec.label, font_size = theme.size.normal, font_weight = 500, color = ink } or nil)
+    local row=content(t,spec,ink,{lead=false,gap=10,pre=M.loading(22,ink)})
     return button(t, spec, { container = function() return C().primaryContainer end, ink = ink, content = row })
   end
 
@@ -358,12 +353,11 @@ return function(S, theme, M)
         color = layer(t, function() return t.checked and C().secondaryContainer or C().surface end, ink),
         border_width = 1, border_color = function() return C().outline end,
         behavior = { color = fade() } },
-      content = with(ui.Row, { anchors = { center_in = true }, gap = 0, align = "center" },
-        ui.Item { height = 18, width = function() return t.checked and 24 or 0.001 end, clip = true,
+      content=content(t,spec,ink,{lead=false,gap=0,size=theme.size.small,
+        pre=ui.Item { height = 18, width = function() return t.checked and 24 or 0.001 end, clip = true,
           opacity = function() return t.checked and 1 or 0 end,
           behavior = { width = bounce(), opacity = fade() },
-          M.icon("check", 18, ink) },
-        M.text { text = spec.label or "", font_size = theme.size.small, font_weight = 500, color = ink }),
+          M.icon("check", 18, ink) }}),
       indicator = ring(t, function() return H(t) / 2 end),
     }
   end
@@ -404,12 +398,11 @@ return function(S, theme, M)
   --- tick that springs in before the label.
   function S.chip_filter(t, spec)
     local function ink() return t.checked and C().onSecondaryContainer or C().onSurfaceVariant end
-    local row = ui.Row { anchors = { center_in = true }, gap = 0, align = "center",
-      ui.Item { height = 18, width = function() return t.checked and 26 or 0.001 end, clip = true,
+    local row=content(t,spec,ink,{lead=false,gap=0,size=theme.size.small,
+      pre=ui.Item { height = 18, width = function() return t.checked and 26 or 0.001 end, clip = true,
         opacity = function() return t.checked and 1 or 0 end,
         behavior = { width = bounce(), opacity = fade() },
-        M.icon("check", 18, ink) },
-      M.text { text = spec.label or "", font_size = theme.size.small, font_weight = 500, color = ink } }
+        M.icon("check", 18, ink) }})
     return chip(t, spec, {
       container = function() return t.checked and C().secondaryContainer or C().surface:alpha(0) end,
       ink = ink, outline = function() return t.checked and C().secondaryContainer or C().outlineVariant end,
@@ -420,11 +413,10 @@ return function(S, theme, M)
   --- cross.
   function S.chip_input(t, spec)
     local function ink() return C().onSurfaceVariant end
-    local row = with(ui.Row, { anchors = { center_in = true }, gap = 8, align = "center" },
-      spec.icon and ui.Rect { width = 24, height = 24, radius = 12, color = function() return C().primaryContainer end,
+    local row=content(t,spec,ink,{lead=false,size=theme.size.small,
+      pre=spec.icon and ui.Rect { width = 24, height = 24, radius = 12, color = function() return C().primaryContainer end,
         M.icon(spec.icon, 16, function() return C().onPrimaryContainer end, { anchors = { center_in = true } }) } or nil,
-      M.text { text = spec.label or "", font_size = theme.size.small, font_weight = 500, color = ink },
-      M.icon("close", 18, ink))
+      post=M.icon("close",18,ink)})
     return chip(t, spec, { ink = ink, outline = function() return C().outlineVariant end, content = row })
   end
 
@@ -631,8 +623,7 @@ return function(S, theme, M)
         behavior = { radius = bounce(), color = fade() },
         ui.ClipRect { anchors = { fill = true }, radius = radius, color = "transparent",
           behavior = { radius = bounce() }, sweep } },
-      content = ui.Row { anchors = { center_in = true }, gap = 10, align = "center", dial,
-        spec.label and M.text { text = spec.label, font_size = theme.size.normal, font_weight = 500, color = ink } or nil },
+      content=content(t,spec,ink,{lead=false,gap=10,pre=dial}),
       indicator = ring(t, function() return radius() end),
     }
   end

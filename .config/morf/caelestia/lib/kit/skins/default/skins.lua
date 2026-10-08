@@ -103,17 +103,17 @@ return function(theme, M)
     local weight = (look == "link" or look == "chip" or look == "tile") and 400 or 700
     local glyph = math.max(16, math.min(24, math.floor((tonumber(spec.height) or 34) * 0.45)))
     local content
-    if spec.icon and spec.label then
-      content = ui.Row { anchors = { center_in = true }, gap = 6, align = "center",
-        M.icon(spec.icon, 16, ink),
-        M.text { text = spec.label, font_size = fs, font_weight = weight, color = ink } }
-    elseif spec.icon then
+    if spec.icon and not spec.label then
       content = M.icon(spec.icon, glyph, ink, { anchors = { center_in = true } })
     else
-      content = M.text { anchors = { fill = true, left_margin = 10, right_margin = 10 }, text = spec.label or "",
-        font_size = fs, font_weight = weight, color = ink, elide = "right",
-        horizontal_alignment = "center", vertical_alignment = "center",
-        decoration = look == "link" and function() return t.hovered and { line = "under" } or {} end or nil }
+      content=require("lib.kit.caption").make {width=spec.width,height=h,gap=6,left=10,right=10,
+        before=spec.icon and {M.icon(spec.icon,16,ink)} or {},
+        measure=M.text {text=spec.label or "",font_size=fs,font_weight=weight,opacity=0},
+        label_visible=function() local s=get(spec.label) return s~=nil and s~="" end,
+        label=function(w)
+          return M.text {text=spec.label or "",width=w,font_size=fs,font_weight=weight,color=ink,elide="right",
+            decoration=look=="link" and function() return t.hovered and {line="under"} or {} end or nil}
+        end}
     end
     return {
       background = ui.Rect { anchors = { fill = true }, radius = radius, color = ground,
