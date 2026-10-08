@@ -4,12 +4,14 @@ local morf=require("morf")
 local ui=require("morf.ui")
 local services=require("services")
 local hypr=require("lib.integrations.hyprland")
+local motion=require("gesture_motion")
 local M={}
 function M.new(root)
   local state=morf.state {active=false,offset=0,from=1,target=1}
   local pages,shots={},{}
   local generation=0
   local animation
+  local drag_origin=0
   -- Keep the real shell frame, rail and its decorations above the preview.
   local viewport=ui.Item {id="phone-workspace-preview",z=-1,clip=true,
     x=function() return select(1,require("bar").desk()) end,
@@ -18,6 +20,8 @@ function M.new(root)
     height=function() return select(4,require("bar").desk()) end,
     visible=function() return state.active end}
   ui.reparent(viewport,root)
+  local track=ui.Item {id="phone-workspace-track",anchors={fill=true}}
+  ui.reparent(track,viewport)
   local style=morf.state {border=0,rounding=0,active="#ffffff",inactive="#808080"}
   local function refresh_style()
     if not hypr.options then return end
@@ -74,7 +78,7 @@ function M.new(root)
     local screen=(morf.screens or {})[1]
     local sw,sh=screen and screen.width or w,screen and screen.height or h
     local node=ui.Item {id="phone-workspace-page-"..position,width=w,height=h,clip=true,
-      x=function() return position*w+state.offset end,
+      x=position*w,
       ui.Rect {anchors={fill=true},z=-2,color=function() return C.surface end},
       -- The real wallpaper covers the entire output, including the area
       -- behind the bar. Preserve that crop and origin inside this viewport.
@@ -82,7 +86,7 @@ function M.new(root)
         z=-1,fill_mode="preserve_aspect_crop",
         source=function() return require("wallpaper").current:get() end},
     }
-    ui.reparent(node,viewport) pages[#pages+1]=node
+    ui.reparent(node,track) pages[#pages+1]=node
     local mx,my,ratio=0,0,1
     local monitors=hypr.state.monitors
     for i=1,monitors:len() do
@@ -129,7 +133,14 @@ function M.new(root)
   local next_id,previous_id
   local g={state=state}
   function g.begin()
+    -- Catch the displayed pose, retaining the snapshots while settling.
+    if state.active and state.from==services.workspace.active() then
+      if animation then animation:stop() animation=nil end
+      drag_origin=track.translate_x or 0
+      return true
+    end
     clear()
+    drag_origin=0 track.translate_x=0
     refresh_style()
     state.from=services.workspace.active()
     state.target=state.from state.offset=0
@@ -159,25 +170,37 @@ function M.new(root)
   function g.update(dx)
     if not state.active then return end
     local w=width()
-    state.offset=math.max(-w,math.min(w,dx))
-    state.target=dx<0 and next_id or previous_id
+    local position=drag_origin+dx
+    state.offset=math.max(-w,math.min(w,position))
+    state.target=position<0 and next_id or previous_id
     if state.target==state.from then state.offset=state.offset*.2 end
-    for i,node in ipairs(pages) do node.x=(i==1 and 0 or i==2 and -w or w)+state.offset end
+    track.translate_x=state.offset
   end
-  function g.finish(canceled)
+  function g.finish(canceled,velocity)
     if not state.active then return end
     local commit=not canceled and math.abs(state.offset)>=width()*.35 and state.target~=state.from
+    if not canceled and motion.fling(state.offset,velocity) then
+      -- Reversing a pull returns to the current workspace, without sending
+      -- it in the direction of the earlier part of the gesture.
+      commit=state.offset*(velocity or 0)>0 and state.target~=state.from
+    end
     local target=state.target
     local final=commit and (state.offset<0 and -width() or width()) or 0
-    local steps={}
-    for i,node in ipairs(pages) do
-      steps[#steps+1]={node=node,property="x",to=(i==1 and 0 or i==2 and -width() or width())+final,
-        duration=160,easing="out_cubic"}
-    end
-    animation=morf.animation.play {{parallel=steps},on_finished=function(reason)
+    animation=morf.animation.play {motion.step(track,"translate_x",final,
+      canceled and 0 or velocity,width()),on_finished=function(reason)
       if reason~="completed" then return end
-      if commit then services.workspace.go(math.floor(target)) end
-      clear()
+      if commit and hypr.available() then
+        -- Keep the destination preview until the compositor has accepted
+        -- the switch. Clearing before the asynchronous command completes
+        -- exposes the previous workspace for a frame.
+        local token=generation
+        hypr.dispatch("workspace",tostring(math.floor(target)),function()
+          if token==generation then clear() end
+        end)
+      else
+        if commit then services.workspace.go(math.floor(target)) end
+        clear()
+      end
     end}
   end
   function g.cancel() clear() end

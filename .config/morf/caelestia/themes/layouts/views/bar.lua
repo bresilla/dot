@@ -95,6 +95,7 @@ function V.build(model)
     end, 10)
   end
   local function windows(as)
+    if PHONE then return ui.Item { width = 0, height = 0 } end
     return ui.Repeater { as = as, gap = 6, model = model.rows, delegate = window_delegate }
   end
 

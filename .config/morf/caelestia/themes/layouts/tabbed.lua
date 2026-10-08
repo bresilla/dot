@@ -107,7 +107,7 @@ function M.new(spec)
     if running then for _, h in ipairs(running) do h:stop() end end
     local function enter()
       present(now)
-      running = kit.bud({ pages[now] }, true, { from = 0.97, delay = 60 })
+      if not phone then running = kit.bud({ pages[now] }, true, { from = 0.97, delay = 60 }) end
     end
     if wipe then wipe(enter, not presented:get(), {
       index=now,name=tabs[now].name,key=tabs[now].key,
@@ -125,7 +125,7 @@ function M.new(spec)
     presented:set(open)
     if wipe then wipe(function() present(tab:get()) end, true) else present(tab:get()) end
     if running then for _, h in ipairs(running) do h:stop() end end
-    if wipe then
+    if wipe or phone then
       for _,page in ipairs(pages) do page.opacity,page.translate_x,page.translate_y=1,0,0 end
     else running = kit.bud({ pages[tab:get()] }, open, { from = 0.97 }) end
   end

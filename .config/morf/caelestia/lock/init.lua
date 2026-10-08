@@ -239,7 +239,8 @@ end)
 -- What they share -- the password, the stage, the door -- is above.
 local function pattern(dots)
   if busy:get() then return end
-  if #dots < 4 then say("Connect at least four dots", false) return end
+  local valid, reason = require("lib.util.pattern").validate(dots)
+  if not valid then say(reason, false) return end
   password = table.concat(dots)
   submit()
 end

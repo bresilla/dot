@@ -464,6 +464,7 @@ return function(theme, M)
   --- A scrolled view: a scroll bar (a kit Range) along its right edge
   --- while there is somewhere to scroll.
   function S.Scroll(t, spec)
+    if require("responsive").portrait() then return require("themes.phone_scrollbar")(t,spec,theme) end
     local flick = spec.flick
     local function room() return math.max(0, t.content_height - t.viewport_height) end
     return {

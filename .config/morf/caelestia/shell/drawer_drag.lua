@@ -1,6 +1,7 @@
 -- Direct manipulation uses surface displacement, never coordinates relative
 -- to the moving drawer. Animation runs only after the finger lets go.
 local morf = require("morf")
+local motion = require("gesture_motion")
 local M = {}
 
 function M.attach(d, ctx, stop_theme)
@@ -41,16 +42,14 @@ function M.attach(d, ctx, stop_theme)
     local opening_velocity = velocity * (tucked > 0 and -1 or 1)
     local opening = progress >= 0.5
     if canceled then opening = drag.was_open
-    elseif math.abs(drag.delta) >= 24 and math.abs(opening_velocity) >= 650 then
+    elseif motion.fling(drag.delta, opening_velocity) then
       opening = opening_velocity > 0
     end
     drag = nil
     d.open:set(opening)
     local target = opening and 0 or tucked
-    local distance = math.abs(target-panel[axis])
-    local duration = math.max(100,math.min(320,320*distance/size))
     settling = morf.animation.play {
-      { node=panel, property=axis, to=target, duration=duration, easing="out_cubic" },
+      motion.step(panel, axis, target, canceled and 0 or velocity, size),
       on_finished=function(reason)
         if reason ~= "completed" then return end
         settling = nil

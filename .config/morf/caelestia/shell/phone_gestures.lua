@@ -50,6 +50,12 @@ function M.swipe(edge,x)
     local dashboard = require("dashboard").drawer
     close_other_panels(dashboard)
     dashboard.set(true)
+  elseif edge == "left" or edge == "right" then
+    local launcher = require("launcher")
+    close_other_panels(launcher.drawer)
+    require("menus").open(edge == "left" and "apps" or "web")
+    launcher.set_query("")
+    launcher.drawer.set(true)
   end
 end
 
@@ -84,6 +90,9 @@ function M.pan(spec)
       if (spec.dismiss == "down" and dy < 0) or (spec.dismiss == "up" and dy > 0) then return false end
       drawer = require(spec.drawer).drawer
       return drawer.begin_drag()
+    elseif (pager or drawer) and blocked() then
+      if pager then pager.finish(0,true) pager=nil end
+      if drawer then drawer.end_drag(0,true) drawer=nil end
     elseif pager then
       if phase=="update" then pager.update(dx)
       else pager.finish(vx,phase=="cancel") pager=nil end
@@ -94,13 +103,22 @@ function M.pan(spec)
   end
 end
 
-local edge_drawer
-function M.edge_pan(edge,phase,dx,dy,vx,vy,start_x)
+local edge_drawer, side_edge
+function M.edge_pan(edge,phase,dx,dy,vx,vy,start_x,start_y)
   if phase == "begin" then
+    edge_drawer,side_edge=nil,nil
     if not phone() or blocked() then return false end
     local inward = ({top=dy,bottom=-dy,left=dx,right=-dx})[edge]
     if not inward or inward <= 0 then return false end
-    if edge == "left" or edge == "right" then return false end
+    if edge == "left" or edge == "right" then
+      local height=(morf.screens[1] or {}).height or morf.surface.height
+      local bottom=height-require("themes.keyboard").inset:get()-EDGE
+      if math.abs(dx)<=math.abs(dy)*1.2 or not start_y or start_y<EDGE or start_y>=bottom then
+        return false
+      end
+      side_edge=edge
+      return true
+    end
     if edge == "top" then
       local sidebar=require("sidebar")
       -- Choose from where the finger landed, even if it crosses the middle
@@ -110,6 +128,23 @@ function M.edge_pan(edge,phase,dx,dy,vx,vy,start_x)
     else edge_drawer=require("dashboard").drawer end
     close_other_panels(edge_drawer)
     return edge_drawer.begin_drag()
+  elseif side_edge then
+    if blocked() or phase=="cancel" then side_edge=nil
+    elseif phase=="end" then
+      local origin=side_edge
+      side_edge=nil
+      local sign=origin=="left" and 1 or -1
+      local distance,velocity=dx*sign,(vx or 0)*sign
+      local motion=require("gesture_motion")
+      -- Finish on release so a short pull, reversal or second finger can
+      -- cancel before the centered launcher takes keyboard focus.
+      if distance>math.abs(dy)*1.2 and velocity>-motion.FLING and
+        (distance>=80 or (distance>=motion.TRAVEL and velocity>=motion.FLING)) then
+        M.swipe(origin)
+      end
+    end
+  elseif edge_drawer and blocked() then
+    edge_drawer.end_drag(0,true) edge_drawer=nil
   elseif edge_drawer then
     if phase == "update" then edge_drawer.drag_by(dy)
     else edge_drawer.end_drag(vy,phase=="cancel") edge_drawer=nil end
@@ -126,11 +161,10 @@ function M.attach(root)
   end
   local preview=require("workspace_gesture").new(root)
   M.workspace_preview=preview.state
-  local mode,last_y,last_time,velocity,drawer
-  local function single(phase,dx,dy)
+  local mode,drawer
+  local function single(phase,dx,dy,vx,vy)
     if phase=="begin" then
       mode,drawer=nil,nil
-      last_y,last_time,velocity=0,morf.time.now_ms(),0
       return
     end
     if phase=="cancel" then
@@ -152,38 +186,67 @@ function M.attach(root)
       end
       if mode=="workspace" then preview.update(dx)
       elseif drawer then drawer.drag_by(dy) end
-      local now=morf.time.now_ms()
-      if now>last_time then velocity=(dy-last_y)*1000/(now-last_time) end
-      last_y,last_time=dy,now
     elseif phase=="end" then
-      if mode=="workspace" then preview.update(dx) preview.finish(false)
+      if mode=="workspace" then preview.update(dx) preview.finish(false,vx)
       elseif drawer then
-        if morf.time.now_ms()-last_time>100 then velocity=0 end
-        drawer.drag_by(dy) drawer.end_drag(velocity,false)
+        drawer.drag_by(dy) drawer.end_drag(vy or 0,false)
       end
       mode,drawer=nil,nil
     end
   end
   local gestures=require("keyboard_gestures")
-  local contacts=gestures.contacts("bottom",function() return not blocked() end,single)
-  -- The bottom strip owns its raw contacts so a second finger can cancel
+  local contacts=gestures.contacts("bottom",function() return not blocked() end,
+    function(phase,dx,dy) single(phase,dx,dy,0,0) end)
+  -- The bottom strip owns the gesture so a second finger can cancel
   -- an in-progress panel/workspace pull before choosing the keyboard.
   if M.continuous then root.on_edge_panned=function(edge,...)
-    if edge=="top" then return M.edge_pan(edge,...) end
+    if edge~="bottom" then return M.edge_pan(edge,...) end
     return false
   end
-  else root.on_edge_swiped=function(edge) if edge=="top" then M.swipe(edge) end end end
+  else root.on_edge_swiped=function(edge) if edge~="bottom" then M.swipe(edge) end end end
   -- Under the existing controls: tapping the bar/rail still reaches them.
   -- An Item, rather than a fullscreen MouseArea, leaves apps interactive.
   ui.reparent(ui.Item {
     id = "phone-gesture-edges", anchors = { fill = true }, z = -1,
     ui.MouseArea { id = "phone-gesture-top", height = EDGE,
       anchors = { top = true, left = true, right = true } },
+    ui.MouseArea { id = "phone-gesture-left", width = EDGE, y = EDGE,
+      anchors = { left = true }, height = function()
+        return math.max(0,((morf.screens[1] or {}).height or morf.surface.height)
+          -require("themes.keyboard").inset:get()-2*EDGE)
+      end },
+    ui.MouseArea { id = "phone-gesture-right", width = EDGE, y = EDGE,
+      anchors = { right = true }, height = function()
+        return math.max(0,((morf.screens[1] or {}).height or morf.surface.height)
+          -require("themes.keyboard").inset:get()-2*EDGE)
+      end },
   }, root)
-  ui.reparent(gestures.area(contacts,{id="phone-gesture-bottom",height=EDGE,z=200,
+  local bottom={id="phone-gesture-bottom",height=EDGE,z=200,
     anchors={left=true,right=true},
     y=function() return ((morf.screens[1] or {}).height or morf.surface.height)
-      -require("themes.keyboard").inset:get()-EDGE end}),root)
+      -require("themes.keyboard").inset:get()-EDGE end}
+  if M.continuous then
+    bottom.on_panned=function(phase,dx,dy,vx,vy)
+      if phase=="begin" then
+        if blocked() then return false end
+        single("begin") single("update",dx,dy,vx,vy)
+        return mode=="workspace" or mode=="dashboard"
+      end
+      if blocked() then single("cancel") return end
+      single(phase,dx,dy,vx,vy)
+    end
+    bottom.on_two_finger_panned=function(phase,dx1,dy1,dx2,dy2,x1,y1,x2,y2)
+      if phase=="begin" then
+        if blocked() or require("keyboard").active() then return false end
+        local height=((morf.screens[1] or {}).height or morf.surface.height)
+        return y1>=height-EDGE and y2>=height-EDGE
+      elseif phase=="end" and not blocked() and dy1<=-48 and dy2<=-48
+        and -dy1>math.abs(dx1)*1.2 and -dy2>math.abs(dx2)*1.2 then
+        require("keyboard").show("full")
+      end
+    end
+    ui.reparent(ui.MouseArea(bottom),root)
+  else ui.reparent(gestures.area(contacts,bottom),root) end
 end
 
 return M
