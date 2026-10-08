@@ -1,6 +1,6 @@
 -- Material 3's looks for the Press widgets, each the M3 component its name
--- promises: filled, tonal, outlined, text and elevated buttons whose round
--- shape tightens on a spring while pressed, toggle buttons that square off
+-- promises: filled, tonal, outlined, text and elevated buttons with stable
+-- corners and bounded captions, toggle buttons that square off
 -- when selected, connected button groups whose chosen member swells to a
 -- pill, 8 px chips, a FAB that morphs (an SDF field) under the finger,
 -- Android quick-settings tiles, filled cards and list items with the state
@@ -65,15 +65,27 @@ return function(S, theme, M)
 
   --- The content of a button: a leading icon, the label (Label Large), a
   --- trailing icon; centred.
-  local function content(spec, ink, o)
+  local function content(t, spec, ink, o)
     o = o or {}
     local lead = o.lead ~= nil and o.lead or spec.icon
     local label = o.label ~= nil and o.label or spec.label
-    return with(ui.Row, { anchors = { center_in = true }, gap = o.gap or 8, align = "center" },
+    local gap, glyph = o.gap or 8, o.glyph or 18
+    local has_label = label and label ~= ""
+    local extras = (lead and glyph or 0) + (o.trail and (o.trail_size or 18) or 0)
+      + (lead and has_label and gap or 0) + (o.trail and (has_label or lead) and gap or 0)
+    local measure=M.text {text=label or "",font_size=o.size or theme.size.normal,
+      font_weight=o.weight or 500,opacity=0}
+    local function width() return get(spec.width) or (measure.layout_width or 0)+extras+24 end
+    local function label_width()
+      return math.max(1e-3,math.min(measure.layout_width or 0,width()-extras-24))
+    end
+    local row=with(ui.Row, { anchors = { center_in = true }, gap = gap, align = "center" },
       lead and M.icon(lead, o.glyph or 18, o.lead_ink or ink, { fill = o.lead_fill }) or nil,
-      (label and label ~= "") and M.text { text = label, font_size = o.size or theme.size.normal,
+      has_label and M.text { text = label, width=label_width,elide="right",font_size = o.size or theme.size.normal,
         font_weight = o.weight or 500, color = ink } or nil,
       o.trail and M.icon(o.trail, o.trail_size or 18, o.trail_ink or ink) or nil)
+    return ui.Item {anchors={center_in=true},width=width,height=function() return H(t) end,clip=true,
+      ui.Item {width=1,height=1,clip=true,measure},row}
   end
 
   --- A button: `container` (fn, nil for none), `ink`, `outline` (fn),
@@ -82,7 +94,7 @@ return function(S, theme, M)
   local function button(t, spec, o)
     local function ink() return get(o.ink) end
     local rest = o.rest or function(h) return h / 2 end
-    local pressed = o.pressed or function(h) return h * 0.25 end
+    local pressed = o.pressed or rest
     local function radius()
       local h = math.min(H(t), W(t))
       if t.down then return pressed(h) end
@@ -98,7 +110,7 @@ return function(S, theme, M)
         border_color = o.outline,
         shadow_color = sc, shadow_blur = sb, shadow_offset_y = sy,
         behavior = { radius = bounce(), color = fade(), shadow_blur = fade(), shadow_offset_y = fade() } },
-      content = (o.content == false) and none or (o.content or content(spec, ink, o)),
+      content = (o.content == false) and none or (o.content or content(t, spec, ink, o)),
       indicator = ring(t, radius),
     }
   end
@@ -106,12 +118,12 @@ return function(S, theme, M)
   -- ----------------------------------------------------- common buttons --
 
   --- A push button: the primary container in M3 expressive's square
-  --- shape family (the pill is the round one), tightening while pressed.
+  --- shape family (the pill is the round one).
   function S.push(t, spec)
     return button(t, spec, { container = function() return get(spec.color) or C().primaryContainer end,
       ink = function() return get(spec.ink) or C().onPrimaryContainer end,
-      rest = function(h) return h * 0.3 end, pressed = function(h) return h * 0.18 end,
-      selected = function(h) return h / 2 end, level = 0, hover_level = 1 })
+      rest = function(h) return h * 0.3 end,
+      selected = function(h) return h * 0.3 end, level = 0, hover_level = 1 })
   end
 
   --- The filled button (the suggested action): primary, its ink on it.
@@ -314,7 +326,7 @@ return function(S, theme, M)
     local glyph = spec.icon
     local inner = (glyph and not spec.label)
       and M.icon(glyph, 22, ink, { anchors = { center_in = true }, fill = function() return t.checked end })
-      or content(spec, ink)
+      or content(t, spec, ink)
     return full {
       background = ui.Rect { anchors = { fill = true, left_margin = outer_l and 0 or 1, right_margin = outer_r and 0 or 1 },
         opacity = dim(t),

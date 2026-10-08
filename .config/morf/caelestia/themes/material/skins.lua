@@ -36,13 +36,13 @@ return function(theme, M)
     end
     return {
       background = ui.Rect { anchors = { fill = true },
-        radius = function() return t.down and h() * 0.22 or h() / 2 end,
+        radius = function() return h() / 2 end,
         color = function()
           local c = color()
           if t.down then return c:mix(ink(), 0.12) end
           return t.hovered and c:mix(ink(), 0.08) or c
         end,
-        behavior = { color = { duration = theme.duration.small }, radius = ui.spring { stiffness = 520, damping = 22 } } },
+        behavior = { color = { duration = theme.duration.small } } },
       content = ui.Item { anchors = { center_in = true },width=width,height=h,clip = true,
         ui.Item {width=1,height=1,clip=true,measure},
         ui.Row { anchors = { center_in = true }, gap = 8, align = "center",
@@ -53,12 +53,11 @@ return function(theme, M)
     }
   end
 
-  --- The M3 switch: a track that fills when on, and a thumb that springs
-  --- across, grows when on and more when pressed, and morphs from a circle
-  --- to a scalloped cookie.
+  --- The M3 switch: a track that fills when on and a circular thumb that
+  --- moves across without changing its size or silhouette.
   local function switch(t)
     local motion = { duration = theme.duration.small, easing = theme.ease.standard }
-    local function thumb() return t.down and 28 or (t.checked and 24 or 16) end
+    local function thumb() return 24 end
     local jump = M.spring(520, 22)
     return {
       background = ui.Rect { anchors = { fill = true }, radius = 16,
@@ -71,9 +70,8 @@ return function(theme, M)
         y = function() return 16 - thumb() / 2 end,
         width = thumb, height = thumb,
         behavior = { x = jump, y = jump, width = jump, height = jump },
-        stretch = M.STRETCH,
         M.shape { anchors = { fill = true },
-          shape = function() return t.checked and "cookie12" or "circle" end,
+          shape = "circle",
           color = function() return t.checked and C().onPrimary or C().outline end },
         M.icon(function() return t.checked and "check" or "close" end, 14, function()
           return t.checked and C().primary or C().surfaceContainerHighest
@@ -83,9 +81,8 @@ return function(theme, M)
     }
   end
 
-  --- A small icon toggle: `icon_on`, `icon_off`, `on` (fn; the error tone
-  --- while on), `size` (20). Round off, a rounded square on, tighter while
-  --- pressed, its icon filling in.
+  --- A small round icon toggle: `icon_on`, `icon_off`, `on` (fn; the error
+  --- tone while on), `size` (20). State changes its colour and glyph.
   local function icon(t, spec)
     local W, H = spec.width or 36, spec.height or 30
     local h = math.min(W, H)
@@ -93,17 +90,14 @@ return function(theme, M)
     local function ink() return on() and C().onErrorContainer or C().onSurfaceVariant end
     return {
       background = ui.Rect { width = W, height = H,
-        radius = function()
-          if t.down then return h * 0.2 end
-          return on() and h * 0.3 or h / 2
-        end,
+        radius = h / 2,
         color = function()
           local base = on() and C().errorContainer or C().surfaceContainerHighest
           if t.down then return base:mix(ink(), 0.12) end
           if t.hovered then return base:mix(ink(), 0.08) end
           return base
         end,
-        behavior = { radius = ui.spring { stiffness = 480, damping = 18 }, color = { duration = theme.duration.small } } },
+        behavior = { color = { duration = theme.duration.small } } },
       icon = M.icon(function() return on() and spec.icon_on or spec.icon_off end, spec.size or 20, ink,
         { anchors = { center_in = true }, fill = on }),
       indicator = ring(t, h / 2 - 1),
@@ -257,9 +251,9 @@ return function(theme, M)
 
   -- ------------------------------------------------------------ ranges --
 
-  --- The M3 expressive slider: the active part, a gap, a slim upright
-  --- handle standing past the track, the rest of the track, an icon inside
-  --- the active part once it fits and the reading at the end. `spec`:
+  --- A split capsule slider: both halves have the same rounded ends, a
+  --- slim upright handle, an icon and a reading. The handle reaches both
+  --- ends, so zero and full leave no isolated track stubs. `spec`:
   --- `width`, `height` (44, the track's), `icon`, `label` (false hides it).
   local function slider(t, spec)
     local H = spec.bar_height or 44
@@ -271,34 +265,37 @@ return function(theme, M)
     local function separate() return spec.label~=false and W()<2*reading_width+math.floor(H/2)+72 end
     local function rail_width() return separate() and W()-label_width()-12 or W() end
     local GAP = 6
-    local function hx() return H / 2 + math.max(0,rail_width() - H) * clamp01(t.visual_position) end
-    local function grip() return t.down and 2 or 4 end
+    local function hx() return 2 + math.max(0,rail_width() - 4) * clamp01(t.visual_position) end
+    local function grip() return 4 end
     local function rest_x() return hx()+grip()/2+GAP end
     local function rest_width() return math.max(0,rail_width()-rest_x()) end
     local function filled_width() return math.max(0,hx()-grip()/2-GAP) end
+    -- A nearly exhausted half becomes a small circle, rather than a tall
+    -- sliver with squeezed corners. Both halves keep one centre line.
+    local function rest_height() return math.min(H,rest_width()) end
+    local function filled_height() return math.min(H,filled_width()) end
+    local function rest_y() return 4+(H-rest_height())/2 end
+    local function filled_y() return 4+(H-filled_height())/2 end
     local function handle_x() return hx()-grip()/2 end
     local slots = {
-      -- The travel the pointer maps onto: the handle's centre keeps the
-      -- track's rounded ends clear.
-      track = ui.Item { id=spec.id and spec.id.."-track",x = H / 2, y = 4,
-        width = function() return math.max(1,rail_width() - H) end, height = H },
-      background = ui.Rect { y = 4, height = H,
+      track = ui.Item { id=spec.id and spec.id.."-track",x = 2, y = 4,
+        width = function() return math.max(1,rail_width() - 4) end, height = H },
+      background = ui.Rect { y = rest_y(), height = rest_height(),
         x = rest_x(), width = rest_width(),
-        top_left_radius = 6, bottom_left_radius = 6, top_right_radius = H / 2, bottom_right_radius = H / 2,
+        radius = H / 2, visible=function() return rest_width()>.5 end,
         color = function() return C().surfaceContainerHighest end },
-      fill = ui.Rect { id = spec.id and spec.id .. "-level", x = 0, y = 4, height = H,
+      fill = ui.Rect { id = spec.id and spec.id .. "-level", x = 0, y = filled_y(), height = filled_height(),
         width = filled_width(),
-        top_left_radius = H / 2, bottom_left_radius = H / 2, top_right_radius = 6, bottom_right_radius = 6,
+        radius = H / 2, visible=function() return filled_width()>.5 end,
         color = function() return C().primary end },
       handle = ui.Rect { id = spec.id and spec.id .. "-handle", y = 0, height = H + 8, radius = 2,
         x = handle_x(), width = grip,
-        color = function() return C().primary end,
-        behavior = { width = { duration = 150 } } },
+        color = function() return C().primary end },
       second_handle = ring(t, H / 2),
     }
     local targets={
-      {node=slots.background,values={x=rest_x,width=rest_width}},
-      {node=slots.fill,values={width=filled_width}},
+      {node=slots.background,values={x=rest_x,width=rest_width,y=rest_y,height=rest_height}},
+      {node=slots.fill,values={width=filled_width,y=filled_y,height=filled_height}},
       {node=slots.handle,values={x=handle_x}},
     }
     local size = math.floor(H / 2)

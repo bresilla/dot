@@ -1251,33 +1251,27 @@ local TONES = {
   error = { "errorContainer", "onErrorContainer" },
 }
 
---- The background of a stateful control, M3 expressive: a pill while off,
---- a rounded square once on, tighter still while pressed -- the shape
---- springs between them with a touch of overshoot -- and the tone's
---- container while on, the highest surface while off, each with its state
+--- The background of a stateful control: one rounded shape in every state,
+--- the tone's container while on, the highest surface while off, each with its state
 --- layer (hover 8 %, press 12 %). `area` (the MouseArea it backs: given as
 --- a node it is put behind its children; or a function returning it),
 --- `on` (fn), `height` (for the radii; the area's), `tone` ("primary",
 --- "secondary", "tertiary", "error"), `pressed` (fn, more presses that
---- count, e.g. a nested button), `radius_on` (h * 0.28), `id`.
+--- count, e.g. a nested button), `radius_on` (h * 0.28, used in all states), `id`.
 function M.state_surface(spec)
   local on = spec.on or function() return false end
   local tone = TONES[spec.tone or "primary"] or TONES.primary
   local function area() return get(spec.area) end
   local is_node = spec.area ~= nil and type(spec.area) ~= "function"
   local h = spec.height or (is_node and tonumber(spec.area.height)) or 56
-  local r_off, r_on = h / 2, spec.radius_on or math.max(8, math.floor(h * 0.28))
-  local r_press = math.max(6, math.floor(r_on * 0.55))
+  local radius = math.min(h/2, spec.radius_on or math.max(8, math.floor(h * 0.28)))
   local function pressed()
     local a = area()
     return (a and a.pressed) or (spec.pressed and spec.pressed()) or false
   end
   local node = ui.Rect {
     id = spec.id, z = -1, anchors = spec.anchors or { fill = true },
-    radius = function()
-      if pressed() then return r_press end
-      return on() and r_on or r_off
-    end,
+    radius = radius,
     color = function()
       local c = theme.color
       local base, ink = c.surfaceContainerHighest, c.onSurface
@@ -1288,7 +1282,6 @@ function M.state_surface(spec)
       return base
     end,
     behavior = {
-      radius = ui.spring { stiffness = 420, damping = 17 },
       color = { duration = theme.duration.small, easing = theme.ease.standard },
     },
   }
