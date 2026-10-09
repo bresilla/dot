@@ -211,6 +211,14 @@ local function reload_desktop(c)
   if remote and remote ~= "" then lule.spawn("scp -r " .. quote(wal) .. " " .. quote(remote)) end
 end
 
+-- GTK, libadwaita and portal-aware apps such as Flatpaks follow these two keys.
+local function set_app_theme(c)
+  local dark = c.theme ~= "light"
+  local key = "/org/gnome/desktop/interface/"
+  lule.run("dconf write " .. key .. "color-scheme \"'" .. (dark and "prefer-dark" or "prefer-light") .. "'\"")
+  lule.run("dconf write " .. key .. "gtk-theme \"'" .. (dark and "Yaru-dark" or "Yaru") .. "'\"")
+end
+
 -- --- what runs, in this order -------------------------------------------------------------------
 
 -- The plain list and the two facts that go with it, which is what everything else reads.
@@ -243,3 +251,4 @@ lule.on.colors(write_lua)
 lule.on.colors(recolour_terminals)
 lule.on.colors(recolour_logo)
 lule.on.colors(reload_desktop)
+lule.on.colors(set_app_theme)
