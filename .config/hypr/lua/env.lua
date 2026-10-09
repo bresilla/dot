@@ -1,10 +1,6 @@
 return function(ctx)
     ctx.colors = ctx.util.read_wal_lua_colors(ctx.home .. "/.cache/wal/colors.lua")
 
-    hl.env("LIBVA_DRIVER_NAME", "nvidia")
-    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
-    hl.env("NVD_BACKEND", "direct")
-
     hl.env("LULE_C", ctx.home .. "/.config/lule")
     hl.env("LULE_A", ctx.home .. "/.cache/lule")
     hl.env("LULE_W", ctx.home .. "/.local/share/lule/wallpapers")
